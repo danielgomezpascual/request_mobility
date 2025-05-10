@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.Marco
 import com.personal.requestmobility.core.composables.graficas.GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.GraficoBarras
@@ -23,7 +23,6 @@ import com.personal.requestmobility.core.composables.graficas.GraficoBarrasVerti
 import com.personal.requestmobility.core.composables.graficas.GraficoCircular
 import com.personal.requestmobility.core.composables.graficas.GraficoLineas
 import com.personal.requestmobility.core.composables.graficas.ElementoGrafica
-import com.personal.requestmobility.core.composables.graficas.ValoresGrafica
 import com.personal.requestmobility.core.composables.tabla.Tabla
 
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
@@ -32,17 +31,15 @@ import com.personal.requestmobility.core.composables.tabla.toValoresGrafica
 
 @Composable
 fun GraTab(modifier: Modifier = Modifier,
-           graTabData: GraTabData
+           gr: GraTabData
 
 ) {
+     val graTabData by remember{ mutableStateOf<GraTabData>(gr) }
+
+
 
     val configGrafica = graTabData.graTabConfiguracion
-//--------------------------------------------------
 
-
-    if (graTabData.graTabConfiguracion.mostrarGrafica && !graTabData.valoresGrafica.tieneContenido()) {
-        graTabData.valoresGrafica = graTabData.valoresTabla.toValoresGrafica(columnaTexto = 0, columnaValor = 1)
-    }
     if (configGrafica.ordenado) {
         graTabData.ordenarElementos()
     }
@@ -50,8 +47,24 @@ fun GraTab(modifier: Modifier = Modifier,
     if (configGrafica.limiteElementos > 0) {
         graTabData.limiteElementos()
     }
-
     graTabData.setupValores()
+
+//--------------------------------------------------
+
+
+   // var datosTabla: ValoresTabla = ValoresTabla()
+
+   // if (graTabData.graTabConfiguracion.mostrarTabla) {
+
+
+        val valoresTabla by remember {mutableStateOf<ValoresTabla>(graTabData.valoresTabla)}
+
+
+
+
+
+
+
 
 
 //--------------------------------------------------
@@ -59,25 +72,18 @@ fun GraTab(modifier: Modifier = Modifier,
     var graficaComposable: @Composable () -> Unit = {}
 
     if (graTabData.graTabConfiguracion.mostrarGrafica) {
-        val valoresGrafica = graTabData.valoresGrafica
+//        val valoresGrafica = graTabData.valoresGrafica
         //var datosGrafica: List<ElementoGrafica> =
-        graficaComposable = dameTipoGrafica(configGrafica, modifier, graTabData.valoresGrafica.elementos)
+
+
+        val listaElementosMostrarGrafica : List<ElementoGrafica> =  valoresTabla.toValoresGrafica(columnaTexto = 0, columnaValor = 1).elementos
+        graficaComposable = dameTipoGrafica(configGrafica, modifier,listaElementosMostrarGrafica)
         //App.log.lista("GR", datosGrafica)
     }
 
     if (graTabData.graTabConfiguracion.mostrarTabla) {
-
-        val valoresTabla = graTabData.valoresTabla
-        val datosTabla: ValoresTabla = if (valoresTabla.tieneContenido()) valoresTabla else ValoresTabla.fromValoresGrafico(graTabData.valoresGrafica)
-        tablaComposable = dameTipoTabla(configGrafica, modifier, datosTabla)
-
+        tablaComposable = dameTipoTabla(configGrafica, modifier, valoresTabla)
     }
-
-
-
-
-
-
 
     when (configGrafica.orientacion) {
         GraTabOrientacion.VERTICAL -> {
@@ -193,30 +199,6 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier
     if (!graTabConfiguracion.mostrarEtiquetas) {
         datosPintar = datos.map { it.copy(leyenda = "") }
     }
-
-
-    /*
-        Box(Modifier
-            .width(500.dp)
-            .height(300.dp)) {
-            GraficoBarras(
-                modifier = modifier,
-                listaValores = datos
-            )
-        }
-    */
-
-    /*if (1 == 1) return {   Box(Modifier
-        .width(500.dp)
-        .height(300.dp)) {
-        GraficoBarrasVerticales(
-            modifier = modifier,
-            listaValores = datos
-        )
-    }}*/
-
-    //App.log.lista("Datos pintar", datosPintar)
-
 
     return {
         when (graTabConfiguracion.tipo) {

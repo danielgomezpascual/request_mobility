@@ -102,6 +102,7 @@ fun Tabla(modifier: Modifier = Modifier,
 
     //variable para controlar el estado de las filas que se estan presentado en la tabla
     var filas by remember { mutableStateOf<List<Fila>>(tabla.filas) }
+    //var filas = tabla.filas
 
     //variable para controlar la fila que se selecciono
     var filaSeleccionada by remember { mutableStateOf<Fila>(filas.first()) }
