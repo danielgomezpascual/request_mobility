@@ -1,0 +1,92 @@
+package com.personal.requestmobility.core.composables.graficas
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.himanshoe.charty.common.asSolidChartColor
+import com.himanshoe.charty.pie.PieChart
+import com.himanshoe.charty.pie.model.PieChartData
+import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabConfiguracion
+
+@Preview
+@Composable
+fun TestGraficoCircular() {
+    var listaValores: List<ElementoGrafica> = emptyList()
+
+    val colors: List<Color> = listOf(
+        Color.White,
+        Color.Red,
+        Color.Blue,
+        Color.Green,
+        Color.Black,
+        Color.Yellow
+    )
+    (0..4).forEach {
+        listaValores = listaValores.plus(
+            ElementoGrafica(it.toFloat(), it.toFloat(), leyenda = "V $it", colors[it])
+        )
+    }
+
+    GraficoCircular(
+        modifier = Modifier
+            .width(400.dp)
+            .height(500.dp),
+
+        listaValores = listaValores  /*generateMockBarData(3, true, false)*/
+    )
+}
+
+
+@Composable
+fun GraficoAnillo(
+    modifier: Modifier = Modifier,
+    listaValores: List<ElementoGrafica>,
+    rellenoCentro: Boolean = false,
+) {
+    _BaseGraficoCircular(modifier, listaValores, rellenoCentro)
+}
+
+@Composable
+fun GraficoCircular(
+    modifier: Modifier = Modifier,
+        listaValores: List<ElementoGrafica>,
+    rellenoCentro: Boolean = true,
+) {
+
+  _BaseGraficoCircular(modifier, listaValores, rellenoCentro)
+}
+
+
+
+@Composable
+private fun _BaseGraficoCircular(
+    modifier: Modifier = Modifier,
+    listaValores: List<ElementoGrafica>,
+    rellenoCentro: Boolean = true,
+) {
+
+    val data = listaValores.map {
+        PieChartData(
+            value = (it.y) as Float,
+            color = (it.color).asSolidChartColor(),
+            label = it.leyenda,
+            labelColor = Color.Black.asSolidChartColor()
+        )
+    }
+    PieChart(
+        onPieChartSliceClick = {
+            println("Clicked on slice with data: $it")
+        },
+        isDonutChart = !rellenoCentro,
+        data = { data },
+        modifier = Modifier
+            .fillMaxSize()
+
+
+    )
+}
