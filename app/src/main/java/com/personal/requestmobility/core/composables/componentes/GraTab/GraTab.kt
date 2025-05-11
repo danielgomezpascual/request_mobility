@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.Marco
 import com.personal.requestmobility.core.composables.graficas.GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.GraficoBarras
@@ -23,19 +25,23 @@ import com.personal.requestmobility.core.composables.graficas.GraficoBarrasVerti
 import com.personal.requestmobility.core.composables.graficas.GraficoCircular
 import com.personal.requestmobility.core.composables.graficas.GraficoLineas
 import com.personal.requestmobility.core.composables.graficas.ElementoGrafica
+import com.personal.requestmobility.core.composables.graficas.ValoresGrafica
+import com.personal.requestmobility.core.composables.tabla.Celda
+import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.Tabla
 
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 import com.personal.requestmobility.core.composables.tabla.toValoresGrafica
+import kotlin.collections.filter
+import kotlin.collections.map
 
 
 @Composable
 fun GraTab(modifier: Modifier = Modifier,
-           gr: GraTabData
+           graTabData: GraTabData
 
 ) {
-     val graTabData by remember{ mutableStateOf<GraTabData>(gr) }
-
+    //val graTabData by remember { mutableStateOf<GraTabData>(gr) }
 
 
     val configGrafica = graTabData.graTabConfiguracion
@@ -52,19 +58,21 @@ fun GraTab(modifier: Modifier = Modifier,
 //--------------------------------------------------
 
 
-   // var datosTabla: ValoresTabla = ValoresTabla()
+    // var datosTabla: ValoresTabla = ValoresTabla()
 
-   // if (graTabData.graTabConfiguracion.mostrarTabla) {
-
-
-        val valoresTabla by remember {mutableStateOf<ValoresTabla>(graTabData.valoresTabla)}
+    // if (graTabData.graTabConfiguracion.mostrarTabla) {
 
 
+    val valoresTabla by remember { mutableStateOf<ValoresTabla>(graTabData.valoresTabla) }
+    //variable para controlar el estado de las filas que se estan presentado en la tabla
+    var filas by remember { mutableStateOf<List<Fila>>(graTabData.valoresTabla.filas) }
+    //var filas = tabla.filas
 
+    //variable para controlar la fila que se selecciono
+    //var filaSeleccionada by remember { mutableStateOf<Fila>(filas.first()) }
 
-
-
-
+    //varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
+    var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }
 
 
 //--------------------------------------------------
@@ -72,17 +80,47 @@ fun GraTab(modifier: Modifier = Modifier,
     var graficaComposable: @Composable () -> Unit = {}
 
     if (graTabData.graTabConfiguracion.mostrarGrafica) {
-//        val valoresGrafica = graTabData.valoresGrafica
-        //var datosGrafica: List<ElementoGrafica> =
-
-
-        val listaElementosMostrarGrafica : List<ElementoGrafica> =  valoresTabla.toValoresGrafica(columnaTexto = 0, columnaValor = 1).elementos
-        graficaComposable = dameTipoGrafica(configGrafica, modifier,listaElementosMostrarGrafica)
-        //App.log.lista("GR", datosGrafica)
+        val listaElementosMostrarGrafica: List<ElementoGrafica> = ValoresGrafica.fromValoresTabla(filas, graTabData.graTabConfiguracion.campoAgrupacionTabla, graTabData.graTabConfiguracion.campoSumaValorTabla).elementos
+        graficaComposable = dameTipoGrafica(configGrafica, modifier, listaElementosMostrarGrafica)
     }
 
     if (graTabData.graTabConfiguracion.mostrarTabla) {
-        tablaComposable = dameTipoTabla(configGrafica, modifier, valoresTabla)
+        tablaComposable = dameTipoTabla(
+            graTabConfiguracion = configGrafica,
+            modifier = modifier,
+            valoresTabla = valoresTabla,
+            filas = filas,
+            celdasFiltro = celdasFiltro,
+
+            onClickSeleccionarFila = { fila ->
+                //filaSeleccionada = fila
+                filas = filas.map { f -> f.copy(seleccionada = (f == fila)) }
+                celdasFiltro = fila.celdas
+            },
+            onClickSeleccionarFiltro = { cf ->
+                celdasFiltro = celdasFiltro.map { c ->
+                    if (c.titulo.equals(cf.titulo)) {
+                        cf.copy(seleccionada = !cf.seleccionada)
+                    } else {
+                        c
+                    }
+                }
+
+                filas = filas.map { fila ->
+                    var cumpleFiltro: Boolean = true
+                    fila.celdas.forEach { celdaFila ->
+                        celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
+                            if ((celdaFila.titulo.equals(celdaFiltro.titulo)) && !(celdaFila.valor.equals(celdaFiltro.valor))) {
+                                cumpleFiltro = false
+                            }
+                        }
+                    }
+                    fila.copy(visible = cumpleFiltro)
+                }
+
+
+            }
+        )
     }
 
     when (configGrafica.orientacion) {
@@ -251,13 +289,24 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier
 }
 
 @Composable
-fun dameTipoTabla(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier, valoresTabla: ValoresTabla): @Composable () -> Unit {
+fun dameTipoTabla(graTabConfiguracion: GraTabConfiguracion,
+                  modifier: Modifier,
+                  valoresTabla: ValoresTabla,
+                  filas: List<Fila>,
+                  celdasFiltro: List<Celda>,
+                  onClickSeleccionarFiltro: (Celda) -> Unit,
+                  onClickSeleccionarFila: (Fila) -> Unit): @Composable () -> Unit {
+
     if (graTabConfiguracion.mostrarTabla) {
         return {
             Tabla(
                 modifier = Modifier.fillMaxSize(),
                 tabla = valoresTabla,
-                mostrarTitulos = graTabConfiguracion.mostrarTituloTabla
+                filas = filas,
+                celdasFiltro = celdasFiltro,
+                mostrarTitulos = graTabConfiguracion.mostrarTituloTabla,
+                onClickSeleccionarFiltro = onClickSeleccionarFiltro,
+                onClickSeleccionarFila = onClickSeleccionarFila
             )
         }
     } else {

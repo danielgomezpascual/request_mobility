@@ -20,10 +20,10 @@ data class GraTabData(
 
 
     fun limiteElementos(grafica: Boolean = true, tabla: Boolean = true) {
-        if (grafica && graTabConfiguracion.mostrarGrafica && valoresGrafica.tieneContenido()) {
+        /*if (grafica && graTabConfiguracion.mostrarGrafica && valoresGrafica.tieneContenido()) {
             valoresGrafica = valoresGrafica.copy(elementos = valoresGrafica.dameElementosTruncados(limite = graTabConfiguracion.limiteElementos, agrupar = graTabConfiguracion.agruparValores))
-        }
-
+        }*/
+//todo: esta funcion debe devovler los elemntos con el elemtno agrupado
         if (tabla && graTabConfiguracion.mostrarTabla && valoresTabla.tieneContenido()) {
             valoresTabla = valoresTabla.copy(filas = valoresTabla.dameElementosTruncados(limite = graTabConfiguracion.limiteElementos, agrupar = graTabConfiguracion.agruparValores, indiceCampoSumar = graTabConfiguracion.campoSumaValorTabla))
         }

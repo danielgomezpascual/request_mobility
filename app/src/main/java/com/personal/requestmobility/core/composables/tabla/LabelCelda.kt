@@ -23,7 +23,7 @@ fun LabelCelda(
     icono: Icons? = null,
 
 ) {
-    Text(text = valor, modifier = modifier.background(fondo).padding(4.dp), color = color,
+    Text(text = valor, modifier = modifier/*.background(fondo)*/.padding(4.dp), color = color,
         style = MaterialTheme.typography.bodySmall,
         textAlign = alineacion)
 }

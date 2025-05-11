@@ -6,6 +6,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.Marco
 import com.personal.requestmobility.core.composables.listas.Lista
+import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.transacciones.ui.screens.composables.ModalInferiorFiltros
 
 
@@ -78,17 +80,21 @@ fun TestTablaDatos() {
 fun TablaDatos(modifier: Modifier = Modifier,
                titulo: String = "",
                tabla: ValoresTabla) {
-
+/*
     Marco(modifier = modifier, titulo = titulo) {
         Tabla(modifier, tabla)
-    }
+    }*/
 }
 
 
 @Composable
 fun Tabla(modifier: Modifier = Modifier,
           tabla: ValoresTabla,
-          mostrarTitulos: Boolean = true) {
+          filas: List<Fila>,
+          celdasFiltro: List<Celda>,
+          mostrarTitulos: Boolean = true,
+          onClickSeleccionarFiltro: (Celda)->Unit,
+          onClickSeleccionarFila: (Fila)-> Unit) {
 
     val estadoScroll = rememberScrollState()
     val indicadorColor = tabla.indicadorColor
@@ -101,46 +107,24 @@ fun Tabla(modifier: Modifier = Modifier,
 
 
     //variable para controlar el estado de las filas que se estan presentado en la tabla
-    var filas by remember { mutableStateOf<List<Fila>>(tabla.filas) }
+ /*   var filas by remember { mutableStateOf<List<Fila>>(tabla.filas) }
     //var filas = tabla.filas
 
     //variable para controlar la fila que se selecciono
     var filaSeleccionada by remember { mutableStateOf<Fila>(filas.first()) }
 
     //varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
-    var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }
+    var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }*/
 
 
     Column(modifierColumn) {
-        Text(text = filaSeleccionada.toString().substring(0, 150) + "...", fontSize = 10.sp, modifier = Modifier.background(Color.Yellow))
+        //Text(text = filaSeleccionada.toString().substring(0, 150) + "...", fontSize = 10.sp, modifier = Modifier.background(Color.Yellow))
 
         ModalInferiorFiltros() {
             Column {
                 Lista(celdasFiltro) { celdaFiltro ->
-                    CeldaFiltro(celda = celdaFiltro) { cf ->
-                        celdasFiltro = celdasFiltro.map { c ->
-                            if (c.titulo.equals(cf.titulo)) {
-                                cf.copy(seleccionada = !cf.seleccionada)
-                            } else {
-                                c
-                            }
-                        }
-
-                        filas = filas.map { fila ->
-                            var cumpleFiltro: Boolean = true
-                            fila.celdas.forEach { celdaFila ->
-                                celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
-                                    if ((celdaFila.titulo.equals(celdaFiltro.titulo)) && !(celdaFila.valor.equals(celdaFiltro.valor))) {
-                                        App.log.d("Dentro, esto no cumple el filro ${celdaFiltro.titulo}")
-                                        cumpleFiltro = false
-                                    }
-                                }
-                            }
-                            fila.copy(visible = cumpleFiltro)
-                        }
-
-                       App.log.lista("Res", filas)
-                     }
+                    CeldaFiltro(celda = celdaFiltro) { cf -> onClickSeleccionarFiltro(cf)
+                       }
                 }
 
                 /*TextBuscador(searchText = viewModel.textoBuscar) { str ->
@@ -211,8 +195,9 @@ fun Tabla(modifier: Modifier = Modifier,
 
         Lista(filas.filter { it.visible == true }) { fila ->
             FilaTablaDatos(fila, indicadorColor, filasColor, ajustarContenidoAncho) { fila ->
-                filaSeleccionada = fila
-                celdasFiltro = fila.celdas
+              /*  filaSeleccionada = fila
+                celdasFiltro = fila.celdas*/
+                onClickSeleccionarFila(fila)
             }
         }
 
@@ -228,7 +213,8 @@ fun FilaTablaDatos(fila: Fila, indicadorColor: Boolean, filasColor: Boolean, aju
 
     Row(
         modifier = modifier
-            .fillMaxWidth()
+            .background(if3(fila.seleccionada, Color.Yellow, Color.Transparent))
+            .fillMaxWidth().fillMaxHeight()
             .clickable {
                 onClick(fila)
             },
@@ -240,6 +226,7 @@ fun FilaTablaDatos(fila: Fila, indicadorColor: Boolean, filasColor: Boolean, aju
         fila.celdas.forEachIndexed { indice, celda ->
 
             var modifierFila: Modifier = Modifier
+
             if (ajustarContenidoAncho) {
                 modifierFila = modifierFila
                     .fillMaxWidth()

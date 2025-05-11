@@ -201,7 +201,7 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
                         uiState.kpis.forEach { kpi ->
                             GraTab(
                                 modifier = modifier,
-                                gr = kpi.graTabData
+                                graTabData = kpi.graTabData
                             )
 
                             App.log.d(kpi.graTabData)

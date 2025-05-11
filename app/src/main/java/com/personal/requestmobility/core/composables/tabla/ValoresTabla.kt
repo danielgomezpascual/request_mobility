@@ -72,17 +72,18 @@ data class ValoresTabla(
 }
 
 
-fun s(){
-    val s : String = "asda"
-    s.esNumerico()
-}
-data class Fila(val celdas: List<Celda> = emptyList<Celda>(), val size: Dp = 200.dp, val color: Color = Color.Black, val visible: Boolean = true)
+data class Fila(val celdas: List<Celda> = emptyList<Celda>(),
+                val size: Dp = 200.dp,
+                val color: Color = Color.Black,
+                val seleccionada: Boolean = false,
+                val visible: Boolean = true)
+
 data class Celda(val valor: String,
                  val size: Dp = 200.dp,
                  val colorCelda: Color = Color.Black,
                  val fondoCelda: Color = Color.White,
                  val contenido: @Composable (Modifier) -> Unit = { modifier ->
-                     LabelCelda(modifier = modifier, valor = valor, color = colorCelda,
+                     LabelCelda(modifier = modifier, valor = valor,/* color = colorCelda,*/
                          alineacion = if3(valor.esNumerico(), TextAlign.End, TextAlign.Start))
                  },
                  val titulo: String,
@@ -105,8 +106,6 @@ fun ValoresTabla.toValoresGrafica(columnaTexto: Int, columnaValor: Int): Valores
         ElementoGrafica(x = valorTexto, y = valor, leyenda = valorTexto, color = color)
 
     }
-
-
 
     filasColor = false
 

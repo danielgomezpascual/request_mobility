@@ -2,9 +2,13 @@ package com.personal.requestmobility.core.composables.graficas
 
 import androidx.compose.ui.graphics.Color
 import com.personal.requestmobility.core.composables.componentes.Colores
+import com.personal.requestmobility.core.composables.tabla.Celda
+import com.personal.requestmobility.core.composables.tabla.Fila
+import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 
 
-data class ValoresGrafica(val elementos: List<ElementoGrafica> = emptyList<ElementoGrafica>(), val textoX: String = "Tipo", val textoY: String = "Total") {
+data class ValoresGrafica(val elementos: List<ElementoGrafica> = emptyList<ElementoGrafica>(),
+                          val textoX: String = "Tipo", val textoY: String = "Total") {
 
     fun dameElementosOrdenados() = elementos.sortedByDescending { it.y }
     fun dameElementosTruncados(limite: Int, agrupar: Boolean): List<ElementoGrafica> {
@@ -24,6 +28,24 @@ data class ValoresGrafica(val elementos: List<ElementoGrafica> = emptyList<Eleme
     }
 
     fun tieneContenido(): Boolean = (elementos.isNotEmpty())
+
+    companion object {
+
+        fun fromValoresTabla(filas : List<Fila>,columnaTexto: Int, columnaValor: Int): ValoresGrafica {
+            var elementos: List<ElementoGrafica> = filas.filter { it.visible }.map { fila ->
+
+                var valorTexto = fila.celdas[columnaTexto].valor
+                var valor: Float = fila.celdas[columnaValor].valor.toFloat()
+                val color = Colores.obtenerColorAleatorio()
+                ElementoGrafica(x = valorTexto, y = valor, leyenda = valorTexto, color = color)
+
+            }
+
+
+            return ValoresGrafica(elementos = elementos, textoX = "Tipo", textoY = "Valor")
+        }
+
+    }
 
 }
 
