@@ -25,14 +25,15 @@ data class KpiUI(
             var configuracion = GraTabConfiguracion(titulo = kpi.nombre, tipo = tipoGrafica)
             var valoresTabla = kpi.resultadoSQL.toValoresTabla()
             if (i == 0) {
-                configuracion = configuracion.copy(width = 1400.dp, height = 200.dp, mostrarGrafica = false, agruparValores = false, paddingTablaVertical = PaddingValues(0.dp, 0.dp))
+                configuracion = configuracion.copy(width = 1400.dp, height = 200.dp,
+                    mostrarGrafica = false,
+                    agruparValores = false, paddingTablaVertical = PaddingValues(0.dp, 0.dp))
                 //val titulos = listOf<Header>(Header("1"),Header("2"), Header("3") ,Header("4"), Header("5"))
-                valoresTabla = valoresTabla.copy(/*titulos =  titulos,*/  filasColor = false)
+                //valoresTabla = valoresTabla.copy(/*titulos =  titulos,*/  filasColor = false)
             }
 
             val grabTabData = GraTabData(
                 graTabConfiguracion = configuracion,
-                valoresGrafica = ValoresGrafica(elementos = emptyList()),
                 valoresTabla = valoresTabla
             )
 

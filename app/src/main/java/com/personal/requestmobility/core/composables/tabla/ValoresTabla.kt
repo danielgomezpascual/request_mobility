@@ -18,9 +18,7 @@ import kotlin.collections.plus
 data class ValoresTabla(
     //var titulos: List<Header> = emptyList<Header>(),
     var filas: List<Fila> = emptyList<Fila>(),
-    var ajustarContenidoAncho: Boolean = true,
-    var indicadorColor: Boolean = true,
-    var filasColor: Boolean = true
+
 ) {
     companion object {
 
@@ -43,7 +41,7 @@ data class ValoresTabla(
                 filas = filas.plus(fila)
             }
 
-            return ValoresTabla(/*titulos = titulos,*/ filas = filas, indicadorColor = indicadorColor, filasColor = filasColor)
+            return ValoresTabla(/*titulos = titulos,*/ filas = filas, /*indicadorColor = indicadorColor, filasColor = filasColor*/)
         }
     }
 
@@ -57,10 +55,15 @@ data class ValoresTabla(
         if (!agrupar) return elementosHastaLimite
         if (filas.size > limite) {
             val elemetosDespuesLimite = filas.drop(limite)
-            //val totalResto = elemetosDespuesLimite.sumOf { it.valor[indiceCampoSumar].toDouble() }.toFloat() // Realizamos la suma en Double y luego convertimos a Float
+            val fila0 = filas.first()
+
             val totalResto = elemetosDespuesLimite.sumOf { fila -> fila.celdas[indiceCampoSumar].valor.toDouble() }.toFloat()
-            val celdaRestoTexto = Celda(valor = "Resto", titulo = "Agrupacion")
-            val celdasRestoValor = Celda(valor = totalResto.toString(), titulo = "Total")
+            //se decalran los mismos titulos que en el resto de filas, estos titulos son por los queluego se filtra...
+            val tituloResto = fila0.celdas[0].titulo
+            val tituloAgrupar = fila0.celdas[indiceCampoSumar].titulo
+
+            val celdaRestoTexto = Celda(valor = "Resto", titulo =tituloResto, seleccionada =  false)
+            val celdasRestoValor = Celda(valor = totalResto.toString(), titulo = tituloAgrupar, seleccionada = false)
 
             val valorResto = Fila(celdas = listOf(celdaRestoTexto, celdasRestoValor), color = Colores.obtenerColorAleatorio())
             return (elementosHastaLimite + valorResto)
@@ -107,7 +110,7 @@ fun ValoresTabla.toValoresGrafica(columnaTexto: Int, columnaValor: Int): Valores
 
     }
 
-    filasColor = false
+   // filasColor = false
 
     return ValoresGrafica(elementos = elementos, textoX = "Tipo", textoY = "Valor")
 }

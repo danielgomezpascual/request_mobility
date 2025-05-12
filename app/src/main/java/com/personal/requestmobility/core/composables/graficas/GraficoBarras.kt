@@ -21,7 +21,9 @@ import com.himanshoe.charty.bar.model.BarData
 import com.himanshoe.charty.common.LabelConfig
 import com.himanshoe.charty.common.asSolidChartColor
 import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabConfiguracion
+import com.personal.requestmobility.core.composables.tabla.Fila
 
+/*
 @Preview
 @Composable
 fun TestGraficoBarras() {
@@ -35,59 +37,66 @@ fun TestGraficoBarras() {
 
 
     GraficoBarras(Modifier,  listaValores)
-}
+}*/
 
 
 @Composable
 fun GraficoBarras(
     modifier: Modifier = Modifier,
-
-    listaValores: List<ElementoGrafica>,
-    ) {
-
-    val data = listaValores.map {
+    listaValores: List<Fila>,
+    posicionX: Int = 0,
+    posivionY: Int = 1,
+) {
+    val data =  listaValores.map { fila ->
+        BarData(
+            xValue = fila.celdas[posicionX].valor,
+            yValue = fila.celdas[posivionY].valor.toFloat(),
+            barColor = (fila.color).asSolidChartColor()
+        )
+    }
+   /* val data = listaValores.map {
         BarData(
             xValue = it.x,
             yValue = it.y,
             barColor = (it.color).asSolidChartColor()
 
         )
-    }
+    }*/
 
 
 
-        BarChart(
-            modifier = Modifier
-                .padding(10.dp)
-                .width(500.dp)
-               .height(200.dp),
+    BarChart(
+        modifier = Modifier
+            .padding(10.dp)
+            .width(500.dp)
+            .height(200.dp),
 
-            barTooltip = BarTooltip.GraphTop,
-            labelConfig = LabelConfig.default().copy(
-                labelTextStyle = TextStyle.Default.copy(fontSize = TextUnit(10f, TextUnitType.Sp)),
-                showXLabel = true,
-                xAxisCharCount = 10,
-                showYLabel = true,
-                textColor = Color(0xFFFF92C1).asSolidChartColor()
-            ),
-            barChartColorConfig = BarChartColorConfig.default().copy(
-                fillBarColor = Color(0xFFFF92C1).asSolidChartColor(),
-                negativeBarColors = Color(0xFF4D4D4D).asSolidChartColor()
-            ),
-            data = { data },
-            barChartConfig = BarChartConfig.default().copy(
-                minimumBarCount = 4,
-                cornerRadius = CornerRadius(40F, 40F),
-            ),
-            onBarClick = { index, barData -> println("click in bar with $index index and data $barData") }
-        )
+        barTooltip = BarTooltip.GraphTop,
+        labelConfig = LabelConfig.default().copy(
+            labelTextStyle = TextStyle.Default.copy(fontSize = TextUnit(10f, TextUnitType.Sp)),
+            showXLabel = true,
+            xAxisCharCount = 10,
+            showYLabel = true,
+            textColor = Color(0xFFFF92C1).asSolidChartColor()
+        ),
+        barChartColorConfig = BarChartColorConfig.default().copy(
+            fillBarColor = Color(0xFFFF92C1).asSolidChartColor(),
+            negativeBarColors = Color(0xFF4D4D4D).asSolidChartColor()
+        ),
+        data = { data },
+        barChartConfig = BarChartConfig.default().copy(
+            minimumBarCount = 4,
+            cornerRadius = CornerRadius(40F, 40F),
+        ),
+        onBarClick = { index, barData -> println("click in bar with $index index and data $barData") }
+    )
 
 
 }
 
 fun dameValores(): List<BarData> = listOf<BarData>(
-        BarData(yValue = 2f, xValue = "Test"),
-        BarData(yValue = 105f, xValue = "Test"),
-        BarData(yValue = 14f, xValue = "Test"),
-        BarData(yValue = 100f, xValue = "Test"),
-    )
+    BarData(yValue = 2f, xValue = "Test"),
+    BarData(yValue = 105f, xValue = "Test"),
+    BarData(yValue = 14f, xValue = "Test"),
+    BarData(yValue = 100f, xValue = "Test"),
+)

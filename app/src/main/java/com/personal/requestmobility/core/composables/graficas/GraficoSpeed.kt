@@ -13,22 +13,27 @@ import com.himanshoe.charty.common.ChartColor
 import com.himanshoe.charty.common.TextConfig
 import com.himanshoe.charty.common.asSolidChartColor
 import com.personal.requestmobility.core.composables.componentes.Marco
+import com.personal.requestmobility.core.composables.tabla.Fila
 
-
+/*
 @Preview
 @Composable
 fun TestGraficoSpeed() {
     GraficoSpeed("Test", dameValoresTest())
-}
+}*/
 
 
 @Composable
-fun GraficoSpeed(titulo: String = "", listaValores: List<ElementoGrafica>) {
+fun GraficoSpeed(titulo: String = "",
+                 listaValores: List<Fila>,
+                 posicionX: Int = 0 ,
+                 posivionY: Int = 1,
+) {
     Marco(titulo = titulo) {
         val v = listaValores.first()
         SpeedometerProgressBar(
             progress = { 0.50f },
-            title = v.leyenda,
+            title = "SIN DESARROLLAR",
             modifier = Modifier.size(300.dp),
             titleTextConfig = TextConfig.default().copy(
                 fontSize = 20.sp,

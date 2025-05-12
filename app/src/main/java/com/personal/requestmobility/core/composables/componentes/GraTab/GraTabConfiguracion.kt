@@ -11,7 +11,7 @@ data class GraTabConfiguracion(
     val orientacion: GraTabOrientacion = GraTabOrientacion.VERTICAL,
     val tipo: GraTabTipoGrafica = GraTabTipoGrafica.BARRAS_ANCHAS_VERTICALES,
     val titulo: String = "GR 001",
-    val limiteElementos: Int = 8,
+    val limiteElementos: Int = 5,
     val mostrarEtiquetas: Boolean = true,
     val target: Float = 0f,
     val ordenado: Boolean = false,
@@ -39,5 +39,8 @@ data class GraTabConfiguracion(
         Color(0xFF800080),
         Color(0xFF008000),
         Color(0xFF000080),
-    )
+    ),
+    var ajustarContenidoAncho: Boolean = true,
+    var indicadorColor: Boolean = true,
+    var filasColor: Boolean = true
 )

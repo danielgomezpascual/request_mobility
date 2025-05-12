@@ -19,7 +19,8 @@ import com.himanshoe.charty.common.asSolidChartColor
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabConfiguracion
 import com.personal.requestmobility.core.composables.componentes.Marco
-
+import com.personal.requestmobility.core.composables.tabla.Fila
+/*
 @Preview
 @Composable
 fun TestGraficoBarrasVerticales() {
@@ -40,15 +41,15 @@ fun TestGraficoBarrasVerticales() {
         )
     }
 
-    GraficoBarrasVerticales(Modifier, listaValores  /*generateMockBarData(3, true, false)*/)
+    GraficoBarrasVerticales(Modifier, listaValores /)
 }
-
+*/
 
 @Composable
 fun GraficoBarrasVerticalesConMarco(
     modifier: Modifier = Modifier,
     titulo: String = "",
-    listaValores: List<ElementoGrafica>,
+    listaValores: List<Fila>,
     target: Float = 1f) {
 
     Marco(modifier = modifier, titulo = titulo) {
@@ -62,11 +63,21 @@ fun GraficoBarrasVerticalesConMarco(
 fun GraficoBarrasVerticales(
     modifier: Modifier = Modifier,
 
-    listaValores: List<ElementoGrafica>,
-  ) {
+    listaValores: List<Fila>,
+    posicionX: Int = 0,
+    posivionY: Int = 1,
+) {
+    val data =  listaValores.map { fila ->
+        BarData(
+            xValue = fila.celdas[posicionX].valor,
+            yValue = fila.celdas[posivionY].valor.toFloat(),
+            barColor = (fila.color).asSolidChartColor()
+        )
+    }
 
 
-    val data = listaValores.map {
+
+  /*  val data = listaValores.map {
         BarData(
             xValue = "${it.y}",
             yValue = it.y,
@@ -74,7 +85,7 @@ fun GraficoBarrasVerticales(
 
             //, label = it.leyenda
         )
-    }
+    }*/
 
 
     LineBarChart(

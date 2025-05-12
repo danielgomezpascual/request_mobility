@@ -8,42 +8,52 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.himanshoe.charty.bar.model.BarData
 import com.himanshoe.charty.common.ChartColor
 import com.himanshoe.charty.common.LabelConfig
+import com.himanshoe.charty.common.asSolidChartColor
 import com.himanshoe.charty.line.LineChart
 import com.himanshoe.charty.line.config.InteractionTooltipConfig
 import com.himanshoe.charty.line.config.LineChartColorConfig
 import com.himanshoe.charty.line.config.LineChartConfig
 import com.himanshoe.charty.line.config.LineConfig
 import com.himanshoe.charty.line.model.LineData
-
+import com.personal.requestmobility.core.composables.tabla.Fila
+/*
 @Preview
 @Composable
 fun TestGraficoLineas() {
     GraficoLineas(Modifier, dameValoresTest(), 8f /*generateMockBarData(3, true, false)*/)
-}
+}*/
 
 
 @Composable
 fun GraficoLineas(modifier: Modifier = Modifier,
-                  listaValores: List<ElementoGrafica>,
-                  target: Float = 0f) {
+                  listaValores: List<Fila>,
+                  posicionX: Int = 0,
+                  posivionY: Int = 1,
+                ) {
 
-    val data = listaValores.map {
+    /*val data = listaValores.map {
         LineData(
             xValue = it.leyenda,
             yValue = it.y,
 
             )
+    }*/
+
+    val data =  listaValores.map { fila ->
+        LineData(
+            xValue = fila.celdas[posicionX].valor,
+            yValue = fila.celdas[posivionY].valor.toFloat(),
+        )
     }
-
-
     LineChart(
         modifier = modifier
             .fillMaxSize()
             .padding(50.dp, 5.dp),
 
-        target = target,
+        target = null,
         colorConfig = LineChartColorConfig.default().copy(
             lineColor = ChartColor.Solid(Color(0xFF8D79F6)),
             lineFillColor = ChartColor.Gradient(

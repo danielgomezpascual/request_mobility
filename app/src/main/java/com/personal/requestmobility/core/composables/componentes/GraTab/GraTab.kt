@@ -46,54 +46,40 @@ fun GraTab(modifier: Modifier = Modifier,
 
     val configGrafica = graTabData.graTabConfiguracion
 
-    if (configGrafica.ordenado) {
-        graTabData.ordenarElementos()
-    }
-
-    if (configGrafica.limiteElementos > 0) {
-        graTabData.limiteElementos()
-    }
     graTabData.setupValores()
 
-//--------------------------------------------------
-
-
-    // var datosTabla: ValoresTabla = ValoresTabla()
-
-    // if (graTabData.graTabConfiguracion.mostrarTabla) {
-
-
-    val valoresTabla by remember { mutableStateOf<ValoresTabla>(graTabData.valoresTabla) }
     //variable para controlar el estado de las filas que se estan presentado en la tabla
     var filas by remember { mutableStateOf<List<Fila>>(graTabData.valoresTabla.filas) }
-    //var filas = tabla.filas
-
-    //variable para controlar la fila que se selecciono
-    //var filaSeleccionada by remember { mutableStateOf<Fila>(filas.first()) }
 
     //varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
     var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }
 
 
 //--------------------------------------------------
+    val filasPintar = filas.filter { it.visible == true } //solo pintamos las filas que estas visibles, el resto no.
+
     var tablaComposable: @Composable () -> Unit = {}
     var graficaComposable: @Composable () -> Unit = {}
 
     if (graTabData.graTabConfiguracion.mostrarGrafica) {
         val listaElementosMostrarGrafica: List<ElementoGrafica> = ValoresGrafica.fromValoresTabla(filas, graTabData.graTabConfiguracion.campoAgrupacionTabla, graTabData.graTabConfiguracion.campoSumaValorTabla).elementos
-        graficaComposable = dameTipoGrafica(configGrafica, modifier, listaElementosMostrarGrafica)
+        graficaComposable = dameTipoGrafica(
+            graTabConfiguracion = configGrafica,
+            modifier = modifier,
+            datos = listaElementosMostrarGrafica,
+            filas = filasPintar
+        )
     }
 
     if (graTabData.graTabConfiguracion.mostrarTabla) {
         tablaComposable = dameTipoTabla(
             graTabConfiguracion = configGrafica,
             modifier = modifier,
-            valoresTabla = valoresTabla,
-            filas = filas,
+           // valoresTabla = valoresTabla,
+            filas = filasPintar,
             celdasFiltro = celdasFiltro,
 
             onClickSeleccionarFila = { fila ->
-                //filaSeleccionada = fila
                 filas = filas.map { f -> f.copy(seleccionada = (f == fila)) }
                 celdasFiltro = fila.celdas
             },
@@ -229,14 +215,24 @@ fun GraficaConTablaVertical(modifier: Modifier = Modifier,
 }
 
 @Composable
-fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier, datos: List<ElementoGrafica>): @Composable () -> Unit {
+fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
+                    modifier: Modifier,
+                    datos: List<ElementoGrafica>,
+                    filas: List<Fila>,
+                    posicionX: Int = 0,
+                    posivionY: Int = 1): @Composable () -> Unit {
     if (!graTabConfiguracion.mostrarGrafica) {
         return {}
     }
-    var datosPintar = datos
-    if (!graTabConfiguracion.mostrarEtiquetas) {
-        datosPintar = datos.map { it.copy(leyenda = "") }
-    }
+    var datosPintar = filas
+
+
+    /*if (!graTabConfiguracion.mostrarEtiquetas) {
+        datosPintar = filas.mapIndexed {index,
+
+
+        }
+    }*/
 
     return {
         when (graTabConfiguracion.tipo) {
@@ -247,7 +243,8 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier
                     .height(300.dp)) {*/
                 GraficoBarras(
                     modifier = modifier,
-                    listaValores = datosPintar
+                    //listaValores = datosPintar
+                    listaValores =  datosPintar
                 )
                 //}
             }
@@ -255,14 +252,16 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier
             GraTabTipoGrafica.BARRAS_FINAS_VERTICALES -> {
                 GraficoBarrasVerticales(
                     modifier = modifier,
-                    listaValores = datosPintar
+                    //listaValores = datosPintar
+                    listaValores =  datosPintar
                 )
             }
 
             GraTabTipoGrafica.CIRCULAR -> {
                 GraficoCircular(
                     modifier = modifier,
-                    listaValores = datosPintar
+                    //listaValores = datosPintar
+                    listaValores =  datosPintar
                 )
 
             }
@@ -271,7 +270,8 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier
 
                 GraficoAnillo(
                     modifier = modifier,
-                    listaValores = datosPintar
+                    //listaValores = datosPintar
+                    listaValores =  datosPintar
                 )
 
             }
@@ -279,7 +279,8 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier
             GraTabTipoGrafica.LINEAS -> {
                 GraficoLineas(
                     modifier = modifier,
-                    listaValores = datosPintar
+                    //listaValores = datosPintar
+                    listaValores =  datosPintar
                 )
             }
         }
@@ -291,7 +292,7 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion, modifier: Modifier
 @Composable
 fun dameTipoTabla(graTabConfiguracion: GraTabConfiguracion,
                   modifier: Modifier,
-                  valoresTabla: ValoresTabla,
+                  //valoresTabla: ValoresTabla,
                   filas: List<Fila>,
                   celdasFiltro: List<Celda>,
                   onClickSeleccionarFiltro: (Celda) -> Unit,
@@ -301,7 +302,8 @@ fun dameTipoTabla(graTabConfiguracion: GraTabConfiguracion,
         return {
             Tabla(
                 modifier = Modifier.fillMaxSize(),
-                tabla = valoresTabla,
+                graTabConfiguracion = graTabConfiguracion,
+                //tabla = valoresTabla,
                 filas = filas,
                 celdasFiltro = celdasFiltro,
                 mostrarTitulos = graTabConfiguracion.mostrarTituloTabla,

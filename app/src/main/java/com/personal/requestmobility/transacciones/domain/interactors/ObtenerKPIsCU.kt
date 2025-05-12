@@ -12,7 +12,7 @@ class ObtenerKPIsCU(private val repoTransacciones: IRepoTransacciones) {
 
     suspend fun obtenerListaKPIs(): List<Kpi> {
         var listaKpi: List<Kpi> = emptyList()
-        //listaKpi = listaKpi.plus(dameEjemploKPI_4())
+
         listaKpi = listaKpi.plus(dameEjemploKPI_0())
         listaKpi = listaKpi.plus(dameEjemploKPI_1())
         listaKpi = listaKpi.plus(dameEjemploKPI_2())

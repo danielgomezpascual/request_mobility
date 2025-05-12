@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabConfiguracion
 import com.personal.requestmobility.core.composables.componentes.Marco
 import com.personal.requestmobility.core.composables.listas.Lista
 import com.personal.requestmobility.core.utils.if3
@@ -89,7 +90,8 @@ fun TablaDatos(modifier: Modifier = Modifier,
 
 @Composable
 fun Tabla(modifier: Modifier = Modifier,
-          tabla: ValoresTabla,
+          graTabConfiguracion: GraTabConfiguracion,
+          //tabla: ValoresTabla,
           filas: List<Fila>,
           celdasFiltro: List<Celda>,
           mostrarTitulos: Boolean = true,
@@ -97,9 +99,9 @@ fun Tabla(modifier: Modifier = Modifier,
           onClickSeleccionarFila: (Fila)-> Unit) {
 
     val estadoScroll = rememberScrollState()
-    val indicadorColor = tabla.indicadorColor
-    val filasColor = tabla.filasColor
-    val ajustarContenidoAncho = tabla.ajustarContenidoAncho
+    val indicadorColor = graTabConfiguracion.indicadorColor
+    val filasColor = graTabConfiguracion.filasColor
+    val ajustarContenidoAncho = graTabConfiguracion.ajustarContenidoAncho
     var modifierColumn = modifier
     if (!ajustarContenidoAncho) {
         modifierColumn = modifierColumn.horizontalScroll(estadoScroll)
@@ -193,7 +195,7 @@ fun Tabla(modifier: Modifier = Modifier,
         }
 
 
-        Lista(filas.filter { it.visible == true }) { fila ->
+        Lista(filas) { fila ->
             FilaTablaDatos(fila, indicadorColor, filasColor, ajustarContenidoAncho) { fila ->
               /*  filaSeleccionada = fila
                 celdasFiltro = fila.celdas*/
