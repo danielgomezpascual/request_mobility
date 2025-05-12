@@ -34,13 +34,6 @@ fun GraficoLineas(modifier: Modifier = Modifier,
                   posivionY: Int = 1,
                 ) {
 
-    /*val data = listaValores.map {
-        LineData(
-            xValue = it.leyenda,
-            yValue = it.y,
-
-            )
-    }*/
 
     val data =  listaValores.map { fila ->
         LineData(
@@ -48,7 +41,7 @@ fun GraficoLineas(modifier: Modifier = Modifier,
             yValue = fila.celdas[posivionY].valor.toFloat(),
         )
     }
-    LineChart(
+       LineChart(
         modifier = modifier
             .fillMaxSize()
             .padding(50.dp, 5.dp),
@@ -63,7 +56,7 @@ fun GraficoLineas(modifier: Modifier = Modifier,
             )
         ),
         data = {
-            data
+         data
         },
         chartConfig = LineChartConfig(
             lineConfig = LineConfig(showValueOnLine = true, drawPointerCircle = true, lineCap = StrokeCap.Round),

@@ -61,21 +61,20 @@ fun GraTab(modifier: Modifier = Modifier,
     var tablaComposable: @Composable () -> Unit = {}
     var graficaComposable: @Composable () -> Unit = {}
 
-    if (graTabData.graTabConfiguracion.mostrarGrafica) {
-        val listaElementosMostrarGrafica: List<ElementoGrafica> = ValoresGrafica.fromValoresTabla(filas, graTabData.graTabConfiguracion.campoAgrupacionTabla, graTabData.graTabConfiguracion.campoSumaValorTabla).elementos
+
+
         graficaComposable = dameTipoGrafica(
             graTabConfiguracion = configGrafica,
             modifier = modifier,
-            datos = listaElementosMostrarGrafica,
             filas = filasPintar
         )
-    }
 
-    if (graTabData.graTabConfiguracion.mostrarTabla) {
+
+
         tablaComposable = dameTipoTabla(
             graTabConfiguracion = configGrafica,
             modifier = modifier,
-           // valoresTabla = valoresTabla,
+
             filas = filasPintar,
             celdasFiltro = celdasFiltro,
 
@@ -107,7 +106,7 @@ fun GraTab(modifier: Modifier = Modifier,
 
             }
         )
-    }
+
 
     when (configGrafica.orientacion) {
         GraTabOrientacion.VERTICAL -> {
@@ -217,7 +216,6 @@ fun GraficaConTablaVertical(modifier: Modifier = Modifier,
 @Composable
 fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
                     modifier: Modifier,
-                    datos: List<ElementoGrafica>,
                     filas: List<Fila>,
                     posicionX: Int = 0,
                     posivionY: Int = 1): @Composable () -> Unit {
@@ -238,49 +236,48 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
         when (graTabConfiguracion.tipo) {
             GraTabTipoGrafica.BARRAS_ANCHAS_VERTICALES -> {
 
-                /*Box(Modifier
-                    .width(500.dp)
-                    .height(300.dp)) {*/
                 GraficoBarras(
                     modifier = modifier,
-                    //listaValores = datosPintar
-                    listaValores =  datosPintar
+                    listaValores = datosPintar,
+                    posicionX =posicionX,
+                    posivionY = posivionY
                 )
-                //}
+
             }
 
             GraTabTipoGrafica.BARRAS_FINAS_VERTICALES -> {
                 GraficoBarrasVerticales(
                     modifier = modifier,
-                    //listaValores = datosPintar
-                    listaValores =  datosPintar
+                    listaValores = datosPintar,
+                    posicionX =posicionX,
+                    posivionY = posivionY
                 )
             }
 
             GraTabTipoGrafica.CIRCULAR -> {
                 GraficoCircular(
                     modifier = modifier,
-                    //listaValores = datosPintar
-                    listaValores =  datosPintar
+                    listaValores = datosPintar,
+                    posicionX =posicionX,
+                    posivionY = posivionY
                 )
-
             }
 
             GraTabTipoGrafica.ANILLO -> {
-
                 GraficoAnillo(
                     modifier = modifier,
-                    //listaValores = datosPintar
-                    listaValores =  datosPintar
+                    listaValores = datosPintar,
+                    posicionX =posicionX,
+                    posivionY = posivionY
                 )
-
             }
 
             GraTabTipoGrafica.LINEAS -> {
                 GraficoLineas(
                     modifier = modifier,
-                    //listaValores = datosPintar
-                    listaValores =  datosPintar
+                    listaValores = datosPintar,
+                    posicionX =posicionX,
+                    posivionY = posivionY
                 )
             }
         }
@@ -292,7 +289,6 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
 @Composable
 fun dameTipoTabla(graTabConfiguracion: GraTabConfiguracion,
                   modifier: Modifier,
-                  //valoresTabla: ValoresTabla,
                   filas: List<Fila>,
                   celdasFiltro: List<Celda>,
                   onClickSeleccionarFiltro: (Celda) -> Unit,
