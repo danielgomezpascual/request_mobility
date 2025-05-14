@@ -1,15 +1,13 @@
-package com.personal.requestmobility.core.composables.componentes.GraTab
+package com.personal.requestmobility.core.composables.componentes.panel
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.componentes.Colores
 
-data class GraTabConfiguracion(
-    val orientacion: GraTabOrientacion = GraTabOrientacion.VERTICAL,
-    val tipo: GraTabTipoGrafica = GraTabTipoGrafica.BARRAS_ANCHAS_VERTICALES,
+data class PanelConfiguracion(
+    val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,
+    val tipo: PanelTipoGrafica = PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES,
     val titulo: String = "GR 001",
     val limiteElementos: Int = 5,
     val mostrarEtiquetas: Boolean = true,

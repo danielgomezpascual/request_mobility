@@ -2,9 +2,11 @@ package com.personal.requestmobility.core.composables.tabla
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.core.composables.formas.Circulo
+import com.personal.requestmobility.core.utils.if3
 
 
 @Composable
@@ -21,18 +25,25 @@ fun CeldaFiltro(
     celda: Celda,
     alineacion: TextAlign = TextAlign.Unspecified,
     icono: Icons? = null,
-    onClick: (Celda) -> Unit = {}
+    onClickSeleccion: (Celda) -> Unit = {},
+    onClickInvertir: (Celda) -> Unit = {},
 
 ) {
 
-    Text(
-        text = "[${celda.seleccionada}]:  ${celda.titulo} = ${celda.valor}",
-        modifier = modifier
-            .background(celda.fondoCelda)
-            .padding(4.dp)
-            .clickable { onClick(celda) },
-        color = celda.colorCelda,
-        style = MaterialTheme.typography.bodySmall,
-        textAlign = alineacion
-    )
+    Row(modifier = Modifier.clickable { onClickSeleccion(celda) },) {
+
+        Circulo(color = if3(celda.seleccionada, Color.Yellow, Color.LightGray))
+        Text(
+            text = "[${celda.seleccionada}]:  ${celda.titulo} = ${celda.valor}",
+            modifier = modifier
+                .background(celda.fondoCelda)
+                .padding(4.dp),
+
+            color = celda.colorCelda,
+            style = MaterialTheme.typography.bodySmall,
+            textAlign = alineacion
+        )
+        Button(onClick = {onClickInvertir(celda)}) { LabelCelda("Invertir")}
+    }
+
 }

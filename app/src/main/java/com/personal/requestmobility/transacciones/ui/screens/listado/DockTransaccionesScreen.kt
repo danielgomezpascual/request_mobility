@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.BotonNormal
-import com.personal.requestmobility.core.composables.componentes.GraTab.GraTab
+import com.personal.requestmobility.core.composables.componentes.panel.GraTab
 import com.personal.requestmobility.core.composables.edittext.TextBuscador
 import com.personal.requestmobility.core.composables.labels.LabelTituloTabla
 import com.personal.requestmobility.core.composables.listas.Lista
@@ -201,10 +201,10 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
                         uiState.kpis.forEach { kpi ->
                             GraTab(
                                 modifier = modifier,
-                                graTabData = kpi.graTabData
+                                panelData = kpi.panelData
                             )
 
-                            App.log.d(kpi.graTabData)
+                            App.log.d(kpi.panelData)
                         }
 
                         /*  GraTab(

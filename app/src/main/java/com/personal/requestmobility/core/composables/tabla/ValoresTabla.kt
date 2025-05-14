@@ -96,7 +96,8 @@ data class Celda(val valor: String,
                      LabelCeldaTitulo(valor = titulo, color = colorTitulo, fondo = fondoTitulo)
                  },
 
-                val seleccionada : Boolean = false
+                val seleccionada : Boolean = false,
+                val filtroInvertido : Boolean = false
 )
 
 fun ValoresTabla.toValoresGrafica(columnaTexto: Int, columnaValor: Int): ValoresGrafica {

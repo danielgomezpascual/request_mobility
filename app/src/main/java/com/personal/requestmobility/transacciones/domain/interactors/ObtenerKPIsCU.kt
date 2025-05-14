@@ -1,12 +1,8 @@
 package com.personal.requestmobility.transacciones.domain.interactors
 
-import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabConfiguracion
-import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabData
-import com.personal.requestmobility.core.composables.graficas.ValoresGrafica
 import com.personal.requestmobility.transacciones.domain.entidades.Kpi
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 import com.personal.requestmobility.transacciones.domain.repositorios.IRepoTransacciones
-import org.koin.java.KoinJavaComponent.inject
 
 class ObtenerKPIsCU(private val repoTransacciones: IRepoTransacciones) {
 

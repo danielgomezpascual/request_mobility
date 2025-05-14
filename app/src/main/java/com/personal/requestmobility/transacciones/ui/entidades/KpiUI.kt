@@ -2,27 +2,26 @@ package com.personal.requestmobility.transacciones.ui.entidades
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabConfiguracion
-import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabData
-import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabTipoGrafica
-import com.personal.requestmobility.core.composables.graficas.ValoresGrafica
+import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
+import com.personal.requestmobility.core.composables.componentes.panel.PanelData
+import com.personal.requestmobility.core.composables.componentes.panel.PanelTipoGrafica
 import com.personal.requestmobility.transacciones.domain.entidades.Kpi
 
 data class KpiUI(
-    val nombre: String, val sql: String, val graTabData: GraTabData,
+    val nombre: String, val sql: String, val panelData: PanelData,
 ) {
     companion object {
         fun from(kpi: Kpi, i: Int): KpiUI {
 
-            val tipoGrafica: GraTabTipoGrafica = when (i) {
-                0 -> GraTabTipoGrafica.BARRAS_FINAS_VERTICALES
-                1 -> GraTabTipoGrafica.CIRCULAR
-                2 -> GraTabTipoGrafica.LINEAS
-                3 -> GraTabTipoGrafica.BARRAS_ANCHAS_VERTICALES
-                else -> GraTabTipoGrafica.ANILLO
+            val tipoGrafica: PanelTipoGrafica = when (i) {
+                0 -> PanelTipoGrafica.BARRAS_FINAS_VERTICALES
+                1 -> PanelTipoGrafica.CIRCULAR
+                2 -> PanelTipoGrafica.LINEAS
+                3 -> PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES
+                else -> PanelTipoGrafica.ANILLO
             }
 
-            var configuracion = GraTabConfiguracion(titulo = kpi.nombre, tipo = tipoGrafica)
+            var configuracion = PanelConfiguracion(titulo = kpi.nombre, tipo = tipoGrafica)
             var valoresTabla = kpi.resultadoSQL.toValoresTabla()
             if (i == 0) {
                 configuracion = configuracion.copy(width = 1400.dp, height = 200.dp,
@@ -32,15 +31,15 @@ data class KpiUI(
                 //valoresTabla = valoresTabla.copy(/*titulos =  titulos,*/  filasColor = false)
             }
 
-            val grabTabData = GraTabData(
-                graTabConfiguracion = configuracion,
+            val grabTabData = PanelData(
+                panelConfiguracion = configuracion,
                 valoresTabla = valoresTabla
             )
 
             return KpiUI(
                 nombre = kpi.nombre,
                 sql = kpi.sql,
-                graTabData = grabTabData
+                panelData = grabTabData
             )
         }
 

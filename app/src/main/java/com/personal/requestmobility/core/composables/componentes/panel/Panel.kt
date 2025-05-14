@@ -1,4 +1,4 @@
-package com.personal.requestmobility.core.composables.componentes.GraTab
+package com.personal.requestmobility.core.composables.componentes.panel
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,39 +17,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.Marco
 import com.personal.requestmobility.core.composables.graficas.GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.GraficoBarras
 import com.personal.requestmobility.core.composables.graficas.GraficoBarrasVerticales
 import com.personal.requestmobility.core.composables.graficas.GraficoCircular
 import com.personal.requestmobility.core.composables.graficas.GraficoLineas
-import com.personal.requestmobility.core.composables.graficas.ElementoGrafica
-import com.personal.requestmobility.core.composables.graficas.ValoresGrafica
 import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.Tabla
 
-import com.personal.requestmobility.core.composables.tabla.ValoresTabla
-import com.personal.requestmobility.core.composables.tabla.toValoresGrafica
 import kotlin.collections.filter
 import kotlin.collections.map
 
 
 @Composable
 fun GraTab(modifier: Modifier = Modifier,
-           graTabData: GraTabData
+           panelData: PanelData
 
 ) {
     //val graTabData by remember { mutableStateOf<GraTabData>(gr) }
 
 
-    val configGrafica = graTabData.graTabConfiguracion
+    val configGrafica = panelData.panelConfiguracion
 
-    graTabData.setupValores()
+    panelData.setupValores()
 
     //variable para controlar el estado de las filas que se estan presentado en la tabla
-    var filas by remember { mutableStateOf<List<Fila>>(graTabData.valoresTabla.filas) }
+    var filas by remember { mutableStateOf<List<Fila>>(panelData.valoresTabla.filas) }
 
     //varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
     var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }
@@ -64,7 +59,7 @@ fun GraTab(modifier: Modifier = Modifier,
 
 
         graficaComposable = dameTipoGrafica(
-            graTabConfiguracion = configGrafica,
+            panelConfiguracion = configGrafica,
             modifier = modifier,
             filas = filasPintar
         )
@@ -72,7 +67,7 @@ fun GraTab(modifier: Modifier = Modifier,
 
 
         tablaComposable = dameTipoTabla(
-            graTabConfiguracion = configGrafica,
+            panelConfiguracion = configGrafica,
             modifier = modifier,
 
             filas = filasPintar,
@@ -81,6 +76,16 @@ fun GraTab(modifier: Modifier = Modifier,
             onClickSeleccionarFila = { fila ->
                 filas = filas.map { f -> f.copy(seleccionada = (f == fila)) }
                 celdasFiltro = fila.celdas
+            },
+            onClickInvertir = {cfi->
+                celdasFiltro = celdasFiltro.map { c ->
+                    if (c.titulo.equals(cfi.titulo)) {
+                        cfi.copy(filtroInvertido = !cfi.filtroInvertido)
+                    } else {
+                        c
+                    }
+                }
+
             },
             onClickSeleccionarFiltro = { cf ->
                 celdasFiltro = celdasFiltro.map { c ->
@@ -109,19 +114,19 @@ fun GraTab(modifier: Modifier = Modifier,
 
 
     when (configGrafica.orientacion) {
-        GraTabOrientacion.VERTICAL -> {
+        PanelOrientacion.VERTICAL -> {
             GraficaConTablaVertical(
                 modifier = modifier,
-                graTabConfiguracion = configGrafica,
+                panelConfiguracion = configGrafica,
                 grafica = { graficaComposable() },
                 tabla = { tablaComposable() }
             )
         }
 
-        GraTabOrientacion.HORIZONTAL -> {
+        PanelOrientacion.HORIZONTAL -> {
             GraficaConTablaHorizontal(
                 modifier = modifier,
-                graTabConfiguracion = configGrafica,
+                panelConfiguracion = configGrafica,
                 grafica = { graficaComposable() },
                 tabla = { tablaComposable() }
             )
@@ -132,7 +137,7 @@ fun GraTab(modifier: Modifier = Modifier,
 
 @Composable
 fun GraficaConTablaHorizontal(modifier: Modifier = Modifier,
-                              graTabConfiguracion: GraTabConfiguracion = GraTabConfiguracion(),
+                              panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
                               grafica: @Composable () -> Unit,
                               tabla: @Composable () -> Unit) {
     Column(
@@ -142,24 +147,24 @@ fun GraficaConTablaHorizontal(modifier: Modifier = Modifier,
     ) {
 
         val m = Modifier
-            .width(graTabConfiguracion.width)
-            .height(graTabConfiguracion.height)
+            .width(panelConfiguracion.width)
+            .height(panelConfiguracion.height)
 
-        Marco(titulo = graTabConfiguracion.titulo, modifier = m, componente = {
+        Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
             Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                if (graTabConfiguracion.mostrarGrafica) {
+                if (panelConfiguracion.mostrarGrafica) {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth(graTabConfiguracion.espacioGrafica)
+                            .fillMaxWidth(panelConfiguracion.espacioGrafica)
                     ) {
                         grafica()
                     }
                 }
-                if (graTabConfiguracion.mostrarTabla) {
+                if (panelConfiguracion.mostrarTabla) {
                     Box(
                         modifier = Modifier
-                            .padding(graTabConfiguracion.paddingTablaHorizontal)
-                            .fillMaxWidth(graTabConfiguracion.espacioTabla)
+                            .padding(panelConfiguracion.paddingTablaHorizontal)
+                            .fillMaxWidth(panelConfiguracion.espacioTabla)
                     ) {
                         tabla()
                     }
@@ -173,7 +178,7 @@ fun GraficaConTablaHorizontal(modifier: Modifier = Modifier,
 
 @Composable
 fun GraficaConTablaVertical(modifier: Modifier = Modifier,
-                            graTabConfiguracion: GraTabConfiguracion = GraTabConfiguracion(),
+                            panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
                             grafica: @Composable () -> Unit,
                             tabla: @Composable () -> Unit) {
     Column(
@@ -183,24 +188,24 @@ fun GraficaConTablaVertical(modifier: Modifier = Modifier,
     ) {
 
         val m = Modifier
-            .width(graTabConfiguracion.width)
-            .height(graTabConfiguracion.height)
+            .width(panelConfiguracion.width)
+            .height(panelConfiguracion.height)
 
-        Marco(titulo = graTabConfiguracion.titulo, modifier = m, componente = {
+        Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
             Column() {
-                if (graTabConfiguracion.mostrarGrafica) {
+                if (panelConfiguracion.mostrarGrafica) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight(graTabConfiguracion.espacioGrafica)
+                            .fillMaxHeight(panelConfiguracion.espacioGrafica)
                     ) {
                         grafica()
                     }
                 }
-                if (graTabConfiguracion.mostrarTabla) {
+                if (panelConfiguracion.mostrarTabla) {
                     Box(
                         modifier = Modifier
-                            .padding(graTabConfiguracion.paddingTablaVertical)
+                            .padding(panelConfiguracion.paddingTablaVertical)
                             .fillMaxSize()
 
                     ) {
@@ -214,12 +219,12 @@ fun GraficaConTablaVertical(modifier: Modifier = Modifier,
 }
 
 @Composable
-fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
+fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                     modifier: Modifier,
                     filas: List<Fila>,
                     posicionX: Int = 0,
                     posivionY: Int = 1): @Composable () -> Unit {
-    if (!graTabConfiguracion.mostrarGrafica) {
+    if (!panelConfiguracion.mostrarGrafica) {
         return {}
     }
     var datosPintar = filas
@@ -233,8 +238,8 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
     }*/
 
     return {
-        when (graTabConfiguracion.tipo) {
-            GraTabTipoGrafica.BARRAS_ANCHAS_VERTICALES -> {
+        when (panelConfiguracion.tipo) {
+            PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES -> {
 
                 GraficoBarras(
                     modifier = modifier,
@@ -245,7 +250,7 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
 
             }
 
-            GraTabTipoGrafica.BARRAS_FINAS_VERTICALES -> {
+            PanelTipoGrafica.BARRAS_FINAS_VERTICALES -> {
                 GraficoBarrasVerticales(
                     modifier = modifier,
                     listaValores = datosPintar,
@@ -254,7 +259,7 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
                 )
             }
 
-            GraTabTipoGrafica.CIRCULAR -> {
+            PanelTipoGrafica.CIRCULAR -> {
                 GraficoCircular(
                     modifier = modifier,
                     listaValores = datosPintar,
@@ -263,7 +268,7 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
                 )
             }
 
-            GraTabTipoGrafica.ANILLO -> {
+            PanelTipoGrafica.ANILLO -> {
                 GraficoAnillo(
                     modifier = modifier,
                     listaValores = datosPintar,
@@ -272,7 +277,7 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
                 )
             }
 
-            GraTabTipoGrafica.LINEAS -> {
+            PanelTipoGrafica.LINEAS -> {
                 GraficoLineas(
                     modifier = modifier,
                     listaValores = datosPintar,
@@ -287,23 +292,25 @@ fun dameTipoGrafica(graTabConfiguracion: GraTabConfiguracion,
 }
 
 @Composable
-fun dameTipoTabla(graTabConfiguracion: GraTabConfiguracion,
+fun dameTipoTabla(panelConfiguracion: PanelConfiguracion,
                   modifier: Modifier,
                   filas: List<Fila>,
                   celdasFiltro: List<Celda>,
                   onClickSeleccionarFiltro: (Celda) -> Unit,
+                  onClickInvertir: (Celda) -> Unit,
                   onClickSeleccionarFila: (Fila) -> Unit): @Composable () -> Unit {
 
-    if (graTabConfiguracion.mostrarTabla) {
+    if (panelConfiguracion.mostrarTabla) {
         return {
             Tabla(
                 modifier = Modifier.fillMaxSize(),
-                graTabConfiguracion = graTabConfiguracion,
+                panelConfiguracion = panelConfiguracion,
                 //tabla = valoresTabla,
                 filas = filas,
                 celdasFiltro = celdasFiltro,
-                mostrarTitulos = graTabConfiguracion.mostrarTituloTabla,
+                mostrarTitulos = panelConfiguracion.mostrarTituloTabla,
                 onClickSeleccionarFiltro = onClickSeleccionarFiltro,
+                onClickInvertir = onClickInvertir,
                 onClickSeleccionarFila = onClickSeleccionarFila
             )
         }

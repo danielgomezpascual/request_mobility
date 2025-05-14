@@ -12,21 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.componentes.GraTab.GraTabConfiguracion
-import com.personal.requestmobility.core.composables.componentes.Marco
+import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
+import com.personal.requestmobility.core.composables.labels.Titulo
 import com.personal.requestmobility.core.composables.listas.Lista
 import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.transacciones.ui.screens.composables.ModalInferiorFiltros
@@ -81,27 +75,28 @@ fun TestTablaDatos() {
 fun TablaDatos(modifier: Modifier = Modifier,
                titulo: String = "",
                tabla: ValoresTabla) {
-/*
-    Marco(modifier = modifier, titulo = titulo) {
-        Tabla(modifier, tabla)
-    }*/
+    /*
+        Marco(modifier = modifier, titulo = titulo) {
+            Tabla(modifier, tabla)
+        }*/
 }
 
 
 @Composable
 fun Tabla(modifier: Modifier = Modifier,
-          graTabConfiguracion: GraTabConfiguracion,
-          //tabla: ValoresTabla,
+          panelConfiguracion: PanelConfiguracion,
+    //tabla: ValoresTabla,
           filas: List<Fila>,
           celdasFiltro: List<Celda>,
           mostrarTitulos: Boolean = true,
-          onClickSeleccionarFiltro: (Celda)->Unit,
-          onClickSeleccionarFila: (Fila)-> Unit) {
+          onClickSeleccionarFiltro: (Celda) -> Unit,
+          onClickInvertir: (Celda) -> Unit,
+          onClickSeleccionarFila: (Fila) -> Unit) {
 
     val estadoScroll = rememberScrollState()
-    val indicadorColor = graTabConfiguracion.indicadorColor
-    val filasColor = graTabConfiguracion.filasColor
-    val ajustarContenidoAncho = graTabConfiguracion.ajustarContenidoAncho
+    val indicadorColor = panelConfiguracion.indicadorColor
+    val filasColor = panelConfiguracion.filasColor
+    val ajustarContenidoAncho = panelConfiguracion.ajustarContenidoAncho
     var modifierColumn = modifier
     if (!ajustarContenidoAncho) {
         modifierColumn = modifierColumn.horizontalScroll(estadoScroll)
@@ -109,14 +104,14 @@ fun Tabla(modifier: Modifier = Modifier,
 
 
     //variable para controlar el estado de las filas que se estan presentado en la tabla
- /*   var filas by remember { mutableStateOf<List<Fila>>(tabla.filas) }
-    //var filas = tabla.filas
+    /*   var filas by remember { mutableStateOf<List<Fila>>(tabla.filas) }
+       //var filas = tabla.filas
 
-    //variable para controlar la fila que se selecciono
-    var filaSeleccionada by remember { mutableStateOf<Fila>(filas.first()) }
+       //variable para controlar la fila que se selecciono
+       var filaSeleccionada by remember { mutableStateOf<Fila>(filas.first()) }
 
-    //varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
-    var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }*/
+       //varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
+       var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }*/
 
 
     Column(modifierColumn) {
@@ -124,9 +119,11 @@ fun Tabla(modifier: Modifier = Modifier,
 
         ModalInferiorFiltros() {
             Column {
+                Titulo("Filtro")
                 Lista(celdasFiltro) { celdaFiltro ->
-                    CeldaFiltro(celda = celdaFiltro) { cf -> onClickSeleccionarFiltro(cf)
-                       }
+                    CeldaFiltro(celda = celdaFiltro,
+                        onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
+                        onClickInvertir = { cf -> onClickInvertir(cf) },
                 }
 
                 /*TextBuscador(searchText = viewModel.textoBuscar) { str ->
@@ -197,8 +194,8 @@ fun Tabla(modifier: Modifier = Modifier,
 
         Lista(filas) { fila ->
             FilaTablaDatos(fila, indicadorColor, filasColor, ajustarContenidoAncho) { fila ->
-              /*  filaSeleccionada = fila
-                celdasFiltro = fila.celdas*/
+                /*  filaSeleccionada = fila
+                  celdasFiltro = fila.celdas*/
                 onClickSeleccionarFila(fila)
             }
         }
@@ -213,10 +210,13 @@ fun Tabla(modifier: Modifier = Modifier,
 fun FilaTablaDatos(fila: Fila, indicadorColor: Boolean, filasColor: Boolean, ajustarContenidoAncho: Boolean, onClick: (Fila) -> Unit) {
     val modifier = Modifier
 
+    val color: Color = (fila.color).copy(alpha = 0.2f)
+
     Row(
         modifier = modifier
-            .background(if3(fila.seleccionada, Color.Yellow, Color.Transparent))
-            .fillMaxWidth().fillMaxHeight()
+            .background(if3(fila.seleccionada, color, Color.Transparent))
+            .fillMaxWidth()
+            .fillMaxHeight()
             .clickable {
                 onClick(fila)
             },
