@@ -79,7 +79,9 @@ data class Fila(val celdas: List<Celda> = emptyList<Celda>(),
                 val size: Dp = 200.dp,
                 val color: Color = Color.Black,
                 val seleccionada: Boolean = false,
-                val visible: Boolean = true)
+                val visible: Boolean = true,
+
+    )
 
 data class Celda(val valor: String,
                  val size: Dp = 200.dp,

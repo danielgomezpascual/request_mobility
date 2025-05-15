@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.Marco
 import com.personal.requestmobility.core.composables.graficas.GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.GraficoBarras
@@ -32,14 +33,14 @@ import kotlin.collections.map
 
 
 @Composable
-fun GraTab(modifier: Modifier = Modifier,
-           panelData: PanelData
+fun Panel(modifier: Modifier = Modifier,
+          panelData: PanelData
 
 ) {
     //val graTabData by remember { mutableStateOf<GraTabData>(gr) }
 
 
-    val configGrafica = panelData.panelConfiguracion
+    val configuracion = panelData.panelConfiguracion
 
     panelData.setupValores()
 
@@ -58,66 +59,89 @@ fun GraTab(modifier: Modifier = Modifier,
 
 
 
-        graficaComposable = dameTipoGrafica(
-            panelConfiguracion = configGrafica,
-            modifier = modifier,
-            filas = filasPintar
-        )
+    graficaComposable = dameTipoGrafica(
+        panelConfiguracion = configuracion,
+        modifier = modifier,
+        filas = filasPintar
+    )
 
 
 
-        tablaComposable = dameTipoTabla(
-            panelConfiguracion = configGrafica,
-            modifier = modifier,
+    tablaComposable = dameTipoTabla(
+        panelConfiguracion = configuracion,
+        modifier = modifier,
 
-            filas = filasPintar,
-            celdasFiltro = celdasFiltro,
+        filas = filasPintar,
+        celdasFiltro = celdasFiltro,
 
-            onClickSeleccionarFila = { fila ->
-                filas = filas.map { f -> f.copy(seleccionada = (f == fila)) }
-                celdasFiltro = fila.celdas
-            },
-            onClickInvertir = {cfi->
-                celdasFiltro = celdasFiltro.map { c ->
-                    if (c.titulo.equals(cfi.titulo)) {
-                        cfi.copy(filtroInvertido = !cfi.filtroInvertido)
+        onClickSeleccionarFila = { fila ->
+            filas = filas.map { f ->
+                if (fila.seleccionada) {
+                    val colorAlpha = f.color.copy(alpha = 1.0f)
+                    f.copy(seleccionada = false, color = colorAlpha)
+
+                } else {
+
+                    if (f.equals(fila)) {
+                        val colorAlpha = f.color.copy(alpha = 1.0f)
+                        f.copy(seleccionada = true, color = colorAlpha)
                     } else {
-                        c
+                        val colorAlpha = f.color.copy(alpha = 0.2f)
+                        f.copy(seleccionada = false, color = colorAlpha)
                     }
                 }
-
-            },
-            onClickSeleccionarFiltro = { cf ->
-                celdasFiltro = celdasFiltro.map { c ->
-                    if (c.titulo.equals(cf.titulo)) {
-                        cf.copy(seleccionada = !cf.seleccionada)
-                    } else {
-                        c
-                    }
-                }
-
-                filas = filas.map { fila ->
-                    var cumpleFiltro: Boolean = true
-                    fila.celdas.forEach { celdaFila ->
-                        celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
-                            if ((celdaFila.titulo.equals(celdaFiltro.titulo)) && !(celdaFila.valor.equals(celdaFiltro.valor))) {
-                                cumpleFiltro = false
-                            }
-                        }
-                    }
-                    fila.copy(visible = cumpleFiltro)
-                }
-
 
             }
-        )
+            celdasFiltro = fila.celdas
+        },
+        onClickInvertir = { cfi ->
+            celdasFiltro = celdasFiltro.map { c ->
+                if (c.titulo.equals(cfi.titulo)) {
+                    if (!cfi.filtroInvertido) {
+                        c.copy(filtroInvertido = true, seleccionada = true)
+                    } else {
+                        c.copy(filtroInvertido = false)
+                    }
+                } else {
+                    c
+                }
+            }
+            filas = cumplenFiltro(filas, celdasFiltro)
+
+        },
+        onClickSeleccionarFiltro = { cf ->
+            celdasFiltro = celdasFiltro.map { c ->
+                if (c.titulo.equals(cf.titulo)) {
+                    cf.copy(seleccionada = !cf.seleccionada)
+                } else {
+                    c
+                }
+            }
+
+            /*filas = filas.map { fila ->
+                var cumpleFiltro: Boolean = true
+                fila.celdas.forEach { celdaFila ->
+                    celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
+                        if ((celdaFila.titulo.equals(celdaFiltro.titulo))
+                            && !(celdaFila.valor.equals(celdaFiltro.valor))) {
+                            cumpleFiltro = false
+                        }
+                    }
+                }
+                fila.copy(visible = cumpleFiltro)
+            }*/
+
+            filas = cumplenFiltro(filas, celdasFiltro)
+
+        }
+    )
 
 
-    when (configGrafica.orientacion) {
+    when (configuracion.orientacion) {
         PanelOrientacion.VERTICAL -> {
             GraficaConTablaVertical(
                 modifier = modifier,
-                panelConfiguracion = configGrafica,
+                panelConfiguracion = configuracion,
                 grafica = { graficaComposable() },
                 tabla = { tablaComposable() }
             )
@@ -126,13 +150,31 @@ fun GraTab(modifier: Modifier = Modifier,
         PanelOrientacion.HORIZONTAL -> {
             GraficaConTablaHorizontal(
                 modifier = modifier,
-                panelConfiguracion = configGrafica,
+                panelConfiguracion = configuracion,
                 grafica = { graficaComposable() },
                 tabla = { tablaComposable() }
             )
         }
     }
 
+}
+
+fun cumplenFiltro(filas: List<Fila>, celdasFiltro: List<Celda>): List<Fila> = filas.map { fila ->
+    var cumpleFiltro: Boolean = true
+    fila.celdas.forEach { celdaFila ->
+        celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
+
+            if ((celdaFila.titulo.equals(celdaFiltro.titulo))
+                &&
+                (!celdaFiltro.filtroInvertido && !(celdaFila.valor.equals(celdaFiltro.valor)))
+                ||
+                (celdaFiltro.filtroInvertido && (celdaFila.valor.equals(celdaFiltro.valor)))
+            ) {
+                cumpleFiltro = false
+            }
+        }
+    }
+    fila.copy(visible = cumpleFiltro)
 }
 
 @Composable
@@ -244,7 +286,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                 GraficoBarras(
                     modifier = modifier,
                     listaValores = datosPintar,
-                    posicionX =posicionX,
+                    posicionX = posicionX,
                     posivionY = posivionY
                 )
 
@@ -254,7 +296,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                 GraficoBarrasVerticales(
                     modifier = modifier,
                     listaValores = datosPintar,
-                    posicionX =posicionX,
+                    posicionX = posicionX,
                     posivionY = posivionY
                 )
             }
@@ -263,7 +305,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                 GraficoCircular(
                     modifier = modifier,
                     listaValores = datosPintar,
-                    posicionX =posicionX,
+                    posicionX = posicionX,
                     posivionY = posivionY
                 )
             }
@@ -272,7 +314,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                 GraficoAnillo(
                     modifier = modifier,
                     listaValores = datosPintar,
-                    posicionX =posicionX,
+                    posicionX = posicionX,
                     posivionY = posivionY
                 )
             }
@@ -281,7 +323,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                 GraficoLineas(
                     modifier = modifier,
                     listaValores = datosPintar,
-                    posicionX =posicionX,
+                    posicionX = posicionX,
                     posivionY = posivionY
                 )
             }

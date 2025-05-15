@@ -123,7 +123,7 @@ fun Tabla(modifier: Modifier = Modifier,
                 Lista(celdasFiltro) { celdaFiltro ->
                     CeldaFiltro(celda = celdaFiltro,
                         onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
-                        onClickInvertir = { cf -> onClickInvertir(cf) },
+                        onClickInvertir = { cf -> onClickInvertir(cf) })
                 }
 
                 /*TextBuscador(searchText = viewModel.textoBuscar) { str ->
@@ -169,7 +169,7 @@ fun Tabla(modifier: Modifier = Modifier,
 
 
             if (mostrarTitulos) {
-
+        //todo: si no hay filas se jode el sistema, poner una pantalla oalgo de sin informacion
                 filas.first().celdas.forEachIndexed { int, celda ->
 
                     var modifierBox: Modifier = Modifier
