@@ -5,8 +5,8 @@ import com.personal.requestmobility.core.log.di.moduloLog
 import com.personal.requestmobility.core.log.domain.MyLog
 import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.core.room.moduloDatabase
+import com.personal.requestmobility.kpi.moduloKpis
 import com.personal.requestmobility.transacciones.data.local.entities.TransaccionesRoom
-import com.personal.requestmobility.transacciones.domain.interactors.ObtenerKPIsCU
 import com.personal.requestmobility.transacciones.moduloTransacciones
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -15,8 +15,6 @@ import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.java.KoinJavaComponent.inject
-import kotlin.getValue
 
 class App : Application() {
 
@@ -32,6 +30,7 @@ class App : Application() {
         initKoin()
         log = getKoin().get()
 
+        //cargaTransaccionesTest()
 
     }
 
@@ -44,7 +43,9 @@ class App : Application() {
             modules(
                 moduloLog,
                 moduloDatabase,
-                moduloTransacciones
+                moduloTransacciones,
+                moduloKpis
+
             )
 
         }
@@ -77,7 +78,7 @@ class App : Application() {
 
         GlobalScope.launch(Dispatchers.IO) {
             val database: AppDatabase = getKoin().get()
-            val dao = database.transacciones()
+            val dao = database.transaccionesDao()
             dao.insert(transacciones)
 
         }

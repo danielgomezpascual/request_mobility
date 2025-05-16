@@ -33,7 +33,7 @@ import com.personal.requestmobility.core.composables.labels.LabelTituloTabla
 import com.personal.requestmobility.core.composables.listas.Lista
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
-import com.personal.requestmobility.transacciones.domain.interactors.ObtenerKPIsCU
+import com.personal.requestmobility.kpi.domain.interactors.ObtenerKPIsCU_NO
 import com.personal.requestmobility.transacciones.ui.entidades.Filtro
 import com.personal.requestmobility.transacciones.ui.screens.composables.ItemFiltroTransaccion
 import com.personal.requestmobility.transacciones.ui.screens.composables.ModalInferiorFiltros
@@ -162,7 +162,7 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
 
             //}
 
-            val cu: ObtenerKPIsCU by inject<ObtenerKPIsCU>(ObtenerKPIsCU::class.java)
+            val cu: ObtenerKPIsCU_NO by inject<ObtenerKPIsCU_NO>(ObtenerKPIsCU_NO::class.java)
 
             val scope = rememberCoroutineScope()
             //  item {

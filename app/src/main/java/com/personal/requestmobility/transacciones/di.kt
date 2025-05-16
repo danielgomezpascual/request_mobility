@@ -11,7 +11,7 @@ import com.personal.requestmobility.transacciones.domain.interactors.ObtenerFilt
 import com.personal.requestmobility.transacciones.domain.interactors.ObtenerTransaccionesCU
 import com.personal.requestmobility.transacciones.domain.graficas.GraficaTransaccionesEstadoCU
 import com.personal.requestmobility.transacciones.domain.graficas.ResumenTrx
-import com.personal.requestmobility.transacciones.domain.interactors.ObtenerKPIsCU
+import com.personal.requestmobility.kpi.domain.interactors.ObtenerKPIsCU_NO
 import com.personal.requestmobility.transacciones.domain.repositorios.IRepoTransacciones
 import com.personal.requestmobility.transacciones.ui.screens.listado.DockTransaccionesVM
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,14 +21,14 @@ import org.koin.dsl.module
 val moduloTransacciones = module {
 
     // Database
-    single<TansaccionesDao> { get<AppDatabase>().transacciones() }
+    single<TansaccionesDao> { get<AppDatabase>().transaccionesDao() }
 
     //Repo
     single<IRepoTransacciones> { TransaccionesRepositorio(get<TansaccionesDao>()) }
 
     //CU
 
-    single<ObtenerKPIsCU> { ObtenerKPIsCU(get<IRepoTransacciones>()) }
+    single<ObtenerKPIsCU_NO> { ObtenerKPIsCU_NO(get<IRepoTransacciones>()) }
 
     single<ObtenerTransaccionesCU> { ObtenerTransaccionesCU(get<IRepoTransacciones>()) }
     single<ObtenerFiltrosTransaccionesCU> { ObtenerFiltrosTransaccionesCU() }
@@ -44,7 +44,7 @@ val moduloTransacciones = module {
         DockTransaccionesVM(
             get<AplicarFiltrosTransaccionesCU>(),
             get<ObtenerTransaccionesCU>(),
-            get<ObtenerKPIsCU>(),
+            get<ObtenerKPIsCU_NO>(),
 
             get<ResumenTrx>(),
             get<GraficaTransaccionPorTipoCU>(),

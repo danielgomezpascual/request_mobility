@@ -10,10 +10,10 @@ import com.personal.requestmobility.transacciones.domain.graficas.GraficaTransac
 import com.personal.requestmobility.transacciones.domain.interactors.ObtenerTransaccionesCU
 import com.personal.requestmobility.transacciones.domain.graficas.GraficaTransaccionesEstadoCU
 import com.personal.requestmobility.transacciones.domain.graficas.ResumenTrx
-import com.personal.requestmobility.transacciones.domain.interactors.ObtenerKPIsCU
+import com.personal.requestmobility.kpi.domain.interactors.ObtenerKPIsCU_NO
 import com.personal.requestmobility.transacciones.ui.entidades.Filtro
 import com.personal.requestmobility.transacciones.ui.entidades.FiltrosTransacciones
-import com.personal.requestmobility.transacciones.ui.entidades.KpiUI
+import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.transacciones.ui.entidades.TransaccionesUI
 import com.personal.requestmobility.transacciones.ui.entidades.fromTransacciones
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +27,7 @@ class DockTransaccionesVM(
     private val aplicarFiltrosTransaccionesCU: AplicarFiltrosTransaccionesCU,
     private val obtenerTransaccionesCU: ObtenerTransaccionesCU,
 
-    private val obtenerKPI: ObtenerKPIsCU,
+    private val obtenerKPI: ObtenerKPIsCU_NO,
     private val resumenTrxCU: ResumenTrx,
     private val contarTransaccionesTipoCU: GraficaTransaccionPorTipoCU,
     private val graficaTransaccionesEstadoCU: GraficaTransaccionesEstadoCU,

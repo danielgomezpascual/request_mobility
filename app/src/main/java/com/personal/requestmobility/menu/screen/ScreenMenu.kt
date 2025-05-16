@@ -41,6 +41,7 @@ fun ScreenMenu(accion: (Modulos) -> Unit) {
     ) {
         Text("Menu")
         BotonNormal("Peticiones") { accion(Modulos.Transacciones) }
+        BotonNormal("Kpis") { accion(Modulos.Kpis) }
     }
 
 }
