@@ -12,6 +12,8 @@ import com.personal.requestmobility.transacciones.domain.interactors.ObtenerTran
 import com.personal.requestmobility.transacciones.domain.graficas.GraficaTransaccionesEstadoCU
 import com.personal.requestmobility.transacciones.domain.graficas.ResumenTrx
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKPIsCU_NO
+import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
+import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
 import com.personal.requestmobility.transacciones.domain.repositorios.IRepoTransacciones
 import com.personal.requestmobility.transacciones.ui.screens.listado.DockTransaccionesVM
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -28,7 +30,7 @@ val moduloTransacciones = module {
 
     //CU
 
-    single<ObtenerKPIsCU_NO> { ObtenerKPIsCU_NO(get<IRepoTransacciones>()) }
+
 
     single<ObtenerTransaccionesCU> { ObtenerTransaccionesCU(get<IRepoTransacciones>()) }
     single<ObtenerFiltrosTransaccionesCU> { ObtenerFiltrosTransaccionesCU() }
@@ -42,15 +44,7 @@ val moduloTransacciones = module {
     //UI - ViewModel
     viewModel {
         DockTransaccionesVM(
-            get<AplicarFiltrosTransaccionesCU>(),
-            get<ObtenerTransaccionesCU>(),
-            get<ObtenerKPIsCU_NO>(),
-
-            get<ResumenTrx>(),
-            get<GraficaTransaccionPorTipoCU>(),
-            get<GraficaTransaccionesEstadoCU>(),
-            get<GraficaDistribucionErrores>(),
-            get<GraficaErroresPorTipo>()
+             get<ObtenerKpisCU>() //definido en el modulo de Kpis
         )
     }
 }

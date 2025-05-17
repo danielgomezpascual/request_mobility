@@ -1,5 +1,6 @@
 package com.personal.requestmobility.core.composables.componentes.panel
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,14 +20,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.Marco
+import com.personal.requestmobility.core.composables.edittext.TextoNormal
 import com.personal.requestmobility.core.composables.graficas.GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.GraficoBarras
 import com.personal.requestmobility.core.composables.graficas.GraficoBarrasVerticales
 import com.personal.requestmobility.core.composables.graficas.GraficoCircular
 import com.personal.requestmobility.core.composables.graficas.GraficoLineas
+import com.personal.requestmobility.core.composables.labels.LabelLeyenda
+import com.personal.requestmobility.core.composables.labels.LabelMini
 import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.Tabla
+import com.personal.requestmobility.kpi.ui.entidades.KpiUI
+import com.personal.requestmobility.transacciones.data.repositorios.SqlToListString
+import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 
 import kotlin.collections.filter
 import kotlin.collections.map
@@ -34,10 +41,12 @@ import kotlin.collections.map
 
 @Composable
 fun Panel(modifier: Modifier = Modifier,
-          panelData: PanelData
+                    panelData: PanelData
 
 ) {
     //val graTabData by remember { mutableStateOf<GraTabData>(gr) }
+
+
 
 
     val configuracion = panelData.panelConfiguracion
@@ -62,7 +71,10 @@ fun Panel(modifier: Modifier = Modifier,
     graficaComposable = dameTipoGrafica(
         panelConfiguracion = configuracion,
         modifier = modifier,
-        filas = filasPintar
+        filas = filasPintar,
+        posicionX = panelData.panelConfiguracion.campoAgrupacionTabla,
+        posivionY = panelData.panelConfiguracion.campoSumaValorTabla
+
     )
 
 
@@ -193,6 +205,9 @@ fun GraficaConTablaHorizontal(modifier: Modifier = Modifier,
             .height(panelConfiguracion.height)
 
         Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
+
+          LabelMini(panelConfiguracion.descripcion)
+
             Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 if (panelConfiguracion.mostrarGrafica) {
                     Box(
@@ -235,6 +250,8 @@ fun GraficaConTablaVertical(modifier: Modifier = Modifier,
 
         Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
             Column() {
+                LabelMini(panelConfiguracion.descripcion)
+
                 if (panelConfiguracion.mostrarGrafica) {
                     Box(
                         modifier = Modifier

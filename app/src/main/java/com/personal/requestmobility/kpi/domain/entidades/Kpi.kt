@@ -9,5 +9,5 @@ data class Kpi(
     val descripcion: String = "",
     val sql: String = "",
     val configuracion: PanelConfiguracion = PanelConfiguracion(),
-    var resultadoSQL: ResultadoSQL = ResultadoSQL()) {
+    ) {
 }

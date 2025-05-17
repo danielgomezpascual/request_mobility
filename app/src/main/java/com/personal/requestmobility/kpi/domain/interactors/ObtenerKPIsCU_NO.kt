@@ -27,7 +27,7 @@ class ObtenerKPIsCU_NO(private val repoTransacciones: IRepoTransacciones) {
             // sql = "SELECT * FROM TRANSACCIONES ORDER BY MOB_REQUEST_ID",
 
         )
-        kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
+        //kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
         return kpi
     }
 
@@ -38,7 +38,7 @@ class ObtenerKPIsCU_NO(private val repoTransacciones: IRepoTransacciones) {
             sql = "SELECT TIPO_MOV, COUNT(MOB_REQUEST_ID) FROM transacciones GROUP BY TIPO_MOV ORDER BY TIPO_MOV",
 
             )
-        kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
+     //   kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
         return kpi
     }
 
@@ -49,7 +49,7 @@ class ObtenerKPIsCU_NO(private val repoTransacciones: IRepoTransacciones) {
             sql = "SELECT TIPO_MOV, COUNT(MOB_REQUEST_ID) FROM Transacciones WHERE REQ_STATUS = 2  GROUP BY TIPO_MOV ",
 
             )
-        kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
+      //  kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
         return kpi
     }
 
@@ -60,7 +60,7 @@ class ObtenerKPIsCU_NO(private val repoTransacciones: IRepoTransacciones) {
             sql = "SELECT PROGRAM_VERSION, COUNT(MOB_REQUEST_ID) FROM Transacciones  GROUP BY PROGRAM_VERSION ",
 
             )
-        kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
+     //   kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
         return kpi
     }
 
@@ -71,7 +71,7 @@ class ObtenerKPIsCU_NO(private val repoTransacciones: IRepoTransacciones) {
             sql = " SELECT SUBSTR(LECTORA_ID,0,4) , COUNT (1) from transacciones WHERE REQ_STATUS = 0  GROUP BY SUBSTR(LECTORA_ID,0,4)  ORDER BY 2 DESC ",
 
             )
-        kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
+      //  kpi.resultadoSQL = ResultadoSQL.Companion.from(repoTransacciones.ejecutarSQL(kpi.sql))
         return kpi
     }
 

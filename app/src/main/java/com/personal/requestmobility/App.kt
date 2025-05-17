@@ -43,8 +43,8 @@ class App : Application() {
             modules(
                 moduloLog,
                 moduloDatabase,
-                moduloTransacciones,
-                moduloKpis
+                moduloKpis,
+                moduloTransacciones
 
             )
 

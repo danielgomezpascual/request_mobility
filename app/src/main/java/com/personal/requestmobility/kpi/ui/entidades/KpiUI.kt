@@ -2,19 +2,22 @@ package com.personal.requestmobility.kpi.ui.entidades
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
 import com.personal.requestmobility.core.composables.componentes.panel.PanelData
 import com.personal.requestmobility.core.composables.componentes.panel.PanelTipoGrafica
 import com.personal.requestmobility.kpi.domain.entidades.Kpi
+import com.personal.requestmobility.transacciones.data.repositorios.SqlToListString
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 import kotlin.Int
 
 data class KpiUI(
     val id: Int = 0,
-    val titulo: String ="",
+    val titulo: String = "",
     val descripcion: String = "",
     val sql: String = "",
     val panelData: PanelData = PanelData(),
+    var resultadoSQL: ResultadoSQL = ResultadoSQL()
 ) {
     companion object {
         fun from(kpi: Kpi, i: Int): KpiUI {
@@ -27,8 +30,10 @@ data class KpiUI(
                 else -> PanelTipoGrafica.ANILLO
             }
 
-            var configuracion = PanelConfiguracion(titulo = kpi.titulo, tipo = tipoGrafica)
-            var valoresTabla = kpi.resultadoSQL.toValoresTabla()
+            val resultadoSQL: ResultadoSQL = SqlToListString(kpi.sql)
+
+            var configuracion = PanelConfiguracion(titulo = kpi.titulo, descripcion = kpi.descripcion, tipo = tipoGrafica)
+            var valoresTabla = resultadoSQL.toValoresTabla()
             if (i == 0) {
                 configuracion = configuracion.copy(
                     width = 1400.dp, height = 200.dp,
@@ -37,11 +42,20 @@ data class KpiUI(
                 )
             }
 
+
+            if (i == 5) {
+                configuracion = configuracion.copy(
+                    campoAgrupacionTabla = 0,
+                    campoSumaValorTabla = 2
+                )
+            }
+
             val grabTabData = PanelData(
                 panelConfiguracion = configuracion,
                 valoresTabla = valoresTabla
             )
 
+            App.log.d(kpi.toString())
             return KpiUI(
                 titulo = kpi.titulo,
                 sql = kpi.sql,
@@ -58,14 +72,15 @@ fun KpiUI.toKpi() = Kpi(
     descripcion = this.descripcion,
     sql = this.sql,
     configuracion = this.panelData.panelConfiguracion,
-    )
+)
 
 
 fun KpiUI.fromKPI(kpi: Kpi) = KpiUI(
-     id = kpi.id,
-     titulo = kpi.titulo,
-     descripcion = kpi.descripcion,
-     sql = kpi.sql
+    id = kpi.id,
+    titulo = kpi.titulo,
+    descripcion = kpi.descripcion,
+    sql = kpi.sql
+
     // configuracion = kpi.configuracion,
 
 )

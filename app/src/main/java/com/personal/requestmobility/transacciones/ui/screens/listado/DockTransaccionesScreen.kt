@@ -85,7 +85,7 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
         ) {
 
             //item {
-            Box() {
+           /* Box() {
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
                     text = "${uiState.transacciones.size} transacciones encontradas",
@@ -94,11 +94,11 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
                     textAlign = TextAlign.Start
                 )
             }
-
+*/
             // }
 
             // item {
-            Box() {
+            /*Box() {
                 Column {
 
 
@@ -134,7 +134,7 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
                         }
                     }
                 }
-            }
+            }*/
             // }
 
             //   item {
@@ -162,9 +162,9 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
 
             //}
 
-            val cu: ObtenerKPIsCU_NO by inject<ObtenerKPIsCU_NO>(ObtenerKPIsCU_NO::class.java)
+           // val cu: ObtenerKPIsCU_NO by inject<ObtenerKPIsCU_NO>(ObtenerKPIsCU_NO::class.java)
 
-            val scope = rememberCoroutineScope()
+          //  val scope = rememberCoroutineScope()
             //  item {
             Box(Modifier) {
                 Column() {
@@ -198,13 +198,14 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
                         )*/
 
 
-                        uiState.kpis.forEach { kpi ->
+                        uiState.kpis.forEach { kpiUI ->
+
                             Panel(
                                 modifier = modifier,
-                                panelData = kpi.panelData
+                                panelData = kpiUI.panelData
                             )
 
-                            App.log.d(kpi.panelData)
+                            App.log.d(kpiUI.panelData)
                         }
 
                         /*  GraTab(
