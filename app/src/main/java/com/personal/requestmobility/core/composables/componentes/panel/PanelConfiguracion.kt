@@ -4,28 +4,39 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.serialization.Serializable
+
 
 data class PanelConfiguracion(
     val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,
     val tipo: PanelTipoGrafica = PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES,
+
     val titulo: String = "GR 001",
     val descripcion : String = "",
     val limiteElementos: Int = 15,
     val mostrarEtiquetas: Boolean = true,
+
+
     val target: Float = 0f,
     val ordenado: Boolean = false,
     val espacioGrafica: Float = 0.4f,
     val espacioTabla: Float = 0.6f,
+    val ocuparTodoEspacio: Boolean = false,
+
     val width: Dp = 500.dp,
     val height: Dp = 600.dp,
-    val paddingTablaVertical : PaddingValues =  PaddingValues(60.dp, 15.dp),
-    val paddingTablaHorizontal : PaddingValues =  PaddingValues(2.dp, 15.dp),
+
+
+    /*val paddingTablaVertical : PaddingValues =  PaddingValues(60.dp, 15.dp),
+    val paddingTablaHorizontal : PaddingValues =  PaddingValues(2.dp, 15.dp),*/
     val mostrarGrafica: Boolean = true,
     val mostrarTabla: Boolean = true,
     val mostrarTituloTabla: Boolean = true,
     val agruparValores : Boolean = true,
+
     val campoAgrupacionTabla : Int = 0,
     val campoSumaValorTabla : Int = 1,
+
     val colores : List<Color>  = listOf<Color>(
         Color(0xFFFF0000),
         Color(0xFF00FF00),

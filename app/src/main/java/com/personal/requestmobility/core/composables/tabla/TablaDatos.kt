@@ -85,7 +85,6 @@ fun TablaDatos(modifier: Modifier = Modifier,
 @Composable
 fun Tabla(modifier: Modifier = Modifier,
           panelConfiguracion: PanelConfiguracion,
-    //tabla: ValoresTabla,
           filas: List<Fila>,
           celdasFiltro: List<Celda>,
           mostrarTitulos: Boolean = true,
@@ -103,20 +102,9 @@ fun Tabla(modifier: Modifier = Modifier,
     }
 
 
-    //variable para controlar el estado de las filas que se estan presentado en la tabla
-    /*   var filas by remember { mutableStateOf<List<Fila>>(tabla.filas) }
-       //var filas = tabla.filas
-
-       //variable para controlar la fila que se selecciono
-       var filaSeleccionada by remember { mutableStateOf<Fila>(filas.first()) }
-
-       //varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
-       var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }*/
 
 
     Column(modifierColumn) {
-        //Text(text = filaSeleccionada.toString().substring(0, 150) + "...", fontSize = 10.sp, modifier = Modifier.background(Color.Yellow))
-
         ModalInferiorFiltros() {
             Column {
                 Titulo("Filtro")
@@ -126,42 +114,10 @@ fun Tabla(modifier: Modifier = Modifier,
                         onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
                         onClickInvertir = { cf -> onClickInvertir(cf) })
                 }
-
-                /*TextBuscador(searchText = viewModel.textoBuscar) { str ->
-                    viewModel.onEvent(DockTransaccionesVM.Eventos.ModificarTextoBuscar(str))
-                }*/
-
-                /* Lista(data = uiState.filtrosTransaccion.filtros) { filtro ->
-                     if (filtro is Filtro.Seleccion) {
-
-                         ItemFiltroTransaccion(
-                             filtro,
-                             onClick = {
-                                 viewModel.onEvent(DockTransaccionesVM.Eventos.ModicarSeleccionFiltro(filtro))
-                             },
-                             onLongClick = {
-                                 viewModel.onEvent(DockTransaccionesVM.Eventos.InvertirSeleccionFiltro(filtro))
-                             })
-                     }
-                 }*/
-
             }
 
 
         }
-
-
-        /* Box() {
-             Text(
-                 modifier = Modifier.padding(start = 16.dp),
-                 text = "TOTLA DE LA TABLA QUe sea configurable y aparezca abajo utlizando una celda 25 transacciones encontradas",
-                 style = MaterialTheme.typography.bodySmall,
-                 color = Color.Red,
-                 textAlign = TextAlign.Start
-             )
-         }*/
-
-
         Row(
             modifier = Modifier
                 .padding(4.dp)
@@ -174,12 +130,12 @@ fun Tabla(modifier: Modifier = Modifier,
                 filas.first().celdas.forEachIndexed { int, celda ->
 
                     var modifierBox: Modifier = Modifier
-                    if (ajustarContenidoAncho) {
-                        modifierBox = modifierBox
+                    modifierBox = if (ajustarContenidoAncho) {
+                        modifierBox
                             .fillMaxWidth()
                             .weight(1f)
                     } else {
-                        modifierBox = modifierBox.width(celda.size)
+                        modifierBox.width(celda.size)
                     }
                     Box(
                         modifier = modifierBox.background(Color.Gray)
@@ -194,9 +150,7 @@ fun Tabla(modifier: Modifier = Modifier,
 
 
         Lista(filas) { fila ->
-            FilaTablaDatos(fila, indicadorColor, filasColor, ajustarContenidoAncho) { fila ->
-                /*  filaSeleccionada = fila
-                  celdasFiltro = fila.celdas*/
+            FilaTablaDatos(fila, panelConfiguracion) { fila ->
                 onClickSeleccionarFila(fila)
             }
         }
@@ -208,20 +162,24 @@ fun Tabla(modifier: Modifier = Modifier,
 }
 
 @Composable
-fun FilaTablaDatos(fila: Fila, indicadorColor: Boolean, filasColor: Boolean, ajustarContenidoAncho: Boolean, onClick: (Fila) -> Unit) {
+fun FilaTablaDatos(fila: Fila, configuracion: PanelConfiguracion, onClick: (Fila) -> Unit) {
     val modifier = Modifier
+    val filasColor = configuracion.filasColor
+    val ajustarContenidoAncho = configuracion.ajustarContenidoAncho
+    val indicadorColor = configuracion.indicadorColor
 
-    val color: Color = (fila.color).copy(alpha = 0.2f)
+    val color: Color = (fila.color).copy(alpha = 0.3f)
+    val colorFondo = if3(filasColor, (fila.color).copy(alpha = 0.1f), Color.Transparent)
+
 
     Row(
         modifier = modifier
-            .background(if3(fila.seleccionada, color, Color.Transparent))
+            .background(if3(fila.seleccionada, color, colorFondo))
             .fillMaxWidth()
             .fillMaxHeight()
             .clickable {
                 onClick(fila)
             },
-        // .padding(4.dp),
         verticalAlignment = Alignment.Companion.CenterVertically
     ) {
 

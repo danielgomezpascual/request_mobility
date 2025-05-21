@@ -6,8 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import com.personal.requestmobility.core.composables.modales.MiBottomSheet
-import com.personal.requestmobility.transacciones.ui.entidades.TransaccionesUI
+import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,7 +17,7 @@ fun ModalInferiorFiltros(contenido: @Composable () -> Unit) {
 
     Button(onClick = { scope.launch { sheetState.show() } }) { Text("Abrir") }
 
-    MiBottomSheet(
+    MA_BottomSheet(
         sheetState,
         onClose = {
             { scope.launch { sheetState.hide() } }

@@ -1,6 +1,9 @@
 package com.personal.requestmobility
 
 import android.app.Application
+import com.google.gson.Gson
+import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
+import com.personal.requestmobility.core.composables.componentes.panel.PanelOrientacion
 import com.personal.requestmobility.core.log.di.moduloLog
 import com.personal.requestmobility.core.log.domain.MyLog
 import com.personal.requestmobility.core.room.AppDatabase
@@ -11,6 +14,7 @@ import com.personal.requestmobility.transacciones.moduloTransacciones
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonNull
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -31,6 +35,19 @@ class App : Application() {
         log = getKoin().get()
 
         //cargaTransaccionesTest()
+
+      /*  var panel = PanelConfiguracion()
+
+
+        panel = panel.copy(titulo= "Test de GSON", orientacion = PanelOrientacion.HORIZONTAL)
+        val str2 = Gson().toJson(panel)
+
+        App.log.d(str2)
+
+
+        val p3 = Gson().fromJson<PanelConfiguracion>(str2, PanelConfiguracion::class.java)
+        App.log.c(p3.titulo)
+        App.log.c(p3.orientacion.toString())*/
 
     }
 

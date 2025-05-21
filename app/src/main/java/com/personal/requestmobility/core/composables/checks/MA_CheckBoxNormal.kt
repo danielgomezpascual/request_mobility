@@ -6,12 +6,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CheckBoxNormal(valor: Boolean, titulo: String, modifier: Modifier = Modifier.Companion, onValueChange: (Boolean) -> Unit) {
+fun MA_CheckBoxNormal(valor: Boolean,
+                      titulo: String,
+                      modifier: Modifier = Modifier.Companion,
+                      onValueChange: (Boolean) -> Unit) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)

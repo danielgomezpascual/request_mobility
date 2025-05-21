@@ -1,9 +1,9 @@
 package com.personal.requestmobility.core.composables.componentes.panel
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,22 +18,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.personal.requestmobility.App
+import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.componentes.Marco
-import com.personal.requestmobility.core.composables.edittext.TextoNormal
 import com.personal.requestmobility.core.composables.graficas.GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.GraficoBarras
 import com.personal.requestmobility.core.composables.graficas.GraficoBarrasVerticales
 import com.personal.requestmobility.core.composables.graficas.GraficoCircular
 import com.personal.requestmobility.core.composables.graficas.GraficoLineas
-import com.personal.requestmobility.core.composables.labels.LabelLeyenda
 import com.personal.requestmobility.core.composables.labels.LabelMini
 import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.Tabla
-import com.personal.requestmobility.kpi.ui.entidades.KpiUI
-import com.personal.requestmobility.transacciones.data.repositorios.SqlToListString
-import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 
 import kotlin.collections.filter
 import kotlin.collections.map
@@ -218,9 +213,18 @@ fun GraficaConTablaHorizontal(modifier: Modifier = Modifier,
                     }
                 }
                 if (panelConfiguracion.mostrarTabla) {
+
+                    var modifier :  Modifier = Modifier
+                    modifier = if (panelConfiguracion.ocuparTodoEspacio){
+                        modifier.padding( PaddingValues(0.dp, 0.dp))
+                    }else{
+                        modifier.padding( PaddingValues(60.dp, 15.dp))
+                    }
+
+
                     Box(
-                        modifier = Modifier
-                            .padding(panelConfiguracion.paddingTablaHorizontal)
+                        modifier = modifier
+
                             .fillMaxWidth(panelConfiguracion.espacioTabla)
                     ) {
                         tabla()
@@ -252,6 +256,8 @@ fun GraficaConTablaVertical(modifier: Modifier = Modifier,
             Column() {
                 LabelMini(panelConfiguracion.descripcion)
 
+
+
                 if (panelConfiguracion.mostrarGrafica) {
                     Box(
                         modifier = Modifier
@@ -262,9 +268,17 @@ fun GraficaConTablaVertical(modifier: Modifier = Modifier,
                     }
                 }
                 if (panelConfiguracion.mostrarTabla) {
+
+                    var modifier :  Modifier = Modifier
+                    modifier = if (panelConfiguracion.ocuparTodoEspacio){
+                        modifier.padding( PaddingValues(0.dp, 0.dp))
+                    }else{
+                        modifier.padding( PaddingValues(60.dp, 15.dp))
+                    }
+
                     Box(
-                        modifier = Modifier
-                            .padding(panelConfiguracion.paddingTablaVertical)
+
+                        modifier = modifier
                             .fillMaxSize()
 
                     ) {

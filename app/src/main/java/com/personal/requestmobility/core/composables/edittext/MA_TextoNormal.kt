@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TextoNormal(valor: String, titulo: String, modifier: Modifier = Modifier.Companion,
-                icono: Icons? = null,
-                onValueChange: (String) -> Unit) {
+fun MA_TextoNormal(valor: String, titulo: String, modifier: Modifier = Modifier.Companion,
+                   icono: Icons? = null,
+                   onValueChange: (String) -> Unit) {
     Row(verticalAlignment = Alignment.Companion.CenterVertically) {
         if (icono != null) {
             Icon(imageVector = Icons.Default.Home, contentDescription = titulo)

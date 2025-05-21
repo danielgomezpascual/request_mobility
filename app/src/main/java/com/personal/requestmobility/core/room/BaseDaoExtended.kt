@@ -44,37 +44,43 @@ abstract class BaseDaoExtended<T : IRoom> : IBaseDao<T> {
     fun sqlToListString(sql: String = "SELECT * FROM $TABLA"): ResultadoEjecucionSQL {
 
         val resultadoEjecucionSQL: ResultadoEjecucionSQL = ResultadoEjecucionSQL()
+        resultadoEjecucionSQL.filas = emptyList()
+        resultadoEjecucionSQL.titulos = emptyList()
 
         val appDatabase: AppDatabase by inject(AppDatabase::class.java)
         val db: SupportSQLiteDatabase = appDatabase.openHelper.readableDatabase // Usamos readableDatabase para operaciones de lectura
 
-        db.query(sql).use { cursor -> // Usamos 'use' para asegurar que el cursor se cierre automáticamente
-            val columnCount = cursor.columnCount
-            if (columnCount <= 0) {
-                resultadoEjecucionSQL.filas = emptyList()
-                resultadoEjecucionSQL.titulos = emptyList()
+        try {
+            db.query(sql).use { cursor -> // Usamos 'use' para asegurar que el cursor se cierre automáticamente
+                val columnCount = cursor.columnCount
+                if (columnCount <= 0) {
+                    return resultadoEjecucionSQL
+                } // Evitamos crear arrays vacíos innecesariamente
 
-                return resultadoEjecucionSQL
-            } // Evitamos crear arrays vacíos innecesariamente
-
-            resultadoEjecucionSQL.titulos = (0 until columnCount).map { cursor.getColumnName(it) }
-            val results = mutableListOf<List<String>>()
-            while (cursor.moveToNext()) {
-                val row = (0 until columnCount).map { columnIndex ->
-                    when (cursor.getType(columnIndex)) {
-                        Cursor.FIELD_TYPE_NULL -> "NULL"
-                        Cursor.FIELD_TYPE_INTEGER -> cursor.getInt(columnIndex).toString()
-                        Cursor.FIELD_TYPE_FLOAT -> cursor.getFloat(columnIndex).toString()
-                        Cursor.FIELD_TYPE_STRING -> cursor.getString(columnIndex)
-                        Cursor.FIELD_TYPE_BLOB -> "Blob"
-                        else -> "Unknown"
+                resultadoEjecucionSQL.titulos = (0 until columnCount).map { cursor.getColumnName(it) }
+                val results = mutableListOf<List<String>>()
+                while (cursor.moveToNext()) {
+                    val row = (0 until columnCount).map { columnIndex ->
+                        when (cursor.getType(columnIndex)) {
+                            Cursor.FIELD_TYPE_NULL -> "NULL"
+                            Cursor.FIELD_TYPE_INTEGER -> cursor.getInt(columnIndex).toString()
+                            Cursor.FIELD_TYPE_FLOAT -> cursor.getFloat(columnIndex).toString()
+                            Cursor.FIELD_TYPE_STRING -> cursor.getString(columnIndex)
+                            Cursor.FIELD_TYPE_BLOB -> "Blob"
+                            else -> "Unknown"
+                        }
                     }
+                    results.add(row)
                 }
-                results.add(row)
+                resultadoEjecucionSQL.filas = results
+                return resultadoEjecucionSQL
             }
-            resultadoEjecucionSQL.filas = results
+        } catch (e: Exception) {
+            e.printStackTrace()
             return resultadoEjecucionSQL
         }
+
+
     }
 
     fun mostrarContenido(sql: String = "SELECT * FROM $TABLA") {

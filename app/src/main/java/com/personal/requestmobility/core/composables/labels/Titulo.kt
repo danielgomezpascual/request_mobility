@@ -21,6 +21,6 @@ fun Titulo(
     icono: Icons? = null,
 ) {
 
-    Text(text = valor, modifier = modifier.fillMaxWidth().background(color =fondo),
+    Text(text = valor, modifier = modifier.fillMaxWidth(),
         color = color, style = MaterialTheme.typography.titleLarge, textAlign = alineacion  )
 }

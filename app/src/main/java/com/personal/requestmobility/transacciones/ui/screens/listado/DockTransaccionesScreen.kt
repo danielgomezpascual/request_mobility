@@ -83,123 +83,12 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-
-            //item {
-           /* Box() {
-                Text(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = "${uiState.transacciones.size} transacciones encontradas",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Black,
-                    textAlign = TextAlign.Start
-                )
-            }
-*/
-            // }
-
-            // item {
-            /*Box() {
-                Column {
-
-
-                    Row(Modifier.fillMaxWidth()) {
-                        BotonNormal("Graficas con Trx") { viewModel.onEvent(DockTransaccionesVM.Eventos.CalcularGraficasTransaccionesPresentadas) }
-                        BotonNormal("Borrar filtros") { viewModel.onEvent(DockTransaccionesVM.Eventos.BorrarFiltrosAplicados) }
-
-                        ModalInferiorFiltros() {
-                            Column {
-                                LabelTituloTabla(valor = uiState.textoBuscar)
-
-                                TextBuscador(searchText = viewModel.textoBuscar) { str ->
-                                    viewModel.onEvent(DockTransaccionesVM.Eventos.ModificarTextoBuscar(str))
-                                }
-
-                                Lista(data = uiState.filtrosTransaccion.filtros) { filtro ->
-                                    if (filtro is Filtro.Seleccion) {
-
-                                        ItemFiltroTransaccion(
-                                            filtro,
-                                            onClick = {
-                                                viewModel.onEvent(DockTransaccionesVM.Eventos.ModicarSeleccionFiltro(filtro))
-                                            },
-                                            onLongClick = {
-                                                viewModel.onEvent(DockTransaccionesVM.Eventos.InvertirSeleccionFiltro(filtro))
-                                            })
-                                    }
-                                }
-
-                            }
-
-
-                        }
-                    }
-                }
-            }*/
-            // }
-
-            //   item {
-            /*
-                Box() {
-                    Row(Modifier.height(300.dp)) {
-                        Lista(data = uiState.transacciones.filter { it.estado != EstadoProceso.OK }) { trx ->
-                            ItemTransacciones(trx) { }
-                        }
-                    }
-                }*/
-            //  }
-
-            //  item {
-
-            /* Row(Modifier.height(300.dp)) {
-
-                 Lista(data = uiState.transacciones) { trx ->
-                     ItemTransacciones(trx) {
-                         viewModel.onEvent(DockTransaccionesVM.Eventos.ModificarSeleccionTransaccion(trx))
-                     }
-                 }
-             }*/
-
-
-            //}
-
-           // val cu: ObtenerKPIsCU_NO by inject<ObtenerKPIsCU_NO>(ObtenerKPIsCU_NO::class.java)
-
-          //  val scope = rememberCoroutineScope()
-            //  item {
             Box(Modifier) {
                 Column() {
                     LabelTituloTabla("Transacciones")
-
                     val modifier: Modifier = Modifier.fillMaxSize()
                     Column() {
-
-                        /* GraficaBarasConLeyendaTabla(
-                             modifier = modifier,
-                             columnaClave = 1,
-                             columnaValor = 2,
-                             listaValores = dameValoresTestTabla()
-                         )*/
-
-
-                        /*uiState.transacciones.forEach { trx ->
-                            GraTab(
-                                modifier = modifier,
-                                graTabData = trx
-                            )
-                        }*/
-
-                        /*GraTab(
-                            modifier = modifier,
-                            graTabData = GraTabData(
-                                graTabConfiguracion = GraTabConfiguracion(tipo = GraTabTipoGrafica.BARRAS_ANCHAS_VERTICALES, titulo = "PRUEAS 02"),
-                                valoresGrafica = ValoresGrafica(elementos = uiState.valoresGraficaErroresTipo)
-
-                            )
-                        )*/
-
-
                         uiState.kpis.forEach { kpiUI ->
-
                             Panel(
                                 modifier = modifier,
                                 panelData = kpiUI.panelData
@@ -207,74 +96,9 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
 
                             App.log.d(kpiUI.panelData)
                         }
-
-                        /*  GraTab(
-                    modifier = modifier,
-                    graTabData = GraTabData(valoresGrafica = ValoresGrafica(elementos = uiState.valoresGraficaErroresTipo))
-                )*/
-
-
-                        /*  BarrasConTablaVertical(
-                              modifier = modifier,
-                              titulo = "Errores Tipos",
-                              listaValores = uiState.valoresGraficaErroresTipo,
-                              target = 1f
-                          )*/
-
-
-                        /* CircularConTablaHorizontal(
-                             modifier = modifier,
-                             titulo = "Tipos",
-                             listaValores = uiState.valoresGraficaTiposTransacciones,
-                             rellenoCentro = true
-                         )*/
-
-
-                        /*CircularConTablaVertical(
-                            modifier = Modifier.fillMaxWidth(),
-                            titulo = "Estados",
-                            listaValores = uiState.valoresGraficaEstadosTiposProcesamiento,
-                            rellenoCentro = true
-                        )
-                        GraficoCircular(
-                            modifier = Modifier.fillMaxSize(),
-
-                            listaValores = uiState.valoresGraficaEstadosTiposProcesamiento,
-                            rellenoCentro = true
-                        )*/
                     }
                 }
-
             }
-            //}
-
-            //item {
-            /* Box(Modifier.height(350.dp)) {
-                 Row() {
-                     LabelTitulo("Errores")
-
-                     val modifier: Modifier = Modifier.fillMaxSize()
-                     Column(modifier = modifier) {
-                         GraficoCircular(
-                             modifier = modifier.weight(1f),
-
-                             listaValores = uiState.valoresGraficaDistribucionErroresPorTipo,
-                             rellenoCentro = true
-                         )
-
-                         GraficoBarrasVerticales(
-                             modifier = modifier.weight(1f),
-
-                             listaValores = uiState.valoresGraficaErroresTipo,
-
-                             )
-
-
-                     }
-                 }
-
-             }*/
-            // }
         }
 
     }

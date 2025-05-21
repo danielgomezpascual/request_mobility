@@ -25,5 +25,7 @@ class TransaccionesRepositorio(private val dao: TansaccionesDao) : IRepoTransacc
 
 fun SqlToListString(sql : String): ResultadoSQL{
     val trxDao = getKoin().get<AppDatabase>().transaccionesDao()
+
+    val lista =  trxDao.sqlToListString(sql)
     return ResultadoSQL.Companion.from(trxDao.sqlToListString(sql))
 }

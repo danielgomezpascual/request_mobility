@@ -1,11 +1,7 @@
 package com.personal.requestmobility.kpi.ui.entidades
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
 import com.personal.requestmobility.core.composables.componentes.panel.PanelData
-import com.personal.requestmobility.core.composables.componentes.panel.PanelTipoGrafica
 import com.personal.requestmobility.kpi.domain.entidades.Kpi
 import com.personal.requestmobility.transacciones.data.repositorios.SqlToListString
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
@@ -16,52 +12,32 @@ data class KpiUI(
     val titulo: String = "",
     val descripcion: String = "",
     val sql: String = "",
-    val panelData: PanelData = PanelData(),
+    var panelData: PanelData = PanelData(),
     var resultadoSQL: ResultadoSQL = ResultadoSQL()
 ) {
+
+
+    fun reloadPanelData(): KpiUI {
+
+        this.resultadoSQL = SqlToListString(sql)
+        this.panelData = PanelData(
+            panelConfiguracion = panelData.panelConfiguracion.copy(titulo = titulo, descripcion = descripcion),
+            valoresTabla = resultadoSQL.toValoresTabla()
+        )
+        return this
+    }
+
     companion object {
         fun from(kpi: Kpi, i: Int): KpiUI {
-
-            val tipoGrafica: PanelTipoGrafica = when (i) {
-                0 -> PanelTipoGrafica.BARRAS_FINAS_VERTICALES
-                1 -> PanelTipoGrafica.CIRCULAR
-                2 -> PanelTipoGrafica.LINEAS
-                3 -> PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES
-                else -> PanelTipoGrafica.ANILLO
-            }
-
-            val resultadoSQL: ResultadoSQL = SqlToListString(kpi.sql)
-
-            var configuracion = PanelConfiguracion(titulo = kpi.titulo, descripcion = kpi.descripcion, tipo = tipoGrafica)
-            var valoresTabla = resultadoSQL.toValoresTabla()
-            if (i == 0) {
-                configuracion = configuracion.copy(
-                    width = 1400.dp, height = 200.dp,
-                    mostrarGrafica = false,
-                    agruparValores = false, paddingTablaVertical = PaddingValues(0.dp, 0.dp)
-                )
-            }
-
-
-            if (i == 5) {
-                configuracion = configuracion.copy(
-                    campoAgrupacionTabla = 0,
-                    campoSumaValorTabla = 2
-                )
-            }
-
-            val grabTabData = PanelData(
-                panelConfiguracion = configuracion,
-                valoresTabla = valoresTabla
-            )
-
-            App.log.d(kpi.toString())
-            return KpiUI(
+            val kpiUI: KpiUI = KpiUI(
                 titulo = kpi.titulo,
-                sql = kpi.sql,
-                panelData = grabTabData
+                sql = kpi.sql
             )
+
+            kpiUI.reloadPanelData()
+            return kpiUI
         }
+
 
     }
 }
@@ -79,8 +55,6 @@ fun KpiUI.fromKPI(kpi: Kpi) = KpiUI(
     id = kpi.id,
     titulo = kpi.titulo,
     descripcion = kpi.descripcion,
-    sql = kpi.sql
-
-    // configuracion = kpi.configuracion,
-
+    sql = kpi.sql,
+    panelData = PanelData(panelConfiguracion = kpi.configuracion)
 )

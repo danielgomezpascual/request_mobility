@@ -1,5 +1,14 @@
 package com.personal.requestmobility.core.composables.componentes.panel
 
-enum class PanelTipoGrafica {
-    BARRAS_ANCHAS_VERTICALES, BARRAS_FINAS_VERTICALES, CIRCULAR, ANILLO, LINEAS
+enum class PanelTipoGrafica(val tipo: String) {
+    BARRAS_ANCHAS_VERTICALES("BARRAS_ANCHAS_VERTICALES"),
+    BARRAS_FINAS_VERTICALES("BARRAS_FINAS_VERTICALES"),
+    CIRCULAR("CIRCULAR"),
+    ANILLO("ANILLO"),
+    LINEAS("LINEAS");
+
+    companion object{
+        fun from(codigo: String): PanelTipoGrafica = (PanelTipoGrafica.entries.find { it.tipo == codigo }) ?: PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES
+    }
+
 }
