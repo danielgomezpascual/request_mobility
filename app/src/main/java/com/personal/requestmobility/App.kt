@@ -8,6 +8,7 @@ import com.personal.requestmobility.core.log.di.moduloLog
 import com.personal.requestmobility.core.log.domain.MyLog
 import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.core.room.moduloDatabase
+import com.personal.requestmobility.dashboards.moduloDashboards
 import com.personal.requestmobility.kpi.moduloKpis
 import com.personal.requestmobility.transacciones.data.local.entities.TransaccionesRoom
 import com.personal.requestmobility.transacciones.moduloTransacciones
@@ -61,7 +62,8 @@ class App : Application() {
                 moduloLog,
                 moduloDatabase,
                 moduloKpis,
-                moduloTransacciones
+                moduloTransacciones,
+                moduloDashboards
 
             )
 
