@@ -1,28 +1,23 @@
 package com.personal.requestmobility.core.composables.tabla
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
-import com.personal.requestmobility.core.composables.labels.Titulo
-import com.personal.requestmobility.core.composables.listas.Lista
-import com.personal.requestmobility.core.utils.if3
+import com.personal.requestmobility.core.composables.labels.MA_Titulo
+import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.transacciones.ui.screens.composables.ModalInferiorFiltros
 
 
@@ -83,14 +78,14 @@ fun TablaDatos(modifier: Modifier = Modifier,
 
 
 @Composable
-fun Tabla(modifier: Modifier = Modifier,
-          panelConfiguracion: PanelConfiguracion,
-          filas: List<Fila>,
-          celdasFiltro: List<Celda>,
-          mostrarTitulos: Boolean = true,
-          onClickSeleccionarFiltro: (Celda) -> Unit,
-          onClickInvertir: (Celda) -> Unit,
-          onClickSeleccionarFila: (Fila) -> Unit) {
+fun MA_Tabla(modifier: Modifier = Modifier,
+             panelConfiguracion: PanelConfiguracion,
+             filas: List<Fila>,
+             celdasFiltro: List<Celda>,
+             mostrarTitulos: Boolean = true,
+             onClickSeleccionarFiltro: (Celda) -> Unit,
+             onClickInvertir: (Celda) -> Unit,
+             onClickSeleccionarFila: (Fila) -> Unit) {
 
     val estadoScroll = rememberScrollState()
     val indicadorColor = panelConfiguracion.indicadorColor
@@ -107,9 +102,9 @@ fun Tabla(modifier: Modifier = Modifier,
     Column(modifierColumn) {
         ModalInferiorFiltros() {
             Column {
-                Titulo("Filtro")
-                Lista(celdasFiltro) { celdaFiltro ->
-                    CeldaFiltro(
+                MA_Titulo("Filtro")
+                MA_Lista(celdasFiltro) { celdaFiltro ->
+                    MA_CeldaFiltro(
                         celda = celdaFiltro,
                         onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
                         onClickInvertir = { cf -> onClickInvertir(cf) })
@@ -149,8 +144,8 @@ fun Tabla(modifier: Modifier = Modifier,
         }
 
 
-        Lista(filas) { fila ->
-            FilaTablaDatos(fila, panelConfiguracion) { fila ->
+        MA_Lista(filas) { fila ->
+            MA_FilaTablaDatos(fila, panelConfiguracion) { fila ->
                 onClickSeleccionarFila(fila)
             }
         }
@@ -158,56 +153,6 @@ fun Tabla(modifier: Modifier = Modifier,
 
     }
 
-
-}
-
-@Composable
-fun FilaTablaDatos(fila: Fila, configuracion: PanelConfiguracion, onClick: (Fila) -> Unit) {
-    val modifier = Modifier
-    val filasColor = configuracion.filasColor
-    val ajustarContenidoAncho = configuracion.ajustarContenidoAncho
-    val indicadorColor = configuracion.indicadorColor
-
-    val color: Color = (fila.color).copy(alpha = 0.3f)
-    val colorFondo = if3(filasColor, (fila.color).copy(alpha = 0.1f), Color.Transparent)
-
-
-    Row(
-        modifier = modifier
-            .background(if3(fila.seleccionada, color, colorFondo))
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .clickable {
-                onClick(fila)
-            },
-        verticalAlignment = Alignment.Companion.CenterVertically
-    ) {
-
-
-        fila.celdas.forEachIndexed { indice, celda ->
-
-            var modifierFila: Modifier = Modifier
-
-            if (ajustarContenidoAncho) {
-                modifierFila = modifierFila
-                    .fillMaxWidth()
-                    .weight(1f)
-            } else {
-                modifierFila = modifierFila.width(fila.size)
-            }
-
-            if (indicadorColor && indice == 0) {
-                Indicador(modifierFila, fila.color) {
-                    celda.contenido(modifierFila)
-                }
-            } else {
-                celda.contenido(modifierFila)
-            }
-
-        }
-
-    }
-    HorizontalDivider()
 
 }
 

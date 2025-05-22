@@ -3,7 +3,7 @@ package com.personal.requestmobility.core.composables.componentes
 import androidx.compose.ui.graphics.Color
 import kotlin.random.Random
 
-object Colores {
+object MA_Colores {
     fun obtenerColorAleatorio(): Color {
         val indiceAleatorio = Random.nextInt(vibrantColorList.size)
         return vibrantColorList[indiceAleatorio]

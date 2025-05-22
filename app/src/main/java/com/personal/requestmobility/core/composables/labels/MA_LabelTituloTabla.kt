@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 
 
 @Composable
-fun LabelTituloTabla(
+fun MA_LabelTituloTabla(
     valor: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Black,

@@ -38,7 +38,7 @@ fun TestGraficoBarras() {
 
 
 @Composable
-fun GraficoBarras(
+fun MA_GraficoBarras(
     modifier: Modifier = Modifier,
     listaValores: List<Fila>,
     posicionX: Int = 0,

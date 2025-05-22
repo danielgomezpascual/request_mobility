@@ -12,7 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
-import com.personal.requestmobility.core.composables.scaffold.ScaffoldGenerico
+import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
@@ -54,7 +54,7 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
     dashboardUI: DashboardUI,
     navegacion: (EventosNavegacion) -> Unit
 ) {
-    ScaffoldGenerico(
+    MA_ScaffoldGenerico(
         titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
         // 'navegacion' en ScaffoldGenerico del ejemplo original es la acción del icono de navegación del TopAppBar
         navegacion = { navegacion(EventosNavegacion.Volver) }, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'

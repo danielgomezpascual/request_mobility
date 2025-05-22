@@ -20,13 +20,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiVM.UIState
-import com.personal.requestmobility.core.composables.botones.BotonNormal
+import com.personal.requestmobility.core.composables.botones.MA_BotonNormal
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.checks.MA_CheckBoxNormal
 import com.personal.requestmobility.core.composables.combo.MA_Combo
-import com.personal.requestmobility.core.composables.componentes.panel.Panel
+import com.personal.requestmobility.core.composables.componentes.panel.MA_Panel
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
-import com.personal.requestmobility.core.composables.labels.Titulo
+import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.navegacion.RespuestaAccionCU
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
@@ -97,7 +97,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
 
             MA_Card {
                 Column {
-                    Titulo("Configuración")
+                    MA_Titulo("Configuración")
 
                     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -274,7 +274,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
 
             }
             kpiUI.reloadPanelData()
-            Panel(
+            MA_Panel(
                 modifier = Modifier,
                 panelData = kpiUI.panelData
             )
@@ -283,8 +283,8 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
 
 
             Column {
-                BotonNormal("Guardar") { viewModel.onEvent(DetalleKpiVM.Eventos.Guardar(onProcess)) }
-                BotonNormal("Eliminar") { viewModel.onEvent(DetalleKpiVM.Eventos.Eliminar(onProcess)) }
+                MA_BotonNormal("Guardar") { viewModel.onEvent(DetalleKpiVM.Eventos.Guardar(onProcess)) }
+                MA_BotonNormal("Eliminar") { viewModel.onEvent(DetalleKpiVM.Eventos.Eliminar(onProcess)) }
             }
 
 

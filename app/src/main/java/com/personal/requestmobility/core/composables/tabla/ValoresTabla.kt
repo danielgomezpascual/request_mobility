@@ -1,13 +1,12 @@
 package com.personal.requestmobility.core.composables.tabla
 
-import android.opengl.Visibility
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.componentes.Colores
+import com.personal.requestmobility.core.composables.componentes.MA_Colores
 import com.personal.requestmobility.core.composables.graficas.ValoresGrafica
 import com.personal.requestmobility.core.composables.graficas.ElementoGrafica
 import com.personal.requestmobility.core.utils.esNumerico
@@ -65,7 +64,7 @@ data class ValoresTabla(
             val celdaRestoTexto = Celda(valor = "Resto", titulo =tituloResto, seleccionada =  false)
             val celdasRestoValor = Celda(valor = totalResto.toString(), titulo = tituloAgrupar, seleccionada = false)
 
-            val valorResto = Fila(celdas = listOf(celdaRestoTexto, celdasRestoValor), color = Colores.obtenerColorAleatorio())
+            val valorResto = Fila(celdas = listOf(celdaRestoTexto, celdasRestoValor), color = MA_Colores.obtenerColorAleatorio())
             return (elementosHastaLimite + valorResto)
         } else {
             return elementosHastaLimite
@@ -88,14 +87,14 @@ data class Celda(val valor: String,
                  val colorCelda: Color = Color.Black,
                  val fondoCelda: Color = Color.White,
                  val contenido: @Composable (Modifier) -> Unit = { modifier ->
-                     LabelCelda(modifier = modifier, valor = valor,/* color = colorCelda,*/
+                     MA_LabelCelda(modifier = modifier, valor = valor,/* color = colorCelda,*/
                          alineacion = if3(valor.esNumerico(), TextAlign.End, TextAlign.Start))
                  },
                  val titulo: String,
                  val colorTitulo: Color = Color.White,
                  val fondoTitulo: Color = Color.DarkGray,
                  val celdaTitulo: @Composable (Modifier) -> Unit = { modifierTitulo ->
-                     LabelCeldaTitulo(valor = titulo, color = colorTitulo, fondo = fondoTitulo)
+                     MA_LabelCeldaTitulo(valor = titulo, color = colorTitulo, fondo = fondoTitulo)
                  },
 
                 val seleccionada : Boolean = false,
@@ -108,7 +107,7 @@ fun ValoresTabla.toValoresGrafica(columnaTexto: Int, columnaValor: Int): Valores
 
         var valorTexto = fila.celdas[columnaTexto].valor
         var valor: Float = fila.celdas[columnaValor].valor.toFloat()
-        val color = Colores.obtenerColorAleatorio()
+        val color = MA_Colores.obtenerColorAleatorio()
         ElementoGrafica(x = valorTexto, y = valor, leyenda = valorTexto, color = color)
 
     }

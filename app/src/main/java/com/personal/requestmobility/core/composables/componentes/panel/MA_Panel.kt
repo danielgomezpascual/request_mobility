@@ -19,24 +19,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.componentes.Marco
-import com.personal.requestmobility.core.composables.graficas.GraficoAnillo
-import com.personal.requestmobility.core.composables.graficas.GraficoBarras
-import com.personal.requestmobility.core.composables.graficas.GraficoBarrasVerticales
-import com.personal.requestmobility.core.composables.graficas.GraficoCircular
-import com.personal.requestmobility.core.composables.graficas.GraficoLineas
-import com.personal.requestmobility.core.composables.labels.LabelMini
+import com.personal.requestmobility.core.composables.componentes.MA_Marco
+import com.personal.requestmobility.core.composables.graficas.MA_GraficoAnillo
+import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarras
+import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarrasVerticales
+import com.personal.requestmobility.core.composables.graficas.MA_GraficoCircular
+import com.personal.requestmobility.core.composables.graficas.MA_GraficoLineas
+import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
-import com.personal.requestmobility.core.composables.tabla.Tabla
+import com.personal.requestmobility.core.composables.tabla.MA_Tabla
 
 import kotlin.collections.filter
 import kotlin.collections.map
 
 
 @Composable
-fun Panel(modifier: Modifier = Modifier,
-                    panelData: PanelData
+fun MA_Panel(modifier: Modifier = Modifier,
+             panelData: PanelData
 
 ) {
     //val graTabData by remember { mutableStateOf<GraTabData>(gr) }
@@ -199,9 +199,9 @@ fun GraficaConTablaHorizontal(modifier: Modifier = Modifier,
             .width(panelConfiguracion.width)
             .height(panelConfiguracion.height)
 
-        Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
+        MA_Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
 
-          LabelMini(panelConfiguracion.descripcion)
+          MA_LabelMini(panelConfiguracion.descripcion)
 
             Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 if (panelConfiguracion.mostrarGrafica) {
@@ -252,9 +252,9 @@ fun GraficaConTablaVertical(modifier: Modifier = Modifier,
             .width(panelConfiguracion.width)
             .height(panelConfiguracion.height)
 
-        Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
+        MA_Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
             Column() {
-                LabelMini(panelConfiguracion.descripcion)
+                MA_LabelMini(panelConfiguracion.descripcion)
 
 
 
@@ -314,7 +314,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
         when (panelConfiguracion.tipo) {
             PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES -> {
 
-                GraficoBarras(
+                MA_GraficoBarras(
                     modifier = modifier,
                     listaValores = datosPintar,
                     posicionX = posicionX,
@@ -324,7 +324,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
             }
 
             PanelTipoGrafica.BARRAS_FINAS_VERTICALES -> {
-                GraficoBarrasVerticales(
+                MA_GraficoBarrasVerticales(
                     modifier = modifier,
                     listaValores = datosPintar,
                     posicionX = posicionX,
@@ -333,7 +333,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
             }
 
             PanelTipoGrafica.CIRCULAR -> {
-                GraficoCircular(
+                MA_GraficoCircular(
                     modifier = modifier,
                     listaValores = datosPintar,
                     posicionX = posicionX,
@@ -342,7 +342,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
             }
 
             PanelTipoGrafica.ANILLO -> {
-                GraficoAnillo(
+                MA_GraficoAnillo(
                     modifier = modifier,
                     listaValores = datosPintar,
                     posicionX = posicionX,
@@ -351,7 +351,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
             }
 
             PanelTipoGrafica.LINEAS -> {
-                GraficoLineas(
+                MA_GraficoLineas(
                     modifier = modifier,
                     listaValores = datosPintar,
                     posicionX = posicionX,
@@ -375,7 +375,7 @@ fun dameTipoTabla(panelConfiguracion: PanelConfiguracion,
 
     if (panelConfiguracion.mostrarTabla) {
         return {
-            Tabla(
+            MA_Tabla(
                 modifier = Modifier.fillMaxSize(),
                 panelConfiguracion = panelConfiguracion,
                 //tabla = valoresTabla,

@@ -21,9 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.labels.LabelNormal
+import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.layouts.MA_Box
-import com.personal.requestmobility.core.composables.listas.Lista
+import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import kotlinx.coroutines.launch
 
@@ -44,7 +44,7 @@ fun MA_Combo(titulo: String = "[TITULO]",
     MA_Box(modifier = Modifier.clickable(enabled = true, onClick = { scope.launch { sheetState.show() } })) {
         Column {
             valorInicial
-            LabelNormal(titulo)
+            MA_LabelNormal(titulo)
             Row {
                 Text(fontWeight = FontWeight.ExtraBold, text =  textoSeleccionado)
 
@@ -81,7 +81,7 @@ fun MA_Combo(titulo: String = "[TITULO]",
                         fontStyle = FontStyle.Italic
                     )
                 }
-                Lista(elementosSeleccionables) { elemento ->
+                MA_Lista(elementosSeleccionables) { elemento ->
                     val posicion = elementosSeleccionables.indexOf(elemento)
                     Box(modifier = Modifier.clickable(enabled = true, onClick = {
                         textoSeleccionado= elemento

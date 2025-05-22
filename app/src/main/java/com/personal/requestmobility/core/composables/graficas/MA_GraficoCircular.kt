@@ -39,7 +39,7 @@ fun TestGraficoCircular() {
 
 
 @Composable
-fun GraficoAnillo(
+fun MA_GraficoAnillo(
     modifier: Modifier = Modifier,
     listaValores: List<Fila>,
     posicionX: Int = 0,
@@ -49,11 +49,11 @@ fun GraficoAnillo(
 
 
 ) {
-    _BaseGraficoCircular(modifier, listaValores, posicionX, posivionY,rellenoCentro)
+    MA_BaseGraficoCircular(modifier, listaValores, posicionX, posivionY,rellenoCentro)
 }
 
 @Composable
-fun GraficoCircular(
+fun MA_GraficoCircular(
     modifier: Modifier = Modifier,
     listaValores: List<Fila>,
     posicionX: Int = 0,
@@ -61,13 +61,13 @@ fun GraficoCircular(
     rellenoCentro: Boolean = true,
 ) {
 
-  _BaseGraficoCircular(modifier, listaValores, posicionX, posivionY, rellenoCentro)
+  MA_BaseGraficoCircular(modifier, listaValores, posicionX, posivionY, rellenoCentro)
 }
 
 
 
 @Composable
-private fun _BaseGraficoCircular(
+private fun MA_BaseGraficoCircular(
     modifier: Modifier = Modifier,
     listaValores: List<Fila>,
     posicionX: Int = 0 ,

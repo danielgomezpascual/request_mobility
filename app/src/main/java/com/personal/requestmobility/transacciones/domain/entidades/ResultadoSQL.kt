@@ -1,8 +1,5 @@
 package com.personal.requestmobility.transacciones.domain.entidades
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import com.personal.requestmobility.core.composables.labels.LabelNormal
 import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla

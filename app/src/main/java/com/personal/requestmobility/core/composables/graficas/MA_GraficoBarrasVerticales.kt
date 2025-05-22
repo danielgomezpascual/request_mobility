@@ -13,7 +13,7 @@ import com.himanshoe.charty.bar.config.BarChartConfig
 import com.himanshoe.charty.bar.model.BarData
 import com.himanshoe.charty.common.LabelConfig
 import com.himanshoe.charty.common.asSolidChartColor
-import com.personal.requestmobility.core.composables.componentes.Marco
+import com.personal.requestmobility.core.composables.componentes.MA_Marco
 import com.personal.requestmobility.core.composables.tabla.Fila
 /*
 @Preview
@@ -41,21 +41,21 @@ fun TestGraficoBarrasVerticales() {
 */
 
 @Composable
-fun GraficoBarrasVerticalesConMarco(
+fun MA_GraficoBarrasVerticalesConMarco(
     modifier: Modifier = Modifier,
     titulo: String = "",
     listaValores: List<Fila>,
     target: Float = 1f) {
 
-    Marco(modifier = modifier, titulo = titulo) {
-        GraficoBarrasVerticalesConMarco(modifier, titulo, listaValores, target)
+    MA_Marco(modifier = modifier, titulo = titulo) {
+        MA_GraficoBarrasVerticalesConMarco(modifier, titulo, listaValores, target)
     }
 
 }
 
 
 @Composable
-fun GraficoBarrasVerticales(
+fun MA_GraficoBarrasVerticales(
     modifier: Modifier = Modifier,
 
     listaValores: List<Fila>,

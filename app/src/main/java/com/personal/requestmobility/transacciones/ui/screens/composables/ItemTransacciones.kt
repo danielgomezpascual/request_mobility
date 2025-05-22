@@ -10,19 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.R
-import com.personal.requestmobility.core.composables.formas.Circulo
-import com.personal.requestmobility.core.composables.imagenes.ImagenDrawable
-import com.personal.requestmobility.core.composables.labels.LabelNormal
+import com.personal.requestmobility.core.composables.formas.MA_Circulo
+import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.transacciones.ui.entidades.EstadoProceso
 import com.personal.requestmobility.transacciones.ui.entidades.TransaccionesUI
 
@@ -81,20 +75,20 @@ fun ItemTransacciones(trx: TransaccionesUI, onClick: (TransaccionesUI)->Unit) {
 
 
                         //ImagenDrawable(R.drawable)
-            Circulo(color = trx.estado.color, size = 48.dp )
+            MA_Circulo(color = trx.estado.color, size = 48.dp )
             Spacer(modifier = Modifier.Companion.width(16.dp))
 
             // Nombre y detalles
             Column {
                 Row {
-                    LabelNormal("#${trx.visible}# ")
-                    LabelNormal("#${trx.seleccionada}# ")
-                    LabelNormal(trx.numero)
+                    MA_LabelNormal("#${trx.visible}# ")
+                    MA_LabelNormal("#${trx.seleccionada}# ")
+                    MA_LabelNormal(trx.numero)
                 }
 
                 Row {
-                    LabelNormal(trx.reqStatus.toString())
-                    LabelNormal(trx.tipoMov)
+                    MA_LabelNormal(trx.reqStatus.toString())
+                    MA_LabelNormal(trx.tipoMov)
                 }
             }
         }

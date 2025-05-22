@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import com.personal.requestmobility.App
 
 @Composable
-fun <T> ListaColumn(data: List<T>, itemContent: @Composable (T) -> Unit) {
+fun <T> MA_ListaColumn(data: List<T>, itemContent: @Composable (T) -> Unit) {
     Column (modifier = Modifier.Companion.fillMaxWidth()) {
        data.forEach {
            App.log.d(it)

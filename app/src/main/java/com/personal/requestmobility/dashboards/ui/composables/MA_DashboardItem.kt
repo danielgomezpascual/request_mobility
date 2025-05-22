@@ -16,7 +16,7 @@ import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
 
 
 @Composable
-fun DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -> Unit) {
+fun MA_DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -> Unit) {
     Column {
         Row(
             modifier = Modifier

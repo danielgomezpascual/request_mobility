@@ -18,7 +18,7 @@ import com.personal.requestmobility.core.navegacion.EventosNavegacion
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldGenerico(
+fun MA_ScaffoldGenerico(
     titulo: String,
     navegacion: (EventosNavegacion) -> Unit,
     contenidoBottomBar: @Composable () -> Unit = {},

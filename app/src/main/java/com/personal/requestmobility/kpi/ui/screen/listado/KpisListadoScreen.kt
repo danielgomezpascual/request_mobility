@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.edittext.TextBuscador
-import com.personal.requestmobility.core.composables.listas.Lista
+import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
+import com.personal.requestmobility.core.composables.listas.MA_Lista
 
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
@@ -84,7 +84,7 @@ fun SucessListadoLectoras(viewModel: KpisListadoVM,
 
 
             // Barra de búsqueda
-            TextBuscador(
+            MA_TextBuscador(
                 searchText = uiState.textoBuscar,
                 onSearchTextChanged = { it ->
                     viewModel.onEvent(KpisListadoVM.Eventos.Buscar(it))
@@ -119,7 +119,7 @@ fun SucessListadoLectoras(viewModel: KpisListadoVM,
 
 
 
-            Lista(data = uiState.lista) { item ->
+            MA_Lista(data = uiState.lista) { item ->
                 KpiListItem(item, onClickItem = onClickKpi)
             }
 

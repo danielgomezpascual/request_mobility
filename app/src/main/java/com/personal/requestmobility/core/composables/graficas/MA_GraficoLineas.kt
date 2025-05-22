@@ -6,12 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.himanshoe.charty.bar.model.BarData
 import com.himanshoe.charty.common.ChartColor
 import com.himanshoe.charty.common.LabelConfig
-import com.himanshoe.charty.common.asSolidChartColor
 import com.himanshoe.charty.line.LineChart
 import com.himanshoe.charty.line.config.InteractionTooltipConfig
 import com.himanshoe.charty.line.config.LineChartColorConfig
@@ -28,10 +25,10 @@ fun TestGraficoLineas() {
 
 
 @Composable
-fun GraficoLineas(modifier: Modifier = Modifier,
-                  listaValores: List<Fila>,
-                  posicionX: Int = 0,
-                  posivionY: Int = 1,
+fun MA_GraficoLineas(modifier: Modifier = Modifier,
+                     listaValores: List<Fila>,
+                     posicionX: Int = 0,
+                     posivionY: Int = 1,
                 ) {
 
 

@@ -1,10 +1,8 @@
 package com.personal.requestmobility.core.composables.graficas
 
 import androidx.compose.ui.graphics.Color
-import com.personal.requestmobility.core.composables.componentes.Colores
-import com.personal.requestmobility.core.composables.tabla.Celda
+import com.personal.requestmobility.core.composables.componentes.MA_Colores
 import com.personal.requestmobility.core.composables.tabla.Fila
-import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 
 
 data class ValoresGrafica(val elementos: List<ElementoGrafica> = emptyList<ElementoGrafica>(),
@@ -36,7 +34,7 @@ data class ValoresGrafica(val elementos: List<ElementoGrafica> = emptyList<Eleme
 
                 var valorTexto = fila.celdas[columnaTexto].valor
                 var valor: Float = fila.celdas[columnaValor].valor.toFloat()
-                val color = Colores.obtenerColorAleatorio()
+                val color = MA_Colores.obtenerColorAleatorio()
                 ElementoGrafica(x = valorTexto, y = valor, leyenda = valorTexto, color = color)
 
             }
@@ -49,7 +47,7 @@ data class ValoresGrafica(val elementos: List<ElementoGrafica> = emptyList<Eleme
 
 }
 
-data class ElementoGrafica(val x: Any, val y: Float, val leyenda: String = "", var color: Color = Colores.obtenerColorAleatorio())
+data class ElementoGrafica(val x: Any, val y: Float, val leyenda: String = "", var color: Color = MA_Colores.obtenerColorAleatorio())
 
 
 

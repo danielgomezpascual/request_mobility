@@ -16,7 +16,7 @@ import com.personal.requestmobility.App
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextBuscador(searchText: String, onSearchTextChanged: (String) -> Unit) {
+fun MA_TextBuscador(searchText: String, onSearchTextChanged: (String) -> Unit) {
     OutlinedTextField(
         maxLines = 1,
         value = searchText,

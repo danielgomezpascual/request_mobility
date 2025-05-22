@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.labels.LabelTituloTabla
+import com.personal.requestmobility.core.composables.labels.MA_LabelTituloTabla
 
 
 @Composable
-fun Marco(modifier: Modifier = Modifier, titulo: String = "", componente: @Composable () -> Unit) {
+fun MA_Marco(modifier: Modifier = Modifier, titulo: String = "", componente: @Composable () -> Unit) {
 
     Column(
         modifier = modifier
@@ -28,7 +28,7 @@ fun Marco(modifier: Modifier = Modifier, titulo: String = "", componente: @Compo
         verticalArrangement = Arrangement.Center
         /* modifier = Modifier.fillMaxWidth()*/
     ) {
-        LabelTituloTabla(
+        MA_LabelTituloTabla(
             titulo,
             modifier = Modifier
                 .fillMaxWidth()

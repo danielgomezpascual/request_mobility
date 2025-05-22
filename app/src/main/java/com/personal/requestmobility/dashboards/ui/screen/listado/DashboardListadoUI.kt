@@ -22,13 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.edittext.TextBuscador
-import com.personal.requestmobility.core.composables.listas.Lista
-import com.personal.requestmobility.core.composables.scaffold.ScaffoldGenerico
+import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
+import com.personal.requestmobility.core.composables.listas.MA_Lista
+import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
-import com.personal.requestmobility.dashboards.ui.composables.DashboardItem
+import com.personal.requestmobility.dashboards.ui.composables.MA_DashboardItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -60,7 +60,7 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
     uiState: DashboardListadoVM.UIState.Success,
     navegacion: (EventosNavegacion) -> Unit
 ) {
-    ScaffoldGenerico(
+    MA_ScaffoldGenerico(
         titulo = "Dashboards", // Título adaptado
         navegacion = { navegacion(EventosNavegacion.MenuApp) }, // Para el icono de navegación del TopAppBar
         contenidoBottomBar = {
@@ -85,7 +85,7 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
                     .fillMaxWidth() // fillMaxWidth para la columna principal
                     .padding(16.dp) // Padding general del contenido como en el ejemplo
             ) {
-                TextBuscador(
+                MA_TextBuscador(
                     searchText = uiState.textoBuscar,
                     onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
                         viewModel.onEvento(DashboardListadoVM.Eventos.Buscar(texto))
@@ -106,10 +106,10 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
                     )
                     // El TextButton de "Nuevo" del ejemplo está comentado y la funcionalidad está en el BottomAppBar
                 }
-                Lista( // Asume que Lista es un Composable que maneja internamente LazyColumn
+                MA_Lista( // Asume que Lista es un Composable que maneja internamente LazyColumn
                     data = uiState.lista,
                     itemContent = { item -> // item es DashboardUI
-                        DashboardItem(item, navegacion = navegacion)
+                        MA_DashboardItem(item, navegacion = navegacion)
                     }
                 )
             }

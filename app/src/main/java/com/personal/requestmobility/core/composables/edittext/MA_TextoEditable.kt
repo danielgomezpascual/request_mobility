@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TextoEditable(
+fun MA_TextoEditable(
     valor: String,
     titulo: String,
     modifier: Modifier = Modifier.Companion,
