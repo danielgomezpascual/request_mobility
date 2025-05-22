@@ -19,30 +19,7 @@ data class ValoresTabla(
     var filas: List<Fila> = emptyList<Fila>(),
 
 ) {
-    companion object {
 
-        fun fromValoresGrafico(data: ValoresGrafica, indicadorColor: Boolean = true, filasColor: Boolean = false): ValoresTabla {
-
-
-            //  var titulos: List<Header> = emptyList<Header>()
-            var filas: List<Fila> = emptyList<Fila>()
-
-            //cabecera, titulo de columna
-            /*  titulos = titulos.plus(Header(data.textoX))
-              titulos = titulos.plus(Header(data.textoY))*/
-
-            //datos
-            data.elementos.forEach { d ->
-
-                val celdaX: Celda = Celda(valor = d.x.toString(), titulo = d.leyenda)
-                val celdaY: Celda = Celda(valor = d.x.toString(), titulo = d.leyenda)
-                val fila: Fila = Fila(celdas = listOf(celdaX, celdaY), color = d.color)
-                filas = filas.plus(fila)
-            }
-
-            return ValoresTabla(/*titulos = titulos,*/ filas = filas, /*indicadorColor = indicadorColor, filasColor = filasColor*/)
-        }
-    }
 
     fun tieneContenido(): Boolean = (filas.isNotEmpty())
 
