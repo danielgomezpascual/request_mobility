@@ -1,21 +1,18 @@
 package com.personal.requestmobility
 
 import android.app.Application
-import com.google.gson.Gson
-import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
-import com.personal.requestmobility.core.composables.componentes.panel.PanelOrientacion
 import com.personal.requestmobility.core.log.di.moduloLog
 import com.personal.requestmobility.core.log.domain.MyLog
 import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.core.room.moduloDatabase
 import com.personal.requestmobility.dashboards.moduloDashboards
 import com.personal.requestmobility.kpi.moduloKpis
+import com.personal.requestmobility.paneles.moduloPaneles
 import com.personal.requestmobility.transacciones.data.local.entities.TransaccionesRoom
 import com.personal.requestmobility.transacciones.moduloTransacciones
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.JsonNull
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -35,7 +32,7 @@ class App : Application() {
         initKoin()
         log = getKoin().get()
 
-        //cargaTransaccionesTest()
+        cargaTransaccionesTest()
 
       /*  var panel = PanelConfiguracion()
 
@@ -63,7 +60,8 @@ class App : Application() {
                 moduloDatabase,
                 moduloKpis,
                 moduloTransacciones,
-                moduloDashboards
+                moduloDashboards,
+                moduloPaneles
 
             )
 
@@ -98,6 +96,7 @@ class App : Application() {
         GlobalScope.launch(Dispatchers.IO) {
             val database: AppDatabase = getKoin().get()
             val dao = database.transaccionesDao()
+            dao.vaciarTabla()
             dao.insert(transacciones)
 
         }

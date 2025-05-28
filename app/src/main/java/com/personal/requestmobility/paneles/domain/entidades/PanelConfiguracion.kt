@@ -1,11 +1,8 @@
-package com.personal.requestmobility.core.composables.componentes.panel
+package com.personal.requestmobility.paneles.domain.entidades
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.serialization.Serializable
-
 
 data class PanelConfiguracion(
     val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,

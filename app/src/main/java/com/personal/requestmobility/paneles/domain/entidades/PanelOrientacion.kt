@@ -1,4 +1,4 @@
-package com.personal.requestmobility.core.composables.componentes.panel
+package com.personal.requestmobility.paneles.domain.entidades
 
 enum class PanelOrientacion(val tipo: String) {
     VERTICAL("VERTICAL"),

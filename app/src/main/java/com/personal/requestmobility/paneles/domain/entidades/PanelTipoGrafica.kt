@@ -1,4 +1,4 @@
-package com.personal.requestmobility.core.composables.componentes.panel
+package com.personal.requestmobility.paneles.domain.entidades
 
 enum class PanelTipoGrafica(val tipo: String) {
     BARRAS_ANCHAS_VERTICALES("BARRAS_ANCHAS_VERTICALES"),
@@ -8,7 +8,7 @@ enum class PanelTipoGrafica(val tipo: String) {
     LINEAS("LINEAS");
 
     companion object{
-        fun from(codigo: String): PanelTipoGrafica = (PanelTipoGrafica.entries.find { it.tipo == codigo }) ?: PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES
+        fun from(codigo: String): PanelTipoGrafica = (entries.find { it.tipo == codigo }) ?: PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES
     }
 
 }

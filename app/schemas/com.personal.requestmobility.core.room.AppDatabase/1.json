@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e377b8e42736e3c21b6c06f1cf041c6e",
+    "identityHash": "a44f638a6ffba2d7aa390903507e3593",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -152,7 +152,7 @@
       },
       {
         "tableName": "Kpis",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `sql` TEXT NOT NULL, `configuracion` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `origen` TEXT NOT NULL, `sql` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -173,14 +173,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "sql",
-            "columnName": "sql",
+            "fieldPath": "origen",
+            "columnName": "origen",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "configuracion",
-            "columnName": "configuracion",
+            "fieldPath": "sql",
+            "columnName": "sql",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -196,7 +196,7 @@
       },
       {
         "tableName": "Dashboard",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `descripcion` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `logo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `paneles` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -211,9 +211,65 @@
             "notNull": true
           },
           {
+            "fieldPath": "logo",
+            "columnName": "logo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "descripcion",
             "columnName": "descripcion",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paneles",
+            "columnName": "paneles",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Paneles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `configuracion` TEXT NOT NULL, `idKpi` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titulo",
+            "columnName": "titulo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descripcion",
+            "columnName": "descripcion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "configuracion",
+            "columnName": "configuracion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idKpi",
+            "columnName": "idKpi",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -230,7 +286,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e377b8e42736e3c21b6c06f1cf041c6e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a44f638a6ffba2d7aa390903507e3593')"
     ]
   }
 }

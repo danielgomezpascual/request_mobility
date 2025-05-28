@@ -24,7 +24,6 @@ import com.personal.requestmobility.core.composables.botones.MA_BotonNormal
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.checks.MA_CheckBoxNormal
 import com.personal.requestmobility.core.composables.combo.MA_Combo
-import com.personal.requestmobility.core.composables.componentes.panel.MA_Panel
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.navegacion.RespuestaAccionCU
@@ -81,9 +80,27 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
                 .verticalScroll(rememberScrollState())
         ) {
 
+
             MA_TextoNormal(
                 valor = kpiUI.id.toString(), "ID",
                 onValueChange = { valor -> null }
+            )
+
+
+
+
+            MA_TextoNormal(
+                valor = kpiUI.titulo, titulo = "Titulo",
+                onValueChange = { valor ->
+                    viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeTitulo(valor))
+                }
+            )
+
+            MA_TextoNormal(
+                valor = kpiUI.descripcion, titulo = "Descripcion",
+                onValueChange = { valor ->
+                    viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeDescripcion(valor))
+                }
             )
 
 
@@ -95,7 +112,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
                 }
             )
 
-            MA_Card {
+          /*  MA_Card {
                 Column {
                     MA_Titulo("Configuración")
 
@@ -272,12 +289,12 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
 
                 }
 
-            }
-            kpiUI.reloadPanelData()
+            }*/
+          /*  kpiUI.reloadPanelData()
             MA_Panel(
                 modifier = Modifier,
                 panelData = kpiUI.panelData
-            )
+            )*/
 
             App.log.d(kpiUI.toString())
 

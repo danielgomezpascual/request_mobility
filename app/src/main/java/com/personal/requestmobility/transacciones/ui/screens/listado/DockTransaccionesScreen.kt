@@ -19,7 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.componentes.panel.MA_Panel
+import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.core.composables.labels.MA_LabelTituloTabla
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
@@ -72,14 +72,14 @@ fun Success(viewModel: DockTransaccionesVM, uiState: UIState.Success) {
                     MA_LabelTituloTabla("Transacciones")
                     val modifier: Modifier = Modifier.fillMaxSize()
                     Column() {
-                        uiState.kpis.forEach { kpiUI ->
+                       /* uiState.kpis.forEach { kpiUI ->
                             MA_Panel(
                                 modifier = modifier,
                                 panelData = kpiUI.panelData
                             )
 
                             App.log.d(kpiUI.panelData)
-                        }
+                        }*/
                     }
                 }
             }

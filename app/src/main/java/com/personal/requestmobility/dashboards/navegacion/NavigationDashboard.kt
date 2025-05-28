@@ -6,11 +6,28 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
+import com.personal.requestmobility.dashboards.ui.screen.cuadricula.CuadriculDashboardUI
 import com.personal.requestmobility.dashboards.ui.screen.detalle.DetalleDashboardUI
 import com.personal.requestmobility.dashboards.ui.screen.listado.DashboardListadoUI
+import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardUI
 import com.personal.requestmobility.menu.navegacion.ScreenMenu
 
 fun NavGraphBuilder.NavegacionDashboard(navController: NavController) {
+    composable<CuadriculaDashboards> {
+        CuadriculDashboardUI() { navegacion ->
+            goto(navegacion, navController)
+        }
+    }
+
+
+    composable<VisualizadorDashboard> { backStackEntry ->
+        val visualizadorDashboardRoute: VisualizadorDashboard = backStackEntry.toRoute<VisualizadorDashboard>()
+        VisualizadorDashboardUI(visualizadorDashboardRoute.id) { navegacion ->
+            goto(navegacion, navController)
+        }
+    }
+
+
     composable<ListadoDashboards> {
         DashboardListadoUI() { navegacion ->
             goto(navegacion, navController)
@@ -49,6 +66,10 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
             navController.navigate(ListadoDashboards) {
                 popUpTo<ListadoDashboards>() { inclusive = true }
             }
+        }
+
+        is EventosNavegacion.VisualizadorDashboard -> {
+            navController.navigate(VisualizadorDashboard(navegacion.identificador))
         }
         // Considera añadir un 'else' o manejar todos los casos posibles de EventosNavegacion
     }

@@ -42,12 +42,16 @@ fun MA_GraficoBarras(
     modifier: Modifier = Modifier,
     listaValores: List<Fila>,
     posicionX: Int = 0,
-    posivionY: Int = 1,
+    posicionY: Int = 1,
 ) {
     val data =  listaValores.map { fila ->
+
+        val x =  if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
+        val y =   if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
+
         BarData(
-            xValue = fila.celdas[posicionX].valor,
-            yValue = fila.celdas[posivionY].valor.toFloat(),
+            xValue = x,
+            yValue = y,
             barColor = (fila.color).asSolidChartColor()
         )
     }

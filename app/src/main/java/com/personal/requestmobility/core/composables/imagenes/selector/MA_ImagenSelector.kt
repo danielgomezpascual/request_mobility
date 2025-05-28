@@ -10,32 +10,41 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape // O la forma que prefieras
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.personal.requestmobility.core.composables.imagenes.selector.MA_ImagenSelectorDialogo
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,6 +56,7 @@ import java.io.File
 fun MA_ImagenSelector(
     modifier: Modifier = Modifier,
     defaultImageResId: Int, // Ejemplo: R.drawable.default_avatar
+    defaultImageFilePath: String? = null,
     imageSize: Dp = 120.dp, // Tamaño del control de imagen
     onImageStored: (filePath: String?) -> Unit // Callback con la ruta del archivo guardado
 ) {
@@ -58,20 +68,36 @@ fun MA_ImagenSelector(
     val imageFileHelper = remember(context) { ImageFileHelper(context) }
 
 
+    // Determina el modelo a cargar para la imagen por defecto o el placeholder
+    val modelForDefaultDisplay: Any = remember(defaultImageFilePath, defaultImageResId) {
+        defaultImageFilePath ?: defaultImageResId
+        // Coil tomará la ruta (String) si se proporciona,
+        // o el ID de recurso (Int) si la ruta es nula.
+        // Si la ruta del archivo no es válida, Coil usará su lógica de .error()
+    }
+
+
 // Painter actual para la imagen
     val painter = if (imageUriToDisplay != null) {
-        rememberAsyncImagePainter(model = imageUriToDisplay)
+        // rememberAsyncImagePainter(model = imageUriToDisplay)
+        // El usuario ha seleccionado/tomado una imagen
+        rememberAsyncImagePainter(
+            model = ImageRequest.Builder(context)
+                .data(imageUriToDisplay) // Carga la nueva imagen (Uri)
+                .placeholder(defaultImageResId) // Placeholder mientras carga la nueva
+                .error(defaultImageResId)       // Si hay error al cargar la nueva
+                .crossfade(true) // Pequeña animación
+                .build())
     } else {
         // USA COIL PARA CARGAR LA IMAGEN POR DEFECTO DESDE EL RECURSO ID
         rememberAsyncImagePainter(
             model = ImageRequest.Builder(context)
-                .data(defaultImageResId) // Coil puede tomar el ID del recurso directamente
+                .data(modelForDefaultDisplay) // Coil puede tomar el ID del recurso directamente
                 .error(defaultImageResId) // Opcional: si Coil falla, intenta mostrarlo directamente
                 .placeholder(defaultImageResId) // Opcional: placeholder mientras carga
                 .build()
         )
     }
-
     // Launcher para tomar foto
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
@@ -130,7 +156,6 @@ fun MA_ImagenSelector(
     )
 
 
-
     val sheetState = rememberModalBottomSheetState()
 
 
@@ -161,7 +186,7 @@ fun MA_ImagenSelector(
     MA_BottomSheet(
         sheetState = sheetState,
         onClose = {
-            {  scope.launch { sheetState.hide() }}
+            { scope.launch { sheetState.hide() } }
         },
         contenido = {
             Card(
@@ -216,7 +241,7 @@ fun MA_ImagenSelector(
                     }
 
                     TextButton(
-                        onClick = {  scope.launch { sheetState.hide() }} ,
+                        onClick = { scope.launch { sheetState.hide() } },
                         modifier = Modifier.width(100.dp)
                     ) {
                         Text("Cancelar")
@@ -226,32 +251,32 @@ fun MA_ImagenSelector(
         })
 
 
-   /* MA_ImagenSelectorDialogo(
-        onDismissRequest = { showSelectionDialog = false },
-        onTakePhotoClick = {
-            showSelectionDialog = false
-            when (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)) {
-                PackageManager.PERMISSION_GRANTED -> {
-                    val uriAndPath = imageFileHelper.createUriAndPathForCamera()
-                    if (uriAndPath != null) {
-                        takePictureLauncher.launch(uriAndPath.first)
-                    } else {
-                        Toast.makeText(context, "Error al preparar la cámara.", Toast.LENGTH_SHORT).show()
-                        onImageStored(null)
-                    }
-                }
+    /* MA_ImagenSelectorDialogo(
+         onDismissRequest = { showSelectionDialog = false },
+         onTakePhotoClick = {
+             showSelectionDialog = false
+             when (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)) {
+                 PackageManager.PERMISSION_GRANTED -> {
+                     val uriAndPath = imageFileHelper.createUriAndPathForCamera()
+                     if (uriAndPath != null) {
+                         takePictureLauncher.launch(uriAndPath.first)
+                     } else {
+                         Toast.makeText(context, "Error al preparar la cámara.", Toast.LENGTH_SHORT).show()
+                         onImageStored(null)
+                     }
+                 }
 
-                else -> {
-                    cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                }
-            }
-        },
-        onPickFromGalleryClick = {
-            showSelectionDialog = false
-            pickImageLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
-        }
-    )*/
+                 else -> {
+                     cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                 }
+             }
+         },
+         onPickFromGalleryClick = {
+             showSelectionDialog = false
+             pickImageLauncher.launch(
+                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+             )
+         }
+     )*/
 
 }

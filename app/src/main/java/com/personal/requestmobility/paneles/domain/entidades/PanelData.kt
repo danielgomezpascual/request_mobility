@@ -1,8 +1,7 @@
-package com.personal.requestmobility.core.composables.componentes.panel
+package com.personal.requestmobility.paneles.domain.entidades
 
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
-
 
 data class PanelData(
     val panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),

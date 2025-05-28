@@ -7,6 +7,7 @@ import com.personal.requestmobility.dashboards.navegacion.NavegacionDashboard
 import com.personal.requestmobility.kpi.navegacion.NavegacionKpis
 import com.personal.requestmobility.menu.navegacion.NavegavionMenu
 import com.personal.requestmobility.menu.navegacion.ScreenMenu
+import com.personal.requestmobility.paneles.navegacion.NavegacionPaneles
 import com.personal.requestmobility.transacciones.navegacion.NavegacionTransacciones
 
 @Composable
@@ -18,5 +19,6 @@ fun NavegacionGuia() {
         NavegacionTransacciones(navController)
         NavegacionKpis(navController)
         NavegacionDashboard(navController)
+        NavegacionPaneles(navController)
     }
 }

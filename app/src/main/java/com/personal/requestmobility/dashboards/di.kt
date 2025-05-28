@@ -5,16 +5,25 @@ import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.dashboards.data.ds.local.DashboardLocalDS
 import com.personal.requestmobility.dashboards.data.ds.local.dao.DashboardDao
 import com.personal.requestmobility.dashboards.data.repositorios.DashboardRepositoriosImp
-import com.personal.requestmobility.dashboards.domain.interactors.* // Importa todos los casos de uso del dominio
+import com.personal.requestmobility.dashboards.domain.interactors.CargarDashboardCU
+import com.personal.requestmobility.dashboards.domain.interactors.EliminarDashboardCU
+import com.personal.requestmobility.dashboards.domain.interactors.EliminarTodosDashboardsCU
+import com.personal.requestmobility.dashboards.domain.interactors.GuardarDashboardCU
+import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardCU
+import com.personal.requestmobility.dashboards.domain.interactors.ObtenerKpisDashboard
+import com.personal.requestmobility.dashboards.domain.interactors.ObtenerKpisSeleccionPanel
 import com.personal.requestmobility.dashboards.domain.repositorios.DashboardRepositorio
+import com.personal.requestmobility.dashboards.navegacion.VisualizadorDashboard
+import com.personal.requestmobility.dashboards.ui.screen.cuadricula.CuadriculaDashboardVM
 import com.personal.requestmobility.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.requestmobility.dashboards.ui.screen.listado.DashboardListadoVM
+import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardVM
+import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
+import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import retrofit2.Retrofit
 
 val moduloDashboards = module {
-
 
     // DAO for Dashboards
     single<DashboardDao> { get<AppDatabase>().dashboardDao() } // Asume que AppDatabase tiene dashboardDao()
@@ -35,11 +44,24 @@ val moduloDashboards = module {
     single<ObtenerDashboardCU> { ObtenerDashboardCU(get<DashboardRepositorio>()) }
     single<EliminarTodosDashboardsCU> { EliminarTodosDashboardsCU(get<DashboardRepositorio>()) }
     single<EliminarDashboardCU> { EliminarDashboardCU(get<DashboardRepositorio>()) }
-    single<GuardarDashboardCU> { GuardarDashboardCU(get<DashboardRepositorio>()) }
     single<CargarDashboardCU> { CargarDashboardCU(get<DashboardRepositorio>()) }
+    single<GuardarDashboardCU> { GuardarDashboardCU(get<DashboardRepositorio>()) }
+
+    single<ObtenerKpisSeleccionPanel> { ObtenerKpisSeleccionPanel(get<KpisRepositorio>()) }
+    single<ObtenerKpisDashboard> { ObtenerKpisDashboard(get<DashboardRepositorio>(), get<ObtenerKpiCU>()) }
 
 
     // ViewModels for Dashboards
+    viewModel {
+        CuadriculaDashboardVM(obtenerDashboardsCU = get<ObtenerDashboardCU>())
+    }
+
+
+
+    viewModel{
+        VisualizadorDashboardVM(obtenerKPI = get<ObtenerKpisDashboard>())
+    }
+
     viewModel {
         DashboardListadoVM(obtenerDashboardsCU = get<ObtenerDashboardCU>())
     }
@@ -49,7 +71,8 @@ val moduloDashboards = module {
         DetalleDashboardVM(
             cargarDashboardCU = get<CargarDashboardCU>(),
             eliminarDashboardCU = get<EliminarDashboardCU>(),
-            guardarDashboardCU = get<GuardarDashboardCU>()
+            guardarDashboardCU = get<GuardarDashboardCU>(),
+            obtenerKpisSeleccionPanel = get<ObtenerKpisSeleccionPanel>()
         )
     }
 }

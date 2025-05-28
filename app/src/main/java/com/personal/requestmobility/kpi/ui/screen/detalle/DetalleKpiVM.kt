@@ -1,17 +1,12 @@
 package com.personal.requestmobility.kpi.ui.screen.detalle
 
-import androidx.compose.ui.focus.FocusEventModifier
-import androidx.compose.ui.graphics.vector.PathData
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.componentes.panel.PanelData
-import com.personal.requestmobility.core.composables.componentes.panel.PanelOrientacion
-import com.personal.requestmobility.core.composables.componentes.panel.PanelTipoGrafica
+import com.personal.requestmobility.paneles.domain.entidades.PanelOrientacion
+import com.personal.requestmobility.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.requestmobility.core.navegacion.RespuestaAccionCU
-import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.kpi.domain.interactors.EliminarKpiCU
 import com.personal.requestmobility.kpi.domain.interactors.GuardarKpiCU
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
@@ -97,9 +92,9 @@ class DetalleKpiVM(
                                 val k = KpiUI(id = estado.kpiUI.id,
                                     titulo =  estado.kpiUI.titulo,
                                     descripcion =  estado.kpiUI.descripcion,
-                                    sql = evento.sql,
-                                    panelData = estado.kpiUI.panelData,
-                                    resultadoSQL = estado.kpiUI.resultadoSQL).reloadPanelData()
+                                    sql = evento.sql)
+                                    /*panelData = estado.kpiUI.panelData,
+                                    resultadoSQL = estado.kpiUI.resultadoSQL).reloadPanelData()*/
 
 
 
@@ -110,7 +105,7 @@ class DetalleKpiVM(
 
 
                             }
-
+/*
                             is Eventos.onChangeOrientacion -> {
                                 estado.copy(
                                     kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(orientacion = PanelOrientacion.from(evento.valor))))
@@ -228,7 +223,7 @@ class DetalleKpiVM(
                                 )
                             }
 
-
+*/
                             else -> estado
                         }
                     } else {

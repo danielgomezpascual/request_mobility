@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
 import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.transacciones.ui.screens.composables.ModalInferiorFiltros

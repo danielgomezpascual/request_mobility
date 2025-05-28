@@ -1,6 +1,7 @@
 package com.personal.requestmobility.dashboards.ui.screen.detalle
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -9,16 +10,21 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.imagenes.selector.MA_ImagenSelector
+import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.dashboards.ui.entidades.KpiSeleccionPanel
+import com.personal.requestmobility.dashboards.ui.composables.KpiSeleccionPanelItem
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
+import com.personal.requestmobility.kpi.domain.entidades.Kpi
 
 import org.koin.androidx.compose.koinViewModel
 
@@ -80,6 +86,8 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
         },
         contenido = {
             Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
 
                     .padding(horizontal = 16.dp) // Padding adicional para el contenido interno
@@ -88,17 +96,16 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
             ) {
 
 
-                Spacer(modifier = Modifier.height(16.dp)) // Espacio superior
-
+                //     Spacer(modifier = Modifier.height(16.dp)) // Espacio superior
 
 
                 Text("Selecciona tu foto de perfil:", style = MaterialTheme.typography.headlineSmall)
-                Spacer(modifier = Modifier.height(24.dp))
-                var userImageFilePath by remember { mutableStateOf<String?>(null) }
+                //    Spacer(modifier = Modifier.height(24.dp))
+                var userImageFilePath by remember { mutableStateOf<String?>(dashboardUI.logo) }
                 var feedbackMessage by remember { mutableStateOf("") }
 
 
-                MA_ImagenSelector(
+                MA_ImagenSelector(defaultImageFilePath = dashboardUI.logo,
                     defaultImageResId = android.R.drawable.sym_def_app_icon, // Reemplaza con tu drawable por defecto
                     // defaultImageResId = R.drawable.ic_default_profile, // Si tienes uno propio
                     onImageStored = { filePath ->
@@ -107,12 +114,12 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                             feedbackMessage = "Imagen guardada en: $filePath"
                             // Aquí puedes guardar 'filePath' en tu base de datos
                             App.log.d("Esta es la ruta: $feedbackMessage")
+                            viewModel.onEvento(DetalleDashboardVM.Eventos.ActualizarLogo(filePath))
                         } else {
                             feedbackMessage = "No se seleccionó o guardó ninguna imagen."
                         }
                     }
                 )
-
 
 
                 // ID: Mostrar solo si es un dashboard existente, no editable
@@ -122,7 +129,7 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                         titulo = "ID",
                         onValueChange = { /* No editable, función vacía o null como en el ejemplo */ },
 
-                    )
+                        )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
@@ -144,9 +151,28 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                         viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeDescripcion(valor))
                     },
 
-                )
+                    )
                 // No hay más campos como "Codigo Organizacion" o "Codigo" para Dashboard
                 Spacer(modifier = Modifier.height(16.dp)) // Espacio inferior
+
+                Text("Paneles:", style = MaterialTheme.typography.headlineSmall)
+                Box(modifier = Modifier.height(200.dp)) {
+                    App.log.lista("Panles", dashboardUI.listaPaneles)
+                    MA_Lista(dashboardUI.listaPaneles) { item ->
+                        KpiSeleccionPanelItem(item) { kpiSeleccionPanel ->
+                            val paneles: List<KpiSeleccionPanel> = dashboardUI.listaPaneles.map { kpi ->
+                                App.log.v(kpi.toString())
+                                if (kpi.equals(kpiSeleccionPanel)) {
+                                    kpi.copy(seleccionado = !kpi.seleccionado)
+                                } else {
+                                    kpi
+                                }
+                            }
+                            viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(paneles))
+                        }
+                    }
+                }
+
             }
         }
     )

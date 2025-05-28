@@ -31,13 +31,15 @@ data class ResultadoSQL(var titulos: List<String> = emptyList(),
                     }else{
                         Celda(valor = contenido, titulo = titulos[indice])
                     }*/
-                            Celda(valor = contenido, titulo = titulos[indice])
+
+
+                    Celda(valor =   if (contenido.isEmpty()) " - " else contenido, titulo = titulos[indice])
                 )
             }
             filasValoresTabla = filasValoresTabla.plus(Fila(celdas = filaVT))
         }
 
-        return ValoresTabla( filas = filasValoresTabla)
+        return ValoresTabla(filas = filasValoresTabla)
 
     }
 }

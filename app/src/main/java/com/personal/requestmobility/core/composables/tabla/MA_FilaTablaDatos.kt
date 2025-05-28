@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.personal.requestmobility.core.composables.componentes.panel.PanelConfiguracion
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
 import com.personal.requestmobility.core.utils.if3
 
 @Composable

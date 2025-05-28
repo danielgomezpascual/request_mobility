@@ -1,34 +1,24 @@
-package com.personal.requestmobility.core.composables.componentes.panel
+package com.personal.requestmobility.paneles.ui.componente
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.core.composables.componentes.MA_Marco
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarras
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarrasVerticales
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoCircular
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoLineas
-import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.MA_Tabla
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
+import com.personal.requestmobility.paneles.domain.entidades.PanelData
+import com.personal.requestmobility.paneles.domain.entidades.PanelOrientacion
+import com.personal.requestmobility.paneles.domain.entidades.PanelTipoGrafica
 
 import kotlin.collections.filter
 import kotlin.collections.map
@@ -39,8 +29,6 @@ fun MA_Panel(modifier: Modifier = Modifier,
              panelData: PanelData
 
 ) {
-    //val graTabData by remember { mutableStateOf<GraTabData>(gr) }
-
 
 
 
@@ -146,7 +134,7 @@ fun MA_Panel(modifier: Modifier = Modifier,
 
     when (configuracion.orientacion) {
         PanelOrientacion.VERTICAL -> {
-            GraficaConTablaVertical(
+            MA_GraficaConTablaVertical(
                 modifier = modifier,
                 panelConfiguracion = configuracion,
                 grafica = { graficaComposable() },
@@ -155,7 +143,7 @@ fun MA_Panel(modifier: Modifier = Modifier,
         }
 
         PanelOrientacion.HORIZONTAL -> {
-            GraficaConTablaHorizontal(
+            MA_GraficaConTablaHorizontal(
                 modifier = modifier,
                 panelConfiguracion = configuracion,
                 grafica = { graficaComposable() },
@@ -184,112 +172,6 @@ fun cumplenFiltro(filas: List<Fila>, celdasFiltro: List<Celda>): List<Fila> = fi
     fila.copy(visible = cumpleFiltro)
 }
 
-@Composable
-fun GraficaConTablaHorizontal(modifier: Modifier = Modifier,
-                              panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
-                              grafica: @Composable () -> Unit,
-                              tabla: @Composable () -> Unit) {
-    Column(
-        modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        val m = Modifier
-            .width(panelConfiguracion.width)
-            .height(panelConfiguracion.height)
-
-        MA_Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
-
-          MA_LabelMini(panelConfiguracion.descripcion)
-
-            Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                if (panelConfiguracion.mostrarGrafica) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(panelConfiguracion.espacioGrafica)
-                    ) {
-                        grafica()
-                    }
-                }
-                if (panelConfiguracion.mostrarTabla) {
-
-                    var modifier :  Modifier = Modifier
-                    modifier = if (panelConfiguracion.ocuparTodoEspacio){
-                        modifier.padding( PaddingValues(0.dp, 0.dp))
-                    }else{
-                        modifier.padding( PaddingValues(60.dp, 15.dp))
-                    }
-
-
-                    Box(
-                        modifier = modifier
-
-                            .fillMaxWidth(panelConfiguracion.espacioTabla)
-                    ) {
-                        tabla()
-                    }
-                }
-            }
-
-        })
-    }
-}
-
-
-@Composable
-fun GraficaConTablaVertical(modifier: Modifier = Modifier,
-                            panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
-                            grafica: @Composable () -> Unit,
-                            tabla: @Composable () -> Unit) {
-    Column(
-        modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        val m = Modifier
-            .width(panelConfiguracion.width)
-            .height(panelConfiguracion.height)
-
-        MA_Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
-            Column() {
-                MA_LabelMini(panelConfiguracion.descripcion)
-
-
-
-                if (panelConfiguracion.mostrarGrafica) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(panelConfiguracion.espacioGrafica)
-                    ) {
-                        grafica()
-                    }
-                }
-                if (panelConfiguracion.mostrarTabla) {
-
-                    var modifier :  Modifier = Modifier
-                    modifier = if (panelConfiguracion.ocuparTodoEspacio){
-                        modifier.padding( PaddingValues(0.dp, 0.dp))
-                    }else{
-                        modifier.padding( PaddingValues(60.dp, 15.dp))
-                    }
-
-                    Box(
-
-                        modifier = modifier
-                            .fillMaxSize()
-
-                    ) {
-                        tabla()
-                    }
-                }
-            }
-
-        })
-    }
-}
 
 @Composable
 fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
@@ -318,7 +200,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                     modifier = modifier,
                     listaValores = datosPintar,
                     posicionX = posicionX,
-                    posivionY = posivionY
+                    posicionY = posivionY
                 )
 
             }

@@ -56,5 +56,7 @@ fun ScreenMenu(accion: (Modulos) -> Unit) {
         MA_BotonNormal("Peticiones") { accion(Modulos.Transacciones) }
         MA_BotonNormal("Kpis") { accion(Modulos.Kpis) }
         MA_BotonNormal("Dashboard") { accion(Modulos.Dashboards) }
+        MA_BotonNormal("Cuadricula") { accion(Modulos.Cuadricula) }
+        MA_BotonNormal("Panel") { accion(Modulos.Paneles) }
     }
 }

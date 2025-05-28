@@ -1,23 +1,20 @@
 package com.personal.requestmobility.kpi.ui.entidades
 
-import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.componentes.panel.PanelData
 import com.personal.requestmobility.kpi.domain.entidades.Kpi
-import com.personal.requestmobility.transacciones.data.repositorios.SqlToListString
-import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 import kotlin.Int
 
 data class KpiUI(
     val id: Int = 0,
     val titulo: String = "",
     val descripcion: String = "",
+    val origen : String = "",
     val sql: String = "",
-    var panelData: PanelData = PanelData(),
-    var resultadoSQL: ResultadoSQL = ResultadoSQL()
+    /*var panelData: PanelData = PanelData(),
+    var resultadoSQL: ResultadoSQL = ResultadoSQL()*/
 ) {
 
 
-    fun reloadPanelData(): KpiUI {
+   /* fun reloadPanelData(): KpiUI {
 
         this.resultadoSQL = SqlToListString(sql)
         this.panelData = PanelData(
@@ -25,7 +22,7 @@ data class KpiUI(
             valoresTabla = resultadoSQL.toValoresTabla()
         )
         return this
-    }
+    }*/
 
     companion object {
         fun from(kpi: Kpi, i: Int): KpiUI {
@@ -34,7 +31,7 @@ data class KpiUI(
                 sql = kpi.sql
             )
 
-            kpiUI.reloadPanelData()
+           // kpiUI.reloadPanelData()
             return kpiUI
         }
 
@@ -47,7 +44,7 @@ fun KpiUI.toKpi() = Kpi(
     titulo = this.titulo,
     descripcion = this.descripcion,
     sql = this.sql,
-    configuracion = this.panelData.panelConfiguracion,
+  //  configuracion = this.panelData.panelConfiguracion,
 )
 
 
@@ -56,5 +53,5 @@ fun KpiUI.fromKPI(kpi: Kpi) = KpiUI(
     titulo = kpi.titulo,
     descripcion = kpi.descripcion,
     sql = kpi.sql,
-    panelData = PanelData(panelConfiguracion = kpi.configuracion)
+   // panelData = PanelData(panelConfiguracion = kpi.configuracion)
 )

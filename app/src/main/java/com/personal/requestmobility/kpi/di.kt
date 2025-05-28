@@ -40,7 +40,11 @@ val moduloKpis = module {
 
     //ViewMOdel
     viewModel { KpisListadoVM(get<ObtenerKpisCU>()) }
-    viewModel { DetalleKpiVM(get<ObtenerKpiCU>(), get<GuardarKpiCU>(), get<EliminarKpiCU>()) }
+    viewModel { DetalleKpiVM(
+        get<ObtenerKpiCU>(),
+        get<GuardarKpiCU>(),
+        get<EliminarKpiCU>()
+    ) }
 
 
 }
