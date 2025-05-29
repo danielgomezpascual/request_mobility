@@ -10,16 +10,17 @@ import com.personal.requestmobility.dashboards.domain.interactors.EliminarDashbo
 import com.personal.requestmobility.dashboards.domain.interactors.EliminarTodosDashboardsCU
 import com.personal.requestmobility.dashboards.domain.interactors.GuardarDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardCU
+import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardsCU
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerKpisDashboard
-import com.personal.requestmobility.dashboards.domain.interactors.ObtenerKpisSeleccionPanel
+import com.personal.requestmobility.dashboards.domain.interactors.ObtenerSeleccionPanel
 import com.personal.requestmobility.dashboards.domain.repositorios.DashboardRepositorio
-import com.personal.requestmobility.dashboards.navegacion.VisualizadorDashboard
 import com.personal.requestmobility.dashboards.ui.screen.cuadricula.CuadriculaDashboardVM
 import com.personal.requestmobility.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.requestmobility.dashboards.ui.screen.listado.DashboardListadoVM
 import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardVM
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
 import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
+import com.personal.requestmobility.paneles.domain.repositorios.PanelesRepositorio
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -41,29 +42,33 @@ val moduloDashboards = module {
     }
 
     // Use Cases for Dashboards
+    single<ObtenerDashboardsCU> { ObtenerDashboardsCU(get<DashboardRepositorio>()) }
     single<ObtenerDashboardCU> { ObtenerDashboardCU(get<DashboardRepositorio>()) }
     single<EliminarTodosDashboardsCU> { EliminarTodosDashboardsCU(get<DashboardRepositorio>()) }
     single<EliminarDashboardCU> { EliminarDashboardCU(get<DashboardRepositorio>()) }
     single<CargarDashboardCU> { CargarDashboardCU(get<DashboardRepositorio>()) }
     single<GuardarDashboardCU> { GuardarDashboardCU(get<DashboardRepositorio>()) }
 
-    single<ObtenerKpisSeleccionPanel> { ObtenerKpisSeleccionPanel(get<KpisRepositorio>()) }
+    single<ObtenerSeleccionPanel> { ObtenerSeleccionPanel(get<PanelesRepositorio>()) }
     single<ObtenerKpisDashboard> { ObtenerKpisDashboard(get<DashboardRepositorio>(), get<ObtenerKpiCU>()) }
 
 
     // ViewModels for Dashboards
     viewModel {
-        CuadriculaDashboardVM(obtenerDashboardsCU = get<ObtenerDashboardCU>())
+        CuadriculaDashboardVM(obtenerDashboardsCU = get<ObtenerDashboardsCU>())
     }
 
 
 
     viewModel{
-        VisualizadorDashboardVM(obtenerKPI = get<ObtenerKpisDashboard>())
+        VisualizadorDashboardVM(obtenerDashboardCU = get<ObtenerDashboardCU>())
     }
 
+
+
+
     viewModel {
-        DashboardListadoVM(obtenerDashboardsCU = get<ObtenerDashboardCU>())
+        DashboardListadoVM(obtenerDashboardsCU = get<ObtenerDashboardsCU>())
     }
 
 
@@ -72,7 +77,7 @@ val moduloDashboards = module {
             cargarDashboardCU = get<CargarDashboardCU>(),
             eliminarDashboardCU = get<EliminarDashboardCU>(),
             guardarDashboardCU = get<GuardarDashboardCU>(),
-            obtenerKpisSeleccionPanel = get<ObtenerKpisSeleccionPanel>()
+            obtenerSeleccionPanel = get<ObtenerSeleccionPanel>()
         )
     }
 }

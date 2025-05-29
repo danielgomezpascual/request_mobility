@@ -4,19 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
-import com.personal.requestmobility.dashboards.ui.entidades.KpiSeleccionPanel
+import com.personal.requestmobility.dashboards.ui.entidades.SeleccionPanelUI
 import com.personal.requestmobility.dashboards.domain.interactors.CargarDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.EliminarDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.GuardarDashboardCU
-import com.personal.requestmobility.dashboards.domain.interactors.ObtenerKpisSeleccionPanel
+import com.personal.requestmobility.dashboards.domain.interactors.ObtenerSeleccionPanel
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
 import com.personal.requestmobility.dashboards.ui.entidades.fromDashboard
 import com.personal.requestmobility.dashboards.ui.entidades.toDashboard
+import com.personal.requestmobility.paneles.ui.entidades.PanelUI
+import com.personal.requestmobility.paneles.ui.entidades.fromPanel
+import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,14 +31,15 @@ class DetalleDashboardVM(
     private val cargarDashboardCU: CargarDashboardCU,
     private val eliminarDashboardCU: EliminarDashboardCU,
     private val guardarDashboardCU: GuardarDashboardCU,
-    private val obtenerKpisSeleccionPanel: ObtenerKpisSeleccionPanel
+    private val obtenerSeleccionPanel: ObtenerSeleccionPanel
+
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading("Cargando..."))
     val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
 
-    private var listaKpiPanel: List<KpiSeleccionPanel> = emptyList()
+    private var listaPaneles: List<SeleccionPanelUI> = emptyList()
 
     sealed class UIState {
         data class Success(val dashboardUI: DashboardUI) : UIState()
@@ -46,7 +53,7 @@ class DetalleDashboardVM(
         data class Guardar(val dashboardUI: DashboardUI, val navegacionExterna: (EventosNavegacion) -> Unit) : Eventos()  // Renombrado para claridad
         data class OnChangeNombre(val valor: String) : Eventos()     // Adaptado desde OnChangeItem
         data class OnChangeDescripcion(val valor: String) : Eventos() // Adaptado desde OnChangeProveedor
-        data class OnActualizarPaneles(val paneles: List<KpiSeleccionPanel>) : Eventos() // Adaptado desde OnChangeProveedor
+        data class OnActualizarPaneles(val panelesUI: List<PanelUI>) : Eventos() // Adaptado desde OnChangeProveedor
         data class ActualizarLogo(val rutaLogo: String) : Eventos() // Adaptado desde OnChangeProveedor
         // Los otros OnChange (global, codigoOrganizacion, codigo) no aplican a Dashboard
     }
@@ -63,7 +70,10 @@ class DetalleDashboardVM(
                         when (eventos) {
                             is Eventos.OnChangeNombre -> estado.copy(dashboardUI = estado.dashboardUI.copy(nombre = eventos.valor))
                             is Eventos.OnChangeDescripcion -> estado.copy(dashboardUI = estado.dashboardUI.copy(descripcion = eventos.valor))
-                            is Eventos.OnActualizarPaneles -> estado.copy(dashboardUI = estado.dashboardUI.copy(listaPaneles = eventos.paneles))
+                            is Eventos.OnActualizarPaneles -> {
+                                estado.copy(dashboardUI = estado.dashboardUI.copy(listaPaneles = eventos.panelesUI))
+                            }
+
                             is Eventos.ActualizarLogo -> estado.copy(dashboardUI = estado.dashboardUI.copy(logo = eventos.rutaLogo))
                             else -> estado // No debería llegar aquí si los eventos están bien definidos
                         }
@@ -76,30 +86,36 @@ class DetalleDashboardVM(
     }
 
     private fun cargar(id: Int) {
-        _uiState.value = UIState.Loading("Cargando Dashboard...")
+        //  _uiState.value = UIState.Loading("Cargando Dashboard...")
 
         viewModelScope.launch {
 
 
+            App.log.d("ID-> $id")
             try {
-                obtenerKpisSeleccionPanel.obtenerTodos().collect { listaSeleccionPanel -> listaKpiPanel = listaSeleccionPanel }
-                val ds: DashboardUI = if (id == 0) {
-                    DashboardUI(listaPaneles = listaKpiPanel)
-                } else {
-                    val dashboardDomain = cargarDashboardCU.cargar(id)
-                    val dashboardUi = DashboardUI().fromDashboard(dashboardDomain)
-                    val ks = listaKpiPanel.map { kpi ->
-                        if (dashboardUi.listaPaneles.filter { it.seleccionado && it.identificador == kpi.identificador }.isNotEmpty()){
-                             kpi.copy(seleccionado = true)
-                        }else{
-                            kpi
+
+
+                obtenerSeleccionPanel.obtenerTodos().map { lp -> lp.map { panel -> PanelUI().fromPanel(panel) } }
+                    .flowOn(Dispatchers.IO)
+                    .catch { ex -> _uiState.update { UIState.Error(ex.toString()) } }
+                    .collect { paneles ->
+                        _uiState.update { estado ->
+                            if (id != 0) {
+                                val ds: DashboardUI = DashboardUI().fromDashboard(cargarDashboardCU.cargar(id))
+                                val panelesSeleccionados: List<PanelUI> = ds.listaPaneles
+
+                                //todo: hay que actualizar el dashboard con los datos que tenga el panel (ademas de marcarle como seleccionado),
+                                // puede ser que tengamos el panel con unos datos y el dashboard con otros.
+                                // Al encontrar el panel, debemos cargar el contenido del panel, no lo que tenga almacneado en room. Tenemos los paneles y los dashboards seleccionados, no deberia ser muy complicado.
+                                val t = paneles.map { p ->
+                                    p.copy(seleccionado = panelesSeleccionados.filter { it.id == p.id }.isNotEmpty())
+                                }
+                                UIState.Success(dashboardUI = ds.copy(listaPaneles = t))
+                            } else {
+                                UIState.Success(dashboardUI = DashboardUI(listaPaneles = paneles))
+                            }
                         }
                     }
-
-                    dashboardUi.copy(listaPaneles = ks)
-                }
-
-                _uiState.value = UIState.Success(dashboardUI = ds)
 
 
             } catch (e: Exception) {
@@ -124,6 +140,9 @@ class DetalleDashboardVM(
     private fun guardar(dashboardUi: DashboardUI, navegacionExterna: (EventosNavegacion) -> Unit) {
 
         App.log.lista("Paneles", dashboardUi.listaPaneles)
+
+        dashboardUi.listaPaneles.forEach { App.log.d(it.titulo + " - " + it.seleccionado) }
+
         viewModelScope.launch {
             if (dashboardUi.nombre.isBlank()) { // Validación simple
                 _uiState.value = UIState.Error("El nombre no puede estar vacío.")

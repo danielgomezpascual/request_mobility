@@ -18,13 +18,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.personal.requestmobility.App
-import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardVM.UIState
-
+import com.personal.requestmobility.paneles.domain.entidades.PanelData
+import com.personal.requestmobility.paneles.domain.entidades.fromPanelUI
+import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -75,6 +75,13 @@ fun Success(viewModel: VisualizadorDashboardVM, uiState: UIState.Success) {
                 Column() {
 
                     val modifier: Modifier = Modifier.fillMaxSize()
+
+
+                    uiState.paneles.forEach { panelUI ->
+
+                        MA_Panel(panelData = PanelData().fromPanelUI(panelUI))
+
+                    }
                     /*Column() {
                         uiState.kpis.forEach { kpiUI ->
                             MA_Panel(

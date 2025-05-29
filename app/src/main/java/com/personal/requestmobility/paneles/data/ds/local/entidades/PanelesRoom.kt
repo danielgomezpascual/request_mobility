@@ -38,7 +38,7 @@ suspend fun PanelesRoom.toPanel(): Panel {
         titulo = this.titulo,
         descripcion = this.descripcion,
         configuracion = configuracion,
-        kpi =     obtenerKpi.obtener(this.id)
+        kpi =     obtenerKpi.obtener(this.idKpi)
     )
 
     return  panel

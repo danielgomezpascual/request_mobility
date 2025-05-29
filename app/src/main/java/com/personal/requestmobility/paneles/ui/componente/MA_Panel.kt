@@ -24,11 +24,15 @@ import kotlin.collections.filter
 import kotlin.collections.map
 
 
+
+
 @Composable
 fun MA_Panel(modifier: Modifier = Modifier,
              panelData: PanelData
 
 ) {
+
+
 
 
 

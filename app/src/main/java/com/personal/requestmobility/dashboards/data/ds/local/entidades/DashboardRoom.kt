@@ -10,6 +10,11 @@ import com.personal.requestmobility.core.utils._toJson
 import com.personal.requestmobility.core.utils._toObjectFromJson
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.entidades.KpiPaneles
+import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
+import com.personal.requestmobility.menu.navegacion.Modulos.Paneles
+import com.personal.requestmobility.paneles.domain.entidades.Panel
+import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelCU
+import org.koin.java.KoinJavaComponent.getKoin
 
 @Entity(tableName = "Dashboard")
 class DashboardRoom(
@@ -21,14 +26,35 @@ class DashboardRoom(
     val paneles: String = ""
 ) : IRoom
 
-fun DashboardRoom.toDashboard(): Dashboard {
-    val type = object : TypeToken<List<KpiPaneles>>() {}.type
+suspend fun DashboardRoom.toDashboard(): Dashboard {
+
+    val type = object : TypeToken<List<Panel>>() {}.type
+    val listaPaneles: List<Panel> = Gson().fromJson<List<Panel>>(this.paneles, type)
+
+    val obtenerPanel : ObtenerPanelCU =   getKoin().get()
+    val obtenerKpi : ObtenerKpiCU =   getKoin().get()
+
+    var listaPanelesActualizado = listOf<Panel>()
+    listaPaneles.forEach { panel ->
+        //actualizamos el panel
+        val panelActualizado = obtenerPanel.obtener(panel.id)
+
+        //actualizamos el kpi dle panel
+        val idKpi = panelActualizado.kpi.id
+        val kpiActualizado = obtenerKpi.obtener(idKpi)
+
+        val p = panelActualizado.copy(kpi = kpiActualizado)
+
+        listaPanelesActualizado = listaPanelesActualizado.plus(p)
+
+    }
+
     return Dashboard(
         id = this.id,
         nombre = this.nombre,
         logo = this.logo,
         descripcion = this.descripcion,
-        paneles = Gson().fromJson<List<KpiPaneles>>(this.paneles, type)
+        paneles = listaPanelesActualizado
     )
 }
 

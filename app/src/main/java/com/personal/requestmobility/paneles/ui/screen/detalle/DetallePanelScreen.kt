@@ -2,7 +2,6 @@ package com.personal.requestmobility.paneles.ui.screen.detalle
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 
@@ -32,19 +30,11 @@ import com.personal.requestmobility.core.composables.combo.MA_Combo
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.labels.MA_Titulo
-import com.personal.requestmobility.core.composables.listas.MA_Lista
-import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import com.personal.requestmobility.core.navegacion.RespuestaAccionCU
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
-import com.personal.requestmobility.dashboards.ui.composables.KpiSeleccionPanelItem
-import com.personal.requestmobility.dashboards.ui.entidades.KpiSeleccionPanel
-import com.personal.requestmobility.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
-import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM.UIState
-import com.personal.requestmobility.paneles.ui.screen.listado.PanelesListadoVM
-import kotlinx.coroutines.launch
 
 import org.koin.androidx.compose.koinViewModel
 

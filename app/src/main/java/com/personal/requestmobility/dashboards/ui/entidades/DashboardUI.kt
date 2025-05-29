@@ -3,13 +3,16 @@ package com.personal.requestmobility.dashboards.ui.entidades
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.entidades.KpiPaneles
 import com.personal.requestmobility.dashboards.domain.entidades.toKpiSeleccionPanel
+import com.personal.requestmobility.paneles.ui.entidades.PanelUI
+import com.personal.requestmobility.paneles.ui.entidades.fromPanel
+import com.personal.requestmobility.paneles.ui.entidades.toPanel
 
 data class DashboardUI(
     val id: Int = 0,
     val nombre: String = "",
     val logo : String = "",
     val descripcion: String = "",
-    val listaPaneles: List<KpiSeleccionPanel> = emptyList<KpiSeleccionPanel>()
+    val listaPaneles: List<PanelUI> = emptyList<PanelUI>()
 )
 
 // Mapper from Domain to UI
@@ -21,7 +24,7 @@ fun DashboardUI.fromDashboard(dashboard: Dashboard): DashboardUI {
         nombre = dashboard.nombre,
         logo = dashboard.logo,
         descripcion = dashboard.descripcion,
-        listaPaneles = dashboard.paneles.map { it.toKpiSeleccionPanel() }
+        listaPaneles = dashboard.paneles.map { PanelUI().fromPanel(it) }
     )
 
 }
@@ -33,5 +36,5 @@ fun DashboardUI.toDashboard(): Dashboard = Dashboard(
     nombre = this.nombre,
     logo =  this.logo,
     descripcion = this.descripcion,
-    paneles = this.listaPaneles.map { KpiPaneles.fromKpiSeleccionPanel(it) }
+    paneles = this.listaPaneles.filter { it.seleccionado }.map { it.toPanel()}
 )

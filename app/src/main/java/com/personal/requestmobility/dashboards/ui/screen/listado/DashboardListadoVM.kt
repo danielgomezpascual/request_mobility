@@ -2,7 +2,7 @@ package com.personal.requestmobility.dashboards.ui.screen.listado
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardCU
+import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardsCU
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
 import com.personal.requestmobility.dashboards.ui.entidades.fromDashboard
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DashboardListadoVM(
-    private val obtenerDashboardsCU: ObtenerDashboardCU
+    private val obtenerDashboardsCU: ObtenerDashboardsCU
 
     ) : ViewModel() {
 

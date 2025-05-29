@@ -12,7 +12,7 @@ class ObtenerKpisDashboard(
     private val obtenerKPI: ObtenerKpiCU
 ) {
 
-    suspend fun damePanelesAsociados(identificadorDashboard: Int): List<KpiUI> {
+   /* suspend fun damePanelesAsociados(identificadorDashboard: Int): List<KpiUI> {
         var listaKpis: List<KpiUI> = emptyList()
         val ds: Dashboard = repoDashboard.obtener(identificadorDashboard)
 
@@ -26,7 +26,7 @@ class ObtenerKpisDashboard(
         }
         return listaKpis
 
-    }
+    }*/
 
 
 }

@@ -3,7 +3,9 @@ package com.personal.requestmobility.transacciones.domain.entidades
 import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
+import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.core.room.ResultadoEjecucionSQL
+import org.koin.mp.KoinPlatform.getKoin
 
 data class ResultadoSQL(var titulos: List<String> = emptyList(),
                         var filas: List<List<String>> = emptyList()
@@ -13,6 +15,13 @@ data class ResultadoSQL(var titulos: List<String> = emptyList(),
             titulos = execSQL.titulos,
             filas = execSQL.filas
         )
+
+        fun fromSqlToTabla(sql: String): ValoresTabla{
+            val trxDao = getKoin().get<AppDatabase>().transaccionesDao()
+            val lista =  trxDao.sqlToListString(sql)
+            return from(lista).toValoresTabla()
+        }
+
 
 
     }

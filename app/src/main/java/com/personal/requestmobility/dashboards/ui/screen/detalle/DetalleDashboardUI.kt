@@ -21,10 +21,9 @@ import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGeneric
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
-import com.personal.requestmobility.dashboards.ui.entidades.KpiSeleccionPanel
-import com.personal.requestmobility.dashboards.ui.composables.KpiSeleccionPanelItem
+import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItem
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
-import com.personal.requestmobility.kpi.domain.entidades.Kpi
+import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 
 import org.koin.androidx.compose.koinViewModel
 
@@ -157,17 +156,20 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
 
                 Text("Paneles:", style = MaterialTheme.typography.headlineSmall)
                 Box(modifier = Modifier.height(200.dp)) {
-                    App.log.lista("Panles", dashboardUI.listaPaneles)
-                    MA_Lista(dashboardUI.listaPaneles) { item ->
-                        KpiSeleccionPanelItem(item) { kpiSeleccionPanel ->
-                            val paneles: List<KpiSeleccionPanel> = dashboardUI.listaPaneles.map { kpi ->
-                                App.log.v(kpi.toString())
-                                if (kpi.equals(kpiSeleccionPanel)) {
-                                    kpi.copy(seleccionado = !kpi.seleccionado)
+
+                    val paneles: List<PanelUI> = dashboardUI.listaPaneles
+                    MA_Lista(paneles) { panelUI ->
+                        SeleccionPanelItem(panelUI) { seleccionPanelUI ->
+
+                            val paneles: List<PanelUI> = paneles.map { panel ->
+
+                                if (panel.equals(seleccionPanelUI)) {
+                                    panel.copy(seleccionado = !seleccionPanelUI.seleccionado)
                                 } else {
-                                    kpi
+                                    panel
                                 }
                             }
+                            App.log.lista("EN clicn" , paneles)
                             viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(paneles))
                         }
                     }

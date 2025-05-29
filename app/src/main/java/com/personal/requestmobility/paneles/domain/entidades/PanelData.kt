@@ -2,6 +2,14 @@ package com.personal.requestmobility.paneles.domain.entidades
 
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
+import com.personal.requestmobility.paneles.ui.entidades.PanelUI
+import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
+
+fun PanelData.fromPanelUI(panelUI: PanelUI): PanelData {
+    val panelConfiguracion = panelUI.configuracion
+    val tabla: ValoresTabla = ResultadoSQL.fromSqlToTabla(panelUI.kpi.sql)
+    return PanelData(panelConfiguracion = panelConfiguracion, valoresTabla = tabla)
+}
 
 data class PanelData(
     val panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
