@@ -22,7 +22,7 @@ fun MA_FilaTablaDatos(fila: Fila, configuracion: PanelConfiguracion, onClick: (F
     val indicadorColor = configuracion.indicadorColor
 
     val color: Color = (fila.color).copy(alpha = 0.3f)
-    val colorFondo = if3(filasColor, (fila.color).copy(alpha = 0.1f), Color.Companion.Transparent)
+    val colorFondo = if3(filasColor, (fila.color).copy(alpha = 0.1f), Color.White)
 
 
     Row(

@@ -68,7 +68,7 @@ data class ValoresTabla(
 
 data class Fila(val celdas: List<Celda> = emptyList<Celda>(),
                 val size: Dp = 200.dp,
-                val color: Color = Color.Black,
+                val color: Color = Color.White,
                 val seleccionada: Boolean = false,
                 val visible: Boolean = true,
 
@@ -76,7 +76,7 @@ data class Fila(val celdas: List<Celda> = emptyList<Celda>(),
 
 data class Celda(val valor: String,
                  val size: Dp = 200.dp,
-                 val colorCelda: Color = Color.Black,
+                 val colorCelda: Color = Color.Blue,
                  val fondoCelda: Color = Color.White,
                  val contenido: @Composable (Modifier) -> Unit = { modifier ->
                      MA_LabelCelda(modifier = modifier, valor = valor,/* color = colorCelda,*/

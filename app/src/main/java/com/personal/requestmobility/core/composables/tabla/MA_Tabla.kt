@@ -79,13 +79,18 @@ fun TablaDatos(modifier: Modifier = Modifier,
 
 @Composable
 fun MA_Tabla(modifier: Modifier = Modifier,
-             panelConfiguracion: PanelConfiguracion,
+             panelConfiguracion: PanelConfiguracion = PanelConfiguracion(
+                 ajustarContenidoAncho = false,
+                 indicadorColor = false,
+                 filasColor = false
+
+             ),
              filas: List<Fila>,
-             celdasFiltro: List<Celda>,
+             celdasFiltro: List<Celda> = emptyList<Celda>(),
              mostrarTitulos: Boolean = true,
-             onClickSeleccionarFiltro: (Celda) -> Unit,
-             onClickInvertir: (Celda) -> Unit,
-             onClickSeleccionarFila: (Fila) -> Unit) {
+             onClickSeleccionarFiltro: (Celda) -> Unit = {},
+             onClickInvertir: (Celda) -> Unit = {},
+             onClickSeleccionarFila: (Fila) -> Unit = {}) {
 
     val estadoScroll = rememberScrollState()
     val indicadorColor = panelConfiguracion.indicadorColor
@@ -100,18 +105,20 @@ fun MA_Tabla(modifier: Modifier = Modifier,
 
 
     Column(modifierColumn) {
-        ModalInferiorFiltros() {
-            Column {
-                MA_Titulo("Filtro")
-                MA_Lista(celdasFiltro) { celdaFiltro ->
-                    MA_CeldaFiltro(
-                        celda = celdaFiltro,
-                        onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
-                        onClickInvertir = { cf -> onClickInvertir(cf) })
+        if (celdasFiltro.isNotEmpty()) {
+            ModalInferiorFiltros() {
+                Column {
+                    MA_Titulo("Filtro")
+                    MA_Lista(celdasFiltro) { celdaFiltro ->
+                        MA_CeldaFiltro(
+                            celda = celdaFiltro,
+                            onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
+                            onClickInvertir = { cf -> onClickInvertir(cf) })
+                    }
                 }
+
+
             }
-
-
         }
         Row(
             modifier = Modifier

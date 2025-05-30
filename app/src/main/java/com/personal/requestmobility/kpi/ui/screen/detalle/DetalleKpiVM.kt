@@ -12,6 +12,12 @@ import com.personal.requestmobility.kpi.domain.interactors.GuardarKpiCU
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.kpi.ui.entidades.fromKPI
+import com.personal.requestmobility.kpi.ui.entidades.toKpi
+import com.personal.requestmobility.menu.Features
+import com.personal.requestmobility.paneles.domain.entidades.Panel
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
+import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
+import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +31,9 @@ class DetalleKpiVM(
     private val obtenerKpi: ObtenerKpiCU,
     private val guardarKpi: GuardarKpiCU,
     private val eliminarKpi: EliminarKpiCU,
+
+    private val guardarPanel: GuardarPanelCU
+
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
@@ -65,8 +74,9 @@ class DetalleKpiVM(
         data class onChangeIndicadorColor(val valor: Boolean) : Eventos()
         data class onChangeFilasColor(val valor: Boolean) : Eventos()
 
-        data class Guardar(val onProcess: ((RespuestaAccionCU) -> Unit)) : Eventos()
-        data class Eliminar(val onProcess: ((RespuestaAccionCU) -> Unit)) : Eventos()
+        object Guardar : Eventos()
+        object Eliminar : Eventos()
+        object CrearPanel : Eventos()
 
     }
 
@@ -79,8 +89,10 @@ class DetalleKpiVM(
     fun onEvent(evento: Eventos) {
         when (evento) {
             is Eventos.Cargar -> cargar(evento.identificador)
-            is Eventos.Guardar -> guardar(evento.onProcess)
-            is Eventos.Eliminar -> eliminar(evento.onProcess)
+            Eventos.Guardar -> guardar()
+            Eventos.Eliminar -> eliminar()
+            Eventos.CrearPanel -> crearPanel()
+
             else -> {
                 _uiState.update { estado ->
                     if (estado is UIState.Success) {
@@ -89,141 +101,25 @@ class DetalleKpiVM(
                             is Eventos.OnChangeDescripcion -> estado.copy(kpiUI = estado.kpiUI.copy(descripcion = evento.descripcion))
                             is Eventos.OnChangeSQL -> {
 
-                                val k = KpiUI(id = estado.kpiUI.id,
-                                    titulo =  estado.kpiUI.titulo,
-                                    descripcion =  estado.kpiUI.descripcion,
-                                    sql = evento.sql)
-                                    /*panelData = estado.kpiUI.panelData,
-                                    resultadoSQL = estado.kpiUI.resultadoSQL).reloadPanelData()*/
+                                val k = KpiUI(
+                                    id = estado.kpiUI.id,
+                                    titulo = estado.kpiUI.titulo,
+                                    descripcion = estado.kpiUI.descripcion,
+                                    sql = evento.sql
+                                )
+                                /*panelData = estado.kpiUI.panelData,
+                                resultadoSQL = estado.kpiUI.resultadoSQL).reloadPanelData()*/
 
 
 
 
                                 estado.copy(
                                     kpiUI = k
-                                    )
-
-
-                            }
-/*
-                            is Eventos.onChangeOrientacion -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(orientacion = PanelOrientacion.from(evento.valor))))
                                 )
+
+
                             }
 
-                            is Eventos.onChangeTipoGrafica -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(tipo = PanelTipoGrafica.from(evento.valor))))
-                                )
-                            }
-
-                            is Eventos.onChangeLimiteElementos -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(limiteElementos = evento.valor.toInt())))
-                                )
-                            }
-
-                            is Eventos.onChangeMostrarEtiquetas -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(mostrarEtiquetas = evento.valor)))
-                                )
-                            }
-
-                            is Eventos.onChangeMostrarOrdenado -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(ordenado = evento.valor)))
-                                )
-                            }
-
-                            is Eventos.onChangeEspacioGrafica -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(espacioGrafica = ((evento.valor).toFloat() / 100.0f))))
-                                )
-                            }
-
-
-                            is Eventos.onChangeEspacioTabla -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(espacioTabla = ((evento.valor).toFloat() / 100.0f))))
-                                )
-                            }
-
-                            is Eventos.onChangeAgruparValores -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(agruparValores = evento.valor)))
-                                )
-                            }
-
-                            is Eventos.onChangeMosrtarTabla -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(mostrarTabla = evento.valor)))
-                                )
-                            }
-
-                            is Eventos.onChangeMostrarGrafica -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(mostrarGrafica = evento.valor)))
-                                )
-                            }
-
-                            is Eventos.onChangeMostrarTitulosTabla -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(mostrarTituloTabla = evento.valor)))
-                                )
-                            }
-
-
-                            is Eventos.onChangeCampoAgrupacionTabla -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(campoAgrupacionTabla = evento.valor.toInt())))
-                                )
-                            }
-
-                            is Eventos.onChangeCampoSumaTabla -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(campoSumaValorTabla = evento.valor.toInt())))
-                                )
-                            }
-
-                            is Eventos.onChangeAjustarContenido -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(ajustarContenidoAncho = evento.valor)))
-                                )
-                            }
-
-                            is Eventos.onChangeIndicadorColor -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(indicadorColor = evento.valor)))
-                                )
-                            }
-
-                            is Eventos.onChangeFilasColor -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(filasColor = evento.valor)))
-                                )
-                            }
-
-                            is Eventos.onChangeAlto -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(height = (evento.valor.toInt()).dp)))
-                                )
-                            }
-
-                            is Eventos.onChangeAncho -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(width = (evento.valor.toInt()).dp)))
-                                )
-                            }
-
-
-                            is Eventos.onChangeOcuparTodoEspacio -> {
-                                estado.copy(
-                                    kpiUI = estado.kpiUI.copy(panelData = estado.kpiUI.panelData.copy(panelConfiguracion = estado.kpiUI.panelData.panelConfiguracion.copy(ocuparTodoEspacio = evento.valor)))
-                                )
-                            }
-
-*/
                             else -> estado
                         }
                     } else {
@@ -232,6 +128,19 @@ class DetalleKpiVM(
                 }
             }
         }
+    }
+
+     private fun crearPanel() {
+
+        if (_uiState.value is UIState.Success) {
+            viewModelScope.launch {
+                val kpiUI: KpiUI = (_uiState.value as UIState.Success).kpiUI
+                val panelUI: PanelUI = PanelUI(id = 0, titulo = kpiUI.titulo, descripcion = kpiUI.descripcion, configuracion = PanelConfiguracion(), kpiUI)
+                guardarPanel.guardar(panelUI)
+            }
+
+        }
+
     }
 
     private fun cargar(identificador: Int) {
@@ -248,24 +157,24 @@ class DetalleKpiVM(
     }
 
 
-    private fun guardar(onProcess: ((RespuestaAccionCU) -> Unit)) {
+    private fun guardar() {
         viewModelScope.launch {
             val id: Long = async(Dispatchers.IO) {
                 val kpiUI = (_uiState.value as UIState.Success).kpiUI
                 guardarKpi.guardar(kpiUI)
             }.await()
 
-            onProcess(RespuestaAccionCU(id > 0, "Guardado $id"))
+//onProcess(RespuestaAccionCU(id > 0, "Guardado $id"))
         }
     }
 
-    private fun eliminar(onProcess: ((RespuestaAccionCU) -> Unit)) {
+    private fun eliminar() {
         viewModelScope.launch {
             async(Dispatchers.IO) {
                 val kpiUI = (_uiState.value as UIState.Success).kpiUI
                 eliminarKpi.eliminar(kpiUI)
             }.await()
-            onProcess(RespuestaAccionCU(true, "Eliinado"))
+            //   onProcess(RespuestaAccionCU(true, "Eliinado"))
         }
     }
 }

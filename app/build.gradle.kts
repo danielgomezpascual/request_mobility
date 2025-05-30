@@ -88,6 +88,13 @@ dependencies {
 
 
     //===========================================================
+    // ========== ICONOS ANDROID ============
+    implementation("androidx.compose.material:material-icons-core:1.7.8") // O la última versión estable
+    implementation("androidx.compose.material:material-icons-extended:1.7.8") // O la última versión estable
+
+
+
+    //===========================================================
     // ========== KOIN ============
     var koin_version = "3.5.0"
     implementation("io.insert-koin:koin-android:$koin_version") //Koin for Android

@@ -69,7 +69,6 @@ fun MA_Panel(modifier: Modifier = Modifier,
     tablaComposable = dameTipoTabla(
         panelConfiguracion = configuracion,
         modifier = modifier,
-
         filas = filasPintar,
         celdasFiltro = celdasFiltro,
 

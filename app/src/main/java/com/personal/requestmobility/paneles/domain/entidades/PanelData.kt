@@ -8,7 +8,8 @@ import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 fun PanelData.fromPanelUI(panelUI: PanelUI): PanelData {
     val panelConfiguracion = panelUI.configuracion
     val tabla: ValoresTabla = ResultadoSQL.fromSqlToTabla(panelUI.kpi.sql)
-    return PanelData(panelConfiguracion = panelConfiguracion, valoresTabla = tabla)
+    return PanelData(panelConfiguracion = panelConfiguracion,
+        valoresTabla = tabla)
 }
 
 data class PanelData(

@@ -31,23 +31,8 @@ class App : Application() {
         super.onCreate()
         initKoin()
         log = getKoin().get()
-
         cargaTransaccionesTest()
-
-      /*  var panel = PanelConfiguracion()
-
-
-        panel = panel.copy(titulo= "Test de GSON", orientacion = PanelOrientacion.HORIZONTAL)
-        val str2 = Gson().toJson(panel)
-
-        App.log.d(str2)
-
-
-        val p3 = Gson().fromJson<PanelConfiguracion>(str2, PanelConfiguracion::class.java)
-        App.log.c(p3.titulo)
-        App.log.c(p3.orientacion.toString())*/
-
-    }
+      }
 
     fun initKoin() {
         startKoin {
@@ -62,7 +47,6 @@ class App : Application() {
                 moduloTransacciones,
                 moduloDashboards,
                 moduloPaneles
-
             )
 
         }

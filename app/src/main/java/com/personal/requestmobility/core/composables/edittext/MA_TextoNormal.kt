@@ -6,22 +6,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun MA_TextoNormal(valor: String, titulo: String, modifier: Modifier = Modifier.Companion,
                    icono: Icons? = null,
                    onValueChange: (String) -> Unit) {
-    Row(verticalAlignment = Alignment.Companion.CenterVertically) {
+    Row(modifier = Modifier.padding(4.dp), verticalAlignment = Alignment.Companion.CenterVertically) {
         if (icono != null) {
             Icon(imageVector = Icons.Default.Home, contentDescription = titulo)
         }
-        OutlinedTextField(
+        TextField(
             value = valor,
             onValueChange = { onValueChange(it) },
             label = { Text(titulo) },
@@ -29,7 +33,13 @@ fun MA_TextoNormal(valor: String, titulo: String, modifier: Modifier = Modifier.
             modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            //  colors = TextFieldDefaults.colors(focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer)
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.LightGray,
+                disabledIndicatorColor = Color.LightGray
+            )
+
+
         )
     }
 

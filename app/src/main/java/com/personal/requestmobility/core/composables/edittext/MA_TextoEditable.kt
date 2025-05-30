@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +26,7 @@ fun MA_TextoEditable(
         if (icono != null) {
             Icon(imageVector = Icons.Default.Home, contentDescription = titulo)
         }
-        OutlinedTextField(
+        TextField(
             value = valor,
             onValueChange = { onValueChange(it) },
             label = { Text(titulo) },
