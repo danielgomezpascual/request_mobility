@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.personal.requestmobility.dashboards.navegacion.goto
 import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiScreen
 import com.personal.requestmobility.kpi.ui.screen.listado.KpisListadoScreen
 import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelScreen
@@ -12,8 +13,9 @@ import com.personal.requestmobility.paneles.ui.screen.listado.PanelesListadoScre
 fun NavGraphBuilder.NavegacionPaneles(navController: NavController) {
 
     composable<ScreenListadoPaneles> {
-        PanelesListadoScreen () { panel ->
-            navController.navigate(ScreenDetallePanel(id = panel.id))
+        PanelesListadoScreen () { navegacion ->
+            //navController.navigate(ScreenDetallePanel(id = panel.id))
+            goto(navegacion, navController)
         }
     }
     composable<ScreenDetallePanel> { bk ->

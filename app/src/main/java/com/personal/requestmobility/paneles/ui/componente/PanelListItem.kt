@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 
@@ -34,6 +35,9 @@ fun PanelListItem(panelUI: PanelUI,
             verticalAlignment = Alignment.Companion.CenterVertically
         ) {
 
+
+
+            MA_Avatar(panelUI.titulo)
 
             Spacer(modifier = Modifier.Companion.width(16.dp))
 

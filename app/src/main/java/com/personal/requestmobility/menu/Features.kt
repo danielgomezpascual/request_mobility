@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.DataThresholding
 import androidx.compose.material.icons.filled.DeveloperBoard
 import androidx.compose.material.icons.filled.GolfCourse
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Preview
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.TableRows
@@ -19,6 +20,7 @@ import com.personal.requestmobility.menu.navegacion.Modulos
 
 sealed class Features {
     data class Menu(val texto: String = "Menu", val icono: ImageVector = Icons.Filled.Menu) : Features()
+    data class Previo(val texto: String = "Previo", val icono: ImageVector = Icons.Filled.Preview) : Features()
     data class Transacciones(val texto: String = "Transacciones", val icono: ImageVector = Icons.Filled.TableView) : Features()
     data class Kpi(val texto: String = "Kpi", val icono: ImageVector = Icons.Filled.DataThresholding) : Features()
     data class Cuadriculas(val texto: String = "Cuadriculas", val icono: ImageVector = Icons.Filled.DeveloperBoard) : Features()

@@ -47,7 +47,13 @@ fun MA_GraficoBarras(
     val data =  listaValores.map { fila ->
 
         val x =  if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
-        val y =  if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
+        var y: Float =  0f
+try {
+    y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
+}catch (e: Exception){
+e.printStackTrace()
+}
+
 
         BarData(
             xValue = x,

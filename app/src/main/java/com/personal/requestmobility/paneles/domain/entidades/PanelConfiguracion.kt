@@ -8,7 +8,7 @@ data class PanelConfiguracion(
     val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,
     val tipo: PanelTipoGrafica = PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES,
 
-    val titulo: String = "GR 001",
+    val titulo: String = "",
     val descripcion : String = "",
     val limiteElementos: Int = 15,
     val mostrarEtiquetas: Boolean = true,
@@ -31,8 +31,8 @@ data class PanelConfiguracion(
     val mostrarTituloTabla: Boolean = true,
     val agruparValores : Boolean = true,
 
-    val campoAgrupacionTabla : Int = 0,
-    val campoSumaValorTabla : Int = 1,
+    val columnaX : Int = 0,
+    val columnaY : Int = 1,
 
     val colores : List<Color>  = listOf<Color>(
         Color(0xFFFF0000),

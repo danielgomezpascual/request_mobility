@@ -1,5 +1,6 @@
 package com.personal.requestmobility.paneles.domain.entidades
 
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
@@ -16,30 +17,16 @@ data class PanelData(
     val panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
     var valoresTabla: ValoresTabla = ValoresTabla()) {
 
+    fun ordenarElementos() = valoresTabla.dameElementosOrdenados(campoOrdenacionTabla = panelConfiguracion.columnaY)
 
-    fun setupValores() {
-
-        if (panelConfiguracion.ordenado) {
-            valoresTabla.filas = ordenarElementos()
-        }
-
-        if (panelConfiguracion.limiteElementos > 0) {
-            valoresTabla.filas = limiteElementos()
-        }
-
-        establecerColorFilas()
-    }
-
-    private fun ordenarElementos() = valoresTabla.dameElementosOrdenados(campoOrdenacionTabla = panelConfiguracion.campoSumaValorTabla)
-
-    private fun limiteElementos(): List<Fila> =
-        valoresTabla.dameElementosTruncados(
+     fun limiteElementos(): List<Fila> =
+        valoresTabla.dameElementosTruncados(panelConfiguracion = panelConfiguracion,
             limite = panelConfiguracion.limiteElementos,
             agrupar = panelConfiguracion.agruparValores,
-            indiceCampoSumar = panelConfiguracion.campoSumaValorTabla
+            indiceCampoSumar = panelConfiguracion.columnaY
         )
 
-    private fun establecerColorFilas() {
+     fun establecerColorFilas(): List<Fila>  {
         //establecemos los colores que va a tener cada elmento (teninedo en cuenta que deben al menos tener todos los coles declarados.
         if (panelConfiguracion.colores.isNotEmpty()) {
             val totalColores: Int = panelConfiguracion.colores.size
@@ -48,5 +35,6 @@ data class PanelData(
                 f.copy(color = panelConfiguracion.colores[indiceColor])
             }
         }
+         return  valoresTabla.filas
     }
 }

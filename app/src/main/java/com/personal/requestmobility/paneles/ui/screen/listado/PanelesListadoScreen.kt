@@ -1,11 +1,15 @@
 package com.personal.requestmobility.paneles.ui.screen.listado
 
+import MA_IconBottom
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,10 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
 import com.personal.requestmobility.core.composables.listas.MA_Lista
+import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
+import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.ui.componente.PanelListItem
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.screen.listado.PanelesListadoVM.UIState
@@ -34,7 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PanelesListadoScreen(viewModel: PanelesListadoVM = koinViewModel(),
-                         onClickPanel: (PanelUI) -> Unit) {
+                         navegacion: (EventosNavegacion) -> Unit) {
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -44,12 +52,12 @@ fun PanelesListadoScreen(viewModel: PanelesListadoVM = koinViewModel(),
 
     when (uiState) {
 
-        is PanelesListadoVM.UIState.Error -> ErrorScreen((uiState as UIState.Error).mensaje)
-        is PanelesListadoVM.UIState.Loading -> LoadingScreen((uiState as UIState.Loading).mensaje)
-        is PanelesListadoVM.UIState.Success -> SuccessListadoPaneles(
+        is UIState.Error -> ErrorScreen((uiState as UIState.Error).mensaje)
+        is UIState.Loading -> LoadingScreen((uiState as UIState.Loading).mensaje)
+        is UIState.Success -> SuccessListadoPaneles(
             viewModel = viewModel,
             uiState = uiState as UIState.Success,
-            onClickPanel = onClickPanel
+            navegacion = navegacion
         )
     }
 
@@ -61,68 +69,88 @@ fun PanelesListadoScreen(viewModel: PanelesListadoVM = koinViewModel(),
 @Composable
 fun SuccessListadoPaneles(viewModel: PanelesListadoVM,
                           uiState: UIState.Success,
-                          onClickPanel: (PanelUI) -> Unit) {
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Paneles") },
-                navigationIcon = { Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = "") }
-            )
-        },
-        bottomBar = {
-
-        }
-    ) { innerPadding ->
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding)
-                .padding(16.dp)
-        ) {
+                          navegacion: (EventosNavegacion) -> Unit) {
 
 
-            // Barra de búsqueda
-            MA_TextBuscador(
-                searchText = uiState.textoBuscar,
-                onSearchTextChanged = { it ->
-                    viewModel.onEvent(PanelesListadoVM.Eventos.Buscar(it))
-                },
-            )
+    MA_ScaffoldGenerico(
+        titulo = "Paneles",
+        navegacion = { navegacion(EventosNavegacion.MenuApp) },
+        volver = false,
+        contenidoBottomBar = {
+            BottomAppBar() {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.Bottom
 
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                ) {
 
-                Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .weight(1f),
-                    text = "${uiState.lista.size} kpis encontradas",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Black,
-                    textAlign = TextAlign.Start
-                )
+                    MA_IconBottom(
+                        modifier = Modifier.weight(1f),
+                        icon = Features.Menu().icono,
+                        labelText = Features.Menu().texto,
+                        onClick = { navegacion(EventosNavegacion.MenuApp) }
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    )
+                    MA_IconBottom(
+                        modifier = Modifier.weight(1f),
+                        icon = Features.Nuevo().icono,
+                        labelText = Features.Nuevo().texto,
+                        color = Features.Nuevo().color,
+                        onClick = { navegacion(EventosNavegacion.NuevoPanel) }
+                    )
 
 
-
-
-                TextButton(
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .weight(1f),
-                    onClick = { viewModel.onEvent(PanelesListadoVM.Eventos.NuevoContenidoLocal(onClickPanel)) }) {
-                    Text(text = "Nuevo")
                 }
 
+
+            }
+        },
+        contenido = {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+
+
+                // Barra de búsqueda
+                MA_TextBuscador(
+                    searchText = uiState.textoBuscar,
+                    onSearchTextChanged = { it ->
+                        viewModel.onEvent(PanelesListadoVM.Eventos.Buscar(it))
+                    },
+                )
+
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+
+                    /*Text(
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .weight(1f),
+                        text = "${uiState.lista.size} kpis encontradas",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Black,
+                        textAlign = TextAlign.Start
+                    )*/
+
+                }
+
+
+                MA_Lista(data = uiState.lista) { item ->
+                    PanelListItem(item, onClickItem = {
+                        App.log.d(item.toString())
+                        navegacion(EventosNavegacion.CargarPanel(item.id))
+                    })
+                }
+
+
             }
 
+        })
 
-
-
-            MA_Lista(data = uiState.lista) { item ->
-                PanelListItem(item, onClickItem = onClickPanel)
-            }
-
-        }
-    }
 }

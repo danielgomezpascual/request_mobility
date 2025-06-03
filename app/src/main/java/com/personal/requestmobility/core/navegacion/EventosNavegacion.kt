@@ -6,9 +6,17 @@ sealed class EventosNavegacion{
 
 
     object Volver: EventosNavegacion()
+
+    //======== KPIS =============
     object MenuKpis: EventosNavegacion()
     data class CargarKPI(val identificador: Int): EventosNavegacion()
     object NuevoKPI: EventosNavegacion()
+
+    //======= Paneles =============
+
+    object MenuPaneles: EventosNavegacion()
+    object NuevoPanel: EventosNavegacion()
+    data class CargarPanel(val identificador : Int): EventosNavegacion()
 
     data class VisualizadorDashboard(val identificador: Int): EventosNavegacion()
 }

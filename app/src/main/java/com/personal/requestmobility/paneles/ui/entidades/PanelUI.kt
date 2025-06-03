@@ -1,11 +1,14 @@
 package com.personal.requestmobility.paneles.ui.entidades
 
+import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 import com.personal.requestmobility.kpi.domain.entidades.Kpi
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.kpi.ui.entidades.fromKPI
 import com.personal.requestmobility.kpi.ui.entidades.toKpi
 import com.personal.requestmobility.paneles.domain.entidades.Panel
 import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
+import com.personal.requestmobility.paneles.domain.entidades.PanelData
+import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 import kotlin.Int
 
 data class PanelUI(
@@ -16,10 +19,7 @@ data class PanelUI(
     val kpi: KpiUI = KpiUI(),
     val seleccionado: Boolean = false
 
-) {
-
-
-}
+)
 
 fun PanelUI.toPanel() = Panel(
     id = this.id,

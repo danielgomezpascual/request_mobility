@@ -13,6 +13,12 @@ object Utils {
 
 }
 
+fun String.siVacio(valorSiVacio: String): String {
+    if (this.isEmpty()) return  valorSiVacio
+    return this
+}
+
+
 fun String.esNumerico(): Boolean {
     return this.matches(Regex("^-?\\d+([.,]\\d+)?$"))
 }

@@ -105,7 +105,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
                         icon = Features.Menu().icono,
                         labelText = Features.Menu().texto,
                         onClick = {
-                            navegacion(EventosNavegacion.MenuApp)
+                            navegacion(EventosNavegacion.MenuKpis)
                         }
                     )
 
@@ -134,7 +134,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
                         color = Features.Eliminar().color,
                         onClick = {
                             viewModel.onEvent(DetalleKpiVM.Eventos.Eliminar)
-                            navegacion(EventosNavegacion.MenuApp)
+                            navegacion(EventosNavegacion.MenuKpis)
                         }
                     )
 
@@ -145,7 +145,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
                         color = Features.Guardar().color,
                         onClick = {
                             viewModel.onEvent(DetalleKpiVM.Eventos.Guardar)
-                            navegacion(EventosNavegacion.MenuApp)
+                            navegacion(EventosNavegacion.MenuKpis)
                         }
                     )
 
@@ -177,7 +177,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
 
 
                 MA_TextoNormal(
-                    valor = kpiUI.titulo, titulo = "Titulo",
+                    valor = kpiUI.titulo, titulo = "Nombre",
                     onValueChange = { valor ->
                         viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeTitulo(valor))
                     }

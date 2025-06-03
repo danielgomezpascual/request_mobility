@@ -32,13 +32,9 @@ fun MA_Panel(modifier: Modifier = Modifier,
 
 ) {
 
-
-
-
-
     val configuracion = panelData.panelConfiguracion
 
-    panelData.setupValores()
+  //  panelData.setupValores()
 
     //variable para controlar el estado de las filas que se estan presentado en la tabla
     var filas by remember { mutableStateOf<List<Fila>>(panelData.valoresTabla.filas) }
@@ -46,6 +42,21 @@ fun MA_Panel(modifier: Modifier = Modifier,
     //varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
     var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }
 
+
+
+
+
+    if (configuracion.limiteElementos > 0) {
+        filas = panelData.limiteElementos()
+        panelData.valoresTabla.filas =filas
+    }
+
+    if (configuracion.ordenado) {
+        filas = panelData.ordenarElementos()
+
+    }
+
+    filas = panelData.establecerColorFilas()
 
 //--------------------------------------------------
     val filasPintar = filas.filter { it.visible == true } //solo pintamos las filas que estas visibles, el resto no.
@@ -59,8 +70,8 @@ fun MA_Panel(modifier: Modifier = Modifier,
         panelConfiguracion = configuracion,
         modifier = modifier,
         filas = filasPintar,
-        posicionX = panelData.panelConfiguracion.campoAgrupacionTabla,
-        posivionY = panelData.panelConfiguracion.campoSumaValorTabla
+        posicionX = panelData.panelConfiguracion.columnaX,
+        posivionY = panelData.panelConfiguracion.columnaY
 
     )
 
@@ -115,19 +126,6 @@ fun MA_Panel(modifier: Modifier = Modifier,
                     c
                 }
             }
-
-            /*filas = filas.map { fila ->
-                var cumpleFiltro: Boolean = true
-                fila.celdas.forEach { celdaFila ->
-                    celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
-                        if ((celdaFila.titulo.equals(celdaFiltro.titulo))
-                            && !(celdaFila.valor.equals(celdaFiltro.valor))) {
-                            cumpleFiltro = false
-                        }
-                    }
-                }
-                fila.copy(visible = cumpleFiltro)
-            }*/
 
             filas = cumplenFiltro(filas, celdasFiltro)
 

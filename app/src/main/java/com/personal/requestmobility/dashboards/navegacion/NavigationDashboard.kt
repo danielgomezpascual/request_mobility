@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.dashboards.ui.screen.cuadricula.CuadriculDashboardUI
 import com.personal.requestmobility.dashboards.ui.screen.detalle.DetalleDashboardUI
@@ -15,6 +16,8 @@ import com.personal.requestmobility.kpi.navegacion.ScreenListadoKpis
 import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiScreen
 import com.personal.requestmobility.kpi.ui.screen.listado.KpisListadoScreen
 import com.personal.requestmobility.menu.navegacion.ScreenMenu
+import com.personal.requestmobility.paneles.navegacion.ScreenDetallePanel
+import com.personal.requestmobility.paneles.navegacion.ScreenListadoPaneles
 
 fun NavGraphBuilder.NavegacionDashboard(navController: NavController) {
     composable<CuadriculaDashboards> {
@@ -76,5 +79,16 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
         EventosNavegacion.NuevoKPI -> navController.navigate(ScreenDetalleKpi(0))
         is EventosNavegacion.CargarKPI -> navController.navigate(ScreenDetalleKpi(navegacion.identificador))
 
+
+        //======= Paneles =========
+        EventosNavegacion.MenuPaneles -> navController.navigate(ScreenListadoPaneles)
+        EventosNavegacion.NuevoPanel -> navController.navigate(ScreenDetallePanel(0))
+        is EventosNavegacion.CargarPanel -> {
+            App.log.d("Cargamos.-->" + navegacion.identificador)
+
+
+            navController.navigate(ScreenDetallePanel(navegacion.identificador))
+        }
+        
     }
 }

@@ -24,8 +24,7 @@ import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.transacciones.ui.screens.composables.ModalInferiorFiltros
 
 @Composable
-fun KpiListItem(kpiUI: KpiUI,
-                onClickItem: (KpiUI) -> Unit) {
+fun KpiComboItem(kpiUI: KpiUI) {
 
     Column {
 
@@ -33,8 +32,7 @@ fun KpiListItem(kpiUI: KpiUI,
         Row(
             modifier = Modifier.Companion
                 .fillMaxWidth()
-                .clickable (  onClick = {onClickItem(kpiUI)}/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/ )
-                .padding(10.dp),
+                .padding(15.dp),
             verticalAlignment = Alignment.Companion.CenterVertically
         ) {
 

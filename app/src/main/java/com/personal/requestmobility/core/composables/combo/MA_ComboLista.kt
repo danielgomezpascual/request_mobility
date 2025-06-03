@@ -19,18 +19,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.core.composables.labels.MA_LabelEtiqueta
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.layouts.MA_Box
 import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
-import com.personal.requestmobility.kpi.ui.composables.KpiListItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> MA_ComboLista(titulo: String = "[TITULO]",
+fun <T> MA_ComboLista(modifier: Modifier = Modifier,
+                      titulo: String = "[TITULO]",
                       descripcion: String = "Seleccione un opcion correspondiente",
                       valorInicial: @Composable () -> Unit,
                       elementosSeleccionables: List<T>,
@@ -46,7 +46,7 @@ fun <T> MA_ComboLista(titulo: String = "[TITULO]",
     MA_Box(modifier = Modifier.clickable(enabled = true, onClick = { scope.launch { sheetState.show() } })) {
         Column {
 
-            MA_LabelNormal(titulo)
+            MA_LabelEtiqueta(titulo)
             Row {
                 elemntoSeleccionado()
             }

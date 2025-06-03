@@ -16,8 +16,7 @@ fun MA_BottomSheet(sheetState: SheetState, onClose: () -> Unit, contenido: @Comp
         ModalBottomSheet(
 
             onDismissRequest = {
-                /*App.log.d("SSh: Cerrandoi")
-                scope.launch { sheetState.hide() }*/
+
                 onClose()
             },
             sheetState = sheetState,

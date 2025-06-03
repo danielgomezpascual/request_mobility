@@ -74,7 +74,7 @@ fun SucessListadoLectoras(viewModel: KpisListadoVM,
 
 
     MA_ScaffoldGenerico(
-        titulo = "KPIS",
+        titulo = "Kpis",
         navegacion = { navegacion(EventosNavegacion.MenuApp) },
         volver = false,
         contenidoBottomBar = {
@@ -111,7 +111,7 @@ fun SucessListadoLectoras(viewModel: KpisListadoVM,
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+
             ) {
 
 

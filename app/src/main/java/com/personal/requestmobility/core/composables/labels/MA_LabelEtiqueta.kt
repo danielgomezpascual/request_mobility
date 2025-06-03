@@ -8,13 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 
-
-
 @Composable
-fun MA_LabelNormal(
+fun MA_LabelEtiqueta(
     valor: String,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.secondary,
+    color: Color = MaterialTheme.colorScheme.primary,
     alineacion : TextAlign = TextAlign.Unspecified,
     icono: Icons? = null,
 
