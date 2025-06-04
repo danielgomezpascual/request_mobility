@@ -89,6 +89,13 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 
             navController.navigate(ScreenDetallePanel(navegacion.identificador))
         }
-        
+
+
+        //==== Dashboard =======================
+        EventosNavegacion.MenuDashboard ->      navController.navigate(ListadoDashboards)
+        EventosNavegacion.NuevoDashboard ->   navController.navigate(DetalleDashboard(0))
+        is EventosNavegacion.CargarDashboard -> {
+            navController.navigate(DetalleDashboard(navegacion.identificador))
+        }
     }
 }

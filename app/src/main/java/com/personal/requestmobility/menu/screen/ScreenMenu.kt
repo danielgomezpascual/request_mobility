@@ -38,18 +38,13 @@ fun ScreenMenu(accion: (Modulos) -> Unit) {
                     ) {
 
 
-                        MA_IconBottom(
+                        /*MA_IconBottom(
                             //modifier = Modifier.weight(1f),
                             icon = Features.Transacciones().icono,
                             labelText = Features.Transacciones().texto,
                             onClick = { accion(Modulos.Transacciones) }
-                        )
-                        MA_IconBottom(
-                            // modifier = Modifier.weight(1f),
-                            icon = Features.Kpi().icono,
-                            labelText = Features.Kpi().texto,
-                            onClick = { accion(Modulos.Kpis) }
-                        )
+                        )*/
+
 
                         MA_IconBottom(
                             //   modifier = Modifier.weight(1f),
@@ -70,6 +65,13 @@ fun ScreenMenu(accion: (Modulos) -> Unit) {
                             icon = Features.Paneles().icono,
                             labelText = Features.Paneles().texto,
                             onClick = { accion(Modulos.Paneles) }
+                        )
+
+                        MA_IconBottom(
+                            // modifier = Modifier.weight(1f),
+                            icon = Features.Kpi().icono,
+                            labelText = Features.Kpi().texto,
+                            onClick = { accion(Modulos.Kpis) }
                         )
                     }
 

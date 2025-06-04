@@ -81,20 +81,20 @@ fun <T> MA_ComboLista(modifier: Modifier = Modifier,
                 )
 
 
+                if (elementosSeleccionables.isNotEmpty()) {
+                    MA_Lista(data = elementosSeleccionables) { el ->
 
-                MA_Lista(data = elementosSeleccionables) { el ->
-
-                    Box(modifier = Modifier.clickable(enabled = true, onClick = {
-                        onClickSeleccion(el)
-                        elemntoSeleccionado = { item(el) }
-                        //valorInicial = valorInicial(el)
-                        scope.launch { sheetState.hide() }
-                    })) {
-                        item(el)
+                        Box(modifier = Modifier.clickable(enabled = true, onClick = {
+                            onClickSeleccion(el)
+                            elemntoSeleccionado = { item(el) }
+                            //valorInicial = valorInicial(el)
+                            scope.launch { sheetState.hide() }
+                        })) {
+                            item(el)
+                        }
                     }
+
                 }
-
-
             }
 
         }

@@ -48,9 +48,11 @@ class DetalleDashboardVM(
     }
 
     sealed class Eventos {
+
         data class Cargar(val identificador: Int) : Eventos()
-        data class Eliminar(val dashboardUI: DashboardUI, val navegacionExterna: (EventosNavegacion) -> Unit) : Eventos() // Renombrado para claridad
-        data class Guardar(val dashboardUI: DashboardUI, val navegacionExterna: (EventosNavegacion) -> Unit) : Eventos()  // Renombrado para claridad
+        object Eliminar : Eventos() // Renombrado para claridad
+        object Guardar : Eventos()  // Renombrado para claridad
+
         data class OnChangeNombre(val valor: String) : Eventos()     // Adaptado desde OnChangeItem
         data class OnChangeDescripcion(val valor: String) : Eventos() // Adaptado desde OnChangeProveedor
         data class OnActualizarPaneles(val panelesUI: List<PanelUI>) : Eventos() // Adaptado desde OnChangeProveedor
@@ -62,8 +64,8 @@ class DetalleDashboardVM(
     fun onEvento(eventos: Eventos) {
         when (eventos) {
             is Eventos.Cargar -> cargar(eventos.identificador)
-            is Eventos.Eliminar -> eliminar(eventos.dashboardUI, eventos.navegacionExterna)
-            is Eventos.Guardar -> guardar(eventos.dashboardUI, eventos.navegacionExterna)
+            Eventos.Eliminar -> eliminar()
+            Eventos.Guardar -> guardar()
             else -> { // Manejo de eventos OnChange
                 _uiState.update { estado ->
                     if (estado is UIState.Success) {
@@ -124,43 +126,32 @@ class DetalleDashboardVM(
         }
     }
 
-    private fun eliminar(dashboardUi: DashboardUI, navegacionExterna: (EventosNavegacion) -> Unit) {
+    private fun eliminar() {
         viewModelScope.launch {
             try { // El ejemplo no tiene try-catch aquí, pero es buena práctica
                 withContext(Dispatchers.IO) {
+                    val dashboardUi = (_uiState.value as UIState.Success).dashboardUI
                     eliminarDashboardCU.eliminar(dashboardUi.toDashboard())
                 }
-                navegarAtras(navegacionExterna) // Llama a la función de navegar atrás
             } catch (e: Exception) {
                 _uiState.value = UIState.Error("Error al eliminar: ${e.message}")
             }
         }
     }
 
-    private fun guardar(dashboardUi: DashboardUI, navegacionExterna: (EventosNavegacion) -> Unit) {
-
-        App.log.lista("Paneles", dashboardUi.listaPaneles)
-
-        dashboardUi.listaPaneles.forEach { App.log.d(it.titulo + " - " + it.seleccionado) }
+    private fun guardar() {
 
         viewModelScope.launch {
-            if (dashboardUi.nombre.isBlank()) { // Validación simple
-                _uiState.value = UIState.Error("El nombre no puede estar vacío.")
-                return@launch
-            }
             try { // El ejemplo no tiene try-catch aquí, pero es buena práctica
                 withContext(Dispatchers.IO) {
+                    val dashboardUi = (_uiState.value as UIState.Success).dashboardUI
                     guardarDashboardCU.guardar(dashboardUi.toDashboard())
                 }
-                // El ejemplo original llama directamente a navegacionExterna(EventosNavegacion.Volver)
-                navegacionExterna(EventosNavegacion.Volver)
             } catch (e: Exception) {
                 _uiState.value = UIState.Error("Error al guardar: ${e.message}")
             }
         }
     }
 
-    fun navegarAtras(navegacion: (EventosNavegacion) -> Unit) { // Como en el ejemplo
-        navegacion(EventosNavegacion.Volver)
-    }
+
 }

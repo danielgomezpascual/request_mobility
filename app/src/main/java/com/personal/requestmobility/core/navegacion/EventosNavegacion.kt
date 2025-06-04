@@ -19,4 +19,10 @@ sealed class EventosNavegacion{
     data class CargarPanel(val identificador : Int): EventosNavegacion()
 
     data class VisualizadorDashboard(val identificador: Int): EventosNavegacion()
+
+
+    //======= Dashboards ===========
+    object MenuDashboard: EventosNavegacion()
+    object NuevoDashboard: EventosNavegacion()
+    data class CargarDashboard(val identificador : Int): EventosNavegacion()
 }

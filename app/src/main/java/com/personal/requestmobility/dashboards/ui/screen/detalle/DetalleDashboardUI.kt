@@ -1,5 +1,6 @@
 package com.personal.requestmobility.dashboards.ui.screen.detalle
 
+import MA_IconBottom
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
@@ -16,13 +17,17 @@ import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.imagenes.selector.MA_ImagenSelector
+import com.personal.requestmobility.core.composables.labels.MA_Titulo2
 import com.personal.requestmobility.core.composables.listas.MA_Lista
+import com.personal.requestmobility.core.composables.listas.MA_ListaReordenable
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItem
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
+import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiVM
+import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 
 import org.koin.androidx.compose.koinViewModel
@@ -62,26 +67,88 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
     navegacion: (EventosNavegacion) -> Unit
 ) {
     MA_ScaffoldGenerico(
+        volver = false,
         titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
         // 'navegacion' en ScaffoldGenerico del ejemplo original es la acción del icono de navegación del TopAppBar
-        navegacion = { navegacion(EventosNavegacion.Volver) }, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'
+        navegacion = { }, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'
         contenidoBottomBar = {
-            BottomAppBar {
-                IconButton(onClick = { navegacion(EventosNavegacion.Volver) }) {
-                    Icon(Icons.Default.Menu, contentDescription = "Listado") // Icono como en el ejemplo
+            BottomAppBar() {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.Bottom
+
+                ) {
+
+                    MA_IconBottom(
+                        modifier = Modifier.weight(1f),
+                        icon = Features.Menu().icono,
+                        labelText = Features.Menu().texto,
+                        onClick = {
+                            navegacion(EventosNavegacion.MenuDashboard)
+                        }
+                    )
+
+                    /*MA_IconBottom(
+                    modifier = Modifier.weight(1f),
+                    icon = Features.Paneles().icono,
+                    labelText = "Crear Panel",
+
+                    onClick = {
+                        viewModel.onEvent(DetalleKpiVM.Eventos.CrearPanel)
+                        //navegacion(EventosNavegacion.MenuApp)
+                    }
+                )*/
+
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    )
+
+                    MA_IconBottom(
+                        modifier = Modifier.weight(1f),
+                        icon = Features.Eliminar().icono,
+                        labelText = Features.Eliminar().texto,
+                        color = Features.Eliminar().color,
+                        onClick = {
+                            viewModel.onEvento(DetalleDashboardVM.Eventos.Eliminar)
+                            navegacion(EventosNavegacion.MenuDashboard)
+                        }
+                    )
+
+                    MA_IconBottom(
+                        modifier = Modifier.weight(1f),
+                        icon = Features.Guardar().icono,
+                        labelText = Features.Guardar().texto,
+                        color = Features.Guardar().color,
+                        onClick = {
+                            viewModel.onEvento(DetalleDashboardVM.Eventos.Guardar)
+                            navegacion(EventosNavegacion.MenuDashboard)
+                        }
+                    )
+
+
                 }
-                Spacer(Modifier.weight(1f)) // Para empujar los siguientes iconos a la derecha si es necesario
-                IconButton(onClick = {
-                    viewModel.onEvento(DetalleDashboardVM.Eventos.Eliminar(dashboardUI, navegacion))
-                }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Borrar")
-                }
-                IconButton(onClick = {
-                    viewModel.onEvento(DetalleDashboardVM.Eventos.Guardar(dashboardUI, navegacion))
-                }) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = "Guardar")
-                }
+
             }
+            /* BottomAppBar {
+                 IconButton(onClick = { navegacion(EventosNavegacion.Volver) }) {
+                     Icon(Icons.Default.Menu, contentDescription = "Listado") // Icono como en el ejemplo
+                 }
+                 Spacer(Modifier.weight(1f)) // Para empujar los siguientes iconos a la derecha si es necesario
+                 IconButton(onClick = {
+                     viewModel.onEvento(DetalleDashboardVM.Eventos.Eliminar(dashboardUI, navegacion))
+                 }) {
+                     Icon(Icons.Default.Delete, contentDescription = "Borrar")
+                 }
+                 IconButton(onClick = {
+                     viewModel.onEvento(DetalleDashboardVM.Eventos.Guardar(dashboardUI, navegacion))
+                 }) {
+                     Icon(Icons.Default.CheckCircle, contentDescription = "Guardar")
+                 }
+             }*/
         },
         contenido = {
             Column(
@@ -98,13 +165,13 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                 //     Spacer(modifier = Modifier.height(16.dp)) // Espacio superior
 
 
-                Text("Selecciona tu foto de perfil:", style = MaterialTheme.typography.headlineSmall)
                 //    Spacer(modifier = Modifier.height(24.dp))
                 var userImageFilePath by remember { mutableStateOf<String?>(dashboardUI.logo) }
                 var feedbackMessage by remember { mutableStateOf("") }
 
 
-                MA_ImagenSelector(defaultImageFilePath = dashboardUI.logo,
+                MA_ImagenSelector(
+                    defaultImageFilePath = dashboardUI.logo,
                     defaultImageResId = android.R.drawable.sym_def_app_icon, // Reemplaza con tu drawable por defecto
                     // defaultImageResId = R.drawable.ic_default_profile, // Si tienes uno propio
                     onImageStored = { filePath ->
@@ -122,15 +189,16 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
 
 
                 // ID: Mostrar solo si es un dashboard existente, no editable
-                if (dashboardUI.id != 0) {
-                    MA_TextoNormal(
-                        valor = dashboardUI.id.toString(),
-                        titulo = "ID",
-                        onValueChange = { /* No editable, función vacía o null como en el ejemplo */ },
+                /* if (dashboardUI.id != 0) {
+                     MA_TextoNormal(
+                         valor = dashboardUI.id.toString(),
+                         titulo = "ID",
+                         onValueChange = { /* No editable, función vacía o null como en el ejemplo */ },
 
-                        )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
+                         )
+                     Spacer(modifier = Modifier.height(16.dp))
+                 }*/
+                MA_Titulo2("Informacion")
 
                 MA_TextoNormal(
                     valor = dashboardUI.nombre,
@@ -152,27 +220,60 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
 
                     )
                 // No hay más campos como "Codigo Organizacion" o "Codigo" para Dashboard
-                Spacer(modifier = Modifier.height(16.dp)) // Espacio inferior
 
-                Text("Paneles:", style = MaterialTheme.typography.headlineSmall)
-                Box(modifier = Modifier.height(200.dp)) {
+                MA_Titulo2("Paneles")
+
+                Box(modifier = Modifier.height(400.dp)) {
 
                     val paneles: List<PanelUI> = dashboardUI.listaPaneles
-                    MA_Lista(paneles) { panelUI ->
-                        SeleccionPanelItem(panelUI) { seleccionPanelUI ->
+                    /*MA_Lista(data = dashboardUI.listaPaneles) {panelUI->
 
-                            val paneles: List<PanelUI> = paneles.map { panel ->
+                        SeleccionPanelItem(panelUI) { panelSeleccionado ->
 
-                                if (panel.equals(seleccionPanelUI)) {
-                                    panel.copy(seleccionado = !seleccionPanelUI.seleccionado)
+                            App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
+                            val panelesR: List<PanelUI> = paneles.map { panel ->
+                                if (panel.id == panelSeleccionado.id) {
+                                    App.log.d("Encontrado")
+                                    App.log.d("${!panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
+                                    panel.copy(seleccionado = !panelSeleccionado.seleccionado)
                                 } else {
                                     panel
                                 }
                             }
-                            App.log.lista("EN clicn" , paneles)
-                            viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(paneles))
+
+                            val p = panelesR.first { it.id == panelSeleccionado.id }
+                            App.log.d("[POST] ${p.seleccionado} ${p.titulo}")
+                            viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
                         }
-                    }
+
+                    }*/
+                    MA_ListaReordenable(
+                        data = dashboardUI.listaPaneles,
+                        itemContent = { panelUI ->
+                            SeleccionPanelItem(panelUI) { panelSeleccionado ->
+
+                                 App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
+                                val panelesR: List<PanelUI> = paneles.map { panel ->
+                                    if (panel.id == panelSeleccionado.id) {
+                                        App.log.d("Encontrado")
+                                        App.log.d("${!panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
+                                        panel.copy(seleccionado = !panelSeleccionado.seleccionado)
+                                    } else {
+                                        panel
+                                    }
+                                }
+
+                                val p = panelesR.first { it.id == panelSeleccionado.id }
+                                App.log.d("[POST] ${p.seleccionado} ${p.titulo}")
+                                viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
+                            }
+                        },
+                        onClick = { panelSeleccionado ->
+                            {
+
+                            }
+
+                        })
                 }
 
             }

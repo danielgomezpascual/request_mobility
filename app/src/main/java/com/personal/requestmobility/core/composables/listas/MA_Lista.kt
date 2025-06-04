@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun <T> MA_Lista(data: List<T>, itemContent: @Composable (T) -> Unit) {
    // val its = remember { mutableStateOf(data) }
+
+
     LazyColumn(modifier = Modifier.Companion.fillMaxWidth()) {
         items(items = data) { elememto ->
             itemContent(elememto)

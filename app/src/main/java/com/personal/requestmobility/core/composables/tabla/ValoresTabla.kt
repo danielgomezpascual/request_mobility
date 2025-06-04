@@ -23,6 +23,7 @@ data class ValoresTabla(
 
     fun dameColumnaPosicion(posicion: Int): Columnas {
         val todasColumnas: List<Columnas> = dameColumnas()
+       if (todasColumnas.isEmpty()) return Columnas("Sin Definir", 0)
         todasColumnas.forEach { columna ->
             if (columna.posicion == posicion) {
                 return columna
@@ -34,9 +35,10 @@ data class ValoresTabla(
 
     fun dameColumnas(): List<Columnas> {
         var columnas: List<Columnas> = emptyList()
-        filas.first().celdas.forEachIndexed { index, celda ->
-
-            columnas = columnas.plus(Columnas(celda.titulo, index))
+        if (columnas.isNotEmpty()) {
+            filas.first().celdas.forEachIndexed { index, celda ->
+                columnas = columnas.plus(Columnas(celda.titulo, index))
+            }
         }
         return columnas
     }

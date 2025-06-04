@@ -1,7 +1,10 @@
 package com.personal.requestmobility.dashboards.ui.screen.listado
 
+import MA_IconBottom
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -29,6 +32,7 @@ import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.dashboards.ui.composables.MA_DashboardItem
+import com.personal.requestmobility.menu.Features
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -62,9 +66,41 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
 ) {
     MA_ScaffoldGenerico(
         titulo = "Dashboards", // Título adaptado
+
         navegacion = { navegacion(EventosNavegacion.MenuApp) }, // Para el icono de navegación del TopAppBar
         contenidoBottomBar = {
-            BottomAppBar {
+
+            BottomAppBar() {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.Bottom
+
+                ) {
+
+                    MA_IconBottom(
+                        modifier = Modifier.weight(1f),
+                        icon = Features.Menu().icono,
+                        labelText = Features.Menu().texto,
+                        onClick = { navegacion(EventosNavegacion.MenuApp) }
+                    )
+                    Spacer(modifier = Modifier.fillMaxWidth().weight(1f))
+                    MA_IconBottom(
+                        modifier = Modifier.weight(1f),
+                        icon = Features.Nuevo().icono,
+                        labelText = Features.Nuevo().texto,
+                        color = Features.Nuevo().color,
+                        onClick = { navegacion(EventosNavegacion.NuevoDashboard) }
+                    )
+
+
+                }
+
+
+            }
+
+
+           /* BottomAppBar {
                 IconButton(onClick = {
                     // App.log.d("Click de volver desde el menu") // Comentado como en el original si App.log no está disponible
                     navegacion(EventosNavegacion.MenuApp)
@@ -77,7 +113,7 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
                 }) {
                     Icon(Icons.Default.Add, contentDescription = "Nuevo")
                 }
-            }
+            }*/
         },
         contenido = {
             Column(

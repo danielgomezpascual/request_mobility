@@ -350,7 +350,6 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                         }
                     ))
 
-            }
 
 
 
@@ -360,73 +359,74 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
 
 
 
-            MA_2Columnas(
-                titulo = "Dimensiones del panel ",
-                elementos = listOf(
-                    {
-                        MA_Combo(
 
-                            icono = Icons.Filled.HorizontalRule,
-                            //modifier = Modifier.weight(1f),
-                            titulo = "Ancho Total",
-                            descripcion = "Ancho a ocupar en (DP)",
-                            valorInicial = (panelUI.configuracion.width.value.toInt()).toString(),
-                            elementosSeleccionables = (400..1000 step 50).map { it.toString() },
-                            onClickSeleccion = { str, indice ->
-                                viewModel.onEvent(DetallePanelVM.Eventos.onChangeAncho(str))
-                            })
-                    },
-                    {
-                        MA_Combo(
-                            icono = Icons.Filled.Height,
-                            // modifier = Modifier.weight(1f),
-                            titulo = "Alto Total",
-                            descripcion = "Alto a ocupar en (DP)",
-                            valorInicial = (panelUI.configuracion.height.value.toInt()).toString(),
-                            elementosSeleccionables = (400..1000 step 50).map { it.toString() },
-                            onClickSeleccion = { str, indice ->
-                                viewModel.onEvent(DetallePanelVM.Eventos.onChangeAlto(str))
-                            })
-                    }
+                MA_2Columnas(
+                    titulo = "Dimensiones del panel ",
+                    elementos = listOf(
+                        {
+                            MA_Combo(
 
-                ))
+                                icono = Icons.Filled.HorizontalRule,
+                                //modifier = Modifier.weight(1f),
+                                titulo = "Ancho Total",
+                                descripcion = "Ancho a ocupar en (DP)",
+                                valorInicial = (panelUI.configuracion.width.value.toInt()).toString(),
+                                elementosSeleccionables = (400..1000 step 50).map { it.toString() },
+                                onClickSeleccion = { str, indice ->
+                                    viewModel.onEvent(DetallePanelVM.Eventos.onChangeAncho(str))
+                                })
+                        },
+                        {
+                            MA_Combo(
+                                icono = Icons.Filled.Height,
+                                // modifier = Modifier.weight(1f),
+                                titulo = "Alto Total",
+                                descripcion = "Alto a ocupar en (DP)",
+                                valorInicial = (panelUI.configuracion.height.value.toInt()).toString(),
+                                elementosSeleccionables = (400..1000 step 50).map { it.toString() },
+                                onClickSeleccion = { str, indice ->
+                                    viewModel.onEvent(DetallePanelVM.Eventos.onChangeAlto(str))
+                                })
+                        }
+
+                    ))
 
 
 
 
-            MA_2Columnas(
-                titulo = "Ocupacion",
-                elementos = listOf(
-                    {
-                        MA_Combo(
-                            //  modifier = Modifier.weight(1f),
-                            icono = Icons.Filled.AutoGraph,
-                            titulo = "Espacio Gráfica",
-                            descripcion = "Porcentaje del espaci que va  utilizar la gráfica en el panel",
-                            valorInicial = (panelUI.configuracion.espacioGrafica * 100).toString(),
-                            elementosSeleccionables = (0..100 step 10).map { it.toString() },
-                            onClickSeleccion = { str, indice ->
-                                viewModel.onEvent(DetallePanelVM.Eventos.onChangeEspacioGrafica(str))
-                            })
-                    },
-                    {
-                        MA_Combo(
-                            //    modifier = Modifier.weight(1f),
-                            icono = Icons.Filled.TableView,
-                            titulo = "Espacio Tabla",
-                            descripcion = "Porcentaje del espaci que va  utilizar la gráfica en el panel",
-                            valorInicial = (panelUI.configuracion.espacioTabla * 100).toString(),
-                            elementosSeleccionables = (0..100 step 10).map { it.toString() },
-                            onClickSeleccion = { str, indice ->
-                                viewModel.onEvent(DetallePanelVM.Eventos.onChangeEspacioTabla(str))
-                            })
-                    }
+                MA_2Columnas(
+                    titulo = "Ocupacion",
+                    elementos = listOf(
+                        {
+                            MA_Combo(
+                                //  modifier = Modifier.weight(1f),
+                                icono = Icons.Filled.AutoGraph,
+                                titulo = "Espacio Gráfica",
+                                descripcion = "Porcentaje del espaci que va  utilizar la gráfica en el panel",
+                                valorInicial = (panelUI.configuracion.espacioGrafica * 100).toString(),
+                                elementosSeleccionables = (0..100 step 10).map { it.toString() },
+                                onClickSeleccion = { str, indice ->
+                                    viewModel.onEvent(DetallePanelVM.Eventos.onChangeEspacioGrafica(str))
+                                })
+                        },
+                        {
+                            MA_Combo(
+                                //    modifier = Modifier.weight(1f),
+                                icono = Icons.Filled.TableView,
+                                titulo = "Espacio Tabla",
+                                descripcion = "Porcentaje del espaci que va  utilizar la gráfica en el panel",
+                                valorInicial = (panelUI.configuracion.espacioTabla * 100).toString(),
+                                elementosSeleccionables = (0..100 step 10).map { it.toString() },
+                                onClickSeleccion = { str, indice ->
+                                    viewModel.onEvent(DetallePanelVM.Eventos.onChangeEspacioTabla(str))
+                                })
+                        }
+                    )
+
+
                 )
 
-
-            )
-
-            /*MA_RowSeccion() {
+                /*MA_RowSeccion() {
 
 
 
@@ -436,76 +436,76 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
 
 
 
-            MA_2Columnas(
-                titulo = "Caracteristicas",
-                elementos = listOf(
+                MA_2Columnas(
+                    titulo = "Caracteristicas",
+                    elementos = listOf(
 
-                    {
-                        MA_Combo(
+                        {
+                            MA_Combo(
 
-                            titulo = "Máximo",
-                            descripcion = "Límite de elementos que se pueden presentar en la lista",
-                            icono = Icons.Filled.FrontHand,
-                            valorInicial = panelUI.configuracion.limiteElementos.toString(),
-                            elementosSeleccionables = (0..10).map { it.toString() },
-                            onClickSeleccion = { str, indice ->
-                                viewModel.onEvent(DetallePanelVM.Eventos.onChangeLimiteElementos(str))
-                            })
-                    },
-                    {
-                        MA_SwitchNormal(
-                            titulo = "Etiquetas", valor = panelUI.configuracion.mostrarEtiquetas, icono = Icons.Filled.Textsms,
-                            onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarEtiquetas(valor)) }
-                        )
-                    },
-                    {
-                        MA_SwitchNormal(
-                            titulo = "Ordenados", valor = panelUI.configuracion.ordenado, icono = Icons.Filled.ArrowDownward,
-                            onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarOrdenado(valor)) })
-                    },
-                    {
-                        MA_SwitchNormal(
-                            titulo = "Todo el espacio", valor = panelUI.configuracion.ocuparTodoEspacio,
-                            icono = Icons.Default.SwapHoriz,
-                            onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeOcuparTodoEspacio(valor)) })
-                    },
-                    {
-                        MA_SwitchNormal(
-                            titulo = "Título Tabla",
-                            icono = Icons.Default.FormatColorText,
-                            valor = panelUI.configuracion.mostrarTituloTabla,
-                            onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarOrdenado(valor)) }
-                        )
-                    },
-                    {
-                        MA_SwitchNormal(
-                            icono = Icons.Default.SpaceBar,
-                            titulo = "Ajustar Ancho",
-                            valor = panelUI.configuracion.ajustarContenidoAncho,
-                            onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeAjustarContenido(valor)) }
-                        )
-                    },
-                    {
-                        MA_SwitchNormal(
-                            titulo = "Indicador Color",
-                            icono = Icons.Default.ColorLens,
-                            valor = panelUI.configuracion.indicadorColor,
-                            onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeIndicadorColor(valor)) }
-                        )
-                    },
-                    {
-                        MA_SwitchNormal(
-                            icono = Icons.Default.FormatColorFill,
-                            titulo = "Filas de color",
-                            valor = panelUI.configuracion.filasColor,
-                            onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeFilasColor(valor)) }
-                        )
-                    }
+                                titulo = "Máximo",
+                                descripcion = "Límite de elementos que se pueden presentar en la lista",
+                                icono = Icons.Filled.FrontHand,
+                                valorInicial = panelUI.configuracion.limiteElementos.toString(),
+                                elementosSeleccionables = (0..10).map { it.toString() },
+                                onClickSeleccion = { str, indice ->
+                                    viewModel.onEvent(DetallePanelVM.Eventos.onChangeLimiteElementos(str))
+                                })
+                        },
+                        {
+                            MA_SwitchNormal(
+                                titulo = "Etiquetas", valor = panelUI.configuracion.mostrarEtiquetas, icono = Icons.Filled.Textsms,
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarEtiquetas(valor)) }
+                            )
+                        },
+                        {
+                            MA_SwitchNormal(
+                                titulo = "Ordenados", valor = panelUI.configuracion.ordenado, icono = Icons.Filled.ArrowDownward,
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarOrdenado(valor)) })
+                        },
+                        {
+                            MA_SwitchNormal(
+                                titulo = "Todo el espacio", valor = panelUI.configuracion.ocuparTodoEspacio,
+                                icono = Icons.Default.SwapHoriz,
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeOcuparTodoEspacio(valor)) })
+                        },
+                        {
+                            MA_SwitchNormal(
+                                titulo = "Título Tabla",
+                                icono = Icons.Default.FormatColorText,
+                                valor = panelUI.configuracion.mostrarTituloTabla,
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarOrdenado(valor)) }
+                            )
+                        },
+                        {
+                            MA_SwitchNormal(
+                                icono = Icons.Default.SpaceBar,
+                                titulo = "Ajustar Ancho",
+                                valor = panelUI.configuracion.ajustarContenidoAncho,
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeAjustarContenido(valor)) }
+                            )
+                        },
+                        {
+                            MA_SwitchNormal(
+                                titulo = "Indicador Color",
+                                icono = Icons.Default.ColorLens,
+                                valor = panelUI.configuracion.indicadorColor,
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeIndicadorColor(valor)) }
+                            )
+                        },
+                        {
+                            MA_SwitchNormal(
+                                icono = Icons.Default.FormatColorFill,
+                                titulo = "Filas de color",
+                                valor = panelUI.configuracion.filasColor,
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeFilasColor(valor)) }
+                            )
+                        }
 
+                    )
                 )
-            )
 
-
+            }
             MA_BottomSheet(
                 sheetState,
                 onClose = {
