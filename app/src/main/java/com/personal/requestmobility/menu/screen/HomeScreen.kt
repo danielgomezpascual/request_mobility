@@ -2,21 +2,60 @@ package com.personal.requestmobility.menu.screen
 
 import MA_IconBottom
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
+import com.personal.requestmobility.core.navegacion.EventosNavegacion
+import com.personal.requestmobility.core.screen.ErrorScreen
+import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardVM
+
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.menu.navegacion.Modulos
+import com.personal.requestmobility.menu.screen.HomeVM.UIState
+import com.personal.requestmobility.paneles.domain.entidades.PanelData
+import com.personal.requestmobility.paneles.domain.entidades.fromPanelUI
+import com.personal.requestmobility.paneles.ui.componente.MA_Panel
+import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
-fun ScreenMenu(accion: (Modulos) -> Unit) {
+fun HomeScreen(
+    viewModel: HomeVM = koinViewModel(),
+    navegacion: (EventosNavegacion) -> Unit
+) {
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(HomeVM.Eventos.Carga)
+    }
+    val uiState by viewModel.uiState.collectAsState()
+
+    when (uiState) {
+        is UIState.Error -> ErrorScreen((uiState as UIState.Error).message)
+        UIState.Loading -> LoadingScreen()
+        is UIState.Success -> {
+            SuccessMenu(viewModel, (uiState as UIState.Success), navegacion)
+        }
+    }
+}
+
+
+@Composable
+fun SuccessMenu(viewModel: HomeVM,
+                uiState: HomeVM.UIState.Success,
+                navegacion: (EventosNavegacion) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,26 +91,26 @@ fun ScreenMenu(accion: (Modulos) -> Unit) {
                             labelText = Features.Cuadriculas().texto,
                             seleccionado = true,
                             destacado = true,
-                            onClick = { accion(Modulos.Cuadricula) }
+                            onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
                         )
                         MA_IconBottom(
                             //  modifier = Modifier.weight(1f),
                             icon = Features.Dashboard().icono,
                             labelText = Features.Dashboard().texto,
-                            onClick = { accion(Modulos.Dashboards) }
+                            onClick = {navegacion(EventosNavegacion.MenuDashboard) }
                         )
                         MA_IconBottom(
                             //   modifier = Modifier.weight(1f),
                             icon = Features.Paneles().icono,
                             labelText = Features.Paneles().texto,
-                            onClick = { accion(Modulos.Paneles) }
+                            onClick = { navegacion(EventosNavegacion.MenuPaneles) }
                         )
 
                         MA_IconBottom(
                             // modifier = Modifier.weight(1f),
                             icon = Features.Kpi().icono,
                             labelText = Features.Kpi().texto,
-                            onClick = { accion(Modulos.Kpis) }
+                            onClick = { navegacion(EventosNavegacion.MenuKpis)  }
                         )
                     }
 
@@ -79,7 +118,18 @@ fun ScreenMenu(accion: (Modulos) -> Unit) {
                 }
             },
             contenido = {
-                Text("Lorem dolor ipsum")
+
+                val scroll =  rememberScrollState()
+                
+                Box(Modifier) {
+                    Column(modifier = Modifier.verticalScroll(state =  scroll)) {
+                        uiState.paneles.forEach { panelUI ->
+                            MA_Panel(panelData = PanelData().fromPanelUI(panelUI))
+                        }
+                    }
+                }
+
+
             }
         )
 

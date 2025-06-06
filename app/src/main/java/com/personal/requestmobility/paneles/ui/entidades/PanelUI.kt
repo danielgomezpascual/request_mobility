@@ -17,7 +17,8 @@ data class PanelUI(
     val descripcion: String = "",
     val configuracion: PanelConfiguracion = PanelConfiguracion(),
     val kpi: KpiUI = KpiUI(),
-    val seleccionado: Boolean = false
+    val seleccionado: Boolean = false,
+    val orden : Int = 0
 
 )
 
@@ -26,7 +27,9 @@ fun PanelUI.toPanel() = Panel(
     titulo = this.titulo,
     descripcion = this.descripcion,
     configuracion = this.configuracion,
-    kpi = this.kpi.toKpi()
+    kpi = this.kpi.toKpi(),
+    orden = this.orden,
+    seleccionado = this.seleccionado
 
 )
 
@@ -39,5 +42,7 @@ fun PanelUI.fromPanel(panel: Panel): PanelUI {
         descripcion = panel.descripcion,
         configuracion = panel.configuracion,
         kpi = KpiUI().fromKPI(panel.kpi),
-        seleccionado = false)
+        orden = panel.orden,
+        seleccionado = panel.seleccionado
+    )
 }

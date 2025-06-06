@@ -3,7 +3,6 @@ package com.personal.requestmobility.dashboards.ui.screen.detalle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.dashboards.ui.entidades.SeleccionPanelUI
 import com.personal.requestmobility.dashboards.domain.interactors.CargarDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.EliminarDashboardCU
@@ -14,7 +13,6 @@ import com.personal.requestmobility.dashboards.ui.entidades.fromDashboard
 import com.personal.requestmobility.dashboards.ui.entidades.toDashboard
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.entidades.fromPanel
-import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,6 +53,7 @@ class DetalleDashboardVM(
 
         data class OnChangeNombre(val valor: String) : Eventos()     // Adaptado desde OnChangeItem
         data class OnChangeDescripcion(val valor: String) : Eventos() // Adaptado desde OnChangeProveedor
+        data class OnChangeInicial(val valor: Boolean) : Eventos() //
         data class OnActualizarPaneles(val panelesUI: List<PanelUI>) : Eventos() // Adaptado desde OnChangeProveedor
         data class ActualizarLogo(val rutaLogo: String) : Eventos() // Adaptado desde OnChangeProveedor
         // Los otros OnChange (global, codigoOrganizacion, codigo) no aplican a Dashboard
@@ -77,7 +76,10 @@ class DetalleDashboardVM(
                             }
 
                             is Eventos.ActualizarLogo -> estado.copy(dashboardUI = estado.dashboardUI.copy(logo = eventos.rutaLogo))
+                            is Eventos.OnChangeInicial -> estado.copy(dashboardUI = estado.dashboardUI.copy(home = eventos.valor))
                             else -> estado // No debería llegar aquí si los eventos están bien definidos
+
+                            
                         }
                     } else {
                         estado // No modificar si no es Success
@@ -105,14 +107,7 @@ class DetalleDashboardVM(
                             if (id != 0) {
                                 val ds: DashboardUI = DashboardUI().fromDashboard(cargarDashboardCU.cargar(id))
                                 val panelesSeleccionados: List<PanelUI> = ds.listaPaneles
-
-                                //todo: hay que actualizar el dashboard con los datos que tenga el panel (ademas de marcarle como seleccionado),
-                                // puede ser que tengamos el panel con unos datos y el dashboard con otros.
-                                // Al encontrar el panel, debemos cargar el contenido del panel, no lo que tenga almacneado en room. Tenemos los paneles y los dashboards seleccionados, no deberia ser muy complicado.
-                                val t = paneles.map { p ->
-                                    p.copy(seleccionado = panelesSeleccionados.filter { it.id == p.id }.isNotEmpty())
-                                }
-                                UIState.Success(dashboardUI = ds.copy(listaPaneles = t))
+                                UIState.Success(dashboardUI = ds.copy(listaPaneles =panelesSeleccionados))
                             } else {
                                 UIState.Success(dashboardUI = DashboardUI(listaPaneles = paneles))
                             }

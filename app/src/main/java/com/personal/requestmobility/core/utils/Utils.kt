@@ -1,5 +1,6 @@
 package com.personal.requestmobility.core.utils
 
+import android.content.Context
 import com.google.gson.Gson
 import kotlin.jvm.java
 
@@ -12,6 +13,12 @@ object Utils {
 
 
 }
+
+fun Context.esTrue(valor: String, valorTrue: String = "Y", diferenciarMayuscula: Boolean = true) = valor.equals(other = valorTrue, ignoreCase = diferenciarMayuscula)
+
+
+fun Context.toSiNo(valor: Boolean, valorTrue: String = "Y", valorFalse: String = "N") = if (valor) valorTrue else valorFalse
+
 
 fun String.siVacio(valorSiVacio: String): String {
     if (this.isEmpty()) return  valorSiVacio

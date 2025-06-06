@@ -97,5 +97,6 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
         is EventosNavegacion.CargarDashboard -> {
             navController.navigate(DetalleDashboard(navegacion.identificador))
         }
+        EventosNavegacion.MenuVisualizadorDashboard -> navController.navigate(CuadriculaDashboards)
     }
 }

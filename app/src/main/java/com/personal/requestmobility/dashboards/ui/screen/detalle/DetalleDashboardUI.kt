@@ -1,35 +1,45 @@
 package com.personal.requestmobility.dashboards.ui.screen.detalle
 
 import MA_IconBottom
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
-import com.personal.requestmobility.core.composables.imagenes.selector.MA_ImagenSelector
+import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.labels.MA_Titulo2
-import com.personal.requestmobility.core.composables.listas.MA_Lista
-import com.personal.requestmobility.core.composables.listas.MA_ListaReordenable
+import com.personal.requestmobility.core.composables.listas.MA_ListaReordenable_EstiloYouTube
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItem
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
-import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiVM
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
-
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -89,18 +99,6 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                         }
                     )
 
-                    /*MA_IconBottom(
-                    modifier = Modifier.weight(1f),
-                    icon = Features.Paneles().icono,
-                    labelText = "Crear Panel",
-
-                    onClick = {
-                        viewModel.onEvent(DetalleKpiVM.Eventos.CrearPanel)
-                        //navegacion(EventosNavegacion.MenuApp)
-                    }
-                )*/
-
-
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -133,22 +131,7 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                 }
 
             }
-            /* BottomAppBar {
-                 IconButton(onClick = { navegacion(EventosNavegacion.Volver) }) {
-                     Icon(Icons.Default.Menu, contentDescription = "Listado") // Icono como en el ejemplo
-                 }
-                 Spacer(Modifier.weight(1f)) // Para empujar los siguientes iconos a la derecha si es necesario
-                 IconButton(onClick = {
-                     viewModel.onEvento(DetalleDashboardVM.Eventos.Eliminar(dashboardUI, navegacion))
-                 }) {
-                     Icon(Icons.Default.Delete, contentDescription = "Borrar")
-                 }
-                 IconButton(onClick = {
-                     viewModel.onEvento(DetalleDashboardVM.Eventos.Guardar(dashboardUI, navegacion))
-                 }) {
-                     Icon(Icons.Default.CheckCircle, contentDescription = "Guardar")
-                 }
-             }*/
+
         },
         contenido = {
             Column(
@@ -162,15 +145,14 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
             ) {
 
 
-                //     Spacer(modifier = Modifier.height(16.dp)) // Espacio superior
-
-
-                //    Spacer(modifier = Modifier.height(24.dp))
                 var userImageFilePath by remember { mutableStateOf<String?>(dashboardUI.logo) }
                 var feedbackMessage by remember { mutableStateOf("") }
 
 
-                MA_ImagenSelector(
+
+
+
+               /* MA_ImagenSelector(
                     defaultImageFilePath = dashboardUI.logo,
                     defaultImageResId = android.R.drawable.sym_def_app_icon, // Reemplaza con tu drawable por defecto
                     // defaultImageResId = R.drawable.ic_default_profile, // Si tienes uno propio
@@ -185,7 +167,7 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                             feedbackMessage = "No se seleccionó o guardó ninguna imagen."
                         }
                     }
-                )
+                )*/
 
 
                 // ID: Mostrar solo si es un dashboard existente, no editable
@@ -198,6 +180,10 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                          )
                      Spacer(modifier = Modifier.height(16.dp))
                  }*/
+
+                MA_Avatar(dashboardUI.nombre)
+
+
                 MA_Titulo2("Informacion")
 
                 MA_TextoNormal(
@@ -207,7 +193,6 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                         viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeNombre(valor))
                     }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
 
                 // No hay CheckBoxNormal para "Global" en Dashboard
 
@@ -219,6 +204,8 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                     },
 
                     )
+
+                MA_SwitchNormal(valor = dashboardUI.home, titulo = "Mostrar Inicio", icono = Icons.Default.Star) { valor ->  viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
                 // No hay más campos como "Codigo Organizacion" o "Codigo" para Dashboard
 
                 MA_Titulo2("Paneles")
@@ -247,12 +234,15 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                         }
 
                     }*/
-                    MA_ListaReordenable(
-                        data = dashboardUI.listaPaneles,
-                        itemContent = { panelUI ->
-                            SeleccionPanelItem(panelUI) { panelSeleccionado ->
 
-                                 App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
+                    MA_ListaReordenable_EstiloYouTube(
+                        data = dashboardUI.listaPaneles.sortedBy { it.orden },
+                        itemContent = { panel, isDragging ->
+                            // Tu Composable para el ítem.
+                            // Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
+                            // ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
+                            SeleccionPanelItem(panel) { panelSeleccionado ->
+                                App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
                                 val panelesR: List<PanelUI> = paneles.map { panel ->
                                     if (panel.id == panelSeleccionado.id) {
                                         App.log.d("Encontrado")
@@ -266,14 +256,24 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                                 val p = panelesR.first { it.id == panelSeleccionado.id }
                                 App.log.d("[POST] ${p.seleccionado} ${p.titulo}")
                                 viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
+
                             }
                         },
-                        onClick = { panelSeleccionado ->
-                            {
+                        onItemClick = { /* ... */ },
+                        onListReordered = {listaReordenada ->
+                            App.log.lista("LR" , listaReordenada)
 
+                            var listaR : List<PanelUI> = emptyList()
+                            listaReordenada.forEachIndexed{indice, panel ->
+                                listaR = listaR.plus(panel.copy(orden =  indice))
                             }
+                            App.log.lista("Reodrd" , listaR)
 
-                        })
+                            viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(listaR))
+
+                        },
+                        itemHeight = 72.dp // ¡IMPORTANTE! Ajusta esto a la altura real de tus ítems
+                    )
                 }
 
             }

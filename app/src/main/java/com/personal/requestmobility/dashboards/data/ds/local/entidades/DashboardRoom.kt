@@ -4,14 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.room.IRoom
-import com.personal.requestmobility.core.utils.Utils
+import com.personal.requestmobility.core.utils.Utils.esTrue
+import com.personal.requestmobility.core.utils.Utils.toSiNo
 import com.personal.requestmobility.core.utils._toJson
-import com.personal.requestmobility.core.utils._toObjectFromJson
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
-import com.personal.requestmobility.dashboards.domain.entidades.KpiPaneles
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
-import com.personal.requestmobility.menu.navegacion.Modulos.Paneles
 import com.personal.requestmobility.paneles.domain.entidades.Panel
 import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelCU
 import org.koin.java.KoinJavaComponent.getKoin
@@ -21,6 +20,7 @@ class DashboardRoom(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     val nombre: String = "",
+    val home: String  = "N",
     val logo: String = "",
     val descripcion: String = "",
     val paneles: String = ""
@@ -35,10 +35,11 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
     val obtenerKpi : ObtenerKpiCU =   getKoin().get()
 
     var listaPanelesActualizado = listOf<Panel>()
-    listaPaneles.forEach { panel ->
+    listaPaneles.sortedBy { it.orden }.forEach { panel ->
         //actualizamos el panel
-        val panelActualizado = obtenerPanel.obtener(panel.id)
+        val panelActualizado = obtenerPanel.obtener(panel.id).copy( seleccionado =  panel.seleccionado , orden = panel.orden)
 
+        App.log.d("***" + panelActualizado.titulo + " -  " + panelActualizado.orden)
         //actualizamos el kpi dle panel
         val idKpi = panelActualizado.kpi.id
         val kpiActualizado = obtenerKpi.obtener(idKpi)
@@ -52,6 +53,7 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
     return Dashboard(
         id = this.id,
         nombre = this.nombre,
+        home =  esTrue(valor = this.home.toString()),
         logo = this.logo,
         descripcion = this.descripcion,
         paneles = listaPanelesActualizado
@@ -61,6 +63,7 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 fun DashboardRoom.fromDashboard(dashboard: Dashboard): DashboardRoom = DashboardRoom(
     id = dashboard.id, // Room maneja la autogeneración si id es 0 en la inserción.
     nombre = dashboard.nombre,
+    home = toSiNo(dashboard.home),
     logo = dashboard.logo,
     descripcion = dashboard.descripcion,
     paneles = _toJson(dashboard.paneles)

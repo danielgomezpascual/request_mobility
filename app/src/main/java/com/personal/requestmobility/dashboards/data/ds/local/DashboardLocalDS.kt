@@ -14,6 +14,11 @@ class DashboardLocalDS(private val dao: DashboardDao) : IDataSourceDashboard {
     override val tipo: TIPO_DS
         get() = TIPO_DS.LOCAL_ROOM
 
+    override suspend fun getAllHome(): List<Dashboard> {
+        val dashboardsRoom: List<DashboardRoom> = dao.todosDashboardsHome()
+        return dashboardsRoom.map { it.toDashboard() }
+    }
+
     override suspend fun getAll(): List<Dashboard> {
         val dashboardsRoom: List<DashboardRoom> = dao.todosDashboards()
         return dashboardsRoom.map { it.toDashboard() }
@@ -29,6 +34,8 @@ class DashboardLocalDS(private val dao: DashboardDao) : IDataSourceDashboard {
     }
 
     override suspend fun guardar(dashboard: Dashboard): Long {
+
+
         // El patrón del ejemplo crea una instancia nueva para llamar a fromDashboard
         return dao.insert(DashboardRoom().fromDashboard(dashboard))
     }

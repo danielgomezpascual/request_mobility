@@ -20,28 +20,28 @@ data class PanelesRoom(
     val titulo: String = "",
     val descripcion: String = "",
     val configuracion: String = "",
-    val idKpi: Int = 0
+    val idKpi: Int = 0,
+    val orden: Int = 0
 ) : IRoom
 
 
 suspend fun PanelesRoom.toPanel(): Panel {
 
-    var configuracion = _toObjectFromJson<PanelConfiguracion>(this.configuracion)?: PanelConfiguracion()
+    var configuracion = _toObjectFromJson<PanelConfiguracion>(this.configuracion) ?: PanelConfiguracion()
 
-    val obtenerKpi : ObtenerKpiCU =   getKoin().get()
-
-
+    val obtenerKpi: ObtenerKpiCU = getKoin().get()
 
 
-    val panel =  Panel(
+    val panel = Panel(
         id = this.id,
         titulo = this.titulo,
         descripcion = this.descripcion,
         configuracion = configuracion,
-        kpi =     obtenerKpi.obtener(this.idKpi)
+        kpi = obtenerKpi.obtener(this.idKpi),
+        orden = this.orden
     )
 
-    return  panel
+    return panel
 
 }
 
@@ -52,6 +52,7 @@ fun PanelesRoom.fromPanel(panel: Panel) = PanelesRoom(
     descripcion = panel.descripcion,
     configuracion = _toJson(panel.configuracion),
     idKpi = panel.kpi.id,
+    orden = panel.orden
 
     )
 

@@ -12,6 +12,12 @@ abstract class DashboardDao : BaseDaoExtended<DashboardRoom>(), KoinComponent { 
     override val TABLA: String
         get() = "Dashboard"
 
+
+    @Query("SELECT * FROM Dashboard WHERE home = 'Y' ")
+    abstract suspend fun todosDashboardsHome(): List<DashboardRoom>
+
+
+
     @Query("SELECT * FROM Dashboard")
     abstract suspend fun todosDashboards(): List<DashboardRoom>
 

@@ -11,6 +11,7 @@ import com.personal.requestmobility.dashboards.domain.interactors.EliminarTodosD
 import com.personal.requestmobility.dashboards.domain.interactors.GuardarDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardsCU
+import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardsHomeCU
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerKpisDashboard
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerSeleccionPanel
 import com.personal.requestmobility.dashboards.domain.repositorios.DashboardRepositorio
@@ -20,7 +21,10 @@ import com.personal.requestmobility.dashboards.ui.screen.listado.DashboardListad
 import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardVM
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
 import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
+import com.personal.requestmobility.menu.screen.HomeVM
+import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelesCU
 import com.personal.requestmobility.paneles.domain.repositorios.PanelesRepositorio
+import com.personal.requestmobility.paneles.ui.screen.listado.PanelesListadoVM
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -51,6 +55,7 @@ val moduloDashboards = module {
 
     single<ObtenerSeleccionPanel> { ObtenerSeleccionPanel(get<PanelesRepositorio>()) }
     single<ObtenerKpisDashboard> { ObtenerKpisDashboard(get<DashboardRepositorio>(), get<ObtenerKpiCU>()) }
+    single<ObtenerDashboardsHomeCU> { ObtenerDashboardsHomeCU(get<DashboardRepositorio>()) }
 
 
     // ViewModels for Dashboards
@@ -60,7 +65,7 @@ val moduloDashboards = module {
 
 
 
-    viewModel{
+    viewModel {
         VisualizadorDashboardVM(obtenerDashboardCU = get<ObtenerDashboardCU>())
     }
 
@@ -70,6 +75,11 @@ val moduloDashboards = module {
     viewModel {
         DashboardListadoVM(obtenerDashboardsCU = get<ObtenerDashboardsCU>())
     }
+
+    viewModel {
+        HomeVM(obtenerDashboardHomeCU = get<ObtenerDashboardsHomeCU>())
+    }
+
 
 
     viewModel {

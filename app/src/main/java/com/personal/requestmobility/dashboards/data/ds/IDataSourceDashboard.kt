@@ -9,6 +9,15 @@ import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 interface IDataSourceDashboard: IDS {
 
 
+
+    /**
+     * Obtiene todos los dashboards que se vayan a mostrar en la home de la app
+     * @return Lista de [Dashboard].
+     */
+    suspend fun getAllHome(): List<Dashboard>
+
+
+
     /**
      * Obtiene todos los dashboards.
      * @return Lista de [Dashboard].

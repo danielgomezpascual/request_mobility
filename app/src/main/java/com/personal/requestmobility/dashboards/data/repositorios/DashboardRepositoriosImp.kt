@@ -1,6 +1,5 @@
 package com.personal.requestmobility.dashboards.data.repositorios
 
-import com.personal.requestmobility.App
 import com.personal.requestmobility.core.data.ds.TIPO_DS
 import com.personal.requestmobility.core.data.repositorio.BaseRepositorio
 import com.personal.requestmobility.dashboards.data.ds.IDataSourceDashboard
@@ -9,9 +8,14 @@ import com.personal.requestmobility.dashboards.domain.repositorios.DashboardRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+
 class DashboardRepositoriosImp(
     fuentesDatos: List<IDataSourceDashboard>
 ) : BaseRepositorio<IDataSourceDashboard>(fuentesDatos), DashboardRepositorio {
+    override suspend fun getAllHome(): Flow<List<Dashboard>> = flow{
+        val listado: List<Dashboard> = dameDS(TIPO_DS.LOCAL_ROOM).getAllHome()
+        emit(listado)
+    }
 
     override suspend fun getAll(): Flow<List<Dashboard>> = flow {
         // App.modo determinaría si se obtienen datos locales o remotos primero,
@@ -30,6 +34,8 @@ class DashboardRepositoriosImp(
     }
 
     override suspend fun guardar(dashboard: Dashboard): Long {
+
+
         return dameDS(TIPO_DS.LOCAL_ROOM).guardar(dashboard)
     }
 

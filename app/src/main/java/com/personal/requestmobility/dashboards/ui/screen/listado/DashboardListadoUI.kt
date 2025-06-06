@@ -66,7 +66,6 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
 ) {
     MA_ScaffoldGenerico(
         titulo = "Dashboards", // Título adaptado
-
         navegacion = { navegacion(EventosNavegacion.MenuApp) }, // Para el icono de navegación del TopAppBar
         contenidoBottomBar = {
 
