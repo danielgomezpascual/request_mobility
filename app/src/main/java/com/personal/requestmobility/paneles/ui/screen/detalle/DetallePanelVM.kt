@@ -79,6 +79,7 @@ class DetallePanelVM(
 
         data class onChangeIndicadorColor(val valor: Boolean) : Eventos()
         data class onChangeFilasColor(val valor: Boolean) : Eventos()
+        data class onChangeEsquemaColores(val valor: Int) : Eventos()
 
         object Preview : Eventos()
         object Guardar : Eventos()
@@ -107,7 +108,6 @@ class DetallePanelVM(
                     if (estado is UIState.Success) {
                         when (evento) {
                             is Eventos.OnChangeTitulo -> {
-
                                 estado.copy(panelUI = estado.panelUI.copy
                                     (titulo = evento.titulo, configuracion = estado.panelUI.configuracion.copy(titulo = evento.titulo)))
 
@@ -259,6 +259,13 @@ class DetallePanelVM(
                             is Eventos.onChangeOcuparTodoEspacio -> {
                                 estado.copy(
                                     panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(ocuparTodoEspacio = evento.valor))
+                                )
+
+                            }
+
+                            is Eventos.onChangeEsquemaColores -> {
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(colores = evento.valor))
                                 )
 
                             }

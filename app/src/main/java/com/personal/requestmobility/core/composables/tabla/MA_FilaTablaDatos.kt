@@ -35,7 +35,7 @@ fun MA_FilaTablaDatos(fila: Fila, configuracion: PanelConfiguracion, onClick: (F
             },
         verticalAlignment = Alignment.Companion.CenterVertically
     ) {
-        MA_LabelCelda(fila.seleccionada.toString())
+
 
         fila.celdas.forEachIndexed { indice, celda ->
 

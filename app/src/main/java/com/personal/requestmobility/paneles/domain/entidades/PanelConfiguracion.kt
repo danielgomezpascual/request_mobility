@@ -34,19 +34,9 @@ data class PanelConfiguracion(
     val columnaX : Int = 0,
     val columnaY : Int = 1,
 
-    val colores : List<Color>  = listOf<Color>(
-        Color(0xFFFF0000),
-        Color(0xFF00FF00),
-        Color(0xFF0000FF),
-        Color(0xFFFFFF00),
-        Color(0xFFFF00FF),
-        Color(0xFF00FFFF),
-        Color(0xFFFF69B4),
-        Color(0xFFFFA500),
-        Color(0xFF800080),
-        Color(0xFF008000),
-        Color(0xFF000080),
-    ),
+    val colores : Int = 1,
+
+
     var ajustarContenidoAncho: Boolean = true,
     var indicadorColor: Boolean = true,
     var filasColor: Boolean = true

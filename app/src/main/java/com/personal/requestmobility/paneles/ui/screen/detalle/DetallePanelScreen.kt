@@ -2,19 +2,13 @@ package com.personal.requestmobility.paneles.ui.screen.detalle
 
 
 import MA_IconBottom
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -28,45 +22,30 @@ import androidx.compose.material.icons.filled.FormatColorText
 import androidx.compose.material.icons.filled.FrontHand
 import androidx.compose.material.icons.filled.Height
 import androidx.compose.material.icons.filled.HorizontalRule
-import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.filled.SpaceBar
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.TableView
-import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.Textsms
-import androidx.compose.material.icons.filled.VerticalSplit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
-
-import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonNormal
-
-import com.personal.requestmobility.core.composables.checks.MA_CheckBoxNormal
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.combo.MA_Combo
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
-import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.composables.labels.MA_Titulo2
 import com.personal.requestmobility.core.composables.layouts.MA_2Columnas
-import com.personal.requestmobility.core.composables.layouts.MA_Expandible
-import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.composables.tabla.Columnas
@@ -76,15 +55,14 @@ import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.kpi.ui.composables.KpiComboItem
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.menu.Features
+import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
 import com.personal.requestmobility.paneles.ui.componente.MA_ColumnaItemSeleccionable
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
-import com.personal.requestmobility.paneles.ui.componente.MA_RowSeccion
+import com.personal.requestmobility.paneles.ui.componente.MA_SelectorEsquemaColores
 import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM.UIState
 import kotlinx.coroutines.launch
-
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.component.getScopeId
 
 
 @Composable
@@ -500,6 +478,21 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                                 valor = panelUI.configuracion.filasColor,
                                 onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeFilasColor(valor)) }
                             )
+                        },
+                        {
+
+                            MA_ComboLista<EsquemaColores>(
+                                titulo = "Esquema de colores ",
+                                descripcion = "Esquema de colores que se van a mostrar en la gráfica",
+                                valorInicial = {
+                                    panelUI.configuracion.colores
+                                    MA_SelectorEsquemaColores(EsquemaColores().get(panelUI.configuracion.colores))
+                                },
+                                elementosSeleccionables = EsquemaColores().dameListasDisponibles(),
+                                item = { esquema ->
+                                    MA_SelectorEsquemaColores(esquema)
+                                },
+                                onClickSeleccion = { columna -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeEsquemaColores(columna.id)) })
                         }
 
                     )

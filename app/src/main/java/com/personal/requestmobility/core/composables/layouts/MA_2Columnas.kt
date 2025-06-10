@@ -48,7 +48,7 @@ fun <T> MA_2Columnas(data: List<T>, contenido: @Composable (T) -> Unit) {
 @Composable
 fun MA_2Columnas(titulo: String = "", elementos: List<@Composable () -> Unit>) {
 
-    Column(  modifier = Modifier.sizeIn(minHeight = 100.dp, maxHeight = 400.dp)) {
+    Column(  modifier = Modifier.sizeIn(minHeight = 100.dp, maxHeight = 450.dp)) {
         MA_Titulo2(titulo)
         LazyVerticalGrid(
 
