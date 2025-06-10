@@ -33,7 +33,7 @@ fun MA_CeldaFiltro(
 
         MA_Circulo(color = if3(celda.seleccionada, Color.Yellow, Color.LightGray))
         Text(
-            text = "[${celda.seleccionada}]:  ${celda.titulo} = ${celda.valor}",
+            text = "${celda.titulo} = ${celda.valor}",
             modifier = modifier
                 .background(celda.fondoCelda)
                 .padding(4.dp),

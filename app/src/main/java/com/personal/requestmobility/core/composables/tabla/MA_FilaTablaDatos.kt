@@ -21,7 +21,7 @@ fun MA_FilaTablaDatos(fila: Fila, configuracion: PanelConfiguracion, onClick: (F
     val ajustarContenidoAncho = configuracion.ajustarContenidoAncho
     val indicadorColor = configuracion.indicadorColor
 
-    val color: Color = (fila.color).copy(alpha = 0.3f)
+    val color: Color = (fila.color).copy(alpha = 0.6f)
     val colorFondo = if3(filasColor, (fila.color).copy(alpha = 0.1f), Color.White)
 
 
@@ -35,7 +35,7 @@ fun MA_FilaTablaDatos(fila: Fila, configuracion: PanelConfiguracion, onClick: (F
             },
         verticalAlignment = Alignment.Companion.CenterVertically
     ) {
-
+        MA_LabelCelda(fila.seleccionada.toString())
 
         fila.celdas.forEachIndexed { indice, celda ->
 

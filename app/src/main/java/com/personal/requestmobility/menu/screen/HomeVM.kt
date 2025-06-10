@@ -53,7 +53,7 @@ class HomeVM(
 
 
                 val d = ds.first()
-                _uiState.value = UIState.Success(paneles = d.paneles.map { PanelUI().fromPanel(it) })
+                _uiState.value = UIState.Success(paneles = d.paneles.filter { it.seleccionado == true }.map { PanelUI().fromPanel(it) })
 
 
         }

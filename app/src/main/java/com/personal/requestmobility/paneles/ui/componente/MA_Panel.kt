@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarras
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarrasVerticales
@@ -24,8 +26,6 @@ import kotlin.collections.filter
 import kotlin.collections.map
 
 
-
-
 @Composable
 fun MA_Panel(modifier: Modifier = Modifier,
              panelData: PanelData
@@ -34,7 +34,7 @@ fun MA_Panel(modifier: Modifier = Modifier,
 
     val configuracion = panelData.panelConfiguracion
 
-  //  panelData.setupValores()
+    //  panelData.setupValores()
 
     //variable para controlar el estado de las filas que se estan presentado en la tabla
     var filas by remember { mutableStateOf<List<Fila>>(panelData.valoresTabla.filas) }
@@ -48,7 +48,7 @@ fun MA_Panel(modifier: Modifier = Modifier,
 
     if (configuracion.limiteElementos > 0) {
         filas = panelData.limiteElementos()
-        panelData.valoresTabla.filas =filas
+        panelData.valoresTabla.filas = filas
     }
 
     if (configuracion.ordenado) {
@@ -66,10 +66,25 @@ fun MA_Panel(modifier: Modifier = Modifier,
 
 
 
+
+    //establecemos los colores
+    val hayFilaSeleccionada: Boolean = !filasPintar.none { it.seleccionada }
+    val fs: List<Fila> = filasPintar.map { fila ->
+        var colorAlpha = fila.color.copy(alpha = 1.0f)
+        if (hayFilaSeleccionada) {
+            colorAlpha = fila.color.copy(alpha = 0.20f)
+            if (fila.seleccionada) {
+                colorAlpha = fila.color.copy(alpha = 1.0f)
+            }
+        }
+        fila.copy(color = colorAlpha)
+    }
+
+
     graficaComposable = dameTipoGrafica(
         panelConfiguracion = configuracion,
         modifier = modifier,
-        filas = filasPintar,
+        filas = fs,
         posicionX = panelData.panelConfiguracion.columnaX,
         posivionY = panelData.panelConfiguracion.columnaY
 
@@ -86,22 +101,22 @@ fun MA_Panel(modifier: Modifier = Modifier,
         onClickSeleccionarFila = { fila ->
             filas = filas.map { f ->
                 if (fila.seleccionada) {
-                    val colorAlpha = f.color.copy(alpha = 1.0f)
-                    f.copy(seleccionada = false, color = colorAlpha)
+                    f.copy(seleccionada = false)
 
                 } else {
 
                     if (f.equals(fila)) {
-                        val colorAlpha = f.color.copy(alpha = 1.0f)
-                        f.copy(seleccionada = true, color = colorAlpha)
+
+                        f.copy(seleccionada = true)
                     } else {
-                        val colorAlpha = f.color.copy(alpha = 0.2f)
-                        f.copy(seleccionada = false, color = colorAlpha)
+
+                        f.copy(seleccionada = false)
                     }
                 }
 
             }
             celdasFiltro = fila.celdas
+            panelData.valoresTabla.filas = filas
         },
         onClickInvertir = { cfi ->
             celdasFiltro = celdasFiltro.map { c ->
@@ -116,7 +131,7 @@ fun MA_Panel(modifier: Modifier = Modifier,
                 }
             }
             filas = cumplenFiltro(filas, celdasFiltro)
-
+            panelData.valoresTabla.filas = filas
         },
         onClickSeleccionarFiltro = { cf ->
             celdasFiltro = celdasFiltro.map { c ->
@@ -128,6 +143,8 @@ fun MA_Panel(modifier: Modifier = Modifier,
             }
 
             filas = cumplenFiltro(filas, celdasFiltro)
+            panelData.valoresTabla.filas = filas
+
 
         }
     )

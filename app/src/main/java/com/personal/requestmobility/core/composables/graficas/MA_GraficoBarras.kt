@@ -44,15 +44,15 @@ fun MA_GraficoBarras(
     posicionX: Int = 0,
     posicionY: Int = 1,
 ) {
-    val data =  listaValores.map { fila ->
+    val data = listaValores.map { fila ->
 
-        val x =  if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
-        var y: Float =  0f
-try {
-    y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
-}catch (e: Exception){
-e.printStackTrace()
-}
+        val x = if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
+        var y: Float = 0f
+        try {
+            y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
 
         BarData(
@@ -61,14 +61,14 @@ e.printStackTrace()
             barColor = (fila.color).asSolidChartColor()
         )
     }
-   /* val data = listaValores.map {
-        BarData(
-            xValue = it.x,
-            yValue = it.y,
-            barColor = (it.color).asSolidChartColor()
+    /* val data = listaValores.map {
+         BarData(
+             xValue = it.x,
+             yValue = it.y,
+             barColor = (it.color).asSolidChartColor()
 
-        )
-    }*/
+         )
+     }*/
 
 
 

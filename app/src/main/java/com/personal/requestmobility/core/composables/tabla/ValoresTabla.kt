@@ -35,7 +35,7 @@ data class ValoresTabla(
 
     fun dameColumnas(): List<Columnas> {
         var columnas: List<Columnas> = emptyList()
-        if (columnas.isNotEmpty()) {
+        if (filas.isNotEmpty()) {
             filas.first().celdas.forEachIndexed { index, celda ->
                 columnas = columnas.plus(Columnas(celda.titulo, index))
             }
