@@ -10,8 +10,9 @@ data class PanelConfiguracion(
 
     val titulo: String = "",
     val descripcion : String = "",
-    val limiteElementos: Int = 15,
+    val limiteElementos: Int = 10,
     val mostrarEtiquetas: Boolean = true,
+    val agruparResto: Boolean = true,
 
 
     val target: Float = 0f,

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.ColorLens
+import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material.icons.filled.Directions
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.FormatColorText
@@ -429,6 +430,13 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                                 onClickSeleccion = { str, indice ->
                                     viewModel.onEvent(DetallePanelVM.Eventos.onChangeLimiteElementos(str))
                                 })
+                        },
+
+                        {
+                            MA_SwitchNormal(
+                                titulo = "Agrupar Elementos en 'Resto' ", valor = panelUI.configuracion.agruparResto, icono = Icons.Filled.ContentCut,
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.OnChangeAgruparResto(valor)) }
+                            )
                         },
                         {
                             MA_SwitchNormal(

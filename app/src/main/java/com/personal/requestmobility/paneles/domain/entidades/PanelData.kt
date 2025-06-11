@@ -23,10 +23,7 @@ data class PanelData(
 
     fun limiteElementos(): List<Fila> =
         valoresTabla.dameElementosTruncados(
-            panelConfiguracion = panelConfiguracion,
-            limite = panelConfiguracion.limiteElementos,
-            agrupar = panelConfiguracion.agruparValores,
-            indiceCampoSumar = panelConfiguracion.columnaY
+           panelConfiguracion
         )
 
     fun establecerColorFilas(): List<Fila> {

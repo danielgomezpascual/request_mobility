@@ -10,12 +10,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.botones.MA_BotonNormal
+import com.personal.requestmobility.core.composables.dialogos.MA_Dialogo
+import com.personal.requestmobility.core.composables.dialogos.ResultadoDialog
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -28,6 +35,7 @@ import com.personal.requestmobility.menu.screen.HomeVM.UIState
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
 import com.personal.requestmobility.paneles.domain.entidades.fromPanelUI
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -52,6 +60,7 @@ fun HomeScreen(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuccessMenu(viewModel: HomeVM,
                 uiState: HomeVM.UIState.Success,
@@ -75,6 +84,11 @@ fun SuccessMenu(viewModel: HomeVM,
                         verticalAlignment = Alignment.Bottom
 
                     ) {
+
+
+
+
+
 
 
                         /*MA_IconBottom(
@@ -119,15 +133,40 @@ fun SuccessMenu(viewModel: HomeVM,
             },
             contenido = {
 
+
+
                 val scroll =  rememberScrollState()
                 
                 Box(Modifier) {
                     Column(modifier = Modifier.verticalScroll(state =  scroll)) {
+
+
+                        MA_Dialogo(
+                            trigger = { show ->                            MA_BotonNormal(texto =  "Pruebas") { show() } },
+                            resultado = {res ->
+                                        if (res is ResultadoDialog.Si){
+                                            App.log.d("Si")
+                                        }
+
+                                if (res is ResultadoDialog.No){
+                                    App.log.d("No")
+                                }
+                                })
+
+
+
+
+
                         uiState.paneles.forEach { panelUI ->
                             MA_Panel(panelData = PanelData().fromPanelUI(panelUI))
                         }
+
+
+
                     }
                 }
+
+
 
 
             }

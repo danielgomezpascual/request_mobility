@@ -75,12 +75,23 @@ data class ValoresTabla(
     }
 
 
-    fun dameElementosTruncados(panelConfiguracion: PanelConfiguracion, limite: Int, agrupar: Boolean, indiceCampoSumar: Int = 1): List<Fila> {
+    fun dameElementosTruncados(panelConfiguracion: PanelConfiguracion): List<Fila> {
+
+
+
+        val limite = panelConfiguracion.limiteElementos
+        val agrupar = panelConfiguracion.agruparValores
+        val indiceCampoSumar = panelConfiguracion.columnaY
+        val incluirResto = panelConfiguracion.agruparResto
+
+
 
 
         if (limite == 0) return filas
         val elementosHastaLimite = filas.take(limite)
         if (!agrupar) return elementosHastaLimite
+if (!incluirResto) return  elementosHastaLimite
+
         if (filas.size > limite) {
             val elemetosDespuesLimite = filas.drop(limite)
             val fila0 = filas.first()
