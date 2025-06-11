@@ -8,8 +8,8 @@ import com.personal.requestmobility.kpi.data.ds.local.dao.KpisDao
 import com.personal.requestmobility.kpi.data.ds.local.entidades.KpisRoom
 import com.personal.requestmobility.paneles.data.ds.local.dao.PanelesDao
 import com.personal.requestmobility.paneles.data.ds.local.entidades.PanelesRoom
-import com.personal.requestmobility.transacciones.data.local.dao.TansaccionesDao
-import com.personal.requestmobility.transacciones.data.local.entities.TransaccionesRoom
+import com.personal.requestmobility.transacciones.data.ds.local.dao.TansaccionesDao
+import com.personal.requestmobility.transacciones.data.ds.local.entities.TransaccionesRoom
 
 
 @Database(

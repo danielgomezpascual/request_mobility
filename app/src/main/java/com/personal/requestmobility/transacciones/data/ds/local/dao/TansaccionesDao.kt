@@ -1,9 +1,9 @@
-package com.personal.requestmobility.transacciones.data.local.dao
+package com.personal.requestmobility.transacciones.data.ds.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 import com.personal.requestmobility.core.room.BaseDaoExtended
-import com.personal.requestmobility.transacciones.data.local.entities.TransaccionesRoom
+import com.personal.requestmobility.transacciones.data.ds.local.entities.TransaccionesRoom
 import org.koin.core.component.KoinComponent
 
 @Dao

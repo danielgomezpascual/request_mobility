@@ -1,4 +1,4 @@
-package com.personal.requestmobility.transacciones.data.local.entities
+package com.personal.requestmobility.transacciones.data.ds.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

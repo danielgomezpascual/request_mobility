@@ -1,7 +1,7 @@
 package com.personal.requestmobility.transacciones
 
 import com.personal.requestmobility.core.room.AppDatabase
-import com.personal.requestmobility.transacciones.data.local.dao.TansaccionesDao
+import com.personal.requestmobility.transacciones.data.ds.local.dao.TansaccionesDao
 import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepositorio
 import com.personal.requestmobility.transacciones.domain.graficas.GraficaDistribucionErrores
 import com.personal.requestmobility.transacciones.domain.graficas.GraficaErroresPorTipo
@@ -11,9 +11,7 @@ import com.personal.requestmobility.transacciones.domain.interactors.ObtenerFilt
 import com.personal.requestmobility.transacciones.domain.interactors.ObtenerTransaccionesCU
 import com.personal.requestmobility.transacciones.domain.graficas.GraficaTransaccionesEstadoCU
 import com.personal.requestmobility.transacciones.domain.graficas.ResumenTrx
-import com.personal.requestmobility.kpi.domain.interactors.ObtenerKPIsCU_NO
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
-import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
 import com.personal.requestmobility.transacciones.domain.repositorios.IRepoTransacciones
 import com.personal.requestmobility.transacciones.ui.screens.listado.DockTransaccionesVM
 import org.koin.androidx.viewmodel.dsl.viewModel
