@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.personal.requestmobility.core.room.IRoom
 import com.personal.requestmobility.transacciones.domain.entidades.Transacciones
+import kotlin.String
 
 @Entity(tableName = "Transacciones")
 data class TransaccionesRoom(
@@ -32,9 +33,9 @@ data class TransaccionesRoom(
 ) : IRoom
 
 
-fun TransaccionesRoom.toTransacciones() : Transacciones{
+fun TransaccionesRoom.toTransacciones(): Transacciones {
     val DESCONOCIDO: Int = -1
-    return   Transacciones(
+    return Transacciones(
         mobRequestId = this.MOB_REQUEST_ID,
         programVersion = this.PROGRAM_VERSION ?: "",
         cXmlField = this.C_XML_FIELD ?: "",
@@ -58,5 +59,31 @@ fun TransaccionesRoom.toTransacciones() : Transacciones{
         reqResultDetail = this.REQ_RESULT_DETAIL ?: "",
         reqResultDate = this.REQ_RESULT_DATE ?: "",
     )
-
 }
+
+
+fun TransaccionesRoom.fromTransaccion(trx: Transacciones): TransaccionesRoom = TransaccionesRoom(
+    MOB_REQUEST_ID = trx.mobRequestId,
+    PROGRAM_VERSION = trx.programVersion,
+    C_XML_FIELD = trx.cXmlField,
+    CREATION_DATE = trx.creationDate,
+    REQ_STATUS = trx.reqStatus,
+    NUMERO = trx.numero,
+    TIPO_MOV = trx.tipoMov,
+    LECTORA_ID = trx.lectoraId,
+    USUARIO_LECTORA = trx.usuarioLectora,
+    REQ_MESSAGE = trx.reqMessage,
+    C_LOB_FIELD = trx.cLobField,
+    PARENT_REQUEST_ID = trx.parentRequestId,
+    REDONE_BY_REQ_ID = trx.redoneByReqId,
+    DONE_FOR_REQ_ID = trx.doneForReqId,
+    PROCESO = trx.proceso,
+    LANGUAGE_CODE = trx.languageCode,
+    READER_XML_ID = trx.readerXmlId,
+    XML_HASH = trx.xmlHash,
+    TCB_ERROR_PILE = trx.tcbErrorPile,
+    REQ_RESULT = trx.reqResult,
+    REQ_RESULT_DETAIL = trx.reqResultDetail,
+    REQ_RESULT_DATE = trx.reqResultDate,    )
+
+

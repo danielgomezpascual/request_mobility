@@ -10,7 +10,7 @@ import com.personal.requestmobility.paneles.domain.entidades.Panel
 
 class PanelesRoomDS(private val dao: PanelesDao) : IDataSourcePaneles {
     override val tipo: TIPO_DS
-        get() = TIPO_DS.LOCAL_ROOM
+        get() = TIPO_DS.ROOM
 
     override suspend fun getAll(): List<Panel> = dao.todosPaneles().map { panelRoom -> panelRoom.toPanel() }
 

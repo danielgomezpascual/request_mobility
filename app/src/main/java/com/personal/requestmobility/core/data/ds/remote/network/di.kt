@@ -1,10 +1,12 @@
 package com.personal.requestmobility.core.data.ds.remote.network
 
+
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 val moduloNetwork = module {
     single { provideHttpLoggingInterceptor() }
@@ -21,6 +23,9 @@ fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
 fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
     return OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
+        .readTimeout(200L, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
+        .connectTimeout(200L, TimeUnit.SECONDS)
         .build()
 }
 
@@ -31,6 +36,7 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         .baseUrl(BASE_URL) // Reemplaza con tu URL base
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
+
         //.addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 }

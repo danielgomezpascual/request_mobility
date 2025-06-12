@@ -12,7 +12,7 @@ class KpisRepositorioImp(fuentesDatos: List<IDataSourceKpis>) :
     BaseRepositorio<IDataSourceKpis>(fuentesDatos),
     KpisRepositorio {
 
-    val origenFuente: TIPO_DS = TIPO_DS.LOCAL_ROOM
+    val origenFuente: TIPO_DS = TIPO_DS.ROOM
 
     override suspend fun getAll(): Flow<List<Kpi>> = flow { emit(dameDS(origenFuente).getAll()) }
 

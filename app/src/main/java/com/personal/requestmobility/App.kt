@@ -1,6 +1,7 @@
 package com.personal.requestmobility
 
 import android.app.Application
+import com.personal.requestmobility.core.data.ds.remote.network.moduloNetwork
 import com.personal.requestmobility.core.log.di.moduloLog
 import com.personal.requestmobility.core.log.domain.MyLog
 import com.personal.requestmobility.core.room.AppDatabase
@@ -9,6 +10,7 @@ import com.personal.requestmobility.dashboards.moduloDashboards
 import com.personal.requestmobility.kpi.moduloKpis
 import com.personal.requestmobility.paneles.moduloPaneles
 import com.personal.requestmobility.transacciones.data.ds.local.entities.TransaccionesRoom
+import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.requestmobility.transacciones.moduloTransacciones
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -31,7 +33,10 @@ class App : Application() {
         super.onCreate()
         initKoin()
         log = getKoin().get()
-        cargaTransaccionesTest()
+       // cargaTransaccionesTest()
+
+
+
       }
 
     fun initKoin() {
@@ -42,6 +47,7 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 moduloLog,
+                moduloNetwork,
                 moduloDatabase,
                 moduloKpis,
                 moduloTransacciones,

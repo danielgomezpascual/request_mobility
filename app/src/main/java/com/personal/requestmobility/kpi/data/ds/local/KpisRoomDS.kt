@@ -10,7 +10,7 @@ import com.personal.requestmobility.kpi.domain.entidades.Kpi
 
 class KpisRoomDS(private val dao: KpisDao) : IDataSourceKpis {
     override val tipo: TIPO_DS
-        get() = TIPO_DS.LOCAL_ROOM
+        get() = TIPO_DS.ROOM
 
     override suspend fun getAll(): List<Kpi> = dao.todasLectoras().map { kpiRoom -> kpiRoom.toKpi() }
 

@@ -12,7 +12,7 @@ import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 class DashboardLocalDS(private val dao: DashboardDao) : IDataSourceDashboard {
 
     override val tipo: TIPO_DS
-        get() = TIPO_DS.LOCAL_ROOM
+        get() = TIPO_DS.ROOM
 
     override suspend fun getAllHome(): List<Dashboard> {
         val dashboardsRoom: List<DashboardRoom> = dao.todosDashboardsHome()

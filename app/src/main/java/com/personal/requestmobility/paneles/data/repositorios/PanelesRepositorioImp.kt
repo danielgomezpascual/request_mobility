@@ -2,9 +2,6 @@ package com.personal.requestmobility.paneles.data.repositorios
 
 import com.personal.requestmobility.core.data.ds.TIPO_DS
 import com.personal.requestmobility.core.data.repositorio.BaseRepositorio
-import com.personal.requestmobility.kpi.data.ds.IDataSourceKpis
-import com.personal.requestmobility.kpi.domain.entidades.Kpi
-import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
 import com.personal.requestmobility.paneles.data.ds.IDataSourcePaneles
 import com.personal.requestmobility.paneles.domain.entidades.Panel
 import com.personal.requestmobility.paneles.domain.repositorios.PanelesRepositorio
@@ -15,7 +12,7 @@ class PanelesRepositorioImp(fuentesDatos: List<IDataSourcePaneles>) :
     BaseRepositorio<IDataSourcePaneles>(fuentesDatos),
     PanelesRepositorio {
 
-    val origenFuente: TIPO_DS = TIPO_DS.LOCAL_ROOM
+    val origenFuente: TIPO_DS = TIPO_DS.ROOM
 
     override suspend fun getAll(): Flow<List<Panel>> = flow { emit(dameDS(origenFuente).getAll()) }
 
