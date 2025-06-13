@@ -1,6 +1,8 @@
 package com.personal.requestmobility.core.data.ds.remote.network
 
 
+import okhttp3.ConnectionPool
+import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -16,17 +18,34 @@ val moduloNetwork = module {
 
 fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
     val logging = HttpLoggingInterceptor()
-    logging.level = HttpLoggingInterceptor.Level.BODY
+    logging.level = HttpLoggingInterceptor.Level.BASIC
     return logging
 }
 
 fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-    return OkHttpClient.Builder()
+
+    val dispatcher = Dispatcher().apply {
+        // Aumentamos el número máximo de peticiones totales.
+        // Pongámoslo en 500 para que coincida con tu necesidad.
+        maxRequests = 500
+
+        // Aumentamos el número máximo de peticiones por host.
+        // Si todas van al mismo dominio, este es el límite más importante.
+        maxRequestsPerHost = 500
+    }
+
+    val httpClient : OkHttpClient = OkHttpClient.Builder()
+        .dispatcher(dispatcher)
         .addInterceptor(loggingInterceptor)
         .readTimeout(200L, TimeUnit.SECONDS)
         .retryOnConnectionFailure(true)
         .connectTimeout(200L, TimeUnit.SECONDS)
+        .connectionPool(ConnectionPool(100,3, TimeUnit.MINUTES))
+        //.connectionSpecs()
         .build()
+
+
+    return  httpClient
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {

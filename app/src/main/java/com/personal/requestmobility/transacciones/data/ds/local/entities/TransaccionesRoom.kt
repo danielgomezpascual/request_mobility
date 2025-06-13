@@ -30,6 +30,9 @@ data class TransaccionesRoom(
     var REQ_RESULT: String? = "",
     var REQ_RESULT_DETAIL: String? = "",
     var REQ_RESULT_DATE: String? = "",
+    var ETIQUETAS: String = "",
+    var DETALLES: String = "",
+    var LECTORA_FISICA_ID: String = ""
 ) : IRoom
 
 
@@ -58,6 +61,9 @@ fun TransaccionesRoom.toTransacciones(): Transacciones {
         reqResult = this.REQ_RESULT ?: "",
         reqResultDetail = this.REQ_RESULT_DETAIL ?: "",
         reqResultDate = this.REQ_RESULT_DATE ?: "",
+        etiquetas = this.ETIQUETAS ?: "",
+        detalles = this.DETALLES ?: "",
+        lectoraFisicaId = this.LECTORA_FISICA_ID ?: "",
     )
 }
 
@@ -84,6 +90,10 @@ fun TransaccionesRoom.fromTransaccion(trx: Transacciones): TransaccionesRoom = T
     TCB_ERROR_PILE = trx.tcbErrorPile,
     REQ_RESULT = trx.reqResult,
     REQ_RESULT_DETAIL = trx.reqResultDetail,
-    REQ_RESULT_DATE = trx.reqResultDate,    )
+    REQ_RESULT_DATE = trx.reqResultDate,
+    ETIQUETAS = trx.etiquetas,
+    DETALLES = trx.detalles,
+    LECTORA_FISICA_ID = trx.lectoraFisicaId,
+)
 
 

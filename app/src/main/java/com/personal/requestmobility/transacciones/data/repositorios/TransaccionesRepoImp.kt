@@ -19,7 +19,7 @@ class TransaccionesRepoImp (fuentesDatos: List<IDataSourceTransacciones>):
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTrxOracle(): List<Transacciones>  = dameDS(TIPO_DS.RETROFIT).getAll()
+    override suspend fun getTrxOracle(organizacion: String): List<Transacciones>  = dameDS(TIPO_DS.RETROFIT).getAll(organizacion =  organizacion)
 
     override suspend fun guardar(trx: List<Transacciones>): Long  = dameDS(TIPO_DS.ROOM).guardar(trx)
 

@@ -2,6 +2,7 @@ package com.personal.requestmobility.core.utils
 
 import android.content.Context
 import com.google.gson.Gson
+import org.jsoup.Jsoup
 import kotlin.jvm.java
 
 object Utils {
@@ -46,4 +47,12 @@ inline fun <reified T> _toObjectFromJson(json: String): T? {
         return  null
     }
 
+}
+
+
+
+fun String.getValueFromTagWithJsoup(tagName: String): String? {
+    // Parsea el string XML y selecciona el primer elemento con esa etiqueta.
+    // .text() extrae el contenido de texto.
+    return Jsoup.parse(this).selectFirst(tagName)?.text()
 }

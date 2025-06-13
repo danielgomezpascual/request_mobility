@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5b6bd84d9078fe813439e976923fa1c8",
+    "identityHash": "d705b7fc741f698f8d7d4ea95afefaa9",
     "entities": [
       {
         "tableName": "Transacciones",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`MOB_REQUEST_ID` INTEGER NOT NULL, `PROGRAM_VERSION` TEXT, `C_XML_FIELD` TEXT, `CREATION_DATE` TEXT, `REQ_STATUS` INTEGER, `NUMERO` TEXT, `TIPO_MOV` TEXT, `LECTORA_ID` TEXT, `USUARIO_LECTORA` TEXT, `REQ_MESSAGE` TEXT, `C_LOB_FIELD` TEXT, `PARENT_REQUEST_ID` INTEGER, `REDONE_BY_REQ_ID` INTEGER, `DONE_FOR_REQ_ID` INTEGER, `PROCESO` TEXT, `LANGUAGE_CODE` TEXT, `READER_XML_ID` TEXT, `XML_HASH` TEXT, `TCB_ERROR_PILE` TEXT, `REQ_RESULT` TEXT, `REQ_RESULT_DETAIL` TEXT, `REQ_RESULT_DATE` TEXT, PRIMARY KEY(`MOB_REQUEST_ID`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`MOB_REQUEST_ID` INTEGER NOT NULL, `PROGRAM_VERSION` TEXT, `C_XML_FIELD` TEXT, `CREATION_DATE` TEXT, `REQ_STATUS` INTEGER, `NUMERO` TEXT, `TIPO_MOV` TEXT, `LECTORA_ID` TEXT, `USUARIO_LECTORA` TEXT, `REQ_MESSAGE` TEXT, `C_LOB_FIELD` TEXT, `PARENT_REQUEST_ID` INTEGER, `REDONE_BY_REQ_ID` INTEGER, `DONE_FOR_REQ_ID` INTEGER, `PROCESO` TEXT, `LANGUAGE_CODE` TEXT, `READER_XML_ID` TEXT, `XML_HASH` TEXT, `TCB_ERROR_PILE` TEXT, `REQ_RESULT` TEXT, `REQ_RESULT_DETAIL` TEXT, `REQ_RESULT_DATE` TEXT, `ETIQUETAS` TEXT NOT NULL, `DETALLES` TEXT NOT NULL, `LECTORA_FISICA_ID` TEXT NOT NULL, PRIMARY KEY(`MOB_REQUEST_ID`))",
         "fields": [
           {
             "fieldPath": "MOB_REQUEST_ID",
@@ -139,6 +139,24 @@
             "columnName": "REQ_RESULT_DATE",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "ETIQUETAS",
+            "columnName": "ETIQUETAS",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "DETALLES",
+            "columnName": "DETALLES",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "LECTORA_FISICA_ID",
+            "columnName": "LECTORA_FISICA_ID",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -298,7 +316,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b6bd84d9078fe813439e976923fa1c8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd705b7fc741f698f8d7d4ea95afefaa9')"
     ]
   }
 }

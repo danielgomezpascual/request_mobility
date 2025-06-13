@@ -8,6 +8,7 @@ import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.core.room.moduloDatabase
 import com.personal.requestmobility.dashboards.moduloDashboards
 import com.personal.requestmobility.kpi.moduloKpis
+import com.personal.requestmobility.organizaciones.moduloOrganizaciones
 import com.personal.requestmobility.paneles.moduloPaneles
 import com.personal.requestmobility.transacciones.data.ds.local.entities.TransaccionesRoom
 import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepoImp
@@ -49,6 +50,7 @@ class App : Application() {
                 moduloLog,
                 moduloNetwork,
                 moduloDatabase,
+                moduloOrganizaciones,
                 moduloKpis,
                 moduloTransacciones,
                 moduloDashboards,

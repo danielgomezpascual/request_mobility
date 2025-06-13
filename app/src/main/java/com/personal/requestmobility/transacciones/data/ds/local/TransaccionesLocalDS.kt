@@ -24,7 +24,7 @@ class TransaccionesLocalDS(private val dao: TansaccionesDao) : IRepoTransaccione
     }
 
 
-    override suspend fun getAll(): List<Transacciones> {
+    override suspend fun getAll(organizacion: String): List<Transacciones> {
         TODO("Not yet implemented")
     }
 
@@ -45,7 +45,7 @@ class TransaccionesLocalDS(private val dao: TansaccionesDao) : IRepoTransaccione
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTrxOracle(): List<Transacciones> {
+    override suspend fun getTrxOracle(organizacion: String): List<Transacciones> {
         TODO("Not yet implemented")
     }
 

@@ -24,5 +24,10 @@ class Transacciones(
   var tcbErrorPile : String = "",
   var reqResult : String = "",
   var reqResultDetail : String = "",
-  var reqResultDate : String = ""
+  var reqResultDate : String = "",
+  var etiquetas: String = "",
+  var detalles: String = "",
+  var lectoraFisicaId: String = ""
+
+
 )
