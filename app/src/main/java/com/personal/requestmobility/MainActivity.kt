@@ -29,11 +29,12 @@ class MainActivity : ComponentActivity() {
 
         }
 
+        /*
 
         val repoTrx: TransaccionesRepoImp = getKoin().get()
         val guardar: GuardarTransacciones = getKoin().get()
-
         val repoOrganizaciones: OrganizacionesRepoImp = getKoin().get()
+
 
         runBlocking {
             val t = repoOrganizaciones.getAll()
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     guardar.guardar(trx)
                 }
             }
-        }
+        }*/
 
     }
 
