@@ -169,4 +169,8 @@ dependencies {
     // ========== GRAFICAS ============
     implementation("com.himanshoe:charty:2.1.0-beta03.4")
 
+
+    //===========================================================
+    // ========== EVALAR EXPLRESIONES DINAMICAMENTE  ============
+    implementation("org.apache.commons:commons-jexl3:3.3")
 }

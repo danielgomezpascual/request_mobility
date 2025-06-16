@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -34,10 +36,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonNormal
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.combo.MA_Combo
@@ -59,11 +66,14 @@ import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
 import com.personal.requestmobility.paneles.ui.componente.MA_ColumnaItemSeleccionable
+import com.personal.requestmobility.paneles.ui.componente.MA_CondicionPanel
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.paneles.ui.componente.MA_SelectorEsquemaColores
+import com.personal.requestmobility.paneles.ui.entidades.Condiciones
 import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM.UIState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import kotlin.collections.plus
 
 
 @Composable
@@ -211,6 +221,45 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                     }
                 )
 
+                //data class Condicion(val id: Int, val color: Color, val predicado: String)
+
+                var condiciones by remember { mutableStateOf<List<Condiciones>>(panelUI.configuracion.condiciones ?: emptyList()) }
+
+
+                MA_BotonNormal("Crear elmento") {
+                    val numeroElemntosLisa = condiciones.size
+                    condiciones = condiciones + Condiciones(id = numeroElemntosLisa, color = 0, predicado = ">50")
+                }
+
+
+                // 3. RENDERIZADO DE LA LISTA
+                // `LazyColumn` es la forma eficiente de mostrar listas en Compose.
+                // Es el equivalente al antiguo RecyclerView.
+                LazyColumn(
+                    modifier = Modifier.height(200.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    // `items` recorre nuestra lista de estado `labelList`.
+                    // Para cada `text` en la lista, crea un Composable `LabelItem`.
+                    items(condiciones) { condicion ->
+                        MA_CondicionPanel(
+                            esquemaColores = EsquemaColores().get(panelUI.configuracion.colores),
+                            condicion = condicion,
+                            onClickAceptar = { condicionUI ->
+                                App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
+                                viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(condicionUI))
+
+                            },
+                            onClickCancelar = { condicionUI ->
+                                viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(condicionUI))
+                            }
+                        )
+
+
+                    }
+
+                }
+
 
 
                 MA_Titulo2("KPI")
@@ -350,7 +399,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                                 titulo = "Ancho Total",
                                 descripcion = "Ancho a ocupar en (DP)",
                                 valorInicial = (panelUI.configuracion.width.value.toInt()).toString(),
-                                elementosSeleccionables = (400..1000 step 50).map { it.toString() },
+                                elementosSeleccionables = (200..1000 step 50).map { it.toString() },
                                 onClickSeleccion = { str, indice ->
                                     viewModel.onEvent(DetallePanelVM.Eventos.onChangeAncho(str))
                                 })
@@ -362,7 +411,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                                 titulo = "Alto Total",
                                 descripcion = "Alto a ocupar en (DP)",
                                 valorInicial = (panelUI.configuracion.height.value.toInt()).toString(),
-                                elementosSeleccionables = (400..1000 step 50).map { it.toString() },
+                                elementosSeleccionables = (200..1000 step 50).map { it.toString() },
                                 onClickSeleccion = { str, indice ->
                                     viewModel.onEvent(DetallePanelVM.Eventos.onChangeAlto(str))
                                 })
@@ -460,7 +509,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                                 titulo = "Título Tabla",
                                 icono = Icons.Default.FormatColorText,
                                 valor = panelUI.configuracion.mostrarTituloTabla,
-                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarOrdenado(valor)) }
+                                onValueChange = { valor -> viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarTitulosTabla(valor)) }
                             )
                         },
                         {

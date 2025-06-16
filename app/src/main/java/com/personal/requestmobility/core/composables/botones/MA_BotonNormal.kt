@@ -6,6 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun MA_BotonNormal(texto: String, modifier: Modifier =  Modifier, onClick: () -> Unit) {
+fun MA_BotonNormal(texto: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(onClick = onClick, modifier = modifier) { Text(text = texto) }
 }

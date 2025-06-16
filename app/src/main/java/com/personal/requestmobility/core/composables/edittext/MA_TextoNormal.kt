@@ -18,10 +18,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MA_TextoNormal(valor: String, titulo: String, modifier: Modifier = Modifier.Companion,
+fun MA_TextoNormal(valor: String, titulo: String,
+                   modifier: Modifier = Modifier.Companion,
                    icono: Icons? = null,
                    onValueChange: (String) -> Unit) {
-    Row(modifier = Modifier.padding(4.dp), verticalAlignment = Alignment.Companion.CenterVertically) {
+    Row(
+        modifier = modifier.padding(4.dp),
+        verticalAlignment = Alignment.Companion.CenterVertically
+    ) {
         if (icono != null) {
             Icon(imageVector = Icons.Default.Home, contentDescription = titulo)
         }
@@ -31,7 +35,6 @@ fun MA_TextoNormal(valor: String, titulo: String, modifier: Modifier = Modifier.
             label = { Text(titulo) },
             readOnly = false,
             modifier = modifier
-                .fillMaxWidth()
                 .padding(8.dp),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = Color.Transparent,

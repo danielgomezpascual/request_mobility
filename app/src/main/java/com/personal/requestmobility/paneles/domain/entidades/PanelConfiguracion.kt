@@ -1,8 +1,8 @@
 package com.personal.requestmobility.paneles.domain.entidades
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.paneles.ui.entidades.Condiciones
 
 data class PanelConfiguracion(
     val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,
@@ -35,10 +35,13 @@ data class PanelConfiguracion(
     val columnaX : Int = 0,
     val columnaY : Int = 1,
 
-    val colores : Int = 1,
+    val colores : Int = 0,
 
 
     var ajustarContenidoAncho: Boolean = true,
     var indicadorColor: Boolean = true,
-    var filasColor: Boolean = true
+    var filasColor: Boolean = true,
+
+
+    var condiciones : List<Condiciones> = listOf<Condiciones>()
 )

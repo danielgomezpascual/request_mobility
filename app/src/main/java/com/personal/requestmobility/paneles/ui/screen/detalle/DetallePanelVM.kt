@@ -3,7 +3,6 @@ package com.personal.requestmobility.paneles.ui.screen.detalle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 import com.personal.requestmobility.core.utils.siVacio
 import com.personal.requestmobility.paneles.domain.entidades.PanelOrientacion
@@ -14,6 +13,7 @@ import com.personal.requestmobility.kpi.ui.entidades.fromKPI
 import com.personal.requestmobility.paneles.domain.interactors.EliminarPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelCU
+import com.personal.requestmobility.paneles.ui.entidades.Condiciones
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.entidades.fromPanel
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
@@ -89,11 +89,8 @@ class DetallePanelVM(
 
         object ObtenerKpisDisponibles : Eventos()
 
-    }
-
-
-    init {
-
+        data class AgregarCondicion(val condicion: Condiciones) : Eventos()
+        data class EliminarCondicion(val condicion: Condiciones) : Eventos()
     }
 
 
@@ -109,15 +106,19 @@ class DetallePanelVM(
                     if (estado is UIState.Success) {
                         when (evento) {
                             is Eventos.OnChangeTitulo -> {
-                                estado.copy(panelUI = estado.panelUI.copy
-                                    (titulo = evento.titulo, configuracion = estado.panelUI.configuracion.copy(titulo = evento.titulo)))
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy
+                                        (titulo = evento.titulo, configuracion = estado.panelUI.configuracion.copy(titulo = evento.titulo))
+                                )
 
 
                             }
 
                             is Eventos.OnChangeDescripcion -> {
-                                estado.copy(panelUI = estado.panelUI.copy
-                                    (descripcion = evento.descripcion, configuracion = estado.panelUI.configuracion.copy(descripcion = evento.descripcion)))
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy
+                                        (descripcion = evento.descripcion, configuracion = estado.panelUI.configuracion.copy(descripcion = evento.descripcion))
+                                )
                             }
 
                             is Eventos.OnChangeKpiSeleccionado -> {
@@ -155,6 +156,7 @@ class DetallePanelVM(
                                     panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(mostrarEtiquetas = evento.valor))
                                 )
                             }
+
                             is Eventos.OnChangeAgruparResto -> {
                                 estado.copy(
                                     panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(agruparResto = evento.valor))
@@ -277,6 +279,24 @@ class DetallePanelVM(
                             }
 
 
+                            is Eventos.AgregarCondicion -> {
+                                var condiciones: List<Condiciones> = estado.panelUI.configuracion.condiciones
+                                condiciones = condiciones.plus(evento.condicion)
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condiciones = condiciones))
+                                )
+                            }
+
+                            is Eventos.EliminarCondicion -> {
+                                var condiciones: List<Condiciones> = estado.panelUI.configuracion.condiciones
+                                val nuevasCondiciones = condiciones.filter { it.id != evento.condicion.id }
+
+                                //condiciones = condiciones.plus(evento.condicion)
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condiciones = nuevasCondiciones))
+                                )
+                            }
+
                             else -> estado
                         }
                     } else {
@@ -292,15 +312,14 @@ class DetallePanelVM(
         if (_uiState is UIState.Success) {
 
 
-
             _uiState.update { estado ->
                 if (estado is UIState.Success) {
                     val kpi = estado.panelUI.kpi
                     val titulo = (estado.panelUI.configuracion.titulo).siVacio(kpi.titulo)
-                    val descripcion =( estado.panelUI.configuracion.descripcion).siVacio(kpi.descripcion)
-                     estado.copy(estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(titulo =titulo, descripcion =  descripcion)))
+                    val descripcion = (estado.panelUI.configuracion.descripcion).siVacio(kpi.descripcion)
+                    estado.copy(estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(titulo = titulo, descripcion = descripcion)))
 
-                }else{
+                } else {
                     estado
                 }
 
