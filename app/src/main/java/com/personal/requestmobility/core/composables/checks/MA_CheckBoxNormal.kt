@@ -18,7 +18,7 @@ fun MA_CheckBoxNormal(valor: Boolean,
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .fillMaxWidth()
+
             .padding(8.dp)
     ) {
         Checkbox(

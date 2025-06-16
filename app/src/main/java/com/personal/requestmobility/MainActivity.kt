@@ -29,27 +29,7 @@ class MainActivity : ComponentActivity() {
 
         }
 
-        /*
 
-        val repoTrx: TransaccionesRepoImp = getKoin().get()
-        val guardar: GuardarTransacciones = getKoin().get()
-        val repoOrganizaciones: OrganizacionesRepoImp = getKoin().get()
-
-
-        runBlocking {
-            val t = repoOrganizaciones.getAll()
-            val totalOrganizaciones = t.size
-            App.log.d("Organizaciones encontradas ${t.size}")
-
-            t.filter { it.organizationCode.equals("DFM") }.forEachIndexed { indice, org ->
-
-                launch {
-                    App.log.d("[${indice+1} / $totalOrganizaciones] Procesando Organizacion encontradas ${org.toString()}")
-                    val trx = repoTrx.getTrxOracle(org.organizationId)
-                    guardar.guardar(trx)
-                }
-            }
-        }*/
 
     }
 

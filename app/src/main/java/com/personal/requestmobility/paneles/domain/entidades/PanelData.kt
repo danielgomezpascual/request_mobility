@@ -65,7 +65,7 @@ data class PanelData(
                     val valorY = panelConfiguracion.columnaY
                     val valor : String = fila.celdas.get(valorY).valor as String
                     val contexto = MapContext().apply {
-                        set("valor", valor.toInt())
+                        set("valor", valor.toFloat())
                     }
                     // 5. ¡Evaluamos!
                     val resultado: Any = expresion.evaluate(contexto)

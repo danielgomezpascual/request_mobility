@@ -10,6 +10,7 @@ import com.personal.requestmobility.dashboards.moduloDashboards
 import com.personal.requestmobility.kpi.moduloKpis
 import com.personal.requestmobility.organizaciones.moduloOrganizaciones
 import com.personal.requestmobility.paneles.moduloPaneles
+import com.personal.requestmobility.sincronizacion.moduloSincronizacion
 import com.personal.requestmobility.transacciones.data.ds.local.entities.TransaccionesRoom
 import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.requestmobility.transacciones.moduloTransacciones
@@ -54,7 +55,8 @@ class App : Application() {
                 moduloKpis,
                 moduloTransacciones,
                 moduloDashboards,
-                moduloPaneles
+                moduloPaneles,
+                moduloSincronizacion
             )
 
         }

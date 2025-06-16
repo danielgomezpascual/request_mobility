@@ -26,4 +26,7 @@ sealed class EventosNavegacion{
     object NuevoDashboard: EventosNavegacion()
     data class CargarDashboard(val identificador : Int): EventosNavegacion()
     object MenuVisualizadorDashboard: EventosNavegacion()
+
+
+    object Sincronizacion: EventosNavegacion()
 }

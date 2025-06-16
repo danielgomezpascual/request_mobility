@@ -1,4 +1,4 @@
-package com.personal.requestmobility.paneles.ui.screen.listado
+package com.personal.requestmobility.sincronizacion.ui.lista
 
 import MA_IconBottom
 import androidx.compose.foundation.layout.Arrangement
@@ -22,45 +22,41 @@ import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.menu.Features
-import com.personal.requestmobility.paneles.ui.componente.PanelListItem
-import com.personal.requestmobility.paneles.ui.screen.listado.PanelesListadoVM.UIState
+import com.personal.requestmobility.sincronizacion.ui.composables.OrganizacionListItem
+import com.personal.requestmobility.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM.UIState
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
-fun PanelesListadoScreen(viewModel: PanelesListadoVM = koinViewModel(),
-                         navegacion: (EventosNavegacion) -> Unit) {
-    val uiState by viewModel.uiState.collectAsState()
+fun ListaOrganizacinesSincronizar(
+    viewModel: ListaOrganizacionesSincronizarVM = koinViewModel(),
+    navegacion: (EventosNavegacion) -> Unit) {
 
     LaunchedEffect(Unit) {
-        viewModel.onEvent(PanelesListadoVM.Eventos.Cargar)
+        viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.Cargar)
     }
 
-
+    // Observando el flujo de estado
+    val uiState by viewModel.uiState.collectAsState()
     when (uiState) {
-
-        is UIState.Error -> ErrorScreen((uiState as UIState.Error).mensaje)
-        is UIState.Loading -> LoadingScreen((uiState as UIState.Loading).mensaje)
-        is UIState.Success -> SuccessListadoPaneles(
-            viewModel = viewModel,
-            uiState = uiState as UIState.Success,
-            navegacion = navegacion
+        is UIState.Error -> ErrorScreen((uiState as UIState.Error).message)
+        UIState.Loading -> LoadingScreen()
+        is UIState.Success -> Success(
+            viewModel, (uiState as UIState.Success),
+            navegacion
         )
     }
-
-
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SuccessListadoPaneles(viewModel: PanelesListadoVM,
-                          uiState: UIState.Success,
-                          navegacion: (EventosNavegacion) -> Unit) {
+fun Success(viewModel: ListaOrganizacionesSincronizarVM,
+            uiState: UIState.Success,
+            navegacion: (EventosNavegacion) -> Unit) {
 
 
     MA_ScaffoldGenerico(
-        titulo = "Paneles",
+        titulo = "Sincroniacion",
         navegacion = { navegacion(EventosNavegacion.MenuApp) },
         volver = false,
         contenidoBottomBar = {
@@ -83,12 +79,28 @@ fun SuccessListadoPaneles(viewModel: PanelesListadoVM,
                             .fillMaxWidth()
                             .weight(1f)
                     )
+
                     MA_IconBottom(
                         modifier = Modifier.weight(1f),
-                        icon = Features.Nuevo().icono,
-                        labelText = Features.Nuevo().texto,
-                        color = Features.Nuevo().color,
-                        onClick = { navegacion(EventosNavegacion.NuevoPanel) }
+                        icon = Features.EliminarDatosActuales().icono,
+                        labelText = Features.EliminarDatosActuales().texto,
+
+                        onClick = {
+                            viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.EliminarDatosActuales)
+
+                        }
+                    )
+
+
+                    MA_IconBottom(
+                        modifier = Modifier.weight(1f),
+                        icon = Features.Sincronizar().icono,
+                        labelText = Features.Sincronizar().texto,
+
+                        onClick = {
+                            viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.RealizarSincronizacion)
+
+                        }
                     )
 
 
@@ -105,13 +117,13 @@ fun SuccessListadoPaneles(viewModel: PanelesListadoVM,
             ) {
 
 
-                // Barra de búsqueda
-                MA_TextBuscador(
-                    searchText = uiState.textoBuscar,
-                    onSearchTextChanged = { it ->
-                        viewModel.onEvent(PanelesListadoVM.Eventos.Buscar(it))
-                    },
-                )
+                 // Barra de búsqueda
+                 MA_TextBuscador(
+                     searchText = uiState.textoBuscar,
+                     onSearchTextChanged = { it ->
+                         viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.Buscar(it))
+                     },
+                 )
 
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
 
@@ -128,10 +140,10 @@ fun SuccessListadoPaneles(viewModel: PanelesListadoVM,
                 }
 
 
-                MA_Lista(data = uiState.lista) { item ->
-                    PanelListItem(item, onClickItem = {
-                        App.log.d(item.toString())
-                        navegacion(EventosNavegacion.CargarPanel(item.id))
+                MA_Lista(data = uiState.organizaciones) { organizacionUI ->
+                    OrganizacionListItem(organizacionUI = organizacionUI, onClickItem = {
+                        App.log.d(organizacionUI.toString())
+                        viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.OnChangeSeleccionCheck(organizacionUI))
                     })
                 }
 
@@ -141,3 +153,6 @@ fun SuccessListadoPaneles(viewModel: PanelesListadoVM,
         })
 
 }
+
+
+

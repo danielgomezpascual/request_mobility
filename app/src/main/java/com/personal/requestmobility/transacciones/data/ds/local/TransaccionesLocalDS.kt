@@ -32,9 +32,8 @@ class TransaccionesLocalDS(private val dao: TansaccionesDao) : IRepoTransaccione
         TODO("Not yet implemented")
     }
 
-    override suspend fun eliminarTodas() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun eliminarTodas()    = dao.vaciarTabla()
+  
 
     override suspend fun guardar(transaccion: Transacciones): Long {
         TODO("Not yet implemented")
@@ -52,6 +51,10 @@ class TransaccionesLocalDS(private val dao: TansaccionesDao) : IRepoTransaccione
     override suspend fun guardar(trx: List<Transacciones>): Long {
        dao.insert(trx.map { TransaccionesRoom(MOB_REQUEST_ID = 0 ).fromTransaccion(it) })
         return 1L
+    }
+
+    override suspend fun vaciarContenido() {
+        dao.vaciarTabla()
     }
 
 

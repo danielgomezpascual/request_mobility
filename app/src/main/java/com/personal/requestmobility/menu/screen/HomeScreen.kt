@@ -94,6 +94,16 @@ fun SuccessMenu(viewModel: HomeVM,
 
                     ) {
 
+                        MA_IconBottom(
+                            //   modifier = Modifier.weight(1f),
+                            icon = Features.Sincronizar().icono,
+                            labelText = Features.Sincronizar().texto,
+                            seleccionado = true,
+                            destacado = true,
+                            onClick = { navegacion(EventosNavegacion.Sincronizacion) }
+                        )
+
+
 
                         MA_IconBottom(
                             //   modifier = Modifier.weight(1f),

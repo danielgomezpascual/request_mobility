@@ -8,4 +8,6 @@ interface IRepoTransacciones {
     suspend fun obtenerTransacciones(): List<Transacciones>
     suspend fun getTrxOracle(organizacion: String): List<Transacciones>
     suspend fun guardar(trx: List<Transacciones>): Long
+    suspend fun vaciarContenido()
+
 }

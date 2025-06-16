@@ -16,7 +16,7 @@ val moduloOrganizaciones = module {
     single<OrganizacionesRemotoDS> { OrganizacionesRemotoDS(get<OrganizacionesApiRemoto>()) }
 
     //Repo
-    single<OrganizacionesRepoImp> {
+    single<IRepoOrganizaciones> {
         OrganizacionesRepoImp(
             listOf(
                 get<OrganizacionesRemotoDS>()
@@ -24,8 +24,13 @@ val moduloOrganizaciones = module {
         )
     }
 
+
+    //single<IRepoOrganizaciones> { OrganizacionesRepoImp() }
     //CU
-    single<ObtenerOrganizacionesCU> { ObtenerOrganizacionesCU(get<IRepoOrganizaciones>()) }
+    single<ObtenerOrganizacionesCU> {
+        ObtenerOrganizacionesCU(get<IRepoOrganizaciones>())
+
+    }
 
 }
 

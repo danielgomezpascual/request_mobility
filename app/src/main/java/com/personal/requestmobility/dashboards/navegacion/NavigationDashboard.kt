@@ -18,6 +18,7 @@ import com.personal.requestmobility.kpi.ui.screen.listado.KpisListadoScreen
 import com.personal.requestmobility.menu.navegacion.ScreenMenu
 import com.personal.requestmobility.paneles.navegacion.ScreenDetallePanel
 import com.personal.requestmobility.paneles.navegacion.ScreenListadoPaneles
+import com.personal.requestmobility.sincronizacion.ui.navegacion.ScreenOrganizacionesSincronizacion
 
 fun NavGraphBuilder.NavegacionDashboard(navController: NavController) {
     composable<CuadriculaDashboards> {
@@ -98,5 +99,9 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
             navController.navigate(DetalleDashboard(navegacion.identificador))
         }
         EventosNavegacion.MenuVisualizadorDashboard -> navController.navigate(CuadriculaDashboards)
+
+
+        //==== Sincronizacion =======================
+        EventosNavegacion.Sincronizacion ->      navController.navigate(ScreenOrganizacionesSincronizacion)
     }
 }
