@@ -1,6 +1,7 @@
 package com.personal.requestmobility.paneles // O com.personal.requestmobility.dashboards
 
 
+import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.requestmobility.paneles.data.ds.local.PanelesRoomDS
@@ -48,7 +49,8 @@ val moduloPaneles = module {
             get<ObtenerPanelCU>(),
             get<GuardarPanelCU>(),
             get<EliminarPanelCU>(),
-            get<ObtenerKpisCU>()
+            get<ObtenerKpisCU>(),
+            get<DialogManager>()
         )
     }
 }

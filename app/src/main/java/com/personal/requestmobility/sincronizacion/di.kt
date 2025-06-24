@@ -1,5 +1,6 @@
 package com.personal.requestmobility.sincronizacion
 
+import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.organizaciones.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.requestmobility.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
 import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepoImp
@@ -15,7 +16,8 @@ val moduloSincronizacion = module {
         ListaOrganizacionesSincronizarVM(
             get<ObtenerOrganizacionesCU>(),
             get<TransaccionesRepoImp>(),
-            get<GuardarTransacciones>()
+            get<GuardarTransacciones>(),
+            get<DialogManager>()
         )
     }
 

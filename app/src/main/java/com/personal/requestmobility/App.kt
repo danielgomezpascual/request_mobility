@@ -1,6 +1,7 @@
 package com.personal.requestmobility
 
 import android.app.Application
+import android.content.Context
 import com.personal.requestmobility.core.data.ds.remote.network.moduloNetwork
 import com.personal.requestmobility.core.log.di.moduloLog
 import com.personal.requestmobility.core.log.domain.MyLog
@@ -26,6 +27,7 @@ class App : Application() {
 
 
     companion object {
+        lateinit var context : Context
         lateinit var log: MyLog
 
     }
@@ -35,6 +37,8 @@ class App : Application() {
         super.onCreate()
         initKoin()
         log = getKoin().get()
+
+        context =  applicationContext
        // cargaTransaccionesTest()
 
 

@@ -65,6 +65,8 @@ fun MA_ScaffoldGenerico(
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             contenido()
+
+
         }
     }
 }

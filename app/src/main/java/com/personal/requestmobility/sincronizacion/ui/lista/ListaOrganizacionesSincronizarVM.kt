@@ -2,7 +2,12 @@ package com.personal.requestmobility.sincronizacion.ui.lista
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.personal.requestmobility.App
+import com.personal.requestmobility.R
+import com.personal.requestmobility.core.composables.dialogos.DialogManager
+import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
+import com.personal.requestmobility.core.composables.dialogos.ResultadoDialog
+import com.personal.requestmobility.core.utils.K
+import com.personal.requestmobility.core.utils._t
 import com.personal.requestmobility.organizaciones.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.requestmobility.sincronizacion.ui.entidades.OrganizacionesSincronizarUI
 import com.personal.requestmobility.sincronizacion.ui.entidades.fromOrganizacion
@@ -19,11 +24,12 @@ class ListaOrganizacionesSincronizarVM(
 
     private val obtenerOrganizacion: ObtenerOrganizacionesCU,
     private val repoTrx: TransaccionesRepoImp,
-    private val  guardar: GuardarTransacciones
+    private val guardar: GuardarTransacciones,
+    private val dialog: DialogManager
 ) : ViewModel() {
 
 
-    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    private val _uiState = MutableStateFlow<UIState>(UIState.Trabajando)
     val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
     var textoBuscar: String = ""
@@ -35,18 +41,25 @@ class ListaOrganizacionesSincronizarVM(
         data class Success(
             val organizaciones: List<OrganizacionesSincronizarUI> = emptyList<OrganizacionesSincronizarUI>(),
             val textoBuscar: String = "",
+            val trabajando: Boolean = false,
+            val mostrarDialogoInformacion: Boolean = false,
+            val mostrarDialogoSiNo: Boolean = false,
+            val texto: String = ""
+
         ) : UIState()
 
         data class Error(val message: String) : UIState()
-        object Loading : UIState()
+        object Trabajando : UIState()
     }
 
     sealed class Eventos {
         object Cargar : Eventos()
         data class Buscar(val texto: String) : Eventos()
         data class OnChangeSeleccionCheck(val organizacionUI: OrganizacionesSincronizarUI) : Eventos()
-        object RealizarSincronizacion: Eventos()
-        object EliminarDatosActuales: Eventos()
+        object RealizarSincronizacion : Eventos()
+
+        object EliminarDatosActuales : Eventos()
+
     }
 
 
@@ -56,7 +69,9 @@ class ListaOrganizacionesSincronizarVM(
             is Eventos.Buscar -> modificarTextoBusqueta(evento.texto)
             is Eventos.OnChangeSeleccionCheck -> onChangeSeleccion(evento.organizacionUI)
             Eventos.RealizarSincronizacion -> realizarSincronizacion()
+
             Eventos.EliminarDatosActuales -> eliminarDatosActuales()
+
         }
     }
 
@@ -76,7 +91,7 @@ class ListaOrganizacionesSincronizarVM(
     private fun onChangeSeleccion(organizacionUI: OrganizacionesSincronizarUI) {
         if (_uiState.value is UIState.Success) {
 
-            listaOrganizacionesSincronizarUI= listaOrganizacionesSincronizarUI.map { org ->
+            listaOrganizacionesSincronizarUI = listaOrganizacionesSincronizarUI.map { org ->
                 if (organizacionUI.organizationCode.equals(org.organizationCode)) {
                     val estado = organizacionUI.seleccionado
                     organizacionUI.copy(seleccionado = !estado)
@@ -115,50 +130,46 @@ class ListaOrganizacionesSincronizarVM(
     }
 
 
-    private fun eliminarDatosActuales(){
-        viewModelScope.launch {
-            repoTrx.eliminarTodo()
-        }
-
-
-    }
-    private fun realizarSincronizacion(){
-
-        if (_uiState.value is UIState.Success) {
-            val orgSeleccionadas = (_uiState.value as UIState.Success).organizaciones.filter { it.seleccionado == true }
-            val totalOrganizaciones = orgSeleccionadas.size
-            App.log.d("Organizaciones que se van a sincronizar ${totalOrganizaciones}")
-            viewModelScope.launch {
-                orgSeleccionadas.forEach { organizacion ->
-                    val trx = repoTrx.getTrxOracle(organizacion.organizationId)
-                    guardar.guardar(trx)
+    private fun eliminarDatosActuales() {
+        dialog.sino(_t(R.string.seguro_que_desea_elminar_los_datos_actuales_de_la_base_de_dtos)) { resp ->
+            if (resp == DialogosResultado.Si) {
+                viewModelScope.launch {
+                    repoTrx.eliminarTodo()
+                    dialog.informacion("Datos eliminados") { }
                 }
 
             }
         }
 
-/*
-       val repoTrx: TransaccionesRepoImp = getKoin().get()
-       val guardar: GuardarTransacciones = getKoin().get()
-       val repoOrganizaciones: OrganizacionesRepoImp = getKoin().get()
+    }
 
 
+    private fun realizarSincronizacion() {
+
+        if (_uiState.value is UIState.Success) {
+
+            val oraganizciones = (_uiState.value as UIState.Success).organizaciones
+
+            val orgSeleccionadas = oraganizciones.filter { it.seleccionado == true }
+            if (orgSeleccionadas.isEmpty()) {
+                dialog.informacion(_t(R.string.no_hay_ninguna_organizaci_n_seleccionada_seleccione_alguna_previamnete)) { }
+                return
+            }
 
 
-       runBlocking {
-           val t = repoOrganizaciones.getAll()
-           val totalOrganizaciones = t.size
-           App.log.d("Organizaciones encontradas ${t.size}")
+            _uiState.value = (_uiState.value as UIState.Success).copy(trabajando = true)
+            viewModelScope.launch {
+                val totalOrganizaciones = oraganizciones.size
+                val orgSeleccionadas = oraganizciones.filter { it.seleccionado == true }
+                orgSeleccionadas.forEach { organizacion ->
+                    val trx = repoTrx.getTrxOracle(organizacion.organizationId)
+                    guardar.guardar(trx)
+                }
+                _uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
+                dialog.informacion(_t(R.string.information_actualizada)) {  }
+            }
+        }
 
-           t.filter { it.organizationCode.equals("DFM") }.forEachIndexed { indice, org ->
-
-               launch {
-                   App.log.d("[${indice+1} / $totalOrganizaciones] Procesando Organizacion encontradas ${org.toString()}")
-                   val trx = repoTrx.getTrxOracle(org.organizationId)
-                   guardar.guardar(trx)
-               }
-           }
-       }*/
     }
 
 

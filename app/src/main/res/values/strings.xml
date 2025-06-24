@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Request Mobility</string>
+    <string name="panel_creado">Panel creado</string>
+    <string name="quieres_crear_un_panel_directamente_desde_esta_kpi">¿Quieres crear un panel directamente desde esta KPI?</string>
+    <string name="debe_proporcionar_un_nombre_para_mejorar_su_localizacion">Debe proporcionar un nombre para mejorar su localizacion</string>
+    <string name="sentencia_de_consulta_vac_a">Sentencia de consulta vacía</string>
+    <string name="datos_guardados_correctamente">Datos guardados correctamente</string>
+    <string name="datos_eliminados_correctamnte">Datos eliminados correctamnte</string>
+    <string name="seguro_que_desea_elminar_los_datos_actuales_de_la_base_de_dtos">¿Seguro que desea elminar los datos actuales de la base de dtos?</string>
+    <string name="information_actualizada">Information actualizada</string>
+    <string name="no_hay_ninguna_organizaci_n_seleccionada_seleccione_alguna_previamnete">No hay ninguna organización seleccionada, seleccione alguna previamnete</string>
+    <string name="seguro_que_desea_elimnar_el_panel_seleccionado">¿Seguro que desea elimnar el panel seleccionado?</string>
+    <string name="elemnetos_eliminado">Elemnetos eliminado</string>
+    <string name="elemento_guardado_correctamente">Elemento guardado correctamente</string>
 </resources>

@@ -19,5 +19,8 @@ fun MA_LabelNormal(
     icono: Icons? = null,
 
     ) {
-    Text(text = valor, modifier = modifier, color = color, style = MaterialTheme.typography.bodyMedium, )
+    Text(
+        text = valor, modifier = modifier, color = color,
+        textAlign =  alineacion,
+        style = MaterialTheme.typography.bodyMedium, )
 }

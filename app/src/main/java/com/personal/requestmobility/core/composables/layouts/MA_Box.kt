@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun MA_Box(modifier: Modifier, contenido: @Composable () -> Unit) {
+fun MA_Box(modifier: Modifier = Modifier, contenido: @Composable () -> Unit) {
 
     Box(modifier.padding(vertical = 5.dp)) {
         contenido()

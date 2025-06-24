@@ -7,6 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
+import com.personal.requestmobility.App
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -16,7 +17,7 @@ fun MA_BottomSheet(sheetState: SheetState, onClose: () -> Unit, contenido: @Comp
         ModalBottomSheet(
 
             onDismissRequest = {
-
+                App.log.d("Cerrando desde el sheet")
                 onClose()
             },
             sheetState = sheetState,

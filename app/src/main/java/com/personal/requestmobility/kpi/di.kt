@@ -11,6 +11,7 @@ import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
 import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiVM
+import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.kpi.ui.screen.listado.KpisListadoVM
 import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -39,13 +40,19 @@ val moduloKpis = module {
     single<ObtenerKpiCU>{ ObtenerKpiCU(get<KpisRepositorio>()) }
     single<ObtenerKpisCU>{ ObtenerKpisCU(get<KpisRepositorio>()) }
 
+
+    single<DialogManager> { DialogManager() }
+
+
     //ViewMOdel
     viewModel { KpisListadoVM(get<ObtenerKpisCU>()) }
     viewModel { DetalleKpiVM(
         get<ObtenerKpiCU>(),
         get<GuardarKpiCU>(),
         get<EliminarKpiCU>(),
-        get<GuardarPanelCU>()
+        get<GuardarPanelCU>(),
+        get <DialogManager>()
+
 
     ) }
 

@@ -33,12 +33,17 @@ fun MA_IconBottom(
     destacado: Boolean = false,
     seleccionado: Boolean = false,
     color : Color  = MaterialTheme.colorScheme.primary,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+
+
 ) {
     Column(
         modifier = modifier
             .clickable(
-                onClick = onClick,
+                onClick ={
+                    onClick()
+
+                } ,
                 role = Role.Button, // Indicar semánticamente que es un botón
                 onClickLabel = labelText // Etiqueta para accesibilidad del clic
             )
@@ -65,13 +70,15 @@ fun MA_IconBottom(
             // contentDescription = contentDescription, // O una descripción más específica del icono.
             modifier = Modifier.size(if (destacado) 36.dp else 24.dp) // Tamaño estándar para iconos en Material 3
         )
-        Spacer(modifier = Modifier.height(4.dp)) // Pequeño espacio entre el icono y el texto
-        Text(
-            text = labelText,
-            style = if (destacado) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelSmall, // Estilo de Material 3 para etiquetas pequeñas
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface // Color apropiado del tema
-        )
+        if (labelText.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(4.dp)) // Pequeño espacio entre el icono y el texto
+            Text(
+                text = labelText,
+                style = if (destacado) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelSmall, // Estilo de Material 3 para etiquetas pequeñas
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface // Color apropiado del tema
+            )
+        }
     }
 }
 

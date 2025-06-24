@@ -3,7 +3,13 @@ package com.personal.requestmobility.paneles.ui.screen.detalle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.personal.requestmobility.App
+import com.personal.requestmobility.R
+import com.personal.requestmobility.core.composables.dialogos.DialogManager
+import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
+import com.personal.requestmobility.core.navegacion.EventosNavegacion
+import com.personal.requestmobility.core.utils._t
 import com.personal.requestmobility.core.utils.siVacio
 import com.personal.requestmobility.paneles.domain.entidades.PanelOrientacion
 import com.personal.requestmobility.paneles.domain.entidades.PanelTipoGrafica
@@ -34,7 +40,9 @@ class DetallePanelVM(
     private val guardarPanelCU: GuardarPanelCU,
     private val eliminarPanelCU: EliminarPanelCU,
     private val obtenerKpis: ObtenerKpisCU,
-) : ViewModel() {
+    private val dialog: DialogManager,
+
+    ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
     val uiState: StateFlow<UIState> = _uiState.asStateFlow()
@@ -82,9 +90,9 @@ class DetallePanelVM(
         data class onChangeFilasColor(val valor: Boolean) : Eventos()
         data class onChangeEsquemaColores(val valor: Int) : Eventos()
 
-        object Preview : Eventos()
-        object Guardar : Eventos()
-        object Eliminar : Eventos()
+        data class Preview(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
+        data class Guardar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
+        data class Eliminar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
 
 
         object ObtenerKpisDisponibles : Eventos()
@@ -98,9 +106,9 @@ class DetallePanelVM(
         when (evento) {
             is Eventos.ObtenerKpisDisponibles -> obtenerKpis()
             is Eventos.Cargar -> cargar(evento.identificador)
-            is Eventos.Guardar -> guardar()
-            is Eventos.Eliminar -> eliminar()
-            is Eventos.Preview -> preview()
+            is Eventos.Guardar -> guardar(evento.navegacion)
+            is Eventos.Eliminar -> eliminar(evento.navegacion)
+            is Eventos.Preview -> preview(evento.navegacion)
             else -> {
                 _uiState.update { estado ->
                     if (estado is UIState.Success) {
@@ -290,8 +298,7 @@ class DetallePanelVM(
                             is Eventos.EliminarCondicion -> {
                                 var condiciones: List<Condiciones> = estado.panelUI.configuracion.condiciones
                                 val nuevasCondiciones = condiciones.filter { it.id != evento.condicion.id }
-
-                                //condiciones = condiciones.plus(evento.condicion)
+                                App.log.d("Conficiones ${condiciones.size} - ${nuevasCondiciones.size}")
                                 estado.copy(
                                     panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condiciones = nuevasCondiciones))
                                 )
@@ -308,7 +315,7 @@ class DetallePanelVM(
     }
 
 
-    private fun preview() {
+    private fun preview(navegacion: (EventosNavegacion) -> Unit) {
         if (_uiState is UIState.Success) {
 
 
@@ -364,24 +371,27 @@ class DetallePanelVM(
         }
     }
 
-    private fun guardar() {
+    private fun guardar(navegacion: (EventosNavegacion) -> Unit) {
         viewModelScope.launch {
-            val id: Long = async(Dispatchers.IO) {
-                val panelUI = (_uiState.value as UIState.Success).panelUI
-                guardarPanelCU.guardar(panelUI)
-            }.await()
-
+            val panelUI = (_uiState.value as UIState.Success).panelUI
+            guardarPanelCU.guardar(panelUI)
+            dialog.informacion(_t(R.string.elemento_guardado_correctamente)) { navegacion(EventosNavegacion.MenuPaneles) }
 
         }
     }
 
-    private fun eliminar() {
-        viewModelScope.launch {
-            async(Dispatchers.IO) {
-                val panelUI = (_uiState.value as UIState.Success).panelUI
-                eliminarPanelCU.eliminar(panelUI)
-            }.await()
-
+    private fun eliminar(navegacion: (EventosNavegacion) -> Unit) {
+        dialog.sino(_t(R.string.seguro_que_desea_elimnar_el_panel_seleccionado)) { resp ->
+            if (resp == DialogosResultado.Si) {
+                viewModelScope.launch {
+                    async(Dispatchers.IO) {
+                        val panelUI = (_uiState.value as UIState.Success).panelUI
+                        eliminarPanelCU.eliminar(panelUI)
+                    }.await()
+                    dialog.informacion(_t(R.string.elemnetos_eliminado)) { navegacion(EventosNavegacion.MenuPaneles) }
+                }
+            }
         }
+
     }
 }

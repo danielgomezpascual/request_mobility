@@ -35,7 +35,7 @@ fun MA_TextoNormal(valor: String, titulo: String,
             label = { Text(titulo) },
             readOnly = false,
             modifier = modifier
-                .padding(8.dp),
+                .padding(4.dp),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.LightGray,

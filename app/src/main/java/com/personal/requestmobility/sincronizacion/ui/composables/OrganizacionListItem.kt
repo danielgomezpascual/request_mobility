@@ -43,7 +43,7 @@ fun OrganizacionListItem(organizacionUI: OrganizacionesSincronizarUI,
 
             MA_Avatar(organizacionUI.organizationCode)
 
-            Spacer(modifier = Modifier.Companion.width(16.dp))
+            Spacer(modifier = Modifier.Companion.width(8.dp))
 
             // Nombre y detalles
             Column {

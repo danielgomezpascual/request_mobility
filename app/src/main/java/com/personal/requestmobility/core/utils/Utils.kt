@@ -2,6 +2,7 @@ package com.personal.requestmobility.core.utils
 
 import android.content.Context
 import com.google.gson.Gson
+import com.personal.requestmobility.App
 import org.jsoup.Jsoup
 import kotlin.jvm.java
 
@@ -56,3 +57,6 @@ fun String.getValueFromTagWithJsoup(tagName: String): String? {
     // .text() extrae el contenido de texto.
     return Jsoup.parse(this).selectFirst(tagName)?.text()
 }
+
+
+fun _t(str: Int)  : String = App.context.getString(str)

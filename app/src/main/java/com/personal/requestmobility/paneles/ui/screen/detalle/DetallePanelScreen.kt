@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -42,10 +43,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.botones.MA_BotonNormal
+import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
+import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.combo.MA_Combo
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
@@ -164,8 +166,8 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                         labelText = Features.Eliminar().texto,
                         color = Features.Eliminar().color,
                         onClick = {
-                            viewModel.onEvent(DetallePanelVM.Eventos.Eliminar)
-                            navegacion(EventosNavegacion.MenuPaneles)
+                            viewModel.onEvent(DetallePanelVM.Eventos.Eliminar(navegacion))
+
                         }
                     )
 
@@ -175,8 +177,8 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                         labelText = Features.Guardar().texto,
                         color = Features.Guardar().color,
                         onClick = {
-                            viewModel.onEvent(DetallePanelVM.Eventos.Guardar)
-                            navegacion(EventosNavegacion.MenuPaneles)
+                            viewModel.onEvent(DetallePanelVM.Eventos.Guardar(navegacion))
+
                         }
                     )
 
@@ -226,18 +228,22 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                 var condiciones by remember { mutableStateOf<List<Condiciones>>(panelUI.configuracion.condiciones ?: emptyList()) }
 
 
-                MA_BotonNormal("Crear elmento") {
-                    val numeroElemntosLisa = condiciones.size
-                    condiciones = condiciones + Condiciones(id = numeroElemntosLisa, color = 0, predicado = ">50")
+                MA_Titulo2("Codiciones sobre las filas ${condiciones.size}")
+                MA_BotonSecundario( texto = "Nueva Condición", modifier = Modifier.fillMaxWidth().padding(5.dp)) {
+                    val numeroElemntosLisa =panelUI.configuracion.condiciones.size+1
+                    val maxEl = panelUI.configuracion.condiciones.maxByOrNull { it.id }
+                    val maxIndice =( maxEl?.id ?: 0)+1
+
+                    val condicionUI = Condiciones(id = maxIndice, color = (numeroElemntosLisa), predicado = "> $maxIndice")
+                    condiciones = condiciones +  condicionUI
+                    viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(condicionUI))
                 }
 
 
-                // 3. RENDERIZADO DE LA LISTA
-                // `LazyColumn` es la forma eficiente de mostrar listas en Compose.
-                // Es el equivalente al antiguo RecyclerView.
+
                 LazyColumn(
-                    modifier = Modifier.height(200.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.height(400.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     // `items` recorre nuestra lista de estado `labelList`.
                     // Para cada `text` en la lista, crea un Composable `LabelItem`.
@@ -248,9 +254,11 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                             onClickAceptar = { condicionUI ->
                                 App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
                                 viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(condicionUI))
-
                             },
                             onClickCancelar = { condicionUI ->
+                                App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
+                                 condiciones = condiciones.filterNot { it.id != condicionUI.id }
+                                panelUI.configuracion.condiciones = condiciones
                                 viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(condicionUI))
                             }
                         )
@@ -262,9 +270,8 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
 
 
 
+
                 MA_Titulo2("KPI")
-
-
                 Box(modifier = Modifier.height(150.dp)) {
                     MA_ComboLista<KpiUI>(
                         titulo = "",
@@ -564,7 +571,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                 contenido = {
                     Column {
 
-                        MA_BotonNormal("Cerrar") { scope.launch { sheetState.hide() } }
+                        MA_BotonPrincipal("Cerrar") { scope.launch { sheetState.hide() } }
                         MA_Panel(
 
                             panelData = PanelData(

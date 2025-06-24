@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.botones.MA_BotonNormal
+import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.transacciones.ui.entidades.Filtro
 
@@ -64,7 +64,7 @@ fun ItemFiltroTransaccion(filtro: Filtro.Seleccion, onClick: (Filtro.Seleccion) 
             MA_LabelNormal(estado.toString() + "|")
             MA_LabelNormal(filtro.campo)
             MA_LabelNormal(filtro.descripcion)
-            MA_BotonNormal("Invertir") {
+            MA_BotonPrincipal("Invertir") {
                 onLongClick(filtro)
             }
 
