@@ -223,13 +223,6 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                     }
                 )
 
-                //data class Condicion(val id: Int, val color: Color, val predicado: String)
-
-                //     var condiciones by remember { mutableStateOf<List<Condiciones>>(panelUI.configuracion.condiciones ?: emptyList()) }
-
-
-
-
 
                 MA_Titulo2("KPI")
                 Box(modifier = Modifier.height(150.dp)) {
@@ -299,6 +292,8 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                                 descripcion = "Seleccione  el tipo de gráfica a utilizar",
                                 valorInicial = panelUI.configuracion.tipo.name,
                                 elementosSeleccionables = listOf(
+                                    "INDICADOR_HORIZONTAL",
+                                    "INDICADOR_VERTICAL" ,
                                     "BARRAS_ANCHAS_VERTICALES",
                                     "BARRAS_FINAS_VERTICALES",
                                     "CIRCULAR",
@@ -534,7 +529,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                         key = { item -> item.id })
                     { condicion ->
                         MA_CondicionPanel(
-                            esquemaColores = EsquemaColores().get(panelUI.configuracion.colores),
+                            esquemaColores = EsquemaColores().dameEsquemaCondiciones(),
                             condicion = condicion,
                             onClickAceptar = { condicionUI ->
                                 App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")

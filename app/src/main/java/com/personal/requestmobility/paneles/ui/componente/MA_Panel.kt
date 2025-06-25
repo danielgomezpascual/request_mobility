@@ -7,13 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarras
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarrasVerticales
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoCircular
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoLineas
+import com.personal.requestmobility.core.composables.graficas.MA_IndicadorHorizontal
+import com.personal.requestmobility.core.composables.graficas.MA_IndicadorVertical
 import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.MA_Tabla
@@ -212,6 +212,21 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
 
     return {
         when (panelConfiguracion.tipo) {
+
+            PanelTipoGrafica.INDICADOR_VERTICAL ->{
+                MA_IndicadorVertical(  modifier = modifier,
+                    listaValores = datosPintar,
+                    posicionX = posicionX,
+                    posicionY = posivionY)
+            }
+
+            PanelTipoGrafica.INDICADOR_HORIZONTAL ->{
+                MA_IndicadorHorizontal(  modifier = modifier,
+                    listaValores = datosPintar,
+                    posicionX = posicionX,
+                    posicionY = posivionY)
+            }
+
             PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES -> {
 
                 MA_GraficoBarras(

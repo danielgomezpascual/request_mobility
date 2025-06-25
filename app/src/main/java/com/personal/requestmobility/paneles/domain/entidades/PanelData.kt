@@ -72,7 +72,8 @@ data class PanelData(
                     // El resultado es un Boolean, hacemos un cast seguro.
                     if (resultado is Boolean && resultado) {
                         //  fila.copy(color = colores[indiceColor])
-                        color = EsquemaColores().get(panelConfiguracion.colores).colores.get(condicion.color)
+
+                        color = EsquemaColores().dameEsquemaCondiciones().colores.get(condicion.color)
 
                     }
 

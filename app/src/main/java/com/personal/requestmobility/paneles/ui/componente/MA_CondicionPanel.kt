@@ -41,6 +41,8 @@ fun MA_CondicionPanel(
     var str by remember { mutableStateOf<String>(condicion.predicado) }
 
 
+    val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
+    //esquemaColores.get()
 
     Row(
         modifier = Modifier
@@ -56,8 +58,9 @@ fun MA_CondicionPanel(
             descripcion = "Color para la condicion",
             valorInicial = {
 
-                val indicadorColorCondicion = (condicion.color % ColoresSeleccion().get(esquemaColores.id).size)
-                val color = ColoresSeleccion().get(esquemaColores.id).get(indicadorColorCondicion).color
+                val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
+                val color =    esquemaColores.colores.get(indicadorColorCondicion)
+
                 MA_SeleccionColor(color)
             },
             elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
