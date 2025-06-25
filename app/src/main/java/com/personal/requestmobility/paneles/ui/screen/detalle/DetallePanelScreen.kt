@@ -225,48 +225,8 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
 
                 //data class Condicion(val id: Int, val color: Color, val predicado: String)
 
-                var condiciones by remember { mutableStateOf<List<Condiciones>>(panelUI.configuracion.condiciones ?: emptyList()) }
+                //     var condiciones by remember { mutableStateOf<List<Condiciones>>(panelUI.configuracion.condiciones ?: emptyList()) }
 
-
-                MA_Titulo2("Codiciones sobre las filas ${condiciones.size}")
-                MA_BotonSecundario( texto = "Nueva Condición", modifier = Modifier.fillMaxWidth().padding(5.dp)) {
-                    val numeroElemntosLisa =panelUI.configuracion.condiciones.size+1
-                    val maxEl = panelUI.configuracion.condiciones.maxByOrNull { it.id }
-                    val maxIndice =( maxEl?.id ?: 0)+1
-
-                    val condicionUI = Condiciones(id = maxIndice, color = (numeroElemntosLisa), predicado = "> $maxIndice")
-                    condiciones = condiciones +  condicionUI
-                    viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(condicionUI))
-                }
-
-
-
-                LazyColumn(
-                    modifier = Modifier.height(400.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    // `items` recorre nuestra lista de estado `labelList`.
-                    // Para cada `text` en la lista, crea un Composable `LabelItem`.
-                    items(condiciones) { condicion ->
-                        MA_CondicionPanel(
-                            esquemaColores = EsquemaColores().get(panelUI.configuracion.colores),
-                            condicion = condicion,
-                            onClickAceptar = { condicionUI ->
-                                App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
-                                viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(condicionUI))
-                            },
-                            onClickCancelar = { condicionUI ->
-                                App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
-                                 condiciones = condiciones.filterNot { it.id != condicionUI.id }
-                                panelUI.configuracion.condiciones = condiciones
-                                viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(condicionUI))
-                            }
-                        )
-
-
-                    }
-
-                }
 
 
 
@@ -562,6 +522,39 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                     )
                 )
 
+
+
+
+                MA_Titulo2("Codiciones sobre las filas ${panelUI.configuracion.condiciones.size}")
+                LazyColumn (  modifier = Modifier.height(250.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)){
+
+                    items(
+                        items = panelUI.configuracion.condiciones,
+                        key = { item -> item.id })
+                    { condicion ->
+                        MA_CondicionPanel(
+                            esquemaColores = EsquemaColores().get(panelUI.configuracion.colores),
+                            condicion = condicion,
+                            onClickAceptar = { condicionUI ->
+                                App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
+                                viewModel.onEvent(DetallePanelVM.Eventos.ActualizarCondicion(condicionUI))
+                            },
+                            onClickCancelar = { condicionUI ->
+                                App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
+                                //condiciones = condiciones.filterNot { it.id != condicionUI.id }
+                                // panelUI.configuracion.condiciones = condiciones
+                                viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(condicionUI))
+                            }
+                        )
+                    }
+                }
+                MA_BotonSecundario(
+                    texto = "Nueva Condición", modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                ) { viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(Condiciones(1, 1, "")))
+                }
             }
             MA_BottomSheet(
                 sheetState,

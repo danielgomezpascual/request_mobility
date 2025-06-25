@@ -111,8 +111,8 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                         labelText = Features.Eliminar().texto,
                         color = Features.Eliminar().color,
                         onClick = {
-                            viewModel.onEvento(DetalleDashboardVM.Eventos.Eliminar)
-                            navegacion(EventosNavegacion.MenuDashboard)
+                            viewModel.onEvento(DetalleDashboardVM.Eventos.Eliminar(navegacion))
+                            //navegacion(EventosNavegacion.MenuDashboard)
                         }
                     )
 
@@ -122,8 +122,8 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                         labelText = Features.Guardar().texto,
                         color = Features.Guardar().color,
                         onClick = {
-                            viewModel.onEvento(DetalleDashboardVM.Eventos.Guardar)
-                            navegacion(EventosNavegacion.MenuDashboard)
+                            viewModel.onEvento(DetalleDashboardVM.Eventos.Guardar(navegacion))
+                            //navegacion(EventosNavegacion.MenuDashboard)
                         }
                     )
 

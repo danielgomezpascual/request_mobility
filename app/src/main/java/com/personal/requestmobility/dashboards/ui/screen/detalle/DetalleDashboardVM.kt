@@ -3,6 +3,11 @@ package com.personal.requestmobility.dashboards.ui.screen.detalle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
+import com.personal.requestmobility.R
+import com.personal.requestmobility.core.composables.dialogos.DialogManager
+import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
+import com.personal.requestmobility.core.navegacion.EventosNavegacion
+import com.personal.requestmobility.core.utils._t
 import com.personal.requestmobility.dashboards.ui.entidades.SeleccionPanelUI
 import com.personal.requestmobility.dashboards.domain.interactors.CargarDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.EliminarDashboardCU
@@ -29,7 +34,8 @@ class DetalleDashboardVM(
     private val cargarDashboardCU: CargarDashboardCU,
     private val eliminarDashboardCU: EliminarDashboardCU,
     private val guardarDashboardCU: GuardarDashboardCU,
-    private val obtenerSeleccionPanel: ObtenerSeleccionPanel
+    private val obtenerSeleccionPanel: ObtenerSeleccionPanel,
+    private val dialog: DialogManager
 
 ) : ViewModel() {
 
@@ -48,8 +54,8 @@ class DetalleDashboardVM(
     sealed class Eventos {
 
         data class Cargar(val identificador: Int) : Eventos()
-        object Eliminar : Eventos() // Renombrado para claridad
-        object Guardar : Eventos()  // Renombrado para claridad
+        data class Eliminar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()  // Renombrado para claridad
+        data class Guardar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()  // Renombrado para claridad
 
         data class OnChangeNombre(val valor: String) : Eventos()     // Adaptado desde OnChangeItem
         data class OnChangeDescripcion(val valor: String) : Eventos() // Adaptado desde OnChangeProveedor
@@ -63,8 +69,8 @@ class DetalleDashboardVM(
     fun onEvento(eventos: Eventos) {
         when (eventos) {
             is Eventos.Cargar -> cargar(eventos.identificador)
-            Eventos.Eliminar -> eliminar()
-            Eventos.Guardar -> guardar()
+            is Eventos.Eliminar -> eliminar(eventos.navegacion)
+            is Eventos.Guardar -> guardar(eventos.navegacion)
             else -> { // Manejo de eventos OnChange
                 _uiState.update { estado ->
                     if (estado is UIState.Success) {
@@ -76,10 +82,12 @@ class DetalleDashboardVM(
                             }
 
                             is Eventos.ActualizarLogo -> estado.copy(dashboardUI = estado.dashboardUI.copy(logo = eventos.rutaLogo))
-                            is Eventos.OnChangeInicial -> estado.copy(dashboardUI = estado.dashboardUI.copy(home = eventos.valor))
+                            is Eventos.OnChangeInicial ->
+                                estado.copy(dashboardUI = estado.dashboardUI.copy(home = eventos.valor))
+
                             else -> estado // No debería llegar aquí si los eventos están bien definidos
 
-                            
+
                         }
                     } else {
                         estado // No modificar si no es Success
@@ -106,8 +114,8 @@ class DetalleDashboardVM(
                         _uiState.update { estado ->
                             if (id != 0) {
                                 val ds: DashboardUI = DashboardUI().fromDashboard(cargarDashboardCU.cargar(id))
-                                val panelesSeleccionados: List<PanelUI> = ds.listaPaneles
-                                UIState.Success(dashboardUI = ds.copy(listaPaneles =panelesSeleccionados))
+                                val listaPaneles = paneles.map { p -> (ds.listaPaneles.find { it.id == p.id }) ?: p }
+                                UIState.Success(dashboardUI = ds.copy(listaPaneles = listaPaneles))
                             } else {
                                 UIState.Success(dashboardUI = DashboardUI(listaPaneles = paneles))
                             }
@@ -121,32 +129,58 @@ class DetalleDashboardVM(
         }
     }
 
-    private fun eliminar() {
-        viewModelScope.launch {
-            try { // El ejemplo no tiene try-catch aquí, pero es buena práctica
-                withContext(Dispatchers.IO) {
-                    val dashboardUi = (_uiState.value as UIState.Success).dashboardUI
-                    eliminarDashboardCU.eliminar(dashboardUi.toDashboard())
+    private fun eliminar(navegacion: (EventosNavegacion) -> Unit) {
+
+        dialog.sino(_t(R.string.seguro_que_desea_elimianr_el_elmento_seleccionado)) { resp ->
+
+            if (resp == DialogosResultado.Si) {
+                viewModelScope.launch {
+                    try { // El ejemplo no tiene try-catch aquí, pero es buena práctica
+                        withContext(Dispatchers.IO) {
+                            val dashboardUi = (_uiState.value as UIState.Success).dashboardUI
+                            eliminarDashboardCU.eliminar(dashboardUi.toDashboard())
+                            dialog.informacion(_t(R.string.elemento_eliminado)) {
+                                navegacion(EventosNavegacion.MenuDashboard)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        _uiState.value = UIState.Error("Error al eliminar: ${e.message}")
+                    }
                 }
-            } catch (e: Exception) {
-                _uiState.value = UIState.Error("Error al eliminar: ${e.message}")
             }
+
         }
+
+
     }
 
-    private fun guardar() {
+    private fun guardar(navegacion: (EventosNavegacion) -> Unit) {
+        if (validar()) {
+            viewModelScope.launch {
+                try { // El ejemplo no tiene try-catch aquí, pero es buena práctica
+                    withContext(Dispatchers.IO) {
+                        val dashboardUi = (_uiState.value as UIState.Success).dashboardUI
+                        guardarDashboardCU.guardar(dashboardUi.toDashboard())
+                        dialog.informacion(_t(R.string.elemento_almacenado)) {
+                            navegacion(EventosNavegacion.MenuDashboard)
 
-        viewModelScope.launch {
-            try { // El ejemplo no tiene try-catch aquí, pero es buena práctica
-                withContext(Dispatchers.IO) {
-                    val dashboardUi = (_uiState.value as UIState.Success).dashboardUI
-                    guardarDashboardCU.guardar(dashboardUi.toDashboard())
+                        }
+                    }
+                } catch (e: Exception) {
+                    _uiState.value = UIState.Error("Error al guardar: ${e.message}")
                 }
-            } catch (e: Exception) {
-                _uiState.value = UIState.Error("Error al guardar: ${e.message}")
             }
         }
+
     }
 
 
+    private fun validar(): Boolean {
+        val ui = _uiState.value as UIState.Success
+        if (ui.dashboardUI.nombre.isEmpty()) {
+            dialog.informacion(_t(R.string.debe_introducir_un_nombre_para_el_dashboard)) { }
+            return false
+        }
+        return true
+    }
 }

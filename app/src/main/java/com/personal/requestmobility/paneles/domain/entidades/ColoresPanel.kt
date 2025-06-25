@@ -13,6 +13,7 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
         0 -> EsquemaColores(0, "Normal", dameColoresBasicos())
         1 -> EsquemaColores(1, "Grises", dameTonosGrises())
         2 -> EsquemaColores(2, "Fosforitos", dameColoresFosforitos())
+        3 -> EsquemaColores(3, "Pers, Azul", dameColoresPersinaAzul())
         else -> EsquemaColores(0, "Normal", dameColoresBasicos())
     }
 
@@ -20,14 +21,19 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
         0 -> dameColoresBasicos()
         1 -> dameTonosGrises()
         2 -> dameColoresFosforitos()
+        3 -> dameColoresPersinaAzul()
         else -> dameColoresBasicos()
     }
 
 
-    fun dameListasDisponibles() = listOf<EsquemaColores>(get(0), get(1), get(2))
+    fun dameListasDisponibles() = listOf<EsquemaColores>(get(0), get(1), get(2), get(3))
 
 
 
+    fun dameColoresPersinaAzul() = listOf<Color>(
+        Color(0xFFBBDEFB),
+        Color(0xFF4FC3F7),
+        )
 
 
     fun dameColoresBasicos() = listOf<Color>(

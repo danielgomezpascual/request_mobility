@@ -43,5 +43,5 @@ data class PanelConfiguracion(
     var filasColor: Boolean = true,
 
 
-    var condiciones : List<Condiciones> = listOf<Condiciones>()
+    val condiciones : List<Condiciones> = listOf<Condiciones>()
 )

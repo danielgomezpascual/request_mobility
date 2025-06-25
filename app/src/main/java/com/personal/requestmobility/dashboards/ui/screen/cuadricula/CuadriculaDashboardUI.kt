@@ -1,6 +1,7 @@
 package com.personal.requestmobility.dashboards.ui.screen.cuadricula
 
 import MA_IconBottom
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
+import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
+import com.personal.requestmobility.core.composables.card.MA_Card
+import com.personal.requestmobility.core.composables.formas.MA_Avatar
+import com.personal.requestmobility.core.composables.labels.MA_LabelMini
+import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.layouts.MA_2Columnas
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
@@ -57,18 +63,7 @@ fun SuccessCuadriculaDashboard(
 
 
     MA_ScaffoldGenerico(
-        titulo = "Dashboards",
-        navegacion = {},
-        contenidoBottomBar = { },
-        contenido = {}
-    )
-
-
-
-
-    MA_ScaffoldGenerico(
         titulo = "Dashboards", // Título adaptado
-        navegacion = { navegacion(EventosNavegacion.MenuApp) }, // Para el icono de navegación del TopAppBar
         contenidoBottomBar = {
             BottomAppBar {
                 Row(
@@ -112,33 +107,43 @@ fun SuccessCuadriculaDashboard(
 
 
                 MA_2Columnas(uiState.lista) { item ->
-
-
-                    Column {
-                        MA_BotonPrincipal (
-                         /*   icon =
-                                Icons.Default.DashboardCustomize,*/
-                            texto = item.nombre,
+                    MA_Card(
+                        modifier = Modifier.clickable(
+                            enabled = true,
                             onClick = { navegacion(EventosNavegacion.VisualizadorDashboard(item.id)) })
+                    ) {
 
-
-                        /*Card(
-                            modifier = Modifier
-                                .clickable {
-                                    navegacion(EventosNavegacion.VisualizadorDashboard(item.id))
-                                }
-                                .padding(4.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                        ) {
-                            Text(
-                                text = item.nombre,
-                                modifier = Modifier.padding(16.dp)
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            MA_Avatar(item.nombre)
+                            MA_LabelNormal(
+                                modifier = Modifier.padding(2.dp),
+                                valor = item.nombre + " (" + item.listaPaneles.filter { it.seleccionado }.size + ")"
                             )
-                        }*/
+
+                            MA_LabelMini(
+                                modifier = Modifier.padding(2.dp),
+                                valor = item.descripcion
+                            )
+                        }
                     }
 
 
+                    /*Card(
+                        modifier = Modifier
+                            .clickable {
+                                navegacion(EventosNavegacion.VisualizadorDashboard(item.id))
+                            }
+                            .padding(4.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    ) {
+                        Text(
+                            text = item.nombre,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }*/
                 }
+
+
             }
 
         })

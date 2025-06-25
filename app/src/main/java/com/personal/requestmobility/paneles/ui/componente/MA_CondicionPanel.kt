@@ -44,22 +44,20 @@ fun MA_CondicionPanel(
 
     Row(
         modifier = Modifier
-
             .fillMaxWidth()
-            .padding(3.dp),
+            .padding(1.dp),
 
         verticalAlignment = Alignment.CenterVertically
     ) {
-         MA_LabelNormal(  valor = condicion.id.toString())
-
-
+        //MA_LabelNormal(valor = condicion.id.toString())
         MA_ComboLista(
             modifier = Modifier.weight(1f),
             titulo = "",
             descripcion = "Color para la condicion",
             valorInicial = {
-                val color = ColoresSeleccion().get(esquemaColores.id).get(condicion.color).color
 
+                val indicadorColorCondicion = (condicion.color % ColoresSeleccion().get(esquemaColores.id).size)
+                val color = ColoresSeleccion().get(esquemaColores.id).get(indicadorColorCondicion).color
                 MA_SeleccionColor(color)
             },
             elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),

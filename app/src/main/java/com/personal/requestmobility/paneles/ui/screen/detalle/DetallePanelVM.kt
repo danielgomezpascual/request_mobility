@@ -98,6 +98,7 @@ class DetallePanelVM(
         object ObtenerKpisDisponibles : Eventos()
 
         data class AgregarCondicion(val condicion: Condiciones) : Eventos()
+        data class ActualizarCondicion(val condicion: Condiciones) : Eventos()
         data class EliminarCondicion(val condicion: Condiciones) : Eventos()
     }
 
@@ -288,17 +289,40 @@ class DetallePanelVM(
 
 
                             is Eventos.AgregarCondicion -> {
+
                                 var condiciones: List<Condiciones> = estado.panelUI.configuracion.condiciones
-                                condiciones = condiciones.plus(evento.condicion)
+
+                                val elemento = estado.panelUI.configuracion.condiciones.maxByOrNull { it.id }
+                                val maxIndice = (elemento?.id ?: 0) + 1
+                                val condicion: Condiciones = Condiciones(id = maxIndice, color = (maxIndice), predicado = "> $maxIndice")
+                                condiciones = condiciones.plus(condicion)
                                 estado.copy(
                                     panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condiciones = condiciones))
                                 )
                             }
 
+                            is Eventos.ActualizarCondicion -> {
+
+                                val conficionActualizar = evento.condicion
+
+
+                                val nuevasCondiciones = estado.panelUI.configuracion.condiciones.map { cond ->
+                                    if (cond.id == conficionActualizar.id) {
+                                        conficionActualizar
+                                    } else {
+                                        cond
+                                    }
+                                }
+
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condiciones = nuevasCondiciones))
+                                )
+                            }
+
                             is Eventos.EliminarCondicion -> {
-                                var condiciones: List<Condiciones> = estado.panelUI.configuracion.condiciones
-                                val nuevasCondiciones = condiciones.filter { it.id != evento.condicion.id }
-                                App.log.d("Conficiones ${condiciones.size} - ${nuevasCondiciones.size}")
+
+                                val condicionEliminar = evento.condicion
+                                val nuevasCondiciones = estado.panelUI.configuracion.condiciones - condicionEliminar
                                 estado.copy(
                                     panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condiciones = nuevasCondiciones))
                                 )
@@ -372,14 +396,33 @@ class DetallePanelVM(
     }
 
     private fun guardar(navegacion: (EventosNavegacion) -> Unit) {
-        viewModelScope.launch {
-            val panelUI = (_uiState.value as UIState.Success).panelUI
-            guardarPanelCU.guardar(panelUI)
-            dialog.informacion(_t(R.string.elemento_guardado_correctamente)) { navegacion(EventosNavegacion.MenuPaneles) }
 
+        if (validarElementosPanel()) {
+            viewModelScope.launch {
+                val panelUI = (_uiState.value as UIState.Success).panelUI
+                guardarPanelCU.guardar(panelUI)
+                dialog.informacion(_t(R.string.elemento_guardado_correctamente)) { navegacion(EventosNavegacion.MenuPaneles) }
+
+            }
         }
     }
 
+
+    private fun validarElementosPanel(): Boolean{
+        val panelUI = (_uiState.value as UIState.Success).panelUI
+
+        if (panelUI.titulo.isEmpty()){
+            dialog.informacion(_t(R.string.debe_proporcionar_un_nombre_al_panel)) {  }
+            return false
+        }
+
+        if (panelUI.kpi.equals( KpiUI())){
+            dialog.informacion(_t(R.string.debe_seleccionar_un_kpi_para_representar_informacion)) {  }
+            return false
+        }
+
+        return true
+    }
     private fun eliminar(navegacion: (EventosNavegacion) -> Unit) {
         dialog.sino(_t(R.string.seguro_que_desea_elimnar_el_panel_seleccionado)) { resp ->
             if (resp == DialogosResultado.Si) {

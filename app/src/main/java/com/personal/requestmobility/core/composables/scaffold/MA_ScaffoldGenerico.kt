@@ -23,8 +23,8 @@ import com.personal.requestmobility.core.navegacion.EventosNavegacion
 @Composable
 fun MA_ScaffoldGenerico(
     titulo: String,
-    navegacion: (EventosNavegacion) -> Unit,
-    volver: Boolean = true,
+    navegacion: (EventosNavegacion) -> Unit = {},
+    volver: Boolean = false,
     contenidoBottomBar: @Composable () -> Unit = {},
     contenido: @Composable () -> Unit,
 

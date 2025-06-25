@@ -1,6 +1,7 @@
 package com.personal.requestmobility.dashboards // O com.personal.requestmobility.dashboards
 
 
+import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.dashboards.data.ds.local.DashboardLocalDS
 import com.personal.requestmobility.dashboards.data.ds.local.dao.DashboardDao
@@ -87,7 +88,8 @@ val moduloDashboards = module {
             cargarDashboardCU = get<CargarDashboardCU>(),
             eliminarDashboardCU = get<EliminarDashboardCU>(),
             guardarDashboardCU = get<GuardarDashboardCU>(),
-            obtenerSeleccionPanel = get<ObtenerSeleccionPanel>()
+            obtenerSeleccionPanel = get<ObtenerSeleccionPanel>(),
+            dialog =  get<DialogManager>()
         )
     }
 }

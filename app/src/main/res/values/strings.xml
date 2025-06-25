@@ -12,4 +12,10 @@
     <string name="seguro_que_desea_elimnar_el_panel_seleccionado">¿Seguro que desea elimnar el panel seleccionado?</string>
     <string name="elemnetos_eliminado">Elemnetos eliminado</string>
     <string name="elemento_guardado_correctamente">Elemento guardado correctamente</string>
+    <string name="debe_proporcionar_un_nombre_al_panel">Debe proporcionar un nombre al panel</string>
+    <string name="debe_seleccionar_un_kpi_para_representar_informacion">Debe seleccionar un KPI para representar informacion</string>
+    <string name="seguro_que_desea_elimianr_el_elmento_seleccionado">¿Seguro que desea elimianr el elmento seleccionado?</string>
+    <string name="debe_introducir_un_nombre_para_el_dashboard">Debe introducir un nombre para el dashboard</string>
+    <string name="elemento_eliminado">Elemento eliminado</string>
+    <string name="elemento_almacenado">Elemento almacenado</string>
 </resources>

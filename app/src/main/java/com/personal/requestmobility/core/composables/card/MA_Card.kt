@@ -34,9 +34,9 @@ fun Test_MA_Card(){
     }
 }
 @Composable
-fun MA_Card(contenido: @Composable () -> Unit) {
+fun MA_Card(modifier: Modifier = Modifier, contenido: @Composable () -> Unit) {
 
-    Box(Modifier.padding(2.dp)){
+    Box(modifier.padding(2.dp)){
         ElevatedCard(
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 2.dp
