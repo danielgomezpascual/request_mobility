@@ -30,13 +30,13 @@ fun Test_MA_Avatar(){
 }
 
 @Composable
-fun MA_Avatar(texto: String , size : Dp = 50.dp, color : Color = getRandomColor()){
+fun MA_Avatar(texto: String , size : Dp = 40.dp, color : Color = getRandomColor()){
     // Avatar
     Box(
         modifier = Modifier.Companion
             .size(size)
             .clip(CircleShape)
-            .background(getRandomColor()),
+            .background(color),
         contentAlignment = Alignment.Companion.Center
     ) {
         // Inicial del usuario, ajusta según la información disponible

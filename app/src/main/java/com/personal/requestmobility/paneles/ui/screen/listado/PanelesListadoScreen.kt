@@ -76,7 +76,7 @@ fun SuccessListadoPaneles(viewModel: PanelesListadoVM,
                         modifier = Modifier.weight(1f),
                         icon = Features.Menu().icono,
                         labelText = Features.Menu().texto,
-                        onClick = { navegacion(EventosNavegacion.MenuApp) }
+                        onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
                     )
                     Spacer(
                         modifier = Modifier

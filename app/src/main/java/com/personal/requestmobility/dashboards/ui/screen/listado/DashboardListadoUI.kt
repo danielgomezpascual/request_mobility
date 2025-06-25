@@ -81,7 +81,7 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
                         modifier = Modifier.weight(1f),
                         icon = Features.Menu().icono,
                         labelText = Features.Menu().texto,
-                        onClick = { navegacion(EventosNavegacion.MenuApp) }
+                        onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
                     )
                     Spacer(modifier = Modifier.fillMaxWidth().weight(1f))
                     MA_IconBottom(

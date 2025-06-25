@@ -79,8 +79,8 @@ fun SuccessMenu(viewModel: HomeVM,
                             //   modifier = Modifier.weight(1f),
                             icon = Features.Sincronizar().icono,
                             labelText = Features.Sincronizar().texto,
-                            seleccionado = true,
-                            destacado = true,
+                            seleccionado = false,
+                            destacado = false,
                             onClick = { navegacion(EventosNavegacion.Sincronizacion) }
                         )
 
@@ -94,7 +94,16 @@ fun SuccessMenu(viewModel: HomeVM,
                             destacado = true,
                             onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
                         )
+
                         MA_IconBottom(
+                            //   modifier = Modifier.weight(1f),
+                            icon = Features.Herramientas().icono,
+                            labelText = Features.Herramientas().texto,
+                            seleccionado = false,
+                            destacado = false,
+                            onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
+                        )
+                       /* MA_IconBottom(
                             //  modifier = Modifier.weight(1f),
                             icon = Features.Dashboard().icono,
                             labelText = Features.Dashboard().texto,
@@ -112,7 +121,7 @@ fun SuccessMenu(viewModel: HomeVM,
                             icon = Features.Kpi().icono,
                             labelText = Features.Kpi().texto,
                             onClick = { navegacion(EventosNavegacion.MenuKpis) }
-                        )
+                        )*/
                     }
 
 
@@ -126,31 +135,9 @@ fun SuccessMenu(viewModel: HomeVM,
                 Box(Modifier) {
                     Column(modifier = Modifier.verticalScroll(state = scroll)) {
 
-
-                        /*MA_Dialogo(
-                            //trigger = { show -> MA_BotonNormal(texto = "Pruebas") { show() } },
-                            resultado = { res ->
-                                if (res is ResultadoDialog.Si) {
-                                    App.log.d("Si")
-                                }
-
-                                if (res is ResultadoDialog.No) {
-                                    App.log.d("No")
-                                }
-                            })*/
-
-
-
-
-
-
-
-
                         uiState.paneles.forEach { panelUI ->
                             MA_Panel(panelData = PanelData().fromPanelUI(panelUI))
                         }
-
-
                     }
                 }
 

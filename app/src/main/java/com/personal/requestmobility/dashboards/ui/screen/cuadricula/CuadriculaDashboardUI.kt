@@ -127,20 +127,6 @@ fun SuccessCuadriculaDashboard(
                         }
                     }
 
-
-                    /*Card(
-                        modifier = Modifier
-                            .clickable {
-                                navegacion(EventosNavegacion.VisualizadorDashboard(item.id))
-                            }
-                            .padding(4.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                    ) {
-                        Text(
-                            text = item.nombre,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }*/
                 }
 
 

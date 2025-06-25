@@ -15,7 +15,9 @@ import com.personal.requestmobility.kpi.navegacion.ScreenDetalleKpi
 import com.personal.requestmobility.kpi.navegacion.ScreenListadoKpis
 import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiScreen
 import com.personal.requestmobility.kpi.ui.screen.listado.KpisListadoScreen
+import com.personal.requestmobility.menu.navegacion.ScreenHerramientas
 import com.personal.requestmobility.menu.navegacion.ScreenMenu
+import com.personal.requestmobility.menu.screen.HerramientasScreen
 import com.personal.requestmobility.paneles.navegacion.ScreenDetallePanel
 import com.personal.requestmobility.paneles.navegacion.ScreenListadoPaneles
 import com.personal.requestmobility.sincronizacion.ui.navegacion.ScreenOrganizacionesSincronizacion
@@ -103,5 +105,9 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 
         //==== Sincronizacion =======================
         EventosNavegacion.Sincronizacion ->      navController.navigate(ScreenOrganizacionesSincronizacion)
+
+
+        //==== Herramientas =======================
+        EventosNavegacion.MenuHerramientas ->   navController.navigate(ScreenHerramientas )
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -36,11 +37,12 @@ fun Test_MA_Card(){
 @Composable
 fun MA_Card(modifier: Modifier = Modifier, contenido: @Composable () -> Unit) {
 
-    Box(modifier.padding(2.dp)){
+    Box(modifier.padding(4.dp)){
         ElevatedCard(
             elevation = CardDefaults.cardElevation(
-                defaultElevation = 2.dp
+                defaultElevation = 4.dp
             ),
+            shape = RoundedCornerShape(2.dp),
             modifier = Modifier.fillMaxWidth()
 
         ) {

@@ -4,3 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 object ScreenMenu
+
+
+
+@Serializable
+object ScreenHerramientas

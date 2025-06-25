@@ -8,6 +8,7 @@ import com.personal.requestmobility.dashboards.navegacion.CuadriculaDashboards
 import com.personal.requestmobility.dashboards.navegacion.ListadoDashboards
 import com.personal.requestmobility.dashboards.navegacion.goto
 import com.personal.requestmobility.kpi.navegacion.ScreenListadoKpis
+import com.personal.requestmobility.menu.screen.HerramientasScreen
 
 import com.personal.requestmobility.menu.screen.HomeScreen
 import com.personal.requestmobility.menu.screen.HomeVM
@@ -16,6 +17,13 @@ import com.personal.requestmobility.paneles.navegacion.ScreenListadoPaneles
 fun NavGraphBuilder.NavegavionMenu(navController: NavController) {
     composable<ScreenMenu> {
         HomeScreen  { navegacion ->
+            goto(navegacion, navController)
+        }
+    }
+
+
+    composable<ScreenHerramientas> {
+        HerramientasScreen()  { navegacion ->
             goto(navegacion, navController)
         }
     }

@@ -29,4 +29,7 @@ sealed class EventosNavegacion{
 
 
     object Sincronizacion: EventosNavegacion()
+
+
+    object MenuHerramientas: EventosNavegacion()
 }
