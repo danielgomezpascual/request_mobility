@@ -7,7 +7,12 @@ data class ColorSeleccionCombo(val indice: Int, val color: Color, val descricion
 
 class ColoresSeleccion {
 
-    fun get(esquema: Int) = EsquemaColores().get(esquema).colores.mapIndexed { indice, color ->
+   /* fun get(esquema: Int) = EsquemaColores().get(esquema).colores.mapIndexed { indice, color ->
+        ColorSeleccionCombo(indice = indice, color = color, descricion = "")
+    }*/
+
+
+    fun get(esquema: Int) = EsquemaColores().dameEsquemaCondiciones().colores.mapIndexed { indice, color ->
         ColorSeleccionCombo(indice = indice, color = color, descricion = "")
     }
 

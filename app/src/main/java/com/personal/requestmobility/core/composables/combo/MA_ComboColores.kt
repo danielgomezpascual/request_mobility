@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> MA_ComboLista(modifier: Modifier = Modifier,
+fun <T> MA_ComboColores(modifier: Modifier = Modifier,
                       titulo: String = "[TITULO]",
                       descripcion: String = "Seleccione un opcion correspondiente",
                       valorInicial: @Composable () -> Unit,
@@ -92,16 +92,27 @@ fun <T> MA_ComboLista(modifier: Modifier = Modifier,
 
 
 
-                    MA_Lista(data = elementosSeleccionables) { el ->
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(4), // Define exactamente 2 columnas
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(8.dp), // Espaciado alrededor de la cuadrícula
+                        verticalArrangement = Arrangement.spacedBy(8.dp), // Espaciado vertical entre items
+                        horizontalArrangement = Arrangement.spacedBy(8.dp) // Espaciado horizontal entre items
+                    ) {
 
-                        Box(modifier = Modifier.clickable(enabled = true, onClick = {
-                            onClickSeleccion(el)
-                            elemntoSeleccionado = { item(el) }
-                            //valorInicial = valorInicial(el)
-                            scope.launch { sheetState.hide() }
-                        })) {
-                            item(el)
+                        items(items = elementosSeleccionables) { ds ->
+                            // contenido(ds)
+                            Box(modifier = Modifier.clickable(enabled = true, onClick = {
+                                onClickSeleccion(ds)
+                                elemntoSeleccionado = { item(ds) }
+                                //valorInicial = valorInicial(el)
+                                scope.launch { sheetState.hide() }
+                            })) {
+                                item(ds)
+                            }
                         }
+
+
                     }
 
                 }
@@ -110,6 +121,5 @@ fun <T> MA_ComboLista(modifier: Modifier = Modifier,
         }
     )
 }
-
 
 

@@ -58,6 +58,7 @@ import com.personal.requestmobility.core.composables.labels.MA_Titulo2
 import com.personal.requestmobility.core.composables.layouts.MA_2Columnas
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
+import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Columnas
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -68,10 +69,12 @@ import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
 import com.personal.requestmobility.paneles.ui.componente.MA_ColumnaItemSeleccionable
+import com.personal.requestmobility.paneles.ui.componente.MA_CondicionCeldaPanel
 import com.personal.requestmobility.paneles.ui.componente.MA_CondicionPanel
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.paneles.ui.componente.MA_SelectorEsquemaColores
 import com.personal.requestmobility.paneles.ui.entidades.Condiciones
+import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
 import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM.UIState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -224,6 +227,39 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                 )
 
 
+
+
+                MA_Titulo2("Codiciones sobre la celda ${panelUI.configuracion.condicionesCeldas.size}")
+                LazyColumn(
+                    modifier = Modifier.height(250.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(
+                        items = panelUI.configuracion.condicionesCeldas,
+                        key = { item -> item.id })
+                    { condicion ->
+                        MA_CondicionCeldaPanel(
+                            columnas = valoresTabla.dameColumnas(),
+                            condicion = condicion,
+                            onClickAceptar = { condicionUI ->
+                                viewModel.onEvent(DetallePanelVM.Eventos.ActualizarCondicionCelda(condicionUI))
+                            },
+                            onClickCancelar = { condicionUI ->
+
+                                viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicionCelda(condicionUI))
+                            }
+                        )
+                    }
+                }
+
+                MA_BotonSecundario(
+                    texto = "Nueva Condición Celda", modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                ) {
+                    viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicionCelda(CondicionesCelda(id = 0, columna = Columnas(nombre = "", posicion = -1), color = 1, condicionCelda = 0, predicado = "")))
+                }
+
                 MA_Titulo2("KPI")
                 Box(modifier = Modifier.height(150.dp)) {
                     MA_ComboLista<KpiUI>(
@@ -293,7 +329,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                                 valorInicial = panelUI.configuracion.tipo.name,
                                 elementosSeleccionables = listOf(
                                     "INDICADOR_HORIZONTAL",
-                                    "INDICADOR_VERTICAL" ,
+                                    "INDICADOR_VERTICAL",
                                     "BARRAS_ANCHAS_VERTICALES",
                                     "BARRAS_FINAS_VERTICALES",
                                     "CIRCULAR",
@@ -521,9 +557,10 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
 
 
                 MA_Titulo2("Codiciones sobre las filas ${panelUI.configuracion.condiciones.size}")
-                LazyColumn (  modifier = Modifier.height(250.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)){
-
+                LazyColumn(
+                    modifier = Modifier.height(250.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     items(
                         items = panelUI.configuracion.condiciones,
                         key = { item -> item.id })
@@ -544,11 +581,14 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM,
                         )
                     }
                 }
+
+
                 MA_BotonSecundario(
                     texto = "Nueva Condición", modifier = Modifier
                         .fillMaxWidth()
                         .padding(5.dp)
-                ) { viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(Condiciones(1, 1, "")))
+                ) {
+                    viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(Condiciones(1, 1, "")))
                 }
             }
             MA_BottomSheet(

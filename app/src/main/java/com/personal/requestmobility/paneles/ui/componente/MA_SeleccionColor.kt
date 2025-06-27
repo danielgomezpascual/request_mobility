@@ -20,8 +20,8 @@ fun MA_SeleccionColor(color: Color) {
             Modifier
                 .padding(3.dp)
                 .border(width = 1.dp, color = Color.Black)
-                .width(24.dp)
-                .height(24.dp)
+                .width(36.dp)
+                .height(36.dp)
                 .background(color = color)
     ) {
         MA_LabelNormal("")

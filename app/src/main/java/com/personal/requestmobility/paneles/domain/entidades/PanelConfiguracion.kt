@@ -3,6 +3,7 @@ package com.personal.requestmobility.paneles.domain.entidades
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.paneles.ui.entidades.Condiciones
+import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
 
 data class PanelConfiguracion(
     val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,
@@ -43,5 +44,6 @@ data class PanelConfiguracion(
     var filasColor: Boolean = true,
 
 
-    val condiciones : List<Condiciones> = listOf<Condiciones>()
+    val condiciones : List<Condiciones> = listOf<Condiciones>(),
+    val condicionesCeldas : List<CondicionesCelda> = listOf<CondicionesCelda>()
 )

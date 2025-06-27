@@ -7,6 +7,8 @@ import com.personal.requestmobility.App
 import com.personal.requestmobility.R
 import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
+import com.personal.requestmobility.core.composables.tabla.Celda
+import com.personal.requestmobility.core.composables.tabla.Columnas
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.utils._t
@@ -20,6 +22,7 @@ import com.personal.requestmobility.paneles.domain.interactors.EliminarPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelCU
 import com.personal.requestmobility.paneles.ui.entidades.Condiciones
+import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.entidades.fromPanel
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
@@ -97,9 +100,14 @@ class DetallePanelVM(
 
         object ObtenerKpisDisponibles : Eventos()
 
+        data class AgregarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
+        data class ActualizarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
+        data class EliminarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
+
         data class AgregarCondicion(val condicion: Condiciones) : Eventos()
         data class ActualizarCondicion(val condicion: Condiciones) : Eventos()
         data class EliminarCondicion(val condicion: Condiciones) : Eventos()
+
     }
 
 
@@ -286,12 +294,45 @@ class DetallePanelVM(
                                 )
 
                             }
+                            is Eventos.AgregarCondicionCelda -> {
+                                var condicionesCeldas: List<CondicionesCelda> = estado.panelUI.configuracion.condicionesCeldas
+
+                                val elemento = estado.panelUI.configuracion.condicionesCeldas.maxByOrNull { it.id }
+                                val maxIndice = (elemento?.id ?: 0) + 1
+                                val condicionCelda: CondicionesCelda
+                                = CondicionesCelda(id = maxIndice, color = (maxIndice), predicado = "> $maxIndice", columna = Columnas(nombre = "", posicion = -1), condicionCelda =   0)
+                                condicionesCeldas = condicionesCeldas.plus(condicionCelda)
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = condicionesCeldas))
+                                )
+                            }
+
+                            is Eventos.ActualizarCondicionCelda -> {
+                                val conficionActualizar = evento.condicion
+                                val nuevasCondiciones = estado.panelUI.configuracion.condicionesCeldas.map { cond ->
+                                    if (cond.id == conficionActualizar.id) {
+                                        conficionActualizar
+                                    } else {
+                                        cond
+                                    }
+                                }
+
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = nuevasCondiciones))
+                                )
+                            }
+
+                            is Eventos.EliminarCondicionCelda -> {
+                                val condicionEliminar = evento.condicion
+                                val nuevasCondiciones = estado.panelUI.configuracion.condicionesCeldas - condicionEliminar
+                                estado.copy(
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = nuevasCondiciones))
+                                )
+                            }
 
 
                             is Eventos.AgregarCondicion -> {
-
                                 var condiciones: List<Condiciones> = estado.panelUI.configuracion.condiciones
-
                                 val elemento = estado.panelUI.configuracion.condiciones.maxByOrNull { it.id }
                                 val maxIndice = (elemento?.id ?: 0) + 1
                                 val condicion: Condiciones = Condiciones(id = maxIndice, color = (maxIndice), predicado = "> $maxIndice")
@@ -302,10 +343,7 @@ class DetallePanelVM(
                             }
 
                             is Eventos.ActualizarCondicion -> {
-
                                 val conficionActualizar = evento.condicion
-
-
                                 val nuevasCondiciones = estado.panelUI.configuracion.condiciones.map { cond ->
                                     if (cond.id == conficionActualizar.id) {
                                         conficionActualizar
@@ -320,13 +358,13 @@ class DetallePanelVM(
                             }
 
                             is Eventos.EliminarCondicion -> {
-
                                 val condicionEliminar = evento.condicion
                                 val nuevasCondiciones = estado.panelUI.configuracion.condiciones - condicionEliminar
                                 estado.copy(
                                     panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condiciones = nuevasCondiciones))
                                 )
                             }
+
 
                             else -> estado
                         }

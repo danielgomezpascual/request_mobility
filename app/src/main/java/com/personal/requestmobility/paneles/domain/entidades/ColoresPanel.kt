@@ -85,6 +85,7 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
     fun dameEsquemaCondiciones() = EsquemaColores(id = 99, nombre = "Todos", colores = dameTodosColores())
 
     fun dameTodosColores() = listOf<Color>(
+        Color(0x00FFFFFF),
         Color(0xFFFF0000),
         Color(0xFF00FF00),
         Color(0xFF0000FF),

@@ -143,7 +143,7 @@ data class Fila(
     val obtenidaDesdeKPI : Boolean= true
     )
 
-data class Celda(val valor: String,
+data class Celda(val valor: String = "",
                  val size: Dp = 200.dp,
                  val colorCelda: Color = Color.Blue,
                  val fondoCelda: Color = Color.White,
@@ -153,7 +153,7 @@ data class Celda(val valor: String,
                          alineacion = if3(valor.esNumerico(), TextAlign.End, TextAlign.Start)
                      )
                  },
-                 val titulo: String,
+                 val titulo: String = "",
                  val colorTitulo: Color = Color.White,
                  val fondoTitulo: Color = Color.DarkGray,
                  val celdaTitulo: @Composable (Modifier) -> Unit = { modifierTitulo ->
