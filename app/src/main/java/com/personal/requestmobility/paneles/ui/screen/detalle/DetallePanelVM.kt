@@ -3,6 +3,7 @@ package com.personal.requestmobility.paneles.ui.screen.detalle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.personal.requestmobility.App
 import com.personal.requestmobility.R
 import com.personal.requestmobility.core.composables.dialogos.DialogManager
@@ -18,6 +19,7 @@ import com.personal.requestmobility.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.kpi.ui.entidades.fromKPI
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
 import com.personal.requestmobility.paneles.domain.interactors.EliminarPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelCU
@@ -53,7 +55,10 @@ class DetallePanelVM(
     sealed class UIState() {
         data class Success(val panelUI: PanelUI,
                            val kpiDisponibles: List<KpiUI> = emptyList<KpiUI>(),
-                           val valoresTabla: ValoresTabla = ValoresTabla()
+                           val valoresTabla: ValoresTabla = ValoresTabla(),
+                           val condicionFila: Condiciones? = null,
+                           val condicionCelda: CondicionesCelda? = null
+
 
         ) : UIState()
 
@@ -100,11 +105,19 @@ class DetallePanelVM(
 
         object ObtenerKpisDisponibles : Eventos()
 
+
+        data class SeleccionarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
         data class AgregarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
+        data class GuardarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
+
+        //data class AgregarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
         data class ActualizarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
         data class EliminarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
 
+        data class SeleccionarCondicion(val condicion: Condiciones) : Eventos()
         data class AgregarCondicion(val condicion: Condiciones) : Eventos()
+        data class GuardarCondicion(val condicion: Condiciones) : Eventos()
+
         data class ActualizarCondicion(val condicion: Condiciones) : Eventos()
         data class EliminarCondicion(val condicion: Condiciones) : Eventos()
 
@@ -294,16 +307,21 @@ class DetallePanelVM(
                                 )
 
                             }
+
                             is Eventos.AgregarCondicionCelda -> {
-                                var condicionesCeldas: List<CondicionesCelda> = estado.panelUI.configuracion.condicionesCeldas
+                                /*var condicionesCeldas: List<CondicionesCelda> = estado.panelUI.configuracion.condicionesCeldas
 
                                 val elemento = estado.panelUI.configuracion.condicionesCeldas.maxByOrNull { it.id }
                                 val maxIndice = (elemento?.id ?: 0) + 1
-                                val condicionCelda: CondicionesCelda
-                                = CondicionesCelda(id = maxIndice, color = (maxIndice), predicado = "> $maxIndice", columna = Columnas(nombre = "", posicion = -1), condicionCelda =   0)
-                                condicionesCeldas = condicionesCeldas.plus(condicionCelda)
+                                val condicionCelda: CondicionesCelda = CondicionesCelda(id = maxIndice, color = (maxIndice), predicado = "> $maxIndice", columna = Columnas(nombre = "", posicion = -1), condicionCelda = 0)
+                            //    condicionesCeldas = condicionesCeldas.plus(condicionCelda)
+                                */
+
+
+                                val condicionCelda: CondicionesCelda = CondicionesCelda(id = 0, color = 0, predicado = "", columna = Columnas(nombre = "", posicion = -1), condicionCelda = 0)
                                 estado.copy(
-                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = condicionesCeldas))
+                                    condicionCelda = condicionCelda,
+                                  //  panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = condicionesCeldas))
                                 )
                             }
 
@@ -330,16 +348,91 @@ class DetallePanelVM(
                                 )
                             }
 
+                            is Eventos.GuardarCondicionCelda -> {
+                                var condicionesCeldas: List<CondicionesCelda> = estado.panelUI.configuracion.condicionesCeldas
+                                var nuevasCondiciones : List<CondicionesCelda> = emptyList()
+                                if (evento.condicion.id == 0 ){
+                                    App.log.d("Nuevo")
+                                    val elemento = estado.panelUI.configuracion.condicionesCeldas.maxByOrNull { it.id }
+                                    val maxIndice = (elemento?.id ?: 0) + 1
+                                    val condicionCelda: CondicionesCelda = CondicionesCelda(id = maxIndice,
+                                        color = (evento.condicion.color), predicado = evento.condicion.predicado,
+                                        columna =evento.condicion.columna, condicionCelda = evento.condicion.condicionCelda)
+
+                                    nuevasCondiciones = condicionesCeldas.plus(condicionCelda)
+                                }else{
+                                    App.log.d("Modificadi")
+                                    val conficionActualizar = evento.condicion
+                                     nuevasCondiciones = estado.panelUI.configuracion.condicionesCeldas.map { cond ->
+                                        if (cond.id == conficionActualizar.id) {
+                                            conficionActualizar
+                                        } else {
+                                            cond
+                                        }
+                                    }
+                                }
+
+
+                                estado.copy(
+                                    condicionCelda =  null,
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = nuevasCondiciones))
+                                )
+
+                            }
+
+                            is Eventos.GuardarCondicion -> {
+
+                                lateinit var configuracion : PanelConfiguracion
+                                if (evento.condicion.id == 0) {
+                                    val elemento = estado.panelUI.configuracion.condiciones.maxByOrNull { it.id }
+                                    val maxIndice = (elemento?.id ?: 0) + 1
+                                    //val  nuevasCondiciones =
+
+                                     configuracion =
+                                        estado.panelUI.configuracion.copy(
+                                            condiciones = estado.panelUI.configuracion.condiciones.plus(evento.condicion.copy(id = maxIndice))
+                                        )
+
+                                } else {
+                                    val nuevasCondiciones = estado.panelUI.configuracion.condiciones.map { cond ->
+                                        if (cond.id == evento.condicion.id) {
+                                            App.log.d("Entonctada ${evento.condicion}")
+                                            //evento.condicion
+                                            cond.copy(color = evento.condicion.color, predicado = evento.condicion.predicado)
+                                        } else {
+                                            cond
+                                        }
+                                    }
+
+                                     configuracion = estado.panelUI.configuracion.copy(condiciones = nuevasCondiciones)
+                                    App.log.lista("condi", nuevasCondiciones)
+
+                                }
+
+                                estado.copy(
+                                    condicionFila = null,
+                                    panelUI = estado.panelUI.copy(configuracion = configuracion)
+                                )
+                            }
+
+                            is Eventos.SeleccionarCondicion -> {
+                                estado.copy(condicionFila = evento.condicion)
+                            }
+
+                            is Eventos.SeleccionarCondicionCelda -> {
+                                estado.copy(condicionCelda = evento.condicion)
+                            }
+
+
+                            is Eventos.AgregarCondicionCelda -> {
+                                estado.copy(condicionCelda = CondicionesCelda(id = 0, color = 0, predicado = "", columna = Columnas("", 0), condicionCelda = 0))
+
+                            }
+
 
                             is Eventos.AgregarCondicion -> {
-                                var condiciones: List<Condiciones> = estado.panelUI.configuracion.condiciones
-                                val elemento = estado.panelUI.configuracion.condiciones.maxByOrNull { it.id }
-                                val maxIndice = (elemento?.id ?: 0) + 1
-                                val condicion: Condiciones = Condiciones(id = maxIndice, color = (maxIndice), predicado = "> $maxIndice")
-                                condiciones = condiciones.plus(condicion)
-                                estado.copy(
-                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condiciones = condiciones))
-                                )
+                                estado.copy(condicionFila = Condiciones(id = 0, color = 0, predicado = ""))
+
                             }
 
                             is Eventos.ActualizarCondicion -> {
@@ -446,21 +539,22 @@ class DetallePanelVM(
     }
 
 
-    private fun validarElementosPanel(): Boolean{
+    private fun validarElementosPanel(): Boolean {
         val panelUI = (_uiState.value as UIState.Success).panelUI
 
-        if (panelUI.titulo.isEmpty()){
-            dialog.informacion(_t(R.string.debe_proporcionar_un_nombre_al_panel)) {  }
+        if (panelUI.titulo.isEmpty()) {
+            dialog.informacion(_t(R.string.debe_proporcionar_un_nombre_al_panel)) { }
             return false
         }
 
-        if (panelUI.kpi.equals( KpiUI())){
-            dialog.informacion(_t(R.string.debe_seleccionar_un_kpi_para_representar_informacion)) {  }
+        if (panelUI.kpi.equals(KpiUI())) {
+            dialog.informacion(_t(R.string.debe_seleccionar_un_kpi_para_representar_informacion)) { }
             return false
         }
 
         return true
     }
+
     private fun eliminar(navegacion: (EventosNavegacion) -> Unit) {
         dialog.sino(_t(R.string.seguro_que_desea_elimnar_el_panel_seleccionado)) { resp ->
             if (resp == DialogosResultado.Si) {

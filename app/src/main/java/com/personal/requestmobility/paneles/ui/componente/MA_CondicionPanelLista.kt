@@ -3,12 +3,15 @@ package com.personal.requestmobility.paneles.ui.componente
 import MA_IconBottom
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
@@ -21,10 +24,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
 import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
+import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
@@ -35,14 +40,14 @@ import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM
 import kotlinx.coroutines.launch
 
 @Composable
-fun MA_CondicionPanel(
+fun MA_CondicionPanelLista(
     esquemaColores: EsquemaColores,
     condicion: Condiciones,
     onClickAceptar: (Condiciones) -> Unit,
     onClickCancelar: (Condiciones) -> Unit) {
 
 
-    var condicion by remember { mutableStateOf<Condiciones>(condicion) }
+    //var condicion by remember { mutableStateOf<Condiciones>(condicion) }
     var str by remember { mutableStateOf<String>(condicion.predicado) }
 
 
@@ -51,56 +56,73 @@ fun MA_CondicionPanel(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(1.dp),
-
         verticalAlignment = Alignment.CenterVertically
     ) {
-        MA_LabelNormal(valor = condicion.id.toString())
-        MA_ComboLista(
-            modifier = Modifier.weight(1f),
-            titulo = "",
-            descripcion = "Color para la condicion",
-            valorInicial = {
+        //MA_LabelNormal(valor = condicion.id.toString())
 
-                val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
-                val color =    esquemaColores.colores.get(indicadorColorCondicion)
+        val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
+        val color = esquemaColores.colores.get(indicadorColorCondicion)
 
-                MA_SeleccionColor(color)
-            },
-            elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-            item = { colorSeleccion ->
-                MA_SeleccionColor(colorSeleccion.color)
-            },
-            onClickSeleccion = { colorSeleccion ->
-                condicion = condicion.copy(color = colorSeleccion.indice)
-                //onClickAceptar(condicion)
-            }
 
-        )
+        MA_Card(modifier = Modifier.clickable(enabled = true, onClick = {
+            onClickAceptar(condicion)
+        })) {
+        Column {
+            MA_LabelNormal(valor = condicion.id.toString())
+            MA_LabelNormal(valor = "Meter una descripcion o algo..\n. y el boton eliminar en cada celda..")
+            Box(Modifier
+                .size(36.dp)
+                .background(color = color))
+            MA_LabelNormal(valor = condicion.predicado)
+        }
+    }
 
-        MA_TextoNormal(modifier = Modifier.weight(1f), valor = str, titulo = "Condición", onValueChange = { it ->
+
+        /* MA_ComboLista(
+             modifier = Modifier.weight(1f),
+             titulo = "",
+             descripcion = "Color para la condicion",
+             valorInicial = {
+
+                 val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
+                 val color =    esquemaColores.colores.get(indicadorColorCondicion)
+
+                 MA_SeleccionColor(color)
+             },
+             elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+             item = { colorSeleccion ->
+                 MA_SeleccionColor(colorSeleccion.color)
+             },
+             onClickSeleccion = { colorSeleccion ->
+                 condicion = condicion.copy(color = colorSeleccion.indice)
+                 //onClickAceptar(condicion)
+             }
+
+         )*/
+
+       /* MA_TextoNormal(modifier = Modifier.weight(1f), valor = str, titulo = "Condición", onValueChange = { it ->
             condicion = condicion.copy(predicado = it)
             str = it
-           /// onClickAceptar(condicion)
-        })
+            /// onClickAceptar(condicion)
+        })*/
 
 
-     //    MA_IconBottom(icon = Icons.Default.Check, labelText = "") { onClickAceptar(condicion) }
-      //  MA_IconBottom(color = Color.Red, icon = Icons.Default.Cancel, labelText = "") { onClickCancelar(condicion) }
+        //    MA_IconBottom(icon = Icons.Default.Check, labelText = "") { onClickAceptar(condicion) }
+        //  MA_IconBottom(color = Color.Red, icon = Icons.Default.Cancel, labelText = "") { onClickCancelar(condicion) }
 
 
-        Row() {
+     /*   Row() {
             MA_BotonSecundario(texto = "Cancelar") {
                 onClickCancelar(condicion)
-
+                //      scope.launch { sheetStateCondicionFila.hide() }
             }
             MA_BotonPrincipal(texto = "Guardar") {
-                App.log.d(condicion.toString())
                 onClickAceptar(condicion)
-
+                //    App.log.d(ui)
+                //  viewModel.onEvent(DetallePanelVM.Eventos.GuardarCondicion(uiState.condicionFila))
             }
-        }
+        }*/
     }
 
 

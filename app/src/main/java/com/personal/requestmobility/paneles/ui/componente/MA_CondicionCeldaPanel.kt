@@ -16,6 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
+import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.combo.MA_ComboColores
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
@@ -63,7 +66,7 @@ fun MA_CondicionCeldaPanel(
             item = { columna -> MA_ColumnaItemSeleccionable(columna) },
             onClickSeleccion = { c ->
                 condicion = condicion.copy(columna = c)
-                onClickAceptar(condicion)
+                //onClickAceptar(condicion)
             }
 
 
@@ -89,7 +92,7 @@ fun MA_CondicionCeldaPanel(
                 },
                 onClickSeleccion = { colorSeleccion ->
                     condicion = condicion.copy(color = colorSeleccion.indice)
-                    onClickAceptar(condicion)
+                 //   onClickAceptar(condicion)
                 }
             )
 
@@ -103,7 +106,7 @@ fun MA_CondicionCeldaPanel(
                 item = { fx -> MA_FuncionalidadCelda(fx.nombre) },
                 onClickSeleccion = { funcion ->
                     condicion = condicion.copy(condicionCelda = funcion.id)
-                    onClickAceptar(condicion)
+                //    onClickAceptar(condicion)
                 }
             )
 
@@ -111,7 +114,7 @@ fun MA_CondicionCeldaPanel(
             MA_TextoNormal(modifier = Modifier.weight(1f), valor = str, titulo = "Condición", onValueChange = { it ->
                 condicion = condicion.copy(predicado = it)
                 str = it
-                onClickAceptar(condicion)
+               // onClickAceptar(condicion)
             })
 
 
@@ -119,6 +122,19 @@ fun MA_CondicionCeldaPanel(
             MA_IconBottom(color = Color.Red, icon = Icons.Default.Cancel, labelText = "") { onClickCancelar(condicion) }
         }
 
+
+
+        Row() {
+            MA_BotonSecundario(texto = "Cancelar") {
+                onClickCancelar(condicion)
+
+            }
+            MA_BotonPrincipal(texto = "Guardar") {
+                App.log.d(condicion.toString())
+                onClickAceptar(condicion)
+
+            }
+        }
 
     }
 

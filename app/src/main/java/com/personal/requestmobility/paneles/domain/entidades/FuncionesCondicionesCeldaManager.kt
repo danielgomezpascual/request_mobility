@@ -13,6 +13,8 @@ import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.MA_LabelCelda
 import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
+import kotlin.Int
+import kotlin.collections.listOf
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.truncate
@@ -20,15 +22,20 @@ import kotlin.math.truncate
 class FuncionesCondicionesCeldaManager {
 
     fun get() = listOf<FuncionesCondicionCelda>(
-        FuncionesCondicionCelda(0, "Ninguna", false, {}),
-        FuncionesCondicionCelda(1, "Banderas", false, { MA_LabelCelda(valor = "Prueas") }),
-        FuncionesCondicionCelda(2, "Estrellas", true, { MA_LabelCelda(valor = "Prueas") })
+        FuncionesCondicionCelda(0, nombre = "Ninguna", sobreTodoConjunto = false, composable = {}),
+        FuncionesCondicionCelda(1, nombre = "Banderas", sobreTodoConjunto = false, composable = { MA_LabelCelda(valor = "Prueas") }),
+        FuncionesCondicionCelda(
+            id = 2, nombre = "Estrellas", sobreTodoConjunto = true,
+            representaciones = listOf<Int>(R.drawable.star_1, R.drawable.star_2, R.drawable.star_3, R.drawable.star_4, R.drawable.star_5),
+            composable = { MA_LabelCelda(valor = "Prueas") },
+        )
     )
 
     fun get(i: Int) = get()[i]
 
 
     fun aplicarCondicion(valor: String, condicion: CondicionesCelda, celda: Celda, filas: List<Fila> = emptyList<Fila>()): FuncionesCondicionCelda {
+
 
         return when (condicion.condicionCelda) {
             1 -> banderas(valor)
@@ -48,7 +55,9 @@ class FuncionesCondicionesCeldaManager {
         return r
     }
 
-    fun estrellas(valor: String, condicion: CondicionesCelda, filas: List<Fila> = emptyList<Fila>()): FuncionesCondicionCelda {
+    fun estrellas(valor: String,
+                  condicion: CondicionesCelda,
+                  filas: List<Fila> = emptyList<Fila>()): FuncionesCondicionCelda {
 
         var listaValores: List<String> = emptyList()
         filas.forEach { fila ->
@@ -65,22 +74,7 @@ class FuncionesCondicionesCeldaManager {
 
 
         val elementos = listOf<Int>(R.drawable.star_1, R.drawable.star_2, R.drawable.star_3, R.drawable.star_4, R.drawable.star_5)
-       /* App.log.d("Elementos en los que va a romprer ${listaValores.size } / ${elementos.size} ")
 
-
-        //val elementosPorParte = floor((listaValores.size / elementos.size).toFloat())
-        val elementosPorParte =  elementos.size % listaValores.size
-
-        App.log.d("elementosPorParte : ${elementosPorParte} ")
-
-
-
-        val partes = listaValores.chunked(elementosPorParte.toInt())
-        //val partes = listaValores.splitIntoParts(elementos.size)
-
-
-        App.log.d("XXL Partes generadas ${partes.size} ")
-*/
         val partes = listaValores.repartirEnOrden(elementos.size)
 
         var listaEncontrada: Int = 0
@@ -93,15 +87,6 @@ class FuncionesCondicionesCeldaManager {
 
 
         val rd = elementos.get(listaEncontrada)
-        /*val rd: Int = when (listaEncontrada) {
-            0 -> R.drawable.star_1
-            1 -> R.drawable.star_2
-            2 -> R.drawable.star_3
-            3 -> R.drawable.star_4
-            4 -> R.drawable.star_5
-            else -> R.drawable.star_3
-        }*/
-
         val r = FuncionesCondicionCelda(sobreTodoConjunto = true, composable = {
             Row() {
                 MA_ImagenDrawable(imagen = rd, s = 24.dp)
