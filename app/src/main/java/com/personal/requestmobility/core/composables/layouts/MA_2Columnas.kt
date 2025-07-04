@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
@@ -69,4 +70,30 @@ fun MA_2Columnas(titulo: String = "", elementos: List<@Composable () -> Unit>) {
         }
     }
 
+}
+
+@Composable
+fun MA_2ColumnasHorizontales(titulo: String = "", elementos: List<@Composable () -> Unit>) {
+    
+    Column(  modifier = Modifier.sizeIn(minHeight = 100.dp, maxHeight = 250.dp)) {
+        MA_Titulo2(titulo)
+        LazyHorizontalGrid(
+            
+            rows = GridCells.Fixed(2), // Define exactamente 2 columnas
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(4.dp), // Espaciado alrededor de la cuadrícula
+            verticalArrangement = Arrangement.spacedBy(4.dp), // Espaciado vertical entre items
+            horizontalArrangement = Arrangement.spacedBy(4.dp) // Espaciado horizontal entre items
+                        ) {
+            
+            elementos.forEach { comp ->
+                item {
+                    comp()
+                }
+            }
+            
+            
+        }
+    }
+    
 }

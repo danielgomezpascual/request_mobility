@@ -52,14 +52,23 @@ data class PanelData(
                 var color = fila.color
                 panelConfiguracion.condiciones.forEach { condicion ->
                     val expresion = jexl.createExpression("valor " + condicion.predicado)
-                    val valorY = panelConfiguracion.columnaY
-                    val valor: String = fila.celdas.get(valorY).valor as String
-                    val contexto = MapContext().apply {
-                        set("valor", valor.toFloat())
-                    }
-                    val resultado: Any = expresion.evaluate(contexto)
-                    if (resultado is Boolean && resultado) {
-                        color = EsquemaColores().dameEsquemaCondiciones().colores.get(condicion.color)
+                    
+                    //val valorY = panelConfiguracion.columnaY
+                    val valorY = condicion.columna.posicion
+                
+                    var valor: String = fila.celdas.get(valorY).valor as String
+                    747306
+                    App.log.d("Posicion $valorY -> $valor")
+
+                    if (valor.isNotEmpty()) {
+                        val contexto = MapContext().apply {
+                            set("valor", valor.toFloat())
+                        }
+                        val resultado: Any = expresion.evaluate(contexto)
+                        if (resultado is Boolean && resultado) {
+                            color =
+                                EsquemaColores().dameEsquemaCondiciones().colores.get(condicion.color)
+                        }
                     }
                 }
                 fila.copy(color = color)
@@ -99,11 +108,11 @@ data class PanelData(
                             val colorCondicion = EsquemaColores().dameEsquemaCondiciones().colores.get(condicionCelda.color)
                             nuevasCeldas = nuevasCeldas.mapIndexed { indice, celda ->
                                 if (indice == posicionEvaluar) {
-                                    val resultado: FuncionesCondicionCelda = funcionesCondicionesCelda.aplicarCondicion(valor, condicionCelda, celda,  valoresTabla.filas)
+                                    val celdaConCondicion: FuncionesCondicionCelda = funcionesCondicionesCelda.aplicarCondicion(valor, condicionCelda,  valoresTabla.columnas.get(indice))
                                     if (condicionCelda.condicionCelda > 0) {
                                         celda.copy(colorCelda = colorCondicion, contenido = {
                                             Box(modifier = Modifier.background(color = colorCondicion)) {
-                                                resultado.composable()
+                                                celdaConCondicion.composable()
                                             }
                                         })
                                     } else {

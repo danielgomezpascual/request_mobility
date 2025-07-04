@@ -29,6 +29,6 @@ fun MA_Titulo2(
             text = valor, modifier = modifier.fillMaxWidth().padding(start = 8.dp, top = 20.dp, end = 8.dp, bottom = 4.dp),
             color = color, style = MaterialTheme.typography.titleMedium, textAlign = alineacion
         )
-    HorizontalDivider()
+  // HorizontalDivider()
 
 }

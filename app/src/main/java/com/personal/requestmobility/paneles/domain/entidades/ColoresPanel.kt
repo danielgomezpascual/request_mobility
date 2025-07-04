@@ -14,6 +14,7 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
         1 -> EsquemaColores(1, "Grises", dameTonosGrises())
         2 -> EsquemaColores(2, "Fosforitos", dameColoresFosforitos())
         3 -> EsquemaColores(3, "Pers, Azul", dameColoresPersinaAzul())
+        4 -> EsquemaColores(4, "Errores", dameColoresErrores())
         else -> EsquemaColores(0, "Normal", dameColoresBasicos())
     }
 
@@ -22,11 +23,12 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
         1 -> dameTonosGrises()
         2 -> dameColoresFosforitos()
         3 -> dameColoresPersinaAzul()
+        4 -> dameColoresErrores()
         else -> dameColoresBasicos()
     }
 
 
-    fun dameListasDisponibles() = listOf<EsquemaColores>(get(0), get(1), get(2), get(3))
+    fun dameListasDisponibles() = listOf<EsquemaColores>(get(0), get(1), get(2), get(3), get(4))
 
 
 
@@ -78,6 +80,19 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
         Color(0xFFFF0000),  // 8. Rojo Puro / Neón
         Color(0xFF00FF7F),  // 9. Verde Primavera
         Color(0xFF007FFF)   // 10. Azul Vibrante (Azure)
+    )
+    fun dameColoresErrores() // He cambiado el nombre para mayor claridad
+            = listOf<Color>(
+            Color(0xFFB00020),  // Rojo de error severo (Material Design)
+            Color(0xFFD32F2F),  // Rojo oscuro intenso
+            Color(0xFFE53935),  // Rojo puro
+            Color(0xFFF44336),  // Rojo estándar
+            Color(0xFFFF5252),  // Rojo claro para acentos
+            Color(0xFFFFAB40),  // Naranja de advertencia
+            Color(0xFFFFC107),  // Ámbar para alertas
+            Color(0xFFFFD54F),  // Amarillo de advertencia claro
+            Color(0xFFFFEB3B),  // Amarillo brillante para notificaciones
+            Color(0xFFFFFDE7)   // Amarillo muy pálido para fondos de alerta
     )
 
 

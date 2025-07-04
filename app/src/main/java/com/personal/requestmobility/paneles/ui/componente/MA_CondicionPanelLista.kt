@@ -75,6 +75,9 @@ fun MA_CondicionPanelLista(
                 .size(36.dp)
                 .background(color = color))
             MA_LabelNormal(valor = condicion.predicado)
+            MA_LabelNormal(valor ="Eliminar", color = Color.Red,
+                modifier =  Modifier.clickable(enabled = true, onClick = {onClickCancelar(condicion)})
+                          )
         }
     }
 

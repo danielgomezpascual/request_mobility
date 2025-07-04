@@ -13,6 +13,7 @@ import com.personal.requestmobility.core.composables.tabla.Columnas
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.utils._t
+import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.core.utils.siVacio
 import com.personal.requestmobility.paneles.domain.entidades.PanelOrientacion
 import com.personal.requestmobility.paneles.domain.entidades.PanelTipoGrafica
@@ -224,8 +225,8 @@ class DetallePanelVM(
 
                             is Eventos.onChangeMosrtarTabla -> {
                                 estado.copy(
-                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(mostrarTabla = evento.valor))
-                                )
+                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(mostrarTabla = evento.valor, espacioTabla = if3(evento.valor, 60f , 0f )))
+                                           )
 
                             }
 
@@ -341,11 +342,16 @@ class DetallePanelVM(
                             }
 
                             is Eventos.EliminarCondicionCelda -> {
-                                val condicionEliminar = evento.condicion
-                                val nuevasCondiciones = estado.panelUI.configuracion.condicionesCeldas - condicionEliminar
-                                estado.copy(
-                                    panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = nuevasCondiciones))
-                                )
+                              
+                                
+                                        val condicionEliminar = evento.condicion
+                                        val nuevasCondiciones = estado.panelUI.configuracion.condicionesCeldas - condicionEliminar
+                                        estado.copy(
+                                            panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = nuevasCondiciones))
+                                                   )
+										
+                                   
+                                
                             }
 
                             is Eventos.GuardarCondicionCelda -> {
@@ -398,7 +404,8 @@ class DetallePanelVM(
                                         if (cond.id == evento.condicion.id) {
                                             App.log.d("Entonctada ${evento.condicion}")
                                             //evento.condicion
-                                            cond.copy(color = evento.condicion.color, predicado = evento.condicion.predicado)
+                                            //cond.copy(color = evento.condicion.color, predicado = evento.condicion.predicado)
+                                        evento.condicion
                                         } else {
                                             cond
                                         }
@@ -431,7 +438,7 @@ class DetallePanelVM(
 
 
                             is Eventos.AgregarCondicion -> {
-                                estado.copy(condicionFila = Condiciones(id = 0, color = 0, predicado = ""))
+                                estado.copy(condicionFila = Condiciones(id = 0, color = 0, columna = Columnas("", 1, emptyList()), predicado = ""))
 
                             }
 
@@ -463,6 +470,7 @@ class DetallePanelVM(
                         }
                     } else {
                         estado
+                 
                     }
                 }
             }
@@ -472,7 +480,6 @@ class DetallePanelVM(
 
     private fun preview(navegacion: (EventosNavegacion) -> Unit) {
         if (_uiState is UIState.Success) {
-
 
             _uiState.update { estado ->
                 if (estado is UIState.Success) {
