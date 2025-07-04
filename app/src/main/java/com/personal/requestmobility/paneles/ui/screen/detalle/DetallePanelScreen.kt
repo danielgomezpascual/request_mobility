@@ -62,6 +62,7 @@ import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.kpi.ui.composables.KpiComboItem
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.menu.Features
+import com.personal.requestmobility.paneles.domain.entidades.Condiciones
 import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
 import com.personal.requestmobility.paneles.ui.componente.MA_ColumnaItemSeleccionable
@@ -71,8 +72,6 @@ import com.personal.requestmobility.paneles.ui.componente.MA_CondicionPanel
 import com.personal.requestmobility.paneles.ui.componente.MA_CondicionPanelLista
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.paneles.ui.componente.MA_SelectorEsquemaColores
-import com.personal.requestmobility.paneles.domain.entidades.Condiciones
-import com.personal.requestmobility.paneles.domain.entidades.CondicionesCelda
 import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM.UIState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -518,7 +517,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM, uiState: UIState.Success,
 					modifier = Modifier
 						.fillMaxWidth()
 						.padding(5.dp)) {
-				viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicionCelda(CondicionesCelda(id = 0,
+				viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicionCelda(Condiciones(id = 0,
 						columna = Columnas(nombre = "", posicion = -1),
 						color = 1,
 						condicionCelda = 0,
@@ -555,7 +554,11 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM, uiState: UIState.Success,
 					modifier = Modifier
 						.fillMaxWidth()
 						.padding(5.dp)) {
-				viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(Condiciones(0, columna = Columnas("", 1, emptyList()), 1, "")))
+				viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(Condiciones(0,
+						columna = Columnas(nombre = "", posicion = 1, valores = emptyList()),
+						color = 1,
+						condicionCelda = 0,
+						predicado = "")))
 				scope.launch { sheetStateCondicionFila.show() }
 			}                //----------------------------------------------------------------------------------
 			
@@ -569,13 +572,13 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM, uiState: UIState.Success,
 			}, contenido = {
 				Column {
 					
-					MA_CondicionPanel(
-							columnas =  valoresTabla.dameColumnas(),
+					MA_CondicionPanel(columnas = valoresTabla.dameColumnas(),
 							esquemaColores = EsquemaColores().dameEsquemaCondiciones(),
 							condicion = uiState.condicionFila,
 							onClickAceptar = { condicionUI ->
 								App.log.d("Condicion - > ${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
-								viewModel.onEvent(DetallePanelVM.Eventos.GuardarCondicion(condicionUI))
+								viewModel.onEvent(DetallePanelVM.Eventos.GuardarCondicion(
+										condicionUI))
 								scope.launch { sheetStateCondicionFila.hide() }
 							},
 							onClickCancelar = { condicionUI ->
@@ -605,8 +608,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetallePanelVM, uiState: UIState.Success,
 										condicionUI))
 								scope.launch { sheetStateCondicionCelda.hide() }
 							},
-							onClickCancelar = { condicionUI ->
-								/*viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicionCelda(
+							onClickCancelar = { condicionUI ->								/*viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicionCelda(
 										condicionUI))*/
 								scope.launch { sheetStateCondicionCelda.hide() }
 								

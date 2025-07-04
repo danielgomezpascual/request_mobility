@@ -48,7 +48,7 @@ class FuncionesCondicionesCeldaManager {
 	fun get(i: Int) = get()[i]
 	
 	
-	fun aplicarCondicion(valor: String, condicion: CondicionesCelda, columna: Columnas): FuncionesCondicionCelda {
+	fun aplicarCondicion(valor: String, condicion: Condiciones, columna: Columnas): FuncionesCondicionCelda {
 		
 		return when (condicion.condicionCelda) {
 			1 -> banderas(valor)
@@ -80,7 +80,7 @@ class FuncionesCondicionesCeldaManager {
 	
 	fun iconosPorPartes(
 		valor: String,
-		condicion: CondicionesCelda,
+		condicion: Condiciones,
 		columna: Columnas,
 					   ): FuncionesCondicionCelda {
 		
@@ -116,7 +116,7 @@ class FuncionesCondicionesCeldaManager {
 	
 	fun maximoMinimo(
 		valor: String,
-		condicion: CondicionesCelda,
+		condicion: Condiciones,
 		columna: Columnas,
 					): FuncionesCondicionCelda {
 		

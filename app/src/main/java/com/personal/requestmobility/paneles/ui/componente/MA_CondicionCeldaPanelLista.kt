@@ -16,42 +16,31 @@ import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
+import com.personal.requestmobility.paneles.domain.entidades.Condiciones
 import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
 import com.personal.requestmobility.paneles.domain.entidades.FuncionesCondicionesCeldaManager
 
-import com.personal.requestmobility.paneles.domain.entidades.CondicionesCelda
-
 @Composable
-fun MA_CondicionCeldaPanelLista(
-	//columnas: List<Columnas>,
+fun MA_CondicionCeldaPanelLista(	//columnas: List<Columnas>,
 	
-	condicion: CondicionesCelda,
-	onClickAceptar: (CondicionesCelda) -> Unit,
-	onClickCancelar: (CondicionesCelda) -> Unit
-							   ) {
+	condicion: Condiciones, onClickAceptar: (Condiciones) -> Unit, onClickCancelar: (Condiciones) -> Unit) {
 	
 	
 	//var condicion by remember { mutableStateOf<CondicionesCelda>(condicion) }
 	//var str by remember { mutableStateOf<String>(condicion.predicado) }
 	
 	
-	Column(
-		modifier = Modifier
-			.clickable(enabled = true, onClick = { onClickAceptar(condicion) })
-			.fillMaxWidth()
-			.padding(1.dp),
-		
-		//verticalAlignment = Alignment.CenterVertically
-		horizontalAlignment = Alignment.CenterHorizontally
-		  ) {
+	Column(modifier = Modifier
+		.clickable(enabled = true, onClick = { onClickAceptar(condicion) })
+		.fillMaxWidth()
+		.padding(1.dp),
+			
+			//verticalAlignment = Alignment.CenterVertically
+			horizontalAlignment = Alignment.CenterHorizontally) {
 		
 		
-		Row(
-			modifier = Modifier
-				.padding(1.dp),
-			verticalAlignment = Alignment.CenterVertically
-		   ) {
-			//MA_LabelNormal(valor = condicion.id.toString())
+		Row(modifier = Modifier.padding(1.dp),
+				verticalAlignment = Alignment.CenterVertically) {			//MA_LabelNormal(valor = condicion.id.toString())
 			val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
 			val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
 			val color = esquemaColores.colores.get(indicadorColorCondicion)
@@ -70,11 +59,9 @@ fun MA_CondicionCeldaPanelLista(
 					MA_LabelNormal(valor = condicionCelda.nombre)
 					MA_LabelNormal(valor = condicion.predicado.toString())
 					
-					Box(
-						Modifier
-							.size(36.dp)
-							.background(color = color)
-					   )
+					Box(Modifier
+						.size(36.dp)
+						.background(color = color))
 					MA_LabelNormal(valor = condicion.predicado)
 					Row() {
 						condicionCelda.representaciones.forEach {
@@ -82,9 +69,10 @@ fun MA_CondicionCeldaPanelLista(
 							MA_ImagenDrawable(it, s = 16.dp)
 						}
 					}
-					MA_LabelNormal(valor ="Eliminar", color = Color.Red,
-						modifier =  Modifier.clickable(enabled = true, onClick = {onClickCancelar(condicion)})
-								  )
+					MA_LabelNormal(valor = "Eliminar",
+							color = Color.Red,
+							modifier = Modifier.clickable(enabled = true,
+									onClick = { onClickCancelar(condicion) }))
 				}
 			}
 			

@@ -43,5 +43,5 @@ data class PanelConfiguracion(
     
     
     val condiciones : List<Condiciones> = listOf<Condiciones>(),
-    val condicionesCeldas : List<CondicionesCelda> = listOf<CondicionesCelda>()
+    val condicionesCeldas : List<Condiciones> = listOf<Condiciones>()
 )
