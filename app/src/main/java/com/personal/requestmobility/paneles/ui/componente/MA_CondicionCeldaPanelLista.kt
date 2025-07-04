@@ -1,6 +1,5 @@
 package com.personal.requestmobility.paneles.ui.componente
 
-import MA_IconBottom
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,33 +8,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.internal.enableLiveLiterals
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.card.MA_Card
-import com.personal.requestmobility.core.composables.combo.MA_ComboColores
-import com.personal.requestmobility.core.composables.combo.MA_ComboLista
-import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
-import com.personal.requestmobility.core.composables.imagenes.MA_ImagenAssets
 import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
-import com.personal.requestmobility.core.composables.tabla.Columnas
-import com.personal.requestmobility.core.composables.tabla.MA_LabelCelda
 import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
-import com.personal.requestmobility.paneles.domain.entidades.FuncionesCondicionCelda
 import com.personal.requestmobility.paneles.domain.entidades.FuncionesCondicionesCeldaManager
 
-import com.personal.requestmobility.paneles.ui.entidades.ColoresSeleccion
-import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
+import com.personal.requestmobility.paneles.domain.entidades.CondicionesCelda
 
 @Composable
 fun MA_CondicionCeldaPanelLista(

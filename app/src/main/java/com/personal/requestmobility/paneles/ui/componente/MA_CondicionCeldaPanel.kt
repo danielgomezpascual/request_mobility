@@ -22,19 +22,17 @@ import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.combo.MA_ComboColores
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
-import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.tabla.Columnas
-import com.personal.requestmobility.core.composables.tabla.MA_LabelCelda
 import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
 import com.personal.requestmobility.paneles.domain.entidades.FuncionesCondicionesCeldaManager
 
 import com.personal.requestmobility.paneles.ui.entidades.ColoresSeleccion
-import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
+import com.personal.requestmobility.paneles.domain.entidades.CondicionesCelda
 
 @Composable
 fun MA_CondicionCeldaPanel(
     columnas: List<Columnas>,
-
+    
     condicion: CondicionesCelda,
     onClickAceptar: (CondicionesCelda) -> Unit,
     onClickCancelar: (CondicionesCelda) -> Unit) {

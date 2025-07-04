@@ -4,15 +4,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.App
 import com.personal.requestmobility.R
 import com.personal.requestmobility.core.composables.imagenes.MA_ImagenAssets
 import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
-import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Columnas
-import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.MA_LabelCelda
-import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
 import kotlin.Int
 import kotlin.collections.listOf
 

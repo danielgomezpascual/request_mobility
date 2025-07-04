@@ -1,7 +1,5 @@
-package com.personal.requestmobility.paneles.ui.entidades
+package com.personal.requestmobility.paneles.domain.entidades
 
-import androidx.compose.ui.graphics.Color
-import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Columnas
 
 data class Condiciones(val id: Int, val columna : Columnas, val color: Int, val condicionCelda: Int, val predicado: String)

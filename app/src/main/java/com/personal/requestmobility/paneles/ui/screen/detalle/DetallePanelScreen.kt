@@ -2,8 +2,6 @@ package com.personal.requestmobility.paneles.ui.screen.detalle
 
 
 import MA_IconBottom
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -40,15 +37,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
 import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
@@ -56,17 +48,13 @@ import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.combo.MA_Combo
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
-import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
-import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.composables.labels.MA_Titulo2
-import com.personal.requestmobility.core.composables.layouts.MA_2Columnas
 import com.personal.requestmobility.core.composables.layouts.MA_2ColumnasHorizontales
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
-import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Columnas
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -83,12 +71,11 @@ import com.personal.requestmobility.paneles.ui.componente.MA_CondicionPanel
 import com.personal.requestmobility.paneles.ui.componente.MA_CondicionPanelLista
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.paneles.ui.componente.MA_SelectorEsquemaColores
-import com.personal.requestmobility.paneles.ui.entidades.Condiciones
-import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
+import com.personal.requestmobility.paneles.domain.entidades.Condiciones
+import com.personal.requestmobility.paneles.domain.entidades.CondicionesCelda
 import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM.UIState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import kotlin.collections.plus
 
 
 @Composable

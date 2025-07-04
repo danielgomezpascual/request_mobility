@@ -3,12 +3,10 @@ package com.personal.requestmobility.paneles.ui.screen.detalle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.personal.requestmobility.App
 import com.personal.requestmobility.R
 import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
-import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Columnas
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
@@ -24,8 +22,8 @@ import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
 import com.personal.requestmobility.paneles.domain.interactors.EliminarPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelCU
-import com.personal.requestmobility.paneles.ui.entidades.Condiciones
-import com.personal.requestmobility.paneles.ui.entidades.CondicionesCelda
+import com.personal.requestmobility.paneles.domain.entidades.Condiciones
+import com.personal.requestmobility.paneles.domain.entidades.CondicionesCelda
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.entidades.fromPanel
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
