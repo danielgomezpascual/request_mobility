@@ -57,7 +57,7 @@ data class PanelData(
                     val valorY = condicion.columna.posicion
                 
                     var valor: String = fila.celdas.get(valorY).valor as String
-                    747306
+                  
                     App.log.d("Posicion $valorY -> $valor")
 
                     if (valor.isNotEmpty()) {
@@ -65,7 +65,7 @@ data class PanelData(
                             set("valor", valor.toFloat())
                         }
                         val resultado: Any = expresion.evaluate(contexto)
-                        if (resultado is Boolean && resultado) {
+                        if (condicion.condicionCelda >0 ||  (resultado is Boolean && resultado) ){
                             color =
                                 EsquemaColores().dameEsquemaCondiciones().colores.get(condicion.color)
                         }
@@ -104,7 +104,7 @@ data class PanelData(
                             set("valor", valor)
                         }
                         val resultadoCondicion: Any = expresion.evaluate(contexto)
-                        if (resultadoCondicion is Boolean && resultadoCondicion) {
+                        if (condicionCelda.condicionCelda >0 || (resultadoCondicion is Boolean && resultadoCondicion)) {
                             val colorCondicion = EsquemaColores().dameEsquemaCondiciones().colores.get(condicionCelda.color)
                             nuevasCeldas = nuevasCeldas.mapIndexed { indice, celda ->
                                 if (indice == posicionEvaluar) {
