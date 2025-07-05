@@ -90,7 +90,7 @@ fun MA_IndicadorHorizontal(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .width(150.dp)
+                    //.width(180.dp)
                     .padding(5.dp)
                     .background(color = Color.Black)
             ) {

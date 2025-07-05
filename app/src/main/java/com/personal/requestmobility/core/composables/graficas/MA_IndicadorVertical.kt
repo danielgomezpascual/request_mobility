@@ -87,14 +87,14 @@ fun MA_IndicadorVertical(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .width(150.dp)
+                    //.width(180.dp)
                     .padding(5.dp)
                     .background(color = Color.Black)
             ) {
 
                 Text(
                     text = y.toString(), modifier = modifier
-                        .fillMaxWidth()
+                       // .fillMaxWidth()
                         .padding(6.dp),
                     color = fila.color,
                     // style = MaterialTheme.typography.titleLarge,
