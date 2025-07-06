@@ -25,94 +25,93 @@ import com.personal.requestmobility.paneles.domain.entidades.Condiciones
 
 @Composable
 fun MA_CondicionPanel(
-    columnas: List<Columnas>,
-    esquemaColores: EsquemaColores,
-    condicion: Condiciones,
-    onClickAceptar: (Condiciones) -> Unit,
-    onClickCancelar: (Condiciones) -> Unit) {
-
-
-    var condicion by remember { mutableStateOf<Condiciones>(condicion) }
-    var str by remember { mutableStateOf<String>(condicion.predicado) }
-
-
-    val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
-    //esquemaColores.get()
-
-    
-    Column {
-        MA_ComboLista<Columnas>(
-                modifier = Modifier.weight(1f),
-                titulo = "Columna ",
-                descripcion = "Columna",
-                valorInicial = { if (condicion.columna != null) MA_ColumnaItemSeleccionable(condicion.columna) },
-                elementosSeleccionables = columnas,
-                item = { columna -> MA_ColumnaItemSeleccionable(columna) },
-                onClickSeleccion = { c ->
-                    condicion = condicion.copy(columna = c)
-                    //onClickAceptar(condicion)
-                    App.log.d(condicion.toString())
-                })
-        
-        
-        Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(1.dp),
-                
-                verticalAlignment = Alignment.CenterVertically
-           ) {
-            
-            MA_LabelNormal(valor = condicion.id.toString())
-            MA_ComboLista(
-                    modifier = Modifier.weight(1f),
-                    titulo = "",
-                    descripcion = "Color para la condicion",
-                    valorInicial = {
-                        
-                        val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
-                        val color =    esquemaColores.colores.get(indicadorColorCondicion)
-                        
-                        MA_SeleccionColor(color)
-                    },
-                    elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-                    item = { colorSeleccion ->
-                        MA_SeleccionColor(colorSeleccion.color)
-                    },
-                    onClickSeleccion = { colorSeleccion ->
-                        condicion = condicion.copy(color = colorSeleccion.indice)
-                        //onClickAceptar(condicion)
-                    }
-                         
-                         )
-            
-            MA_TextoNormal(modifier = Modifier.weight(1f), valor = str, titulo = "Condición", onValueChange = { it ->
-                condicion = condicion.copy(predicado = it)
-                str = it
-                /// onClickAceptar(condicion)
-            })
-            
-            
-            //    MA_IconBottom(icon = Icons.Default.Check, labelText = "") { onClickAceptar(condicion) }
-            //  MA_IconBottom(color = Color.Red, icon = Icons.Default.Cancel, labelText = "") { onClickCancelar(condicion) }
-            
-            
-            Row() {
-                MA_BotonSecundario(texto = "Cancelar") {
-                    onClickCancelar(condicion)
-                    
-                }
-                MA_BotonPrincipal(texto = "Guardar") {
-                    App.log.d("Demntrp amacñtp")
-                    App.log.d(condicion.toString())
-                    onClickAceptar(condicion)
-                    
-                }
-            }
-        }
-        
-    }
-
-
-
+	columnas: List<Columnas>,
+	esquemaColores: EsquemaColores,
+	condicion: Condiciones,
+	onClickAceptar: (Condiciones) -> Unit,
+	onClickCancelar: (Condiciones) -> Unit,
+					 )
+{
+	
+	
+	var condicion by remember { mutableStateOf<Condiciones>(condicion) }
+	// var str by remember { mutableStateOf<String>(condicion.predicado) }
+	
+	
+	val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
+	//esquemaColores.get()
+	
+	
+	Column {
+		MA_ComboLista<Columnas>(
+				modifier = Modifier.weight(1f),
+				titulo = "Columna ",
+				descripcion = "Columna",
+				valorInicial = { if (condicion.columna != null) MA_ColumnaItemSeleccionable(condicion.columna) },
+				elementosSeleccionables = columnas,
+				item = { columna -> MA_ColumnaItemSeleccionable(columna) },
+				onClickSeleccion = { c ->
+					condicion = condicion.copy(columna = c)
+					//onClickAceptar(condicion)
+					App.log.d(condicion.toString())
+				})
+		
+		MA_TextoNormal(/*modifier = Modifier.weight(1f), */
+					   valor = condicion.descripion,
+					   titulo = "Descripcion",
+					   onValueChange = { it ->
+						   condicion = condicion.copy(descripion = it)
+					   })
+		
+		
+		//MA_LabelNormal(valor = condicion.id.toString())
+		Row(){
+			MA_ComboLista(
+					/*modifier = Modifier.weight(1f),*/
+					titulo = "",
+					descripcion = "Color para la condicion",
+					valorInicial = {
+						val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
+						val color = esquemaColores.colores.get(indicadorColorCondicion)
+						MA_SeleccionColor(color)
+					},
+					elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+					item = { colorSeleccion ->
+						MA_SeleccionColor(colorSeleccion.color)
+					},
+					onClickSeleccion = { colorSeleccion ->
+						condicion = condicion.copy(color = colorSeleccion.indice)
+						//onClickAceptar(condicion)
+					}
+						 
+						 )
+			
+			MA_TextoNormal(/*modifier = Modifier.weight(1f),*/ valor = condicion.predicado, titulo = "Condición", onValueChange = { it ->
+				condicion = condicion.copy(predicado = it)
+				//str = it
+				/// onClickAceptar(condicion)
+			})
+		}
+		
+		
+		
+		//    MA_IconBottom(icon = Icons.Default.Check, labelText = "") { onClickAceptar(condicion) }
+		//  MA_IconBottom(color = Color.Red, icon = Icons.Default.Cancel, labelText = "") { onClickCancelar(condicion) }
+		
+		
+		Row() {
+			MA_BotonSecundario(texto = "Cancelar") {
+				onClickCancelar(condicion)
+				
+			}
+			MA_BotonPrincipal(texto = "Guardar") {
+				onClickAceptar(condicion)
+				
+			}
+		}
+		
+		
+	}
+	
+	
 }

@@ -8,6 +8,7 @@ import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Columnas
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
+import com.personal.requestmobility.core.utils.esNumerico
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 import org.apache.commons.jexl3.JexlBuilder
@@ -60,8 +61,9 @@ data class PanelData(
                   
                     App.log.d("Posicion $valorY -> $valor")
 
-                    if (valor.isNotEmpty()) {
+                    if (valor.isNotEmpty() && valor.esNumerico()) {
                         val contexto = MapContext().apply {
+                            
                             set("valor", valor.toFloat())
                         }
                         val resultado: Any = expresion.evaluate(contexto)

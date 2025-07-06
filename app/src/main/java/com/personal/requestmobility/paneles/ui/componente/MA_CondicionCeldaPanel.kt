@@ -29,89 +29,73 @@ import com.personal.requestmobility.paneles.domain.entidades.FuncionesCondicione
 import com.personal.requestmobility.paneles.ui.entidades.ColoresSeleccion
 
 @Composable
-fun MA_CondicionCeldaPanel(columnas: List<Columnas>,
-						   
-						   condicion: Condiciones, onClickAceptar: (Condiciones) -> Unit, onClickCancelar: (Condiciones) -> Unit) {
+fun MA_CondicionCeldaPanel(
+	columnas: List<Columnas>,
+	condicion: Condiciones,
+	onClickAceptar: (Condiciones) -> Unit,
+	onClickCancelar: (Condiciones) -> Unit,
+						  )
+{
 	
 	
 	var condicion by remember { mutableStateOf<Condiciones>(condicion) }
-	var str by remember { mutableStateOf<String>(condicion.predicado) }
+	//	var str by remember { mutableStateOf<String>(condicion.predicado) }	//var strDesripcion by remember { mutableStateOf<String>(condicion.descripion) }
 	
 	
-	
+	App.log.d(condicion.toString())
 	
 	Column(modifier = Modifier
 		.fillMaxWidth()
 		.padding(1.dp),
 			
 			//verticalAlignment = Alignment.CenterVertically
-			horizontalAlignment = Alignment.CenterHorizontally) {
+		   horizontalAlignment = Alignment.CenterHorizontally) {
 		
 		
-		MA_ComboLista<Columnas>(modifier = Modifier.weight(1f),
-				titulo = "Columna ",
-				descripcion = "Columna",
-				valorInicial = {
-					if (condicion.columna != null) MA_ColumnaItemSeleccionable(condicion.columna)
-				},
-				elementosSeleccionables = columnas,
-				item = { columna -> MA_ColumnaItemSeleccionable(columna) },
-				onClickSeleccion = { c ->
-					condicion = condicion.copy(columna = c) //onClickAceptar(condicion)
-				}
+		MA_ComboLista<Columnas>(modifier = Modifier.weight(1f), titulo = "Columna ", descripcion = "Columna", valorInicial = {
+			if (condicion.columna != null) MA_ColumnaItemSeleccionable(condicion.columna)
+		}, elementosSeleccionables = columnas, item = { columna -> MA_ColumnaItemSeleccionable(columna) }, onClickSeleccion = { c ->
+			condicion = condicion.copy(columna = c) //onClickAceptar(condicion)
+		}
 							   
 							   
 							   )
 		
+		MA_ComboLista(titulo = "Funcionalidad", descripcion = "Condicion a aplicar", valorInicial = {
+			MA_FuncionalidadCelda(FuncionesCondicionesCeldaManager().get(condicion.condicionCelda).nombre)
+		}, elementosSeleccionables = FuncionesCondicionesCeldaManager().get(), item = { fx -> MA_FuncionalidadCelda(fx.nombre) }, onClickSeleccion = { funcion ->
+			
+			condicion = condicion.copy(condicionCelda = funcion.id, descripion = funcion.descripcion) //    onClickAceptar(condicion)
+		})
+		
+		MA_TextoNormal(/*modifier = Modifier.weight(1f),*/
+					   valor = condicion.descripion, titulo = "Descripcion", onValueChange = { it ->
+			condicion = condicion.copy(descripion = it)                        //strDesripcion = it // onClickAceptar(condicion)
+		})
+		
 		
 		Row(modifier = Modifier.fillMaxWidth()) {
 			val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
-			MA_ComboColores(modifier = Modifier.weight(1f),
-					titulo = "",
-					descripcion = "Color para la condicion",
-					valorInicial = {
-						val indicadorColorCondicion =
-							(condicion.color % esquemaColores.colores.size)
-						val color = esquemaColores.colores.get(indicadorColorCondicion)
-						MA_SeleccionColor(color)
-					},
-					elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-					item = { colorSeleccion ->
-						MA_SeleccionColor(colorSeleccion.color)
-					},
-					onClickSeleccion = { colorSeleccion ->
-						condicion =
-							condicion.copy(color = colorSeleccion.indice) //   onClickAceptar(condicion)
-					})
+			MA_ComboColores(modifier = Modifier.weight(1f), titulo = "", descripcion = "Color para la condicion", valorInicial = {
+				val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
+				val color = esquemaColores.colores.get(indicadorColorCondicion)
+				MA_SeleccionColor(color)
+			}, elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id), item = { colorSeleccion ->
+				MA_SeleccionColor(colorSeleccion.color)
+			}, onClickSeleccion = { colorSeleccion ->
+				condicion = condicion.copy(color = colorSeleccion.indice) //   onClickAceptar(condicion)
+			})
 			
 			
 			
-			MA_ComboLista(titulo = "Funcionalidad",
-					descripcion = "Condicion ea aplicar",
-					valorInicial = {
-						MA_FuncionalidadCelda(FuncionesCondicionesCeldaManager().get(condicion.condicionCelda).nombre)
-					},
-					elementosSeleccionables = FuncionesCondicionesCeldaManager().get(),
-					item = { fx -> MA_FuncionalidadCelda(fx.nombre) },
-					onClickSeleccion = { funcion ->
-						condicion =
-							condicion.copy(condicionCelda = funcion.id) //    onClickAceptar(condicion)
-					})
-			
-			
-			MA_TextoNormal(modifier = Modifier.weight(1f),
-					valor = str,
-					titulo = "Condición",
-					onValueChange = { it ->
-						condicion = condicion.copy(predicado = it)
-						str = it // onClickAceptar(condicion)
-					})
 			
 			
 			
-			MA_IconBottom(color = Color.Red,
-					icon = Icons.Default.Cancel,
-					labelText = "") { onClickCancelar(condicion) }
+			MA_TextoNormal(modifier = Modifier.weight(1f), valor = condicion.predicado, titulo = "Condición", onValueChange = { it ->
+				condicion = condicion.copy(predicado = it)                        //str = it // onClickAceptar(condicion)
+			})
+			
+			
 		}
 		
 		
@@ -127,8 +111,7 @@ fun MA_CondicionCeldaPanel(columnas: List<Columnas>,
 				
 			}
 		}
-		
 	}
-	
-	
 }
+	
+	

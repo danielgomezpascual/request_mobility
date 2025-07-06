@@ -2,12 +2,15 @@ package com.personal.requestmobility.paneles.ui.componente
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,133 +18,64 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
+import com.personal.requestmobility.core.composables.labels.MA_LabelLeyenda
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
+import com.personal.requestmobility.core.composables.tabla.MA_LabelCeldaTitulo
 import com.personal.requestmobility.paneles.domain.entidades.Condiciones
 import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
 import com.personal.requestmobility.paneles.domain.entidades.FuncionesCondicionesCeldaManager
 
 @Composable
-fun MA_CondicionCeldaPanelLista(	//columnas: List<Columnas>,
-	
-	condicion: Condiciones, onClickAceptar: (Condiciones) -> Unit, onClickCancelar: (Condiciones) -> Unit) {
-	
-	
-	//var condicion by remember { mutableStateOf<CondicionesCelda>(condicion) }
-	//var str by remember { mutableStateOf<String>(condicion.predicado) }
+fun MA_CondicionCeldaPanelLista(
+	condicion: Condiciones,
+	onClickAceptar: (Condiciones) -> Unit,
+	onClickCancelar: (Condiciones) -> Unit) {
 	
 	
 	Column(modifier = Modifier
 		.clickable(enabled = true, onClick = { onClickAceptar(condicion) })
-		.fillMaxWidth()
+		.width(300.dp)
+		.height(350.dp)
 		.padding(1.dp),
 			
-			//verticalAlignment = Alignment.CenterVertically
+		
 			horizontalAlignment = Alignment.CenterHorizontally) {
 		
 		
-		Row(modifier = Modifier.padding(1.dp),
-				verticalAlignment = Alignment.CenterVertically) {			//MA_LabelNormal(valor = condicion.id.toString())
+		Row(modifier = Modifier.padding(1.dp), verticalAlignment = Alignment.CenterVertically) {
 			val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
 			val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
 			val color = esquemaColores.colores.get(indicadorColorCondicion)
-			
 			
 			MA_Card(modifier = Modifier.clickable(enabled = true, onClick = {
 				onClickAceptar(condicion)
 			})) {
 				
-				val condicionCelda =
-					FuncionesCondicionesCeldaManager().get(condicion.condicionCelda)
+				val condicionCelda = FuncionesCondicionesCeldaManager().get(condicion.condicionCelda)
 				
 				Column {
-					MA_LabelNormal(valor = condicion.id.toString())
+					//MA_LabelNormal(valor = condicion.id.toString())
 					MA_LabelNormal(valor = condicion.columna.nombre)
 					MA_LabelNormal(valor = condicionCelda.nombre)
-					MA_LabelNormal(valor = condicion.predicado.toString())
+					MA_LabelLeyenda(valor = condicion.descripion)
+					
+					MA_LabelNormal(valor = "Condicion: ${condicion.predicado.toString()}")
 					
 					Box(Modifier
 						.size(36.dp)
 						.background(color = color))
-					MA_LabelNormal(valor = condicion.predicado)
-					Row() {
+				
+					Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
 						condicionCelda.representaciones.forEach {
-							
 							MA_ImagenDrawable(it, s = 16.dp)
 						}
 					}
-					MA_LabelNormal(valor = "Eliminar",
-							color = Color.Red,
-							modifier = Modifier.clickable(enabled = true,
-									onClick = { onClickCancelar(condicion) }))
+					MA_LabelNormal(valor = "Eliminar", color = Color.Red, modifier = Modifier.clickable(enabled = true, onClick = { onClickCancelar(condicion) }))
 				}
 			}
 			
 			
-			/* MA_ComboLista<Columnas>(
-				 modifier = Modifier.weight(1f),
-				 titulo = "Columna ",
-				 descripcion = "Columna",
-				 valorInicial = { if (condicion.columna != null) MA_ColumnaItemSeleccionable(condicion.columna) },
-				 elementosSeleccionables = columnas,
-				 item = { columna -> MA_ColumnaItemSeleccionable(columna) },
-				 onClickSeleccion = { c ->
-					 condicion = condicion.copy(columna = c)
-					 onClickAceptar(condicion)
-				 }
-
-
-			 )*/
-			
-			
-			//    Row(
-			//        modifier = Modifier
-			//           .fillMaxWidth()
-			//    ) {
-			//  val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
-			/*  MA_ComboColores(
-					  modifier = Modifier.weight(1f),
-					  titulo = "",
-					  descripcion = "Color para la condicion",
-					  valorInicial = {
-						  val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
-						  val color = esquemaColores.colores.get(indicadorColorCondicion)
-						  MA_SeleccionColor(color)
-					  },
-					  elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-					  item = { colorSeleccion ->
-						  MA_SeleccionColor(colorSeleccion.color)
-					  },
-					  onClickSeleccion = { colorSeleccion ->
-						  condicion = condicion.copy(color = colorSeleccion.indice)
-						  onClickAceptar(condicion)
-					  }
-				  )*/
-			
-			
-			/* MA_ComboLista(
-					 titulo = "Funcionalidad",
-					 descripcion = "Condicion ea aplicar",
-					 valorInicial = { MA_FuncionalidadCelda(FuncionesCondicionesCeldaManager().get(condicion.condicionCelda).nombre) },
-					 elementosSeleccionables =FuncionesCondicionesCeldaManager().get(),
-					 item = { fx -> MA_FuncionalidadCelda(fx.nombre) },
-					 onClickSeleccion = { funcion ->
-						 condicion = condicion.copy(condicionCelda = funcion.id)
-						 onClickAceptar(condicion)
-					 }
-				 )*/
-			
-			
-			/*MA_TextoNormal(modifier = Modifier.weight(1f), valor = str, titulo = "Condición", onValueChange = { it ->
-					condicion = condicion.copy(predicado = it)
-					str = it
-					onClickAceptar(condicion)
-				})*/
-			
-			
-			//  MA_IconBottom(color = Color.Red, icon = Icons.Default.Cancel, labelText = "") { onClickCancelar(condicion) }
-			//  }
-			
-			
+	
 		}
 	}
 	

@@ -22,6 +22,7 @@ class FuncionesCondicionesCeldaManager {
 			FuncionesCondicionCelda(1,
 					nombre = "Banderas",
 					sobreTodoConjunto = false,
+					descripcion = "En funcion del codigo de la lectora, se toman los primeros caracters para definir el pais al que pertenece y mostrar su bandera",
 					composable = { MA_LabelCelda(valor = "Prueas") }),
 			
 			FuncionesCondicionCelda(id = 2,
@@ -32,6 +33,7 @@ class FuncionesCondicionesCeldaManager {
 							R.drawable.star_3,
 							R.drawable.star_4,
 							R.drawable.star_5),
+					descripcion = "Califica los valores de la columna en 5 grupos, dependiendo del valor que tenga se añade un icono u ootro al valor de la celda",
 					composable = { MA_LabelCelda(valor = "Prueas") }),
 			
 			
@@ -39,6 +41,7 @@ class FuncionesCondicionesCeldaManager {
 					nombre = "Máximo / Mínimo",
 					sobreTodoConjunto = true,
 					representaciones = listOf<Int>(R.drawable.star_1, R.drawable.star_5),
+					descripcion = "Marca el valor máximo y mínimo con un icono",
 					composable = { MA_LabelCelda(valor = "Prueas") })
 											   
 											   
