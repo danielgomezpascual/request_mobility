@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d705b7fc741f698f8d7d4ea95afefaa9",
+    "identityHash": "952b8f5a6d2feff3c356818460d990b7",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -214,11 +214,17 @@
       },
       {
         "tableName": "Dashboard",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `home` TEXT NOT NULL, `logo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `paneles` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tipo` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `home` TEXT NOT NULL, `logo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `idKpi` INTEGER NOT NULL, `paneles` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipo",
+            "columnName": "tipo",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -244,6 +250,12 @@
             "fieldPath": "descripcion",
             "columnName": "descripcion",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idKpi",
+            "columnName": "idKpi",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -316,7 +328,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd705b7fc741f698f8d7d4ea95afefaa9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '952b8f5a6d2feff3c356818460d990b7')"
     ]
   }
 }

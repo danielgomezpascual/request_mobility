@@ -23,6 +23,6 @@ fun MA_LabelMini(
 
 ) {
     Text(text = valor, modifier = modifier.fillMaxWidth().padding(3.dp), color = color,
-        style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center,
-        fontStyle = FontStyle.Italic)
+        style = MaterialTheme.typography.bodySmall, textAlign = alineacion,
+        fontStyle = FontStyle.Normal)
 }

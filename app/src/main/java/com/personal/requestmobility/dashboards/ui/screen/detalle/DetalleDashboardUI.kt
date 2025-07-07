@@ -27,7 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
+import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.labels.MA_Titulo2
@@ -38,8 +40,11 @@ import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItem
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
+import com.personal.requestmobility.kpi.ui.composables.KpiComboItem
+import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
+import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -51,10 +56,13 @@ fun DetalleDashboardUI(
     val uiState by viewModel.uiState.collectAsState()
 
     // LaunchedEffect con Unit en el ejemplo, pero es mejor usar identificador como key
-    // si puede cambiar y queremos recargar. El ejemplo usa Unit.
+    // si puede cambiar y queremos recargar. El ejemplo usa Unit
+    // .
     LaunchedEffect(Unit) { // Siguiendo el ejemplo
         viewModel.onEvento(DetalleDashboardVM.Eventos.Cargar(identificador))
     }
+    
+    
     // Si el identificador pudiera cambiar mientras la pantalla está en la pila,
     // LaunchedEffect(identificador) { ... } sería más robusto.
 
@@ -63,7 +71,7 @@ fun DetalleDashboardUI(
         is DetalleDashboardVM.UIState.Loading -> LoadingScreen(state.mensaje)
         is DetalleDashboardVM.UIState.Success -> DetalleDashboardUIScreen( // Nombre corregido
             viewModel = viewModel,
-            dashboardUI = state.dashboardUI, // Pasando el objeto correcto
+            uiState = state, // Pasando el objeto correcto
             navegacion = navegacion
         )
     }
@@ -73,9 +81,11 @@ fun DetalleDashboardUI(
 @Composable
 fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
     viewModel: DetalleDashboardVM,
-    dashboardUI: DashboardUI,
+    uiState: DetalleDashboardVM.UIState.Success,
     navegacion: (EventosNavegacion) -> Unit
 ) {
+    
+    val dashboardUI =   uiState.dashboardUI
     MA_ScaffoldGenerico(
         volver = false,
         titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
@@ -145,42 +155,6 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
             ) {
 
 
-                var userImageFilePath by remember { mutableStateOf<String?>(dashboardUI.logo) }
-                var feedbackMessage by remember { mutableStateOf("") }
-
-
-
-
-
-               /* MA_ImagenSelector(
-                    defaultImageFilePath = dashboardUI.logo,
-                    defaultImageResId = android.R.drawable.sym_def_app_icon, // Reemplaza con tu drawable por defecto
-                    // defaultImageResId = R.drawable.ic_default_profile, // Si tienes uno propio
-                    onImageStored = { filePath ->
-                        userImageFilePath = filePath
-                        if (filePath != null) {
-                            feedbackMessage = "Imagen guardada en: $filePath"
-                            // Aquí puedes guardar 'filePath' en tu base de datos
-                            App.log.d("Esta es la ruta: $feedbackMessage")
-                            viewModel.onEvento(DetalleDashboardVM.Eventos.ActualizarLogo(filePath))
-                        } else {
-                            feedbackMessage = "No se seleccionó o guardó ninguna imagen."
-                        }
-                    }
-                )*/
-
-
-                // ID: Mostrar solo si es un dashboard existente, no editable
-                /* if (dashboardUI.id != 0) {
-                     MA_TextoNormal(
-                         valor = dashboardUI.id.toString(),
-                         titulo = "ID",
-                         onValueChange = { /* No editable, función vacía o null como en el ejemplo */ },
-
-                         )
-                     Spacer(modifier = Modifier.height(16.dp))
-                 }*/
-
                 MA_Avatar(dashboardUI.nombre)
 
 
@@ -207,34 +181,33 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
 
                 MA_SwitchNormal(valor = dashboardUI.home, titulo = "Mostrar Inicio", icono = Icons.Default.Star) { valor ->  viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
                 // No hay más campos como "Codigo Organizacion" o "Codigo" para Dashboard
-
+                
+                
+                MA_Titulo2("KPI")
+                MA_Card {
+                    Box(modifier = Modifier.height(100.dp)) {
+                        MA_ComboLista<KpiUI>(titulo = "",
+                                             descripcion = "Seleccione el KPI a enlazar",
+                                             valorInicial = {
+                                                 KpiComboItem(kpiUI = dashboardUI.kpiOrigen ?: KpiUI())
+                                                 
+                                             },
+                                             elementosSeleccionables = uiState.kpisDisponibles,
+                                             item = { kpiUI ->
+                                                 KpiComboItem(kpiUI = kpiUI)
+                                             },
+                                             onClickSeleccion = { kpiUI ->
+                                                 viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeKpiSeleccionado(kpiUI))
+                                             })
+                    }
+                }
+                
                 MA_Titulo2("Paneles")
 
                 Box(modifier = Modifier.height(400.dp)) {
 
                     val paneles: List<PanelUI> = dashboardUI.listaPaneles
-                    /*MA_Lista(data = dashboardUI.listaPaneles) {panelUI->
-
-                        SeleccionPanelItem(panelUI) { panelSeleccionado ->
-
-                            App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
-                            val panelesR: List<PanelUI> = paneles.map { panel ->
-                                if (panel.id == panelSeleccionado.id) {
-                                    App.log.d("Encontrado")
-                                    App.log.d("${!panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
-                                    panel.copy(seleccionado = !panelSeleccionado.seleccionado)
-                                } else {
-                                    panel
-                                }
-                            }
-
-                            val p = panelesR.first { it.id == panelSeleccionado.id }
-                            App.log.d("[POST] ${p.seleccionado} ${p.titulo}")
-                            viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
-                        }
-
-                    }*/
-
+                 
                     MA_ListaReordenable_EstiloYouTube(
                         data = dashboardUI.listaPaneles.sortedBy { it.orden },
                         itemContent = { panel, isDragging ->

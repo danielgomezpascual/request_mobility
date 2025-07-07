@@ -10,6 +10,7 @@ import com.personal.requestmobility.core.utils.Utils.esTrue
 import com.personal.requestmobility.core.utils.Utils.toSiNo
 import com.personal.requestmobility.core.utils._toJson
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
+import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
 import com.personal.requestmobility.paneles.domain.entidades.Panel
 import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelCU
@@ -19,10 +20,12 @@ import org.koin.java.KoinJavaComponent.getKoin
 class DashboardRoom(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
+    val tipo: Int = 0,
     val nombre: String = "",
     val home: String  = "N",
     val logo: String = "",
     val descripcion: String = "",
+    val idKpi : Int = 0 ,
     val paneles: String = ""
 ) : IRoom
 
@@ -50,23 +53,41 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 
     }
 
+    
     return Dashboard(
         id = this.id,
+        tipo = TipoDashboard.fromId(this.tipo),
         nombre = this.nombre,
         home =  esTrue(valor = this.home.toString()),
         logo = this.logo,
         descripcion = this.descripcion,
+        kpi =  obtenerKpi.obtener(this.idKpi),
         paneles = listaPanelesActualizado
     )
 }
 
-fun DashboardRoom.fromDashboard(dashboard: Dashboard): DashboardRoom = DashboardRoom(
-    id = dashboard.id, // Room maneja la autogeneración si id es 0 en la inserción.
-    nombre = dashboard.nombre,
-    home = toSiNo(dashboard.home),
-    logo = dashboard.logo,
-    descripcion = dashboard.descripcion,
-    paneles = _toJson(dashboard.paneles)
-
-)
-
+fun DashboardRoom.fromDashboard(dashboard: Dashboard): DashboardRoom {
+    
+    
+ 
+    
+    val idTipo = when (dashboard.tipo){
+		is TipoDashboard.Dinamico -> dashboard.tipo.id
+		is TipoDashboard.Estatico -> dashboard.tipo.id
+	}
+    
+    
+    
+    return DashboardRoom(
+            id = dashboard.id, // Room maneja la autogeneración si id es 0 en la inserción.
+            tipo = idTipo,
+            nombre = dashboard.nombre,
+            home = toSiNo(dashboard.home),
+            logo = dashboard.logo,
+            descripcion = dashboard.descripcion,
+            idKpi = dashboard.kpi.id,
+            paneles = _toJson(dashboard.paneles)
+                 
+                 )
+    
+}

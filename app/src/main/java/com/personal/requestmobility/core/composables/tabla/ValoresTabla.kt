@@ -9,6 +9,8 @@ import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.componentes.MA_Colores
 import com.personal.requestmobility.core.composables.graficas.ValoresGrafica
 import com.personal.requestmobility.core.composables.graficas.ElementoGrafica
+import com.personal.requestmobility.core.utils.Parametro
+import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils.esNumerico
 import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
@@ -16,9 +18,11 @@ import kotlin.collections.plus
 
 data class Columnas(val nombre: String, val posicion: Int, var valores: List<String> = emptyList())
 
-data class ValoresTabla( //var titulos: List<Header> = emptyList<Header>(),
+data class ValoresTabla(
+		//var titulos: List<Header> = emptyList<Header>(),
 	var filas: List<Fila> = emptyList<Fila>(),
-	var columnas: List<Columnas> = emptyList<Columnas>()) {
+	var columnas: List<Columnas> = emptyList<Columnas>(),
+					   ) {
 	
 	fun dameColumnaPosicion(posicion: Int): Columnas {
 		val todasColumnas: List<Columnas> = dameColumnas()
@@ -68,7 +72,7 @@ data class ValoresTabla( //var titulos: List<Header> = emptyList<Header>(),
 			if (campoOrdenacionTabla >= filas.first().celdas.size) 0 else campoOrdenacionTabla
 		
 		val fs = filas.filter { it.obtenidaDesdeKPI }
-			.sortedByDescending { it.celdas[orden].valor.toFloat() } + filas.filter { !it.obtenidaDesdeKPI }
+					 .sortedByDescending { it.celdas[orden].valor.toFloat() } + filas.filter { !it.obtenidaDesdeKPI }
 		return fs
 	}
 	
@@ -123,15 +127,15 @@ data class ValoresTabla( //var titulos: List<Header> = emptyList<Header>(),
 					panelConfiguracion.columnaY -> filaResultado =
 						filaResultado.plus(celdasRestoValor)
 					
-					else -> filaResultado = filaResultado.plus(celdaVacia)
+					else                        -> filaResultado = filaResultado.plus(celdaVacia)
 				}
 				
 				
 			}
 			
 			val filaResto = Fila(celdas = filaResultado,
-					color = MA_Colores.listaColoresDefecto.last(),
-					obtenidaDesdeKPI = false)
+								 color = MA_Colores.listaColoresDefecto.last(),
+								 obtenidaDesdeKPI = false)
 			return (elementosHastaLimite + filaResto)
 		} else {
 			return elementosHastaLimite
@@ -141,12 +145,27 @@ data class ValoresTabla( //var titulos: List<Header> = emptyList<Header>(),
 }
 
 
-data class Fila(val celdas: List<Celda> = emptyList<Celda>(), val size: Dp = 200.dp, val color: Color = Color.White, val seleccionada: Boolean = false, val visible: Boolean = true, val obtenidaDesdeKPI: Boolean = true)
+data class Fila(
+	val celdas: List<Celda> = emptyList<Celda>(), val size: Dp = 200.dp,
+	val color: Color = Color.White, val seleccionada: Boolean = false,
+	val visible: Boolean = true, val obtenidaDesdeKPI: Boolean = true,
+			   ) {
+	fun toParametros() = Parametros(ps = this.celdas.map { celda -> Parametro(celda.titulo, celda.valor) })
+	
+}
 
-data class Celda(val valor: String = "", val size: Dp = 200.dp, val colorCelda: Color = Color.Blue, val fondoCelda: Color = Color.White, val contenido: @Composable (Modifier) -> Unit = { modifier ->
-	MA_LabelCelda(modifier = modifier, valor = valor,/* color = colorCelda,*/
-			alineacion = if3(valor.esNumerico(), TextAlign.End, TextAlign.Start))
-}, val titulo: String = "", val colorTitulo: Color = Color.White, val fondoTitulo: Color = Color.DarkGray, val celdaTitulo: @Composable (Modifier) -> Unit = { modifierTitulo ->
-	MA_LabelCeldaTitulo(valor = titulo, color = colorTitulo, fondo = fondoTitulo)
-}, val seleccionada: Boolean = false, val filtroInvertido: Boolean = false)
+data class Celda(
+	val valor: String = "", val size: Dp = 200.dp, val colorCelda: Color = Color.Blue,
+	val fondoCelda: Color = Color.White,
+	val contenido: @Composable (Modifier) -> Unit = { modifier ->
+		MA_LabelCelda(modifier = modifier, valor = valor,/* color = colorCelda,*/
+					  alineacion = if3(valor.esNumerico(), TextAlign.End, TextAlign.Start))
+	},
+	val titulo: String = "", val colorTitulo: Color = Color.White,
+	val fondoTitulo: Color = Color.DarkGray,
+	val celdaTitulo: @Composable (Modifier) -> Unit = { modifierTitulo ->
+		MA_LabelCeldaTitulo(valor = titulo, color = colorTitulo, fondo = fondoTitulo)
+	},
+	val seleccionada: Boolean = false, val filtroInvertido: Boolean = false,
+				)
 

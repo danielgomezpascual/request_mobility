@@ -8,6 +8,7 @@ import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.utils._t
+import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.dashboards.ui.entidades.SeleccionPanelUI
 import com.personal.requestmobility.dashboards.domain.interactors.CargarDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.EliminarDashboardCU
@@ -16,6 +17,9 @@ import com.personal.requestmobility.dashboards.domain.interactors.ObtenerSelecci
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
 import com.personal.requestmobility.dashboards.ui.entidades.fromDashboard
 import com.personal.requestmobility.dashboards.ui.entidades.toDashboard
+import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
+import com.personal.requestmobility.kpi.ui.entidades.KpiUI
+import com.personal.requestmobility.kpi.ui.entidades.fromKPI
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.entidades.fromPanel
 
@@ -29,12 +33,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.collections.map
 
 class DetalleDashboardVM(
     private val cargarDashboardCU: CargarDashboardCU,
     private val eliminarDashboardCU: EliminarDashboardCU,
     private val guardarDashboardCU: GuardarDashboardCU,
     private val obtenerSeleccionPanel: ObtenerSeleccionPanel,
+    private val obtenerKpisCU: ObtenerKpisCU,
     private val dialog: DialogManager
 
 ) : ViewModel() {
@@ -46,7 +52,7 @@ class DetalleDashboardVM(
     private var listaPaneles: List<SeleccionPanelUI> = emptyList()
 
     sealed class UIState {
-        data class Success(val dashboardUI: DashboardUI) : UIState()
+        data class Success(val dashboardUI: DashboardUI, val kpisDisponibles : List<KpiUI> = emptyList<KpiUI>()) : UIState()
         data class Error(val mensaje: String) : UIState()
         data class Loading(val mensaje: String) : UIState()
     }
@@ -62,6 +68,7 @@ class DetalleDashboardVM(
         data class OnChangeInicial(val valor: Boolean) : Eventos() //
         data class OnActualizarPaneles(val panelesUI: List<PanelUI>) : Eventos() // Adaptado desde OnChangeProveedor
         data class ActualizarLogo(val rutaLogo: String) : Eventos() // Adaptado desde OnChangeProveedor
+        data class OnChangeKpiSeleccionado(val kpi: KpiUI) : Eventos() // Adaptado desde OnChangeProveedor
         // Los otros OnChange (global, codigoOrganizacion, codigo) no aplican a Dashboard
     }
 
@@ -85,9 +92,13 @@ class DetalleDashboardVM(
                             is Eventos.OnChangeInicial ->
                                 estado.copy(dashboardUI = estado.dashboardUI.copy(home = eventos.valor))
 
+                           
+
+                            is Eventos.OnChangeKpiSeleccionado ->{
+                                estado.copy(dashboardUI = estado.dashboardUI.copy(tipo = TipoDashboard.Dinamico(), kpiOrigen = eventos.kpi))
+                            }
+                            
                             else -> estado // No debería llegar aquí si los eventos están bien definidos
-
-
                         }
                     } else {
                         estado // No modificar si no es Success
@@ -105,21 +116,27 @@ class DetalleDashboardVM(
 
             App.log.d("ID-> $id")
             try {
-
-
+                
+               
+                
                 obtenerSeleccionPanel.obtenerTodos().map { lp -> lp.map { panel -> PanelUI().fromPanel(panel) } }
                     .flowOn(Dispatchers.IO)
                     .catch { ex -> _uiState.update { UIState.Error(ex.toString()) } }
                     .collect { paneles ->
-                        _uiState.update { estado ->
+                        //_uiState.update { estado ->
+                            val newEstado: UIState
                             if (id != 0) {
                                 val ds: DashboardUI = DashboardUI().fromDashboard(cargarDashboardCU.cargar(id))
                                 val listaPaneles = paneles.map { p -> (ds.listaPaneles.find { it.id == p.id }) ?: p }
-                                UIState.Success(dashboardUI = ds.copy(listaPaneles = listaPaneles))
+                                _uiState.value = UIState.Success(dashboardUI = ds.copy(listaPaneles = listaPaneles))
                             } else {
-                                UIState.Success(dashboardUI = DashboardUI(listaPaneles = paneles))
+                                _uiState.value = UIState.Success(dashboardUI = DashboardUI(listaPaneles = paneles))
                             }
-                        }
+                            
+                            
+                            
+                            obtenerKpis()
+                      // }
                     }
 
 
@@ -127,6 +144,28 @@ class DetalleDashboardVM(
                 _uiState.value = UIState.Error(e.message ?: "Error desconocido al cargar")
             }
         }
+    }
+    
+    suspend fun obtenerKpis() {
+        
+       // viewModelScope.launch {
+            
+            
+            obtenerKpisCU.getAll().map { listaKpi -> listaKpi.map { k -> KpiUI().fromKPI(k) } }
+                .flowOn(Dispatchers.IO)
+                .catch { ex -> _uiState.update { DetalleDashboardVM.UIState.Error(ex.toString()) } }
+                .collect { listakpi ->
+                    _uiState.update { estado ->
+                        if (estado is DetalleDashboardVM.UIState.Success) {
+                            estado.copy(kpisDisponibles =  listakpi)
+                        } else {
+                            estado
+                        }
+                    }
+                }
+            
+            
+        //}
     }
 
     private fun eliminar(navegacion: (EventosNavegacion) -> Unit) {

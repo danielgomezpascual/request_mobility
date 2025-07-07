@@ -21,6 +21,7 @@ import com.personal.requestmobility.dashboards.ui.screen.detalle.DetalleDashboar
 import com.personal.requestmobility.dashboards.ui.screen.listado.DashboardListadoVM
 import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardVM
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
+import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
 import com.personal.requestmobility.menu.screen.HomeVM
 import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelesCU
@@ -55,7 +56,8 @@ val moduloDashboards = module {
     single<GuardarDashboardCU> { GuardarDashboardCU(get<DashboardRepositorio>()) }
 
     single<ObtenerSeleccionPanel> { ObtenerSeleccionPanel(get<PanelesRepositorio>()) }
-    single<ObtenerKpisDashboard> { ObtenerKpisDashboard(get<DashboardRepositorio>(), get<ObtenerKpiCU>()) }
+    single<ObtenerKpisDashboard> { ObtenerKpisDashboard(get<DashboardRepositorio>(),
+                                                        get<ObtenerKpiCU>()) }
     single<ObtenerDashboardsHomeCU> { ObtenerDashboardsHomeCU(get<DashboardRepositorio>()) }
 
 
@@ -85,11 +87,12 @@ val moduloDashboards = module {
 
     viewModel {
         DetalleDashboardVM(
-            cargarDashboardCU = get<CargarDashboardCU>(),
-            eliminarDashboardCU = get<EliminarDashboardCU>(),
-            guardarDashboardCU = get<GuardarDashboardCU>(),
-            obtenerSeleccionPanel = get<ObtenerSeleccionPanel>(),
-            dialog =  get<DialogManager>()
+                cargarDashboardCU = get<CargarDashboardCU>(),
+                eliminarDashboardCU = get<EliminarDashboardCU>(),
+                guardarDashboardCU = get<GuardarDashboardCU>(),
+                obtenerSeleccionPanel = get<ObtenerSeleccionPanel>(),
+                obtenerKpisCU = get<ObtenerKpisCU>(),
+                dialog =  get<DialogManager>()
         )
     }
 }

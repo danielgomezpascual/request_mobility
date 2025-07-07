@@ -34,8 +34,6 @@ class DashboardRepositoriosImp(
     }
 
     override suspend fun guardar(dashboard: Dashboard): Long {
-
-
         return dameDS(TIPO_DS.ROOM).guardar(dashboard)
     }
 

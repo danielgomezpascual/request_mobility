@@ -26,26 +26,32 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
+import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.core.utils.reemplazaValorFila
+import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardVM.UIState
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
 import com.personal.requestmobility.paneles.domain.entidades.fromPanelUI
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
+import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun VisualizadorDashboardUI(
     identificador: Int,
+    paramtrosJSON : String,
     viewModel: VisualizadorDashboardVM = koinViewModel(),
     navegacion: (EventosNavegacion) -> Unit
 ) {
 
     LaunchedEffect(Unit) {
-        viewModel.onEvent(VisualizadorDashboardVM.Eventos.Carga(identificador))
+        viewModel.onEvent(VisualizadorDashboardVM.Eventos.Carga(identificador, paramtrosJSON))
     }
 
 
@@ -60,7 +66,8 @@ fun VisualizadorDashboardUI(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Success(viewModel: VisualizadorDashboardVM, uiState: UIState.Success,
+fun Success(viewModel: VisualizadorDashboardVM,
+            uiState: UIState.Success,
             navegacion: (EventosNavegacion) -> Unit) {
 
 
@@ -92,17 +99,31 @@ fun Success(viewModel: VisualizadorDashboardVM, uiState: UIState.Success,
 
         }},
         contenido = {
-
+            
             val scroll =  rememberScrollState()
             Box(Modifier) {
                 Column(modifier = Modifier.verticalScroll(state =  scroll)) {
 
-                    val modifier: Modifier = Modifier.fillMaxSize()
+                    
 
-
-                    uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->
-
-                        MA_Panel(panelData = PanelData().fromPanelUI(panelUI))
+                    uiState.paneles.filter { it.seleccionado }.forEach {
+                        panelUI ->
+                        lateinit var p: PanelUI
+                        if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()){
+                            val sql = panelUI.kpi.sql
+                            
+                            App.log.lista(uiState.dashboardUI.parametros.ps)
+                            
+                            App.log.d(sql.reemplazaValorFila(uiState.dashboardUI.parametros))
+                            
+                            
+                            
+                            p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
+                        }else{
+                            p = panelUI
+                        }
+                        
+                        MA_Panel(panelData = PanelData().fromPanelUI(p))
 
                     }
 

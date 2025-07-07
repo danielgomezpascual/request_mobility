@@ -37,7 +37,6 @@
     </JavaCodeStyleSettings>
     <JetCodeStyleSettings>
       <option name="ALIGN_IN_COLUMNS_CASE_BRANCH" value="true" />
-      <option name="LBRACE_ON_NEXT_LINE" value="true" />
       <option name="CONTINUATION_INDENT_IN_ARGUMENT_LISTS" value="true" />
       <option name="CONTINUATION_INDENT_IN_SUPERTYPE_LISTS" value="true" />
       <option name="WRAP_EXPRESSION_BODY_FUNCTIONS" value="0" />

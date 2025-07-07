@@ -10,17 +10,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
 import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
+import com.personal.requestmobility.core.composables.labels.MA_LabelEtiqueta
+import com.personal.requestmobility.core.composables.labels.MA_LabelLeyenda
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.layouts.MA_2Columnas
@@ -28,6 +33,7 @@ import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGeneric
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.core.utils._toJson
 import com.personal.requestmobility.menu.Features
 import org.koin.androidx.compose.koinViewModel
 
@@ -63,7 +69,7 @@ fun SuccessCuadriculaDashboard(
 
 
     MA_ScaffoldGenerico(
-        titulo = "Dashboards", // Título adaptado
+        titulo = "C-Dashboards", // Título adaptado
         contenidoBottomBar = {
             BottomAppBar {
                 Row(
@@ -107,23 +113,32 @@ fun SuccessCuadriculaDashboard(
 
 
                 MA_2Columnas(uiState.lista) { item ->
+                    
                     MA_Card(
                         modifier = Modifier.clickable(
                             enabled = true,
-                            onClick = { navegacion(EventosNavegacion.VisualizadorDashboard(item.id)) })
+                            onClick = {
+                                                                navegacion(EventosNavegacion.VisualizadorDashboard(item.id, _toJson(item.parametros)))
+                            })
                     ) {
 
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             MA_Avatar(item.nombre)
                             MA_LabelNormal(
                                 modifier = Modifier.padding(2.dp),
-                                valor = item.nombre + " (" + item.listaPaneles.filter { it.seleccionado }.size + ")"
+                                valor = item.nombre
                             )
 
                             MA_LabelMini(
                                 modifier = Modifier.padding(2.dp),
                                 valor = item.descripcion
                             )
+                            
+                            MA_LabelMini(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    valor = "${item.listaPaneles.filter { it.seleccionado }.size} paneles",
+                                         alineacion = TextAlign.End,
+                                         color = MaterialTheme.colorScheme.primary )
                         }
                     }
 

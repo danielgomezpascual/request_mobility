@@ -1,5 +1,7 @@
 package com.personal.requestmobility.core.navegacion
 
+import com.personal.requestmobility.core.composables.tabla.Fila
+
 sealed class EventosNavegacion{
     object MenuApp: EventosNavegacion()
     data class Cargar(val identificador: Int): EventosNavegacion()
@@ -18,7 +20,7 @@ sealed class EventosNavegacion{
     object NuevoPanel: EventosNavegacion()
     data class CargarPanel(val identificador : Int): EventosNavegacion()
 
-    data class VisualizadorDashboard(val identificador: Int): EventosNavegacion()
+    data class VisualizadorDashboard(val identificador: Int, val parametrosJson: String): EventosNavegacion()
 
 
     //======= Dashboards ===========
