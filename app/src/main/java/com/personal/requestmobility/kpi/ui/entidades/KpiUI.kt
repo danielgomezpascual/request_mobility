@@ -1,5 +1,7 @@
 package com.personal.requestmobility.kpi.ui.entidades
 
+import androidx.compose.ui.graphics.Color
+import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.kpi.domain.entidades.Kpi
 import kotlin.Int
 
@@ -13,7 +15,9 @@ data class KpiUI(
     var resultadoSQL: ResultadoSQL = ResultadoSQL()*/
 ) {
 
-
+    fun esDinamico(): Boolean = sql.contains("$")
+    fun dameColorDinamico() = if3(esDinamico(), Color(0xFF81D4FA), Color(0xFFE6EE9C))
+    
    /* fun reloadPanelData(): KpiUI {
 
         this.resultadoSQL = SqlToListString(sql)

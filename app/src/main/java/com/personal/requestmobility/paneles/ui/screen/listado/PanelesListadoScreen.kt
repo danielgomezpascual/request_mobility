@@ -130,7 +130,7 @@ fun SuccessListadoPaneles(viewModel: PanelesListadoVM,
 
                 MA_Lista(data = uiState.lista) { item ->
                     PanelListItem(item, onClickItem = {
-                        App.log.d(item.toString())
+                    
                         navegacion(EventosNavegacion.CargarPanel(item.id))
                     })
                 }

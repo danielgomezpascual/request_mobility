@@ -19,10 +19,11 @@ fun MA_LabelMini(
     modifier: Modifier = Modifier,
     color: Color = Color.Gray,
     alineacion : TextAlign = TextAlign.Unspecified,
+    fontStyle: FontStyle = FontStyle.Normal,
     icono: Icons? = null,
 
 ) {
-    Text(text = valor, modifier = modifier.fillMaxWidth().padding(3.dp), color = color,
+    Text(text = valor, modifier = modifier.padding(3.dp), color = color,
         style = MaterialTheme.typography.bodySmall, textAlign = alineacion,
-        fontStyle = FontStyle.Normal)
+        fontStyle =fontStyle)
 }
