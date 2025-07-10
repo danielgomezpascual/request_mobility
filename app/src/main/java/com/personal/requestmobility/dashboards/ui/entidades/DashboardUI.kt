@@ -46,13 +46,13 @@ fun DashboardUI.fromDashboard(dashboard: Dashboard): DashboardUI {
 // Se usa como: dashboardUi.toDashboard()
 fun DashboardUI.toDashboard(): Dashboard {
 	
-		val panelesDinamcos = (this.listaPaneles.filter { it.esDinamico() })
-	val tipo = if3 ((panelesDinamcos.isEmpty()),  TipoDashboard.Estatico() , TipoDashboard.Dinamico())
+	//val panelesDinamcos = (this.listaPaneles.filter { it.esDinamico() })
+	//val tipo = if3 ((panelesDinamcos.isEmpty()),  TipoDashboard.Estatico() , TipoDashboard.Dinamico())
 	
 	
 	return Dashboard(
 			id = this.id,
-			tipo = tipo,
+			tipo = this.tipo,
 			nombre = this.nombre,
 			home = this.home,
 			logo = this.logo,

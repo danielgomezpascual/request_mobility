@@ -35,6 +35,7 @@ import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGeneric
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItemDashboard
 import com.personal.requestmobility.kpi.ui.composables.KpiComboItem
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
@@ -154,93 +155,118 @@ fun DetalleDashboardUIScreen(
 					MA_Avatar(dashboardUI.nombre)
 					
 					
-					MA_Titulo2("Informacion")
+					Column {
+						MA_Titulo2("Informacion")
+						
+						
+						MA_SwitchNormal(valor = dashboardUI.home, titulo = "Home", icono = Icons.Default.Star) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
+						
+					}
 					
-					MA_TextoNormal(
-							valor = dashboardUI.nombre,
-							titulo = "Nombre", // Equivalente a "Item"
-							onValueChange = { valor ->
-								viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeNombre(valor))
-							}
-								  )
-					
-					// No hay CheckBoxNormal para "Global" en Dashboard
-					
-					MA_TextoNormal(
-							valor = dashboardUI.descripcion,
-							titulo = "Descripción", // Equivalente a "Proveedor"
-							onValueChange = { valor ->
-								viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeDescripcion(valor))
-							},
+					MA_Card {
+						Column() {
+							MA_TextoNormal(
+									valor = dashboardUI.nombre,
+									titulo = "Nombre", // Equivalente a "Item"
+									onValueChange = { valor ->
+										viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeNombre(valor))
+									}
+										  )
 							
-							)
-					
-					MA_SwitchNormal(valor = dashboardUI.home, titulo = "Mostrar Inicio", icono = Icons.Default.Star) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
-					// No hay más campos como "Codigo Organizacion" o "Codigo" para Dashboard
+							// No hay CheckBoxNormal para "Global" en Dashboard
+							
+							MA_TextoNormal(
+									valor = dashboardUI.descripcion,
+									titulo = "Descripción", // Equivalente a "Proveedor"
+									onValueChange = { valor ->
+										viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeDescripcion(valor))
+									},
+									
+									)
+							
+							
+							// No hay más campos como "Codigo Organizacion" o "Codigo" para Dashboard
+							
+						}
+						
+					}
 					
 					
 					MA_Titulo2("KPI")
 					MA_Card {
-						Box(modifier = Modifier.height(100.dp)) {
-							MA_ComboLista<KpiUI>(titulo = "",
-												 descripcion = "Seleccione el KPI a enlazar",
-												 valorInicial = {
-													 KpiComboItem(kpiUI = dashboardUI.kpiOrigen ?: KpiUI())
-													 
-												 },
-												 elementosSeleccionables = uiState.kpisDisponibles,
-												 item = { kpiUI ->
-													 KpiComboItem(kpiUI = kpiUI)
-												 },
-												 onClickSeleccion = { kpiUI ->
-													 viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeKpiSeleccionado(kpiUI))
-												 })
+						Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(100.dp)) {
+							
+
+							MA_SwitchNormal(valor = (dashboardUI.tipo == TipoDashboard.Dinamico()), titulo = "Dinamico", icono = Icons.Default.Star) { valor ->
+								viewModel.onEvento(DetalleDashboardVM.Eventos.onChangeTipoDashboard(valor))
+							}
+							
+							
+							if (dashboardUI.tipo == TipoDashboard.Dinamico()) {
+								MA_ComboLista<KpiUI>(titulo = "",
+													 descripcion = "Seleccione el KPI a enlazar",
+													 valorInicial = {
+														 KpiComboItem(kpiUI = dashboardUI.kpiOrigen ?: KpiUI())
+														 
+													 },
+													 elementosSeleccionables = uiState.kpisDisponibles,
+													 item = { kpiUI ->
+														 KpiComboItem(kpiUI = kpiUI)
+													 },
+													 onClickSeleccion = { kpiUI ->
+														 viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeKpiSeleccionado(kpiUI))
+													 })
+							}
+
 						}
 					}
 					
 					MA_Titulo2("Paneles")
-					
-					Box(modifier = Modifier.height(400.dp)) {
+					MA_Card {
 						
-						val paneles: List<PanelUI> = dashboardUI.listaPaneles
-						
-						MA_ListaReordenable_EstiloYouTube(
-								data = dashboardUI.listaPaneles.sortedBy { it.orden },
-								itemContent = { panel, isDragging ->
-									// Tu Composable para el ítem.
-									// Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
-									// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
-									SeleccionPanelItemDashboard(panel) { panelSeleccionado ->
-										App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
-										val panelesR: List<PanelUI> = paneles.map { panel ->
-											if (panel.id == panelSeleccionado.id) {
-												App.log.d("Encontrado")
-												App.log.d("${!panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
-												panel.copy(seleccionado = !panelSeleccionado.seleccionado)
-											} else {
-												panel
+						Box(modifier = Modifier.height(400.dp)) {
+							
+							val paneles: List<PanelUI> = dashboardUI.listaPaneles
+							
+							MA_ListaReordenable_EstiloYouTube(
+									data = dashboardUI.listaPaneles.sortedBy { it.orden },
+									itemContent = { panel, isDragging ->
+										// Tu Composable para el ítem.
+										// Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
+										// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
+										SeleccionPanelItemDashboard(panel) { panelSeleccionado ->
+											App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
+											val panelesR: List<PanelUI> = paneles.map { panel ->
+												if (panel.id == panelSeleccionado.id) {
+													App.log.d("Encontrado")
+													App.log.d("${!panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
+													panel.copy(seleccionado = !panelSeleccionado.seleccionado)
+												} else {
+													panel
+												}
 											}
+											
+											val p = panelesR.first { it.id == panelSeleccionado.id }
+											App.log.d("[POST] ${p.seleccionado} ${p.titulo}")
+											viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
+											
 										}
+									},
+									onItemClick = { /* ... */ },
+									onListReordered = { listaReordenada ->
 										
-										val p = panelesR.first { it.id == panelSeleccionado.id }
-										App.log.d("[POST] ${p.seleccionado} ${p.titulo}")
-										viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
+										var listaR: List<PanelUI> = emptyList()
+										listaReordenada.forEachIndexed { indice, panel ->
+											listaR = listaR.plus(panel.copy(orden = indice))
+										}
+										viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(listaR))
 										
-									}
-								},
-								onItemClick = { /* ... */ },
-								onListReordered = { listaReordenada ->
-									
-									var listaR: List<PanelUI> = emptyList()
-									listaReordenada.forEachIndexed { indice, panel ->
-										listaR = listaR.plus(panel.copy(orden = indice))
-									}
-									viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(listaR))
-									
-								},
-								itemHeight = 72.dp // ¡IMPORTANTE! Ajusta esto a la altura real de tus ítems
-														 )
+									},
+									itemHeight = 72.dp // ¡IMPORTANTE! Ajusta esto a la altura real de tus ítems
+															 )
+						}
 					}
+					
 					
 				}
 			}
