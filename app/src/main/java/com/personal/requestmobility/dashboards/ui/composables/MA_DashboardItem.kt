@@ -1,13 +1,26 @@
 package com.personal.requestmobility.dashboards.ui.composables
 
+
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
+import com.personal.requestmobility.core.composables.imagenes.MA_Icono
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.labels.MA_LabelNegrita
 import com.personal.requestmobility.core.composables.layouts.MA_Columnas
@@ -32,15 +45,18 @@ fun MA_DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -
 			
 			MA_Avatar(dashboardUI.nombre)
 			
+			
 			Spacer(modifier = Modifier.width(8.dp))
 			Column(modifier = Modifier) {
 				
-				MA_LabelNegrita(valor = dashboardUI.nombre,)
-				MA_LabelMini(valor =dashboardUI.descripcion, )
+				
+				Row (verticalAlignment = Alignment.CenterVertically){
+					if (dashboardUI.home) MA_Icono(Icons.Default.Stars, Modifier.size(16.dp))
+					MA_LabelNegrita(valor = dashboardUI.nombre)
+				}
 				
 				
-				
-				
+				MA_LabelMini(valor = dashboardUI.descripcion)
 				
 				
 				/*Row {
@@ -56,7 +72,6 @@ fun MA_DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -
 				
 				}*/
 				
-			
 				
 			}
 		}

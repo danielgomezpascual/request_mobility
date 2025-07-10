@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
+import com.personal.requestmobility.core.composables.imagenes.MA_Icono
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
+import com.personal.requestmobility.core.composables.labels.MA_LabelNegrita
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.layouts.MA_Columnas
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
@@ -119,10 +124,15 @@ fun SuccessCuadriculaDashboard(
 							
 							Column(horizontalAlignment = Alignment.CenterHorizontally) {
 								MA_Avatar(item.nombre)
-								MA_LabelNormal(
-										modifier = Modifier.padding(2.dp),
-										valor = item.nombre
-											  )
+								
+								
+								Row (verticalAlignment = Alignment.CenterVertically){
+									if (item.home) MA_Icono(Icons.Default.Stars, Modifier.size(16.dp))
+									MA_LabelNegrita(
+											modifier = Modifier.padding(2.dp),
+											valor = item.nombre
+												  )
+								}
 								
 								MA_LabelMini(
 										modifier = Modifier.padding(2.dp),
