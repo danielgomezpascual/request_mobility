@@ -19,4 +19,6 @@
     <string name="elemento_eliminado">Elemento eliminado</string>
     <string name="elemento_almacenado">Elemento almacenado</string>
     <string name="kpi_duplicado">Kpi Duplicado</string>
+    <string name="panel_duplicado">Panel duplicado</string>
+    <string name="seguro_que_desea_duplicar_el_panel_seleccionado">¿Seguro que desea duplicar el panel seleccionado?</string>
 </resources>

@@ -154,6 +154,16 @@ fun SuccessScreenDetalleKpi(
 					.fillMaxWidth()
 					.weight(1f))
 				
+				
+				MA_IconBottom(modifier = Modifier.weight(1f),
+							  icon = Features.Duplicar().icono,
+							  labelText = Features.Duplicar().texto,
+							  onClick = {
+								  viewModel.onEvent(DetallePanelVM.Eventos.Duplicar(navegacion))
+								  
+							  })
+				
+				
 				MA_IconBottom(modifier = Modifier.weight(1f),
 							  icon = Features.Eliminar().icono,
 							  labelText = Features.Eliminar().texto,
