@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "952b8f5a6d2feff3c356818460d990b7",
+    "identityHash": "6201074e4d312fb0a565ce02a0b5785a",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -276,7 +276,7 @@
       },
       {
         "tableName": "Paneles",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `configuracion` TEXT NOT NULL, `idKpi` INTEGER NOT NULL, `orden` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `configuracion` TEXT NOT NULL, `idKpi` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -307,12 +307,6 @@
             "columnName": "idKpi",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "orden",
-            "columnName": "orden",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -328,7 +322,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '952b8f5a6d2feff3c356818460d990b7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6201074e4d312fb0a565ce02a0b5785a')"
     ]
   }
 }

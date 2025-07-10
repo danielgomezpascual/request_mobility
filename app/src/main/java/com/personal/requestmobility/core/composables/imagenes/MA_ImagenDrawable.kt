@@ -14,11 +14,11 @@ import com.personal.requestmobility.R
 @Preview
 @Composable
 fun TestImagen() {
-    MA_ImagenDrawable(R.drawable.ic_launcher_foreground)
+    MA_ImagenDrawable(imagen = R.drawable.ic_launcher_foreground)
 }
 
 @Composable
-fun MA_ImagenDrawable(imagen: Int, s: Dp = 48.dp) {
+fun MA_ImagenDrawable( imagen: Int, s: Dp = 48.dp) {
     Image(
         modifier = Modifier.width(s),
         painter = painterResource(id = imagen),

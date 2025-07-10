@@ -20,9 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,13 +35,11 @@ import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGeneric
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
-import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItem
-import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
+import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItemDashboard
 import com.personal.requestmobility.kpi.ui.composables.KpiComboItem
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
-import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -214,7 +209,7 @@ fun DetalleDashboardUIScreen( // Nombre corregido del Composable de éxito
                             // Tu Composable para el ítem.
                             // Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
                             // ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
-                            SeleccionPanelItem(panel) { panelSeleccionado ->
+                            SeleccionPanelItemDashboard(panel) { panelSeleccionado ->
                                 App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
                                 val panelesR: List<PanelUI> = paneles.map { panel ->
                                     if (panel.id == panelSeleccionado.id) {

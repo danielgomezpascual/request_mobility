@@ -19,16 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
-import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
-import com.personal.requestmobility.core.composables.labels.MA_LabelEtiqueta
-import com.personal.requestmobility.core.composables.labels.MA_LabelLeyenda
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
-import com.personal.requestmobility.core.composables.layouts.MA_2Columnas
+import com.personal.requestmobility.core.composables.layouts.MA_Columnas
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -112,7 +107,7 @@ fun SuccessCuadriculaDashboard(
             ) {
 
 
-                MA_2Columnas(uiState.lista) { item ->
+                MA_Columnas(data = uiState.lista) { item ->
                     
                     MA_Card(
                         modifier = Modifier.clickable(

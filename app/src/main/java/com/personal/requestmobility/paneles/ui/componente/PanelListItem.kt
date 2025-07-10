@@ -2,6 +2,7 @@ package com.personal.requestmobility.paneles.ui.componente
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,8 +19,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.personal.requestmobility.R
+import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
+import com.personal.requestmobility.core.composables.imagenes.MA_ImagenAssets
+import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.requestmobility.core.composables.labels.MA_LabelEtiqueta
 import com.personal.requestmobility.core.composables.labels.MA_LabelExtendido
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
@@ -27,6 +33,7 @@ import com.personal.requestmobility.core.composables.labels.MA_LabelNegrita
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
+import com.personal.requestmobility.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 
 @Composable
@@ -35,37 +42,90 @@ fun PanelListItem(
     onClickItem: (PanelUI) -> Unit,
                  ) {
 	
-	
-	Column {
-		
-		
-		Row(
-				modifier = Modifier.Companion
-                    .fillMaxWidth()
-                    .clickable { onClickItem(panelUI)/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/ }
-                    .padding(16.dp),
-				verticalAlignment = Alignment.Companion.CenterVertically
-		   ) {
+	//MA_Card {
+		Column {
 			
-			
-			MA_Avatar(panelUI.titulo)
-			
-			Spacer(modifier = Modifier.Companion.width(16.dp))
-			
-			// Nombre y detalles
-			Column {
-				MA_LabelNegrita(valor = "${panelUI.titulo}")
-				MA_LabelMini(valor = "${panelUI.descripcion} ")
-				MA_LabelMini(modifier = Modifier.padding(1.dp)
-					.background(color = panelUI.kpi.dameColorDinamico()),
-							 valor = "(KPI: ${panelUI.kpi.titulo})",
-							 color = Color.Black,
-							 fontStyle = FontStyle.Normal )
+			Row(
+					modifier = Modifier.Companion
+						.fillMaxWidth()
+						.clickable { onClickItem(panelUI)/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/ }
+						.padding(16.dp),
+					verticalAlignment = Alignment.Companion.CenterVertically
+			   ) {
+				
+				
+				MA_Avatar(panelUI.titulo)
+				Spacer(modifier = Modifier.Companion.width(10.dp))
+				
+				// Nombre y detalles
+				Column {
+					Row (verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start){
+						
+						MA_LabelNegrita(modifier = Modifier.weight(1f), valor = "${panelUI.titulo}")
+						
+						
+					}
+					
+					Row (modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
+						MA_InfoPanel(panelUI)
+						MA_LabelMini(valor = " - ")
+						MA_LabelMini(valor = "${panelUI.descripcion} ")
+					}
+					
+					
+					MA_LabelMini(modifier = Modifier,
+								 valor = "${panelUI.kpi.titulo}",
+								 color = MaterialTheme.colorScheme.primary,
+								 fontStyle = FontStyle.Normal )
+					
+					
+					HorizontalDivider()
+				}
 			}
+			
+			//
+			
+			
+		}
+	//}
+	
+}
+
+@Composable
+fun MA_InfoPanel(panel: PanelUI, mostrarNombre : Boolean = false){
+	
+		
+		
+		
+			
+			Row (modifier = Modifier, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+				
+				if (mostrarNombre){
+					MA_LabelMini(panel.titulo)
+				}
+				MA_Avatar("", size = 12.dp, color = panel.kpi.dameColorDinamico(), fontSize =12.sp )
+				
+				Spacer(Modifier.width(5.dp))
+				if (panel.configuracion.mostrarGrafica) {
+					val idGrafico = when (panel.configuracion.tipo) {
+						is PanelTipoGrafica.Anillo                 -> panel.configuracion.tipo.icono
+						is PanelTipoGrafica.BarrasAnchasVerticales -> panel.configuracion.tipo.icono
+						is PanelTipoGrafica.BarrasFinasVerticales  -> panel.configuracion.tipo.icono
+						is PanelTipoGrafica.Circular               -> panel.configuracion.tipo.icono
+						is PanelTipoGrafica.IndicadorHorizontal    -> panel.configuracion.tipo.icono
+						is PanelTipoGrafica.IndicadorVertical      -> panel.configuracion.tipo.icono
+						is PanelTipoGrafica.Lineas                 -> panel.configuracion.tipo.icono
+					}
+					MA_ImagenDrawable(  idGrafico, s = 16.dp)
+				}
+				Spacer(Modifier.width(5.dp))
+				if (panel.configuracion.mostrarTabla) {
+					MA_ImagenDrawable(R.drawable.tabla, s = 16.dp)
+				}
+				Spacer(Modifier.width(5.dp))
+			
 		}
 		
-		HorizontalDivider()
 		
-		
-	}
+	
 }

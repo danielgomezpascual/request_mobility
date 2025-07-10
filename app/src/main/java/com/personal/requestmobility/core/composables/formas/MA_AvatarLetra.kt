@@ -1,7 +1,13 @@
 package com.personal.requestmobility.core.composables.formas
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -11,40 +17,54 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.personal.requestmobility.core.utils.if3
+import java.nio.file.WatchEvent
 
 // Función para generar un color aleatorio para el avatar
 private fun getRandomColor(): Color {
-    val red = (0..255).random()
-    val green = (0..255).random()
-    val blue = (0..255).random()
-    return Color(red, green, blue)
+	val red = (0..255).random()
+	val green = (0..255).random()
+	val blue = (0..255).random()
+	return Color(red, green, blue)
 }
 
 @Preview
 @Composable
-fun Test_MA_Avatar(){
-    MA_Avatar("Pruebas")
+fun Test_MA_Avatar() {
+	MA_Avatar("Pruebas")
 }
 
 @Composable
-fun MA_Avatar(texto: String , size : Dp = 40.dp, color : Color = getRandomColor()){
-    // Avatar
-    Box(
-        modifier = Modifier.Companion
-            .size(size)
-            .clip(CircleShape)
-            .background(color),
-        contentAlignment = Alignment.Companion.Center
-    ) {
-        // Inicial del usuario, ajusta según la información disponible
-        Text(
-            text = texto.take(1).uppercase(),
-            style = MaterialTheme.typography.titleLarge,
-            color = Color.Companion.White
-        )
-
-    }
+fun MA_Avatar(
+	texto: String, size: Dp = 40.dp, color: Color = getRandomColor(),
+	fontSize: TextUnit = 18.sp,
+			 ) {
+	// Avatar
+	var letras = if3( (texto.isNotEmpty() && texto.length == 3), 3 , 2)
+	val fs : TextUnit = if3( (letras == 3 && fontSize >= 18.sp ), 14.sp, fontSize)
+	
+	Column(
+			modifier = Modifier.Companion
+				.size(size)
+				.clip(CircleShape)
+				.background(color),
+			verticalArrangement = Arrangement.Center,
+			horizontalAlignment = Alignment.CenterHorizontally
+		  
+		  
+		  ) {
+		Text(modifier = Modifier.fillMaxWidth(),
+			 textAlign = TextAlign.Center,
+			 text = texto.take(letras).uppercase(),
+			 fontSize = fs,
+			 color = Color.Companion.White)
+		
+	}
+	
 }

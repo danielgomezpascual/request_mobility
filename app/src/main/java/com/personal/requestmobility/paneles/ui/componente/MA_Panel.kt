@@ -213,21 +213,21 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
     return {
         when (panelConfiguracion.tipo) {
 
-            PanelTipoGrafica.INDICADOR_VERTICAL ->{
+            is PanelTipoGrafica.IndicadorVertical ->{
                 MA_IndicadorVertical(  modifier = modifier,
                     listaValores = datosPintar,
                     posicionX = posicionX,
                     posicionY = posivionY)
             }
 
-            PanelTipoGrafica.INDICADOR_HORIZONTAL ->{
+            is PanelTipoGrafica.IndicadorHorizontal  ->{
                 MA_IndicadorHorizontal(  modifier = modifier,
                     listaValores = datosPintar,
                     posicionX = posicionX,
                     posicionY = posivionY)
             }
 
-            PanelTipoGrafica.BARRAS_ANCHAS_VERTICALES -> {
+           is  PanelTipoGrafica.BarrasAnchasVerticales -> {
 
                 MA_GraficoBarras(
                     modifier = modifier,
@@ -238,7 +238,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
 
             }
 
-            PanelTipoGrafica.BARRAS_FINAS_VERTICALES -> {
+            is PanelTipoGrafica.BarrasFinasVerticales -> {
                 MA_GraficoBarrasVerticales(
                     modifier = modifier,
                     listaValores = datosPintar,
@@ -247,7 +247,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                 )
             }
 
-            PanelTipoGrafica.CIRCULAR -> {
+            is PanelTipoGrafica.Circular -> {
                 MA_GraficoCircular(
                     modifier = modifier,
                     listaValores = datosPintar,
@@ -256,7 +256,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                 )
             }
 
-            PanelTipoGrafica.ANILLO -> {
+            is PanelTipoGrafica.Anillo -> {
                 MA_GraficoAnillo(
                     modifier = modifier,
                     listaValores = datosPintar,
@@ -265,7 +265,7 @@ fun dameTipoGrafica(panelConfiguracion: PanelConfiguracion,
                 )
             }
 
-            PanelTipoGrafica.LINEAS -> {
+            is PanelTipoGrafica.Lineas -> {
                 MA_GraficoLineas(
                     modifier = modifier,
                     listaValores = datosPintar,

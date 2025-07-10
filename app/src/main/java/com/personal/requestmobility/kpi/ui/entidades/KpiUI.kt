@@ -16,7 +16,7 @@ data class KpiUI(
 ) {
 
     fun esDinamico(): Boolean = sql.contains("$")
-    fun dameColorDinamico() = if3(esDinamico(), Color(0xFF81D4FA), Color(0xFFE6EE9C))
+    fun dameColorDinamico() = if3(esDinamico(), Color(0xFF0277BD), Color(0xFFD84315))
     
    /* fun reloadPanelData(): KpiUI {
 

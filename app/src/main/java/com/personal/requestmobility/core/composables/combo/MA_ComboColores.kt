@@ -27,10 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.labels.MA_LabelEtiqueta
-import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
-import com.personal.requestmobility.core.composables.layouts.MA_2Columnas
 import com.personal.requestmobility.core.composables.layouts.MA_Box
-import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import kotlinx.coroutines.launch
 

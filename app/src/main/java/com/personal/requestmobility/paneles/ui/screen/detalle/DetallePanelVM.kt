@@ -67,7 +67,7 @@ class DetallePanelVM(
 		data class OnChangeKpiSeleccionado(val identificador: Int) : Eventos()
 		data class onChangeOrientacion(val valor: String) : Eventos()
 		
-		data class onChangeTipoGrafica(val valor: String) : Eventos()
+		data class onChangeTipoGrafica(val valor: PanelTipoGrafica) : Eventos()
 		data class onChangeLimiteElementos(val valor: String) : Eventos()
 		data class onChangeMostrarEtiquetas(val valor: Boolean) : Eventos()
 		data class OnChangeAgruparResto(val valor: Boolean) : Eventos()
@@ -160,7 +160,7 @@ class DetallePanelVM(
 							
 							is Eventos.onChangeTipoGrafica -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										tipo = PanelTipoGrafica.from(evento.valor))))
+										tipo = evento.valor)))
 							}
 							
 							is Eventos.onChangeLimiteElementos -> {

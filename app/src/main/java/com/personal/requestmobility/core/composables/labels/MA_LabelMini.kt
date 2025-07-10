@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 @Composable
@@ -23,7 +24,9 @@ fun MA_LabelMini(
     icono: Icons? = null,
 
 ) {
-    Text(text = valor, modifier = modifier.padding(3.dp), color = color,
-        style = MaterialTheme.typography.bodySmall, textAlign = alineacion,
+    Text(text = valor, modifier = modifier.padding(1.dp), color = color,
+         fontSize = 12.sp,
+        
+        /*style = MaterialTheme.typography.bodySmall,*/ textAlign = alineacion,
         fontStyle =fontStyle)
 }
