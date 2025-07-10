@@ -443,7 +443,8 @@ fun SuccessScreenDetalleKpi(
 															elementosSeleccionables = PanelTipoGrafica.dameTipos(),
 															item = { tipo ->
 																App.log.d(panelUI.configuracion.tipo)
-																MA_SeleccionTipoGrafica(tipo) },
+																MA_SeleccionTipoGrafica(tipo)
+															},
 															onClickSeleccion = { tipo ->
 																viewModel.onEvent(DetallePanelVM.Eventos.onChangeTipoGrafica(tipo))
 															})
@@ -636,10 +637,10 @@ fun SuccessScreenDetalleKpi(
 			{ scope.launch { sheetState.hide() } }
 		}, contenido = {
 			Column {
-				
 				MA_BotonPrincipal("Cerrar") { scope.launch { sheetState.hide() } }
+				
+				
 				MA_Panel(
-						
 						panelData = PanelData(panelConfiguracion = panelUI.configuracion,
 											  valoresTabla = uiState.valoresTabla))
 				

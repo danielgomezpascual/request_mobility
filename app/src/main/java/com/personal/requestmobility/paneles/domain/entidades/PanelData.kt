@@ -29,10 +29,7 @@ data class PanelData(
 
     fun ordenarElementos() = valoresTabla.dameElementosOrdenados(campoOrdenacionTabla = panelConfiguracion.columnaY)
 
-    fun limiteElementos(): List<Fila> =
-        valoresTabla.dameElementosTruncados(
-            panelConfiguracion
-        )
+    fun limiteElementos(): List<Fila> = valoresTabla.dameElementosTruncados(panelConfiguracion)
 
     fun establecerColorFilas(): List<Fila> {
 

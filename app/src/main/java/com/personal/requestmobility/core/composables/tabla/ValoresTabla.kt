@@ -129,8 +129,6 @@ data class ValoresTabla(
 					
 					else                        -> filaResultado = filaResultado.plus(celdaVacia)
 				}
-				
-				
 			}
 			
 			val filaResto = Fila(celdas = filaResultado,
