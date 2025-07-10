@@ -388,7 +388,7 @@ class DetallePanelVM(
 									
 									configuracion =
 										estado.panelUI.configuracion.copy(condiciones = nuevasCondiciones)
-									App.log.lista("condi", nuevasCondiciones)
+									
 									
 								}
 								

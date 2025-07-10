@@ -45,95 +45,90 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun VisualizadorDashboardUI(
     identificador: Int,
-    paramtrosJSON : String,
+    paramtrosJSON: String,
     viewModel: VisualizadorDashboardVM = koinViewModel(),
-    navegacion: (EventosNavegacion) -> Unit
-) {
-
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(VisualizadorDashboardVM.Eventos.Carga(identificador, paramtrosJSON))
-    }
-
-
-    val uiState by viewModel.uiState.collectAsState()
-    when (uiState) {
-        is UIState.Error -> ErrorScreen((uiState as UIState.Error).message)
-        UIState.Loading -> LoadingScreen()
-        is UIState.Success -> Success(viewModel, (uiState as UIState.Success), navegacion)
-    }
+    navegacion: (EventosNavegacion) -> Unit,
+                           ) {
+	
+	LaunchedEffect(Unit) {
+		viewModel.onEvent(VisualizadorDashboardVM.Eventos.Carga(identificador, paramtrosJSON))
+	}
+	
+	
+	val uiState by viewModel.uiState.collectAsState()
+	when (uiState) {
+		is UIState.Error   -> ErrorScreen((uiState as UIState.Error).message)
+		UIState.Loading    -> LoadingScreen()
+		is UIState.Success -> Success(viewModel, (uiState as UIState.Success), navegacion)
+	}
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Success(viewModel: VisualizadorDashboardVM,
-            uiState: UIState.Success,
-            navegacion: (EventosNavegacion) -> Unit) {
-
-
-    MA_ScaffoldGenerico(
-        titulo = "",
-        navegacion = {},
-        contenidoBottomBar = {
-
-            BottomAppBar() {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.Bottom
-
-            ) {
-
-                MA_IconBottom(
-                    modifier = Modifier.weight(1f),
-                    icon = Features.Menu().icono,
-                    labelText = Features.Menu().texto,
-                    onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
-                )
-                Spacer(modifier = Modifier.fillMaxWidth().weight(1f))
-
-
-
-            }
-
-
-        }},
-        contenido = {
-            
-            val scroll =  rememberScrollState()
-            Box(Modifier) {
-                Column(modifier = Modifier.verticalScroll(state =  scroll)) {
-
-                    
-
-                    uiState.paneles.filter { it.seleccionado }.forEach {
-                        panelUI ->
-                        lateinit var p: PanelUI
-                        if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()){
-                            val sql = panelUI.kpi.sql
-                            
-                            App.log.lista(uiState.dashboardUI.parametros.ps)
-                            
-                            App.log.d(sql.reemplazaValorFila(uiState.dashboardUI.parametros))
-                            
-                            
-                            
-                            p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
-                        }else{
-                            p = panelUI
-                        }
-                        
-                        MA_Panel(panelData = PanelData().fromPanelUI(p))
-
-                    }
-
-                }
-            }
-        }
-    )
-
-
-
+fun Success(
+    viewModel: VisualizadorDashboardVM,
+    uiState: UIState.Success,
+    navegacion: (EventosNavegacion) -> Unit,
+           ) {
+	
+	
+	MA_ScaffoldGenerico(
+			titulo = "",
+			navegacion = {},
+			contenidoBottomBar = {
+				
+				BottomAppBar() {
+					Row(
+							modifier = Modifier.fillMaxWidth(),
+							horizontalArrangement = Arrangement.Start,
+							verticalAlignment = Alignment.Bottom
+					   
+					   ) {
+						
+						MA_IconBottom(
+								modifier = Modifier.weight(1f),
+								icon = Features.Menu().icono,
+								labelText = Features.Menu().texto,
+								onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
+									 )
+						Spacer(modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f))
+						
+						
+					}
+					
+					
+				}
+			},
+			contenido = {
+				
+				val scroll = rememberScrollState()
+				Box(Modifier) {
+					Column(modifier = Modifier.verticalScroll(state = scroll)) {
+						
+						
+						uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->
+							lateinit var p: PanelUI
+							if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()) {
+								val sql = panelUI.kpi.sql
+								App.log.d(sql.reemplazaValorFila(uiState.dashboardUI.parametros))
+								p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
+							} else {
+								p = panelUI
+							}
+							
+							MA_Panel(panelData = PanelData().fromPanelUI(p))
+							
+						}
+						
+					}
+				}
+			}
+					   )
+	
+	
 }
 
 

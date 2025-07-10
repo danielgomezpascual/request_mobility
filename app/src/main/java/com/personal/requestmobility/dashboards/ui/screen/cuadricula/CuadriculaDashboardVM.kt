@@ -67,6 +67,9 @@ class CuadriculaDashboardVM(
 					
 					listaDashboard = listaDashboard.plus(listaDshEstaticos)
 					
+					
+					App.log.lista("Dashboard", listaDashboard)
+					App.log.d("Dentro anaclertro...")
 					_uiState.value = UIState.Success(lista = listaDashboard.map {
 						DashboardUI().fromDashboard(it)
 					})

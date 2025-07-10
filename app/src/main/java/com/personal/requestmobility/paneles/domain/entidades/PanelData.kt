@@ -131,8 +131,6 @@ data class PanelData(
 
 
                 }
-
-                App.log.lista("Celdas", nuevasCeldas)
                 fila.copy(celdas = nuevasCeldas)
 
 

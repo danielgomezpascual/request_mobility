@@ -54,14 +54,6 @@ data class ResultadoSQL(
 			}
 			filasValoresTabla = filasValoresTabla.plus(Fila(celdas = filaVT))
 		}
-		
-		
-		
-		columnasTabla.forEach {  c ->
-			App.log.lista("Columnas ${c.copy()}", c.valores)
-			
-		}
-		
 		return ValoresTabla(filas = filasValoresTabla, columnas = columnasTabla)
 		
 	}
