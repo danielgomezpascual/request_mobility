@@ -23,55 +23,47 @@ import kotlinx.coroutines.launch
 class CuadriculaDashboardVM(
 	private val obtenerDashboardsCU: ObtenerDashboardsCU,
 	
-	) : ViewModel()
-{
+	) : ViewModel() {
 	
 	private val _uiState = MutableStateFlow<UIState>(UIState.Loading("Cargando"))
 	val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 	
 	
-	sealed class UIState
-	{
+	sealed class UIState {
 		data class Success(val lista: List<DashboardUI> = emptyList()) : UIState()
 		data class Error(val mensaje: String) : UIState()
 		data class Loading(val mensaje: String) : UIState()
 	}
 	
-	sealed class Eventos
-	{
+	sealed class Eventos {
 		object Cargar : Eventos()
 	}
 	
-	fun onEvento(evento: Eventos)
-	{
-		when (evento)
-		{
+	fun onEvento(evento: Eventos) {
+		when (evento) {
 			Eventos.Cargar -> cargarDatos()
 		}
 	}
 	
-	private fun cargarDatos()
-	{
+	private fun cargarDatos() {
 		viewModelScope.launch {
 			_uiState.value = UIState.Loading("Cargando dashboards...")
 			obtenerDashboardsCU.getAll()
 				.catch { e -> _uiState.value = UIState.Error("Error al cargar: ${e.message}") }
-				.collect {
-					listaDashboardsDomain ->
+				.collect { listaDashboardsDomain ->
 					
 					
 					var listaDashboard: List<Dashboard> = emptyList()
 					listaDashboardsDomain.filter { it.tipo == TipoDashboard.Dinamico() }.forEach { dsh ->
 						ResultadoSQL.fromSqlToTabla(dsh.kpi.sql).filas.forEach { f ->
-							
 							val ds: Dashboard = dsh.copy(nombre = dsh.nombre.reemplazaValorFila(f.toParametros(), addComillas = false))
 							listaDashboard = listaDashboard.plus(ds.copy(parametros = f.toParametros()))
 						}
 					}
 					
 					
-					
-					val listaDshEstaticos = listaDashboardsDomain.filter { it.tipo == TipoDashboard.Estatico() }
+					val listaDshEstaticos =
+						listaDashboardsDomain.filter { it.tipo == TipoDashboard.Estatico() }
 					
 					listaDashboard = listaDashboard.plus(listaDshEstaticos)
 					

@@ -7,6 +7,7 @@ class GuardarDashboardCU(private val repo: DashboardRepositorio
 ) {
     suspend fun guardar(dashboard: Dashboard) {
 
+        //todo: comprobar el funcionamiento del guardado del home
 
         repo.getAll().collect { list ->
             if (list.isNotEmpty()) {

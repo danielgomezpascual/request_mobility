@@ -11,12 +11,13 @@ data class KpiUI(
     val descripcion: String = "",
     val origen : String = "",
     val sql: String = "",
+    val dinamico : Boolean = false
     /*var panelData: PanelData = PanelData(),
     var resultadoSQL: ResultadoSQL = ResultadoSQL()*/
 ) {
 
-    fun esDinamico(): Boolean = sql.contains("$")
-    fun dameColorDinamico() = if3(esDinamico(), Color(0xFF0277BD), Color(0xFFD84315))
+//    fun esDinamico(): Boolean = sql.contains("$")
+    fun dameColorDinamico() = if3(dinamico, Color(0xFF0277BD), Color(0xFFD84315))
     
    /* fun reloadPanelData(): KpiUI {
 
@@ -32,7 +33,8 @@ data class KpiUI(
         fun from(kpi: Kpi, i: Int): KpiUI {
             val kpiUI: KpiUI = KpiUI(
                 titulo = kpi.titulo,
-                sql = kpi.sql
+                sql = kpi.sql,
+                dinamico =  kpi.esDinamico()
             )
 
            // kpiUI.reloadPanelData()
@@ -57,5 +59,6 @@ fun KpiUI.fromKPI(kpi: Kpi) = KpiUI(
     titulo = kpi.titulo,
     descripcion = kpi.descripcion,
     sql = kpi.sql,
+    dinamico =  kpi.esDinamico()
    // panelData = PanelData(panelConfiguracion = kpi.configuracion)
 )

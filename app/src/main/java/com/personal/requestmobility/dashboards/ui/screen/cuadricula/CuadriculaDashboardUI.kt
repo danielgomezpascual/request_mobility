@@ -34,113 +34,113 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CuadriculDashboardUI(
-    viewModel: CuadriculaDashboardVM = koinViewModel(),
-    navegacion: (EventosNavegacion) -> Unit
-) {
-    val uiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.onEvento(CuadriculaDashboardVM.Eventos.Cargar)
-    }
-
-    when (val state = uiState) { // Renombrado uiState a state para claridad en el when
-        is CuadriculaDashboardVM.UIState.Error -> ErrorScreen(state.mensaje) // Asume ErrorScreen(mensaje: String)
-        is CuadriculaDashboardVM.UIState.Loading -> LoadingScreen(state.mensaje) // Asume LoadingScreen(mensaje: String)
-        is CuadriculaDashboardVM.UIState.Success -> SuccessCuadriculaDashboard( // Nombre corregido
-            viewModel = viewModel,
-            uiState = state,
-            navegacion = navegacion
-        )
-    }
+	viewModel: CuadriculaDashboardVM = koinViewModel(),
+	navegacion: (EventosNavegacion) -> Unit,
+						) {
+	val uiState by viewModel.uiState.collectAsState()
+	
+	LaunchedEffect(Unit) {
+		viewModel.onEvento(CuadriculaDashboardVM.Eventos.Cargar)
+	}
+	
+	when (val state = uiState) { // Renombrado uiState a state para claridad en el when
+		is CuadriculaDashboardVM.UIState.Error   -> ErrorScreen(state.mensaje) // Asume ErrorScreen(mensaje: String)
+		is CuadriculaDashboardVM.UIState.Loading -> LoadingScreen(state.mensaje) // Asume LoadingScreen(mensaje: String)
+		is CuadriculaDashboardVM.UIState.Success -> SuccessCuadriculaDashboard( // Nombre corregido
+				viewModel = viewModel,
+				uiState = state,
+				navegacion = navegacion
+																			  )
+	}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuccessCuadriculaDashboard(
-    viewModel: CuadriculaDashboardVM,
-    uiState: CuadriculaDashboardVM.UIState.Success,
-    navegacion: (EventosNavegacion) -> Unit
-) {
-
-
-    MA_ScaffoldGenerico(
-        titulo = "C-Dashboards", // Título adaptado
-        contenidoBottomBar = {
-            BottomAppBar {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.Bottom
-
-                ) {
-
-                    MA_IconBottom(
-                        modifier = Modifier.weight(1f),
-                        icon = Features.Menu().icono,
-                        labelText = Features.Menu().texto,
-                        onClick = { navegacion(EventosNavegacion.MenuApp) }
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    )
-                    MA_IconBottom(
-                        modifier = Modifier.weight(1f),
-                        icon = Features.Dashboard().icono,
-                        labelText = Features.Dashboard().texto,
-                        color = Features.Nuevo().color,
-                        onClick = { navegacion(EventosNavegacion.NuevoDashboard) }
-                    )
-
-
-                }
-
-
-            }
-        },
-        contenido = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth() // fillMaxWidth para la columna principal
-                    .padding(16.dp) // Padding general del contenido como en el ejemplo
-            ) {
-
-
-                MA_Columnas(data = uiState.lista) { item ->
-                    
-                    MA_Card(
-                        modifier = Modifier.clickable(
-                            enabled = true,
-                            onClick = {
-                                                                navegacion(EventosNavegacion.VisualizadorDashboard(item.id, _toJson(item.parametros)))
-                            })
-                    ) {
-
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            MA_Avatar(item.nombre)
-                            MA_LabelNormal(
-                                modifier = Modifier.padding(2.dp),
-                                valor = item.nombre
-                            )
-
-                            MA_LabelMini(
-                                modifier = Modifier.padding(2.dp),
-                                valor = item.descripcion
-                            )
-                            
-                            MA_LabelMini(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    valor = "${item.listaPaneles.filter { it.seleccionado }.size} paneles",
-                                         alineacion = TextAlign.End,
-                                         color = MaterialTheme.colorScheme.primary )
-                        }
-                    }
-
-                }
-
-
-            }
-
-        })
+	viewModel: CuadriculaDashboardVM,
+	uiState: CuadriculaDashboardVM.UIState.Success,
+	navegacion: (EventosNavegacion) -> Unit,
+							  ) {
+	
+	
+	MA_ScaffoldGenerico(
+			titulo = "C-Dashboards", // Título adaptado
+			contenidoBottomBar = {
+				BottomAppBar {
+					Row(
+							modifier = Modifier.fillMaxWidth(),
+							horizontalArrangement = Arrangement.Start,
+							verticalAlignment = Alignment.Bottom
+					   
+					   ) {
+						
+						MA_IconBottom(
+								modifier = Modifier.weight(1f),
+								icon = Features.Menu().icono,
+								labelText = Features.Menu().texto,
+								onClick = { navegacion(EventosNavegacion.MenuApp) }
+									 )
+						Spacer(
+								modifier = Modifier
+									.fillMaxWidth()
+									.weight(1f)
+							  )
+						MA_IconBottom(
+								modifier = Modifier.weight(1f),
+								icon = Features.Dashboard().icono,
+								labelText = Features.Dashboard().texto,
+								color = Features.Nuevo().color,
+								onClick = { navegacion(EventosNavegacion.NuevoDashboard) }
+									 )
+						
+						
+					}
+					
+					
+				}
+			},
+			contenido = {
+				Column(
+						modifier = Modifier
+							.fillMaxWidth() // fillMaxWidth para la columna principal
+							.padding(16.dp) // Padding general del contenido como en el ejemplo
+					  ) {
+					
+					
+					MA_Columnas(data = uiState.lista) { item ->
+						
+						MA_Card(
+								modifier = Modifier.clickable(
+										enabled = true,
+										onClick = {
+											navegacion(EventosNavegacion.VisualizadorDashboard(item.id, _toJson(item.parametros)))
+										})
+							   ) {
+							
+							Column(horizontalAlignment = Alignment.CenterHorizontally) {
+								MA_Avatar(item.nombre)
+								MA_LabelNormal(
+										modifier = Modifier.padding(2.dp),
+										valor = item.nombre
+											  )
+								
+								MA_LabelMini(
+										modifier = Modifier.padding(2.dp),
+										valor = item.descripcion
+											)
+								
+								MA_LabelMini(
+										modifier = Modifier.fillMaxWidth(),
+										valor = "${item.listaPaneles.filter { it.seleccionado }.size} paneles",
+										alineacion = TextAlign.End,
+										color = MaterialTheme.colorScheme.primary)
+							}
+						}
+						
+					}
+					
+					
+				}
+				
+			})
 }

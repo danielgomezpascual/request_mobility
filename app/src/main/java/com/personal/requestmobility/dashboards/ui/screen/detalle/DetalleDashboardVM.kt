@@ -95,7 +95,7 @@ class DetalleDashboardVM(
                            
 
                             is Eventos.OnChangeKpiSeleccionado ->{
-                                estado.copy(dashboardUI = estado.dashboardUI.copy(tipo = TipoDashboard.Dinamico(), kpiOrigen = eventos.kpi))
+                                estado.copy(dashboardUI = estado.dashboardUI.copy( kpiOrigen = eventos.kpi))
                             }
                             
                             else -> estado // No debería llegar aquí si los eventos están bien definidos

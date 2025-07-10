@@ -8,4 +8,6 @@ data class Kpi(
     val sql: String = "",
     //val configuracion: PanelConfiguracion = PanelConfiguracion(),
     ) {
+    
+    fun esDinamico(): Boolean = sql.contains("$")
 }

@@ -35,11 +35,9 @@ class DashboardRoom(
 				   ) : IRoom
 
 suspend fun DashboardRoom.toDashboard(): Dashboard {
-	//var listaPanelesActualizado = listOf<Panel>()
 	
 	
 	val obtenerPaneles: ObtenerPanelesCU = getKoin().get()
-	val obtenerPanel: ObtenerPanelCU = getKoin().get()
 	val obtenerKpi: ObtenerKpiCU = getKoin().get()
 	
 	val type = object : TypeToken<List<PanelDashboardRoom>>() {}.type

@@ -2,6 +2,7 @@ package com.personal.requestmobility.dashboards.ui.entidades
 
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.utils.Parametros
+import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
@@ -43,16 +44,25 @@ fun DashboardUI.fromDashboard(dashboard: Dashboard): DashboardUI {
 
 // Mapper from UI to Domain
 // Se usa como: dashboardUi.toDashboard()
-fun DashboardUI.toDashboard(): Dashboard = Dashboard(
-		id = this.id,
-		tipo = this.tipo,
-		nombre = this.nombre,
-		home = this.home,
-		logo = this.logo,
-		descripcion = this.descripcion,
-		kpi = this.kpiOrigen.toKpi(),
-		paneles = this.listaPaneles.map {
-			it.toPanel()
-		},
-		parametros = this.parametros
-													)
+fun DashboardUI.toDashboard(): Dashboard {
+	
+		val panelesDinamcos = (this.listaPaneles.filter { it.esDinamico() })
+	val tipo = if3 ((panelesDinamcos.isEmpty()),  TipoDashboard.Estatico() , TipoDashboard.Dinamico())
+	
+	
+	return Dashboard(
+			id = this.id,
+			tipo = tipo,
+			nombre = this.nombre,
+			home = this.home,
+			logo = this.logo,
+			descripcion = this.descripcion,
+			kpi = this.kpiOrigen.toKpi(),
+			paneles = this.listaPaneles.map {
+				it.toPanel()
+			},
+			parametros = this.parametros
+			 )
+}
+
+
