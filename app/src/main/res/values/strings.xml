@@ -18,4 +18,5 @@
     <string name="debe_introducir_un_nombre_para_el_dashboard">Debe introducir un nombre para el dashboard</string>
     <string name="elemento_eliminado">Elemento eliminado</string>
     <string name="elemento_almacenado">Elemento almacenado</string>
+    <string name="kpi_duplicado">Kpi Duplicado</string>
 </resources>

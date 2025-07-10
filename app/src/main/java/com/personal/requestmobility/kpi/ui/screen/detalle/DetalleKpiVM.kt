@@ -69,6 +69,7 @@ class DetalleKpiVM(
         data class Guardar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
         data class Eliminar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
         data class CrearPanel(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
+        data class DuplicarKpi(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
 
     }
 
@@ -85,7 +86,8 @@ class DetalleKpiVM(
             is Eventos.Eliminar -> eliminar(evento.navegacion)
             is Eventos.CrearPanel -> crearPanel(evento.navegacion)
             //DetalleKpiVM.Eventos.EliminarDatosActuales -> eliminar()
-
+            
+            is Eventos.DuplicarKpi->duplicarKpi(evento.navegacion)
 
             else -> {
                 _uiState.update { estado ->
@@ -202,6 +204,21 @@ class DetalleKpiVM(
 
     }
 
+    private fun duplicarKpi(navegacion:  (EventosNavegacion) -> Unit){
+        dialog.sino("¿Seguro que desea duplicar el KPI?") { resp ->
+            if (resp == DialogosResultado.Si) {
+                viewModelScope.launch {
+                    async(Dispatchers.IO) {
+                        val kpiUI = (_uiState.value as UIState.Success).kpiUI
+                        val nuevoKpi = kpiUI.copy(id = 0, titulo =  "${kpiUI.titulo} - Copia", )
+                        guardarKpi.guardar(nuevoKpi)
+                    }.await()
+                    dialog.informacion(_t(R.string.kpi_duplicado)) { navegacion(EventosNavegacion.MenuKpis) }
+                }
+            }
+        }
+    }
+    
     private fun eliminar(navegacion: (EventosNavegacion) -> Unit) {
 
         dialog.sino("¿Seguro que desea eliminar el KPI?") { resp ->

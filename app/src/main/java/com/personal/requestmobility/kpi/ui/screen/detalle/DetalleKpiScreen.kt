@@ -102,6 +102,16 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
                             //navegacion(EventosNavegacion.MenuApp)
                         }
                     )
+                    
+                    MA_IconBottom(
+                            modifier = Modifier.weight(1f),
+                            icon = Features.Duplicar().icono,
+                            labelText = Features.Duplicar().texto,
+                                                        onClick = {
+                                viewModel.onEvent(DetalleKpiVM.Eventos.DuplicarKpi(navegacion))
+                                //navegacion(EventosNavegacion.MenuApp)
+                            }
+                                 )
 
 
                     Spacer(

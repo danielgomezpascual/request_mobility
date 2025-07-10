@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.DataThresholding
 import androidx.compose.material.icons.filled.DeveloperBoard
@@ -27,6 +28,7 @@ sealed class Features {
     data class Kpi(val texto: String = "Kpi", val icono: ImageVector = Icons.Filled.DataThresholding) : Features()
     data class Cuadriculas(val texto: String = "Cuadriculas", val icono: ImageVector = Icons.Filled.DeveloperBoard) : Features()
     data class Dashboard(val texto: String = "Dashboard", val icono: ImageVector = Icons.Filled.Dashboard) : Features()
+    data class Duplicar(val texto: String = "Duplocar", val icono: ImageVector = Icons.Filled.ContentCopy) : Features()
     data class Paneles(val texto: String = "Paneles", val icono: ImageVector = Icons.Filled.SelectAll) : Features()
     data class Sincronizar(val texto: String = "Sincronizar", val icono: ImageVector = Icons.Filled.Sync) : Features()
     data class Herramientas(val texto: String = "Herramientas", val icono: ImageVector = Icons.Filled.Settings) : Features()
