@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 fun MA_Icono(
 	icono: ImageVector, modifier: Modifier = Modifier, descripcion: String = "",
 	color: Color = MaterialTheme.colorScheme.primary,
-			) {
+			onClick: ()->Unit ={} ) {
 	Icon(imageVector = icono, contentDescription =
 		descripcion, tint = color, modifier = modifier)
 }

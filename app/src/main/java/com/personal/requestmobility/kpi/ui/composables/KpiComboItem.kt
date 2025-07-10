@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.TableView
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,8 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.R
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
+import com.personal.requestmobility.core.composables.imagenes.MA_Icono
 import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
+import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
+import com.personal.requestmobility.paneles.ui.componente.MA_InfoPanel
 import com.personal.requestmobility.transacciones.ui.screens.composables.ModalInferiorFiltros
 
 @Composable
@@ -57,6 +61,7 @@ fun KpiComboItem(kpiUI: KpiUI) {
 
 
             }
+
         }
 
 

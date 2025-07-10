@@ -1,5 +1,6 @@
 package com.personal.requestmobility.core.composables.combo
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +45,6 @@ fun <T> MA_ComboLista(modifier: Modifier = Modifier,
 
     MA_Box(modifier = Modifier.clickable(enabled = true, onClick = { scope.launch { sheetState.show() } })) {
         Column {
-
             MA_LabelEtiqueta(titulo)
             Row {
                 elemntoSeleccionado()

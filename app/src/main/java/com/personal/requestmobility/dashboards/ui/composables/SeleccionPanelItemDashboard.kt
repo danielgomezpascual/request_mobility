@@ -55,30 +55,13 @@ fun SeleccionPanelItemDashboard(panelUI: PanelUI,
                 }
             }
             Spacer(modifier = Modifier.padding(8.dp))
-           /* MA_SwitchNormal(
-                valor = panelUI.seleccionado,
-                titulo = "",
-                icono = Icons.Default.CheckCircle,
-                onValueChange = { res ->
-                    onClickItem(panelUI)
-                }
 
-            )*/
         }
-
-
-
-
-
-
-
-
-
         Spacer(modifier = Modifier.Companion.width(16.dp))
-
+        HorizontalDivider()
     }
 
-    HorizontalDivider()
+
 
 
 }
