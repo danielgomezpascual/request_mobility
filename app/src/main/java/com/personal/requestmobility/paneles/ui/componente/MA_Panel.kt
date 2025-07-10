@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +25,8 @@ import com.personal.requestmobility.core.composables.graficas.MA_GraficoCircular
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoLineas
 import com.personal.requestmobility.core.composables.graficas.MA_IndicadorHorizontal
 import com.personal.requestmobility.core.composables.graficas.MA_IndicadorVertical
+import com.personal.requestmobility.core.composables.imagenes.MA_ImagenAssets
+import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.labels.MA_LabelNegrita
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
@@ -59,12 +64,14 @@ fun MA_Panel(
 	var tablaComposable: @Composable () -> Unit = {}
 	var graficaComposable: @Composable () -> Unit = {}
 	
-	val configuracion = panelData.panelConfiguracion
+	val configuracion = panelData.panelConfiguracion.copy(titulo =  panelData.panel.titulo, descripcion =  panelData.panel.descripcion)
 	lateinit var fs: List<Fila>
 	lateinit var filasPintar: List<Fila>
 	
-	App.log.d(configuracion.titulo)
-	App.log.d(configuracion.descripcion)
+	App.log.d("Titulo -> " + panelData.panel.titulo,)
+	App.log.d("Descripcion -->" +panelData.panel.descripcion)
+	
+	
 	
 	
 	try {
@@ -107,11 +114,11 @@ fun MA_Panel(
 	}
 	
 	if (tieneErrores) {
-		MA_Marco(titulo = configuracion.titulo, modifier = Modifier, componente = {
+		MA_Marco(titulo = panelData.panel.titulo, modifier = Modifier, componente = {
 			Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+				Icon(imageVector = Icons.Default.Error, tint =  Color.Red, contentDescription = "")
 				MA_LabelNegrita("ERROR", color = Color.Red)
-				MA_LabelNormal(configuracion.titulo)
-				MA_LabelMini(configuracion.descripcion)
+								MA_LabelMini( panelData.panel.descripcion)
 				MA_LabelNegrita(mensajeError)
 				MA_LabelNormal(trazaError)
 				

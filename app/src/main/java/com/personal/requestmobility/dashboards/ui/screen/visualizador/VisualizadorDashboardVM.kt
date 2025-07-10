@@ -57,7 +57,11 @@ class VisualizadorDashboardVM(
 		
 		viewModelScope.launch {
 			val ds = obtenerDashboardCU.getID(idenificadorDS)
-			var dsUI = DashboardUI().fromDashboard(ds)
+			var dsUI : DashboardUI= DashboardUI().fromDashboard(ds)
+			
+			dsUI.listaPaneles.forEach { panel ->
+				App.log.d("${panel.titulo} - ${panel.seleccionado} - ${panel.orden}  ")
+			}
 			if (!parametrosJSON.isEmpty()) {
 				dsUI = dsUI.copy(parametros = _toObjectFromJson<Parametros>(parametrosJSON) ?: Parametros())
 			}

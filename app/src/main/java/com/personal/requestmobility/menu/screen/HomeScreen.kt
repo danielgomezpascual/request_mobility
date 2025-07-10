@@ -24,7 +24,6 @@ import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.menu.screen.HomeVM.UIState
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
-import com.personal.requestmobility.paneles.domain.entidades.fromPanelUI
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import org.koin.androidx.compose.koinViewModel
 
@@ -136,7 +135,7 @@ fun SuccessMenu(viewModel: HomeVM,
                     Column(modifier = Modifier.verticalScroll(state = scroll)) {
 
                         uiState.paneles.forEach { panelUI ->
-                            MA_Panel(panelData = PanelData().fromPanelUI(panelUI))
+                            MA_Panel(panelData = PanelData.fromPanelUI(panelUI))
                         }
                     }
                 }

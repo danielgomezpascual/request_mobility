@@ -59,7 +59,7 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 		} ?: panel // El operador Elvis (?:) devuelve el panel original si no se encuentra
 	}.sortedBy { it.orden } // Finalmente, ordenamos la lista resultante.
 	
-	//App.log.lista("Paneles", listaPanelesActualizado)
+	App.log.lista("Paneles", listaPanelesActualizado)
 	
 	// 3. Ahora que tenemos todos los datos, construimos y devolvemos el objeto.
 	// Todo el bloque de la función se ha ejecutado de forma secuencial y legible,
@@ -73,23 +73,8 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 			logo = this.logo,
 			descripcion = this.descripcion,
 			kpi = obtenerKpi.obtener(this.idKpi), // Asumo que esta también es una función suspend
-			paneles = listaPanelesActualizado
-					)
-
+			paneles = listaPanelesActualizado)
 	
-	
-
-	
-	/*return Dashboard(
-			id = this.id,
-			tipo = TipoDashboard.fromId(this.tipo),
-			nombre = this.nombre,
-			home = esTrue(valor = this.home.toString()),
-			logo = this.logo,
-			descripcion = this.descripcion,
-			kpi = obtenerKpi.obtener(this.idKpi),
-			paneles = listaPanelesActualizado
-					)*/
 }
 
 fun DashboardRoom.fromDashboard(dashboard: Dashboard): DashboardRoom {

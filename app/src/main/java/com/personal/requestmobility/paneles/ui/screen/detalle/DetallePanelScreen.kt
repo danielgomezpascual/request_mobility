@@ -74,6 +74,7 @@ import com.personal.requestmobility.paneles.ui.componente.MA_CondicionPanelLista
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.paneles.ui.componente.MA_SeleccionTipoGrafica
 import com.personal.requestmobility.paneles.ui.componente.MA_SelectorEsquemaColores
+import com.personal.requestmobility.paneles.ui.entidades.toPanel
 import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM.UIState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -641,7 +642,9 @@ fun SuccessScreenDetalleKpi(
 				
 				
 				MA_Panel(
-						panelData = PanelData(panelConfiguracion = panelUI.configuracion,
+						panelData = PanelData(
+								panel = panelUI.toPanel(),
+								panelConfiguracion = panelUI.configuracion,
 											  valoresTabla = uiState.valoresTabla))
 				
 			}

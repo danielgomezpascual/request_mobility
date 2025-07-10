@@ -34,7 +34,7 @@ fun MA_GraficaConTablaVertical(modifier: Modifier = Modifier.Companion,
             .height(panelConfiguracion.height)
 
         MA_Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
-            Column() {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 MA_LabelMini(panelConfiguracion.descripcion)
 
 
