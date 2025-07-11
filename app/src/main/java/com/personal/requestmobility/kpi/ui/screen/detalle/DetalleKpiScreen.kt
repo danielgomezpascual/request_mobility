@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.labels.MA_Titulo
@@ -70,6 +71,7 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
 
     MA_ScaffoldGenerico(
         titulo = "",
+        tituloScreen = TituloScreen.Kpi,
         navegacion = { },
         volver = false,
         contenidoBottomBar = {

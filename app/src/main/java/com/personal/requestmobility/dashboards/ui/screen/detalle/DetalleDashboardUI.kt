@@ -40,6 +40,7 @@ import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.imagenes.MA_Icono
@@ -110,9 +111,10 @@ fun DetalleDashboardUIScreen(
 	val scope = rememberCoroutineScope() // Se mantiene dentro del componente
 
 
-
 	val dashboardUI = uiState.dashboardUI
-	MA_ScaffoldGenerico(volver = false, titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
+	MA_ScaffoldGenerico(
+		tituloScreen = TituloScreen.DashboardDetalle,
+		volver = false, titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
 		// 'navegacion' en ScaffoldGenerico del ejemplo original es la acción del icono de navegación del TopAppBar
 						navegacion = { }, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'
 						contenidoBottomBar = {
@@ -222,8 +224,7 @@ fun DetalleDashboardUIScreen(
 									viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeKpiSeleccionado(kpiUI))
 								})
 
-								Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier
-																		.clickable(enabled = true, onClick = { navegacion(EventosNavegacion.CargarKPI(dashboardUI.kpiOrigen.id)) })) {
+								Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.clickable(enabled = true, onClick = { navegacion(EventosNavegacion.CargarKPI(dashboardUI.kpiOrigen.id)) })) {
 									MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
 								}
 
@@ -299,36 +300,33 @@ fun DetalleDashboardUIScreen(
 
 				//------------------
 
-					MA_BottomSheet(sheetStateCondicionCelda, onClose = {
-						{ scope.launch { sheetStateCondicionCelda.hide() } }
-					}, contenido = {
+				MA_BottomSheet(sheetStateCondicionCelda, onClose = {
+					{ scope.launch { sheetStateCondicionCelda.hide() } }
+				}, contenido = {
 
-						Box(Modifier) {
-							Column(modifier = Modifier.verticalScroll(state = scroll)) {
+					Box(Modifier) {
+						Column(modifier = Modifier.verticalScroll(state = scroll)) {
 
-								MA_BotonSecundario(texto = "Cerrar") { scope.launch { sheetStateCondicionCelda.hide() } }
+							MA_BotonSecundario(texto = "Cerrar") { scope.launch { sheetStateCondicionCelda.hide() } }
 
 
 
-								dashboardUI.listaPaneles.filter { it.seleccionado }.forEach { panelUI ->
-									lateinit var p: PanelUI
-									if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()) {
-										val sql = panelUI.kpi.sql
-										p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
-									} else {
-										p = panelUI
-									}
-
-									MA_Panel(panelData = PanelData.fromPanelUI(p))
-
+							dashboardUI.listaPaneles.filter { it.seleccionado }.forEach { panelUI ->
+								lateinit var p: PanelUI
+								if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()) {
+									val sql = panelUI.kpi.sql
+									p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
+								} else {
+									p = panelUI
 								}
 
+								MA_Panel(panelData = PanelData.fromPanelUI(p))
+
 							}
+
 						}
-					})
-
-
-
+					}
+				})
 
 
 				//------------------

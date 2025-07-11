@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.core.composables.card.MA_Card
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
 import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
@@ -75,6 +77,7 @@ fun SucessListadoLectoras(viewModel: KpisListadoVM,
 
     MA_ScaffoldGenerico(
         titulo = "Kpis",
+        tituloScreen = TituloScreen.Kpi,
         navegacion = { navegacion(EventosNavegacion.MenuApp) },
         volver = false,
         contenidoBottomBar = {
@@ -115,32 +118,25 @@ fun SucessListadoLectoras(viewModel: KpisListadoVM,
             ) {
 
 
-                // Barra de búsqueda
-                MA_TextBuscador(
-                    searchText = uiState.textoBuscar,
-                    onSearchTextChanged = { it ->
-                        viewModel.onEvent(KpisListadoVM.Eventos.Buscar(it))
-                    },
-                )
+                MA_Card() {
+                    Column() {
 
-               /* Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .weight(1f),
-                        text = "${uiState.lista.size} kpis encontradas",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Black,
-                        textAlign = TextAlign.Start
-                    )
-                }*/
+                        // Barra de búsqueda
+                        MA_TextBuscador(
+                            searchText = uiState.textoBuscar,
+                            onSearchTextChanged = { it ->
+                                viewModel.onEvent(KpisListadoVM.Eventos.Buscar(it))
+                            },
+                        )
 
 
 
 
-                MA_Lista(data = uiState.lista) { item ->
-                    KpiListItem(item, onClickItem = { navegacion(EventosNavegacion.CargarKPI(item.id)) })
+
+                        MA_Lista(data = uiState.lista) { item ->
+                            KpiListItem(item, onClickItem = { navegacion(EventosNavegacion.CargarKPI(item.id)) })
+                        }
+                    }
                 }
 
             }

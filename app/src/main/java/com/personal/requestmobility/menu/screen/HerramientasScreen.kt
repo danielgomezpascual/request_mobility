@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.card.MA_Card
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
@@ -24,6 +26,7 @@ fun HerramientasScreen(navegacion: (EventosNavegacion) -> Unit) {
 
     MA_ScaffoldGenerico(
         titulo = "",
+        tituloScreen = TituloScreen.Herramientas,
         volver = false,
         navegacion = { },
         contenidoBottomBar = {
@@ -80,7 +83,10 @@ fun HerramientasScreen(navegacion: (EventosNavegacion) -> Unit) {
                         .fillMaxWidth()
                         .clickable(
                             enabled = true,
-                            onClick = { navegacion(EventosNavegacion.MenuPaneles) })
+                            onClick = {
+                                App.log.d("Clien en panles")
+
+                                navegacion(EventosNavegacion.MenuPaneles) })
                 ) {
                     Column(modifier = Modifier.fillMaxWidth(),horizontalAlignment = Alignment.CenterHorizontally) {
                         MA_Avatar(Features.Paneles().texto)

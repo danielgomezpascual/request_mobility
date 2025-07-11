@@ -21,4 +21,5 @@
     <string name="kpi_duplicado">Kpi Duplicado</string>
     <string name="panel_duplicado">Panel duplicado</string>
     <string name="seguro_que_desea_duplicar_el_panel_seleccionado">¿Seguro que desea duplicar el panel seleccionado?</string>
+    <string name="datos_no_encotrados">Datos no encotrados</string>
 </resources>

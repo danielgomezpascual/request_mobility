@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.card.MA_Card
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.imagenes.MA_Icono
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
@@ -69,7 +70,9 @@ fun SuccessCuadriculaDashboard(
 	
 	
 	MA_ScaffoldGenerico(
+
 			titulo = "C-Dashboards", // Título adaptado
+			tituloScreen = TituloScreen.Cuadriculas,
 			contenidoBottomBar = {
 				BottomAppBar {
 					Row(

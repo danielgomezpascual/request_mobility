@@ -17,6 +17,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.personal.requestmobility.core.composables.card.MA_Card
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -54,14 +56,15 @@ fun HomeScreen(
 fun SuccessMenu(viewModel: HomeVM,
                 uiState: UIState.Success,
                 navegacion: (EventosNavegacion) -> Unit) {
-    Column(
+  /*  Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
-    ) {
+    ) {*/
 
         MA_ScaffoldGenerico(
             titulo = "",
+            tituloScreen = TituloScreen.Home,
             volver = false,
             navegacion = { },
             contenidoBottomBar = {
@@ -129,13 +132,17 @@ fun SuccessMenu(viewModel: HomeVM,
             contenido = {
 
 
+
                 val scroll = rememberScrollState()
 
                 Box(Modifier) {
                     Column(modifier = Modifier.verticalScroll(state = scroll)) {
 
                         uiState.paneles.forEach { panelUI ->
-                            MA_Panel(panelData = PanelData.fromPanelUI(panelUI))
+                          MA_Card {
+                              MA_Panel(panelData = PanelData.fromPanelUI(panelUI))
+                          }
+
                         }
                     }
                 }
@@ -145,6 +152,6 @@ fun SuccessMenu(viewModel: HomeVM,
         )
 
 
-    }
+   // }
 }
 

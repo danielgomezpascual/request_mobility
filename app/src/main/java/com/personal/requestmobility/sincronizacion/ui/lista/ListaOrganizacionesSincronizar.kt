@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.dialogos.MA_Dialogo_Informacion
 import com.personal.requestmobility.core.composables.dialogos.MA_Dialogo_SiNo
 import com.personal.requestmobility.core.composables.dialogos.ResultadoDialog
@@ -72,6 +73,7 @@ fun Success(viewModel: ListaOrganizacionesSincronizarVM,
 
     MA_ScaffoldGenerico(
         titulo = "Sincroniacion",
+        tituloScreen = TituloScreen.Sincronizar,
         navegacion = { navegacion(EventosNavegacion.MenuApp) },
         volver = false,
         contenidoBottomBar = {

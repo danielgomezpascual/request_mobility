@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -14,11 +16,12 @@ fun MA_LabelEtiqueta(
     valor: String,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
+    sizeLetras: TextUnit = 14.sp,
     alineacion : TextAlign = TextAlign.Unspecified,
     icono: Icons? = null,
 
     ) {
     Text(text = valor, modifier = modifier, color = color,
-         fontSize = 14.sp
+         fontSize = sizeLetras
         /*style = MaterialTheme.typography.bodyMedium,*/ )
 }

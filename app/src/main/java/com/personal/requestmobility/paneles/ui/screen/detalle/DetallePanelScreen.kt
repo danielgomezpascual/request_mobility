@@ -51,6 +51,7 @@ import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.combo.MA_Combo
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.imagenes.MA_Icono
@@ -129,7 +130,9 @@ fun SuccessScreenDetalleKpi(
 	
 	
 	
-	MA_ScaffoldGenerico(titulo = "", navegacion = { }, volver = false, contenidoBottomBar = {
+	MA_ScaffoldGenerico(titulo = "",
+						tituloScreen = TituloScreen.Paneles,
+						navegacion = { }, volver = false, contenidoBottomBar = {
 		
 		BottomAppBar() {
 			Row(modifier = Modifier.fillMaxWidth(),

@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.core.composables.card.MA_Card
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
 import com.personal.requestmobility.core.composables.listas.MA_Lista
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
@@ -66,6 +68,7 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
 ) {
     MA_ScaffoldGenerico(
         titulo = "Dashboards", // Título adaptado
+        tituloScreen = TituloScreen.DashboardLista,
         navegacion = { navegacion(EventosNavegacion.MenuApp) }, // Para el icono de navegación del TopAppBar
         contenidoBottomBar = {
 
@@ -98,21 +101,6 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
 
             }
 
-
-           /* BottomAppBar {
-                IconButton(onClick = {
-                    // App.log.d("Click de volver desde el menu") // Comentado como en el original si App.log no está disponible
-                    navegacion(EventosNavegacion.MenuApp)
-                }) {
-                    Icon(Icons.Default.Menu, contentDescription = "Menu")
-                }
-
-                IconButton(onClick = {
-                    navegacion(EventosNavegacion.Cargar(0)) // id 0 para nuevo item
-                }) {
-                    Icon(Icons.Default.Add, contentDescription = "Nuevo")
-                }
-            }*/
         },
         contenido = {
             Column(
@@ -120,33 +108,39 @@ fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
                     .fillMaxWidth() // fillMaxWidth para la columna principal
                     .padding(16.dp) // Padding general del contenido como en el ejemplo
             ) {
-                MA_TextBuscador(
-                    searchText = uiState.textoBuscar,
-                    onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
-                        viewModel.onEvento(DashboardListadoVM.Eventos.Buscar(texto))
+
+                MA_Card() {
+                    Column() {
+                        MA_TextBuscador(
+                            searchText = uiState.textoBuscar,
+                            onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
+                                viewModel.onEvento(DashboardListadoVM.Eventos.Buscar(texto))
+                            }
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(start = 16.dp) // Como en el ejemplo
+                                    .weight(1f),
+                                text = "${uiState.lista.size} elementos",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.Black, // Como en el ejemplo
+                                textAlign = TextAlign.Start
+                            )
+                            // El TextButton de "Nuevo" del ejemplo está comentado y la funcionalidad está en el BottomAppBar
+                        }
+                        MA_Lista( // Asume que Lista es un Composable que maneja internamente LazyColumn
+                            data = uiState.lista,
+                            itemContent = { item -> // item es DashboardUI
+                                MA_DashboardItem(item, navegacion = navegacion)
+                            }
+                        )
                     }
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 16.dp) // Como en el ejemplo
-                            .weight(1f),
-                        text = "${uiState.lista.size} elementos",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Black, // Como en el ejemplo
-                        textAlign = TextAlign.Start
-                    )
-                    // El TextButton de "Nuevo" del ejemplo está comentado y la funcionalidad está en el BottomAppBar
                 }
-                MA_Lista( // Asume que Lista es un Composable que maneja internamente LazyColumn
-                    data = uiState.lista,
-                    itemContent = { item -> // item es DashboardUI
-                        MA_DashboardItem(item, navegacion = navegacion)
-                    }
-                )
+
             }
         }
     )

@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -63,6 +64,7 @@ fun Success(
 	
 	MA_ScaffoldGenerico(
 			titulo = "",
+			tituloScreen = TituloScreen.DashboardLista,
 			navegacion = {},
 			contenidoBottomBar = {
 				

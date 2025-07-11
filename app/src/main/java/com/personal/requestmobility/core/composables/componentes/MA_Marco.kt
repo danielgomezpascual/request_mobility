@@ -23,8 +23,8 @@ fun MA_Marco(modifier: Modifier = Modifier, titulo: String = "", componente: @Co
             .fillMaxWidth()
             .background(Color.White)
             .padding(3.dp)
-            .border(1.dp, Color.LightGray),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            //.border(0.dp, Color.LightGray),
+        ,horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
         /* modifier = Modifier.fillMaxWidth()*/
     ) {
