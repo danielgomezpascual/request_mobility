@@ -27,7 +27,12 @@ class Transacciones(
   var reqResultDate : String = "",
   var etiquetas: String = "",
   var detalles: String = "",
-  var lectoraFisicaId: String = ""
+  var lectoraFisicaId: String = "",
+
+  var organizationCode: String = "",
+  var organizationName: String = "",
+  var organizationId: String = "",
+  var masterOrganizationId: String = ""
 
 
 )

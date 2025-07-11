@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.checks.MA_CheckBoxNormal
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
 import com.personal.requestmobility.core.composables.layouts.MA_Box
@@ -128,6 +129,9 @@ fun Success(viewModel: ListaOrganizacionesSincronizarVM,
                     .fillMaxWidth()
             ) {
 
+                MA_CheckBoxNormal(valor = uiState.todos, titulo= "Aplicar a todos") {
+                    viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.AplicarTodos(it))
+                }
 
                 // Barra de búsqueda
                 MA_TextBuscador(

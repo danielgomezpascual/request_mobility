@@ -328,20 +328,24 @@ fun SuccessScreenDetalleKpi(
 			MA_Titulo2("Tabla")
 			
 			
-			MA_Card {
-				MA_SwitchNormal(valor = panelUI.configuracion.mostrarTabla,
-								titulo = "Tabla",
-								icono = Icons.Filled.TableView,
-								modifier = Modifier.weight(1f),
-								onValueChange = { valor ->
-									viewModel.onEvent(DetallePanelVM.Eventos.onChangeMosrtarTabla(valor))
-								})
-			}
+
 			
 			
 			
 			MA_Card {
-				MA_2ColumnasHorizontales(titulo = "", elementos = listOf({
+				MA_2ColumnasHorizontales(titulo = "", elementos = listOf(
+
+					{
+						MA_SwitchNormal(valor = panelUI.configuracion.mostrarTabla,
+										titulo = "Tabla",
+										icono = Icons.Filled.TableView,
+										modifier = Modifier.weight(1f),
+										onValueChange = { valor ->
+											viewModel.onEvent(DetallePanelVM.Eventos.onChangeMosrtarTabla(valor))
+										})
+					},
+					{
+
 																			 MA_Combo(                                        //    modifier = Modifier.weight(1f),
 																					 icono = Icons.Filled.TableView,
 																					 titulo = "Espacio Tabla",
@@ -443,21 +447,20 @@ fun SuccessScreenDetalleKpi(
 			
 			//Grafica
 			MA_Titulo2("Grafica")
-			
-			MA_Card {
-				MA_SwitchNormal(valor = panelUI.configuracion.mostrarGrafica,
-								titulo = "Grafica",
-								icono = Icons.Filled.AutoGraph,
-								modifier = Modifier.weight(1f),
-								onValueChange = { valor ->
-									viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarGrafica(valor))
-								})
-			}
+
 			MA_Card {
 				
 				
 				MA_2ColumnasHorizontales(titulo = "", elementos = listOf(
-						
+					{
+						MA_SwitchNormal(valor = panelUI.configuracion.mostrarGrafica,
+										titulo = "Grafica",
+										icono = Icons.Filled.AutoGraph,
+										modifier = Modifier.weight(1f),
+										onValueChange = { valor ->
+											viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarGrafica(valor))
+										})
+					},
 						
 						{
 							

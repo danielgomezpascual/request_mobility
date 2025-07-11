@@ -32,7 +32,15 @@ data class TransaccionesRoom(
     var REQ_RESULT_DATE: String? = "",
     var ETIQUETAS: String = "",
     var DETALLES: String = "",
-    var LECTORA_FISICA_ID: String = ""
+    var LECTORA_FISICA_ID: String = "",
+
+    var ORGANIZATION_CODE: String = "",
+    var ORGANIZATION_NAME: String = "",
+    var ORGANIZATION_ID: String = "",
+    var MASTERORGANIZATION_ID: String = ""
+
+
+
 ) : IRoom
 
 
@@ -64,6 +72,12 @@ fun TransaccionesRoom.toTransacciones(): Transacciones {
         etiquetas = this.ETIQUETAS ?: "",
         detalles = this.DETALLES ?: "",
         lectoraFisicaId = this.LECTORA_FISICA_ID ?: "",
+         organizationCode = this.ORGANIZATION_CODE ?: "",
+     	organizationName = this.ORGANIZATION_NAME ?: "",
+     	organizationId = this.ORGANIZATION_ID ?: "",
+     	masterOrganizationId = this.MASTERORGANIZATION_ID ?: ""
+
+
     )
 }
 
@@ -94,6 +108,10 @@ fun TransaccionesRoom.fromTransaccion(trx: Transacciones): TransaccionesRoom = T
     ETIQUETAS = trx.etiquetas,
     DETALLES = trx.detalles,
     LECTORA_FISICA_ID = trx.lectoraFisicaId,
+	 ORGANIZATION_CODE = trx.organizationCode,
+	 ORGANIZATION_NAME = trx.organizationName,
+	 ORGANIZATION_ID = trx.organizationId,
+	 MASTERORGANIZATION_ID = trx.masterOrganizationId,
 )
 
 
