@@ -2,6 +2,7 @@ package com.personal.requestmobility.paneles.ui.screen.detalle
 
 
 import MA_IconBottom
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +23,7 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material.icons.filled.DoubleArrow
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.FormatColorText
 import androidx.compose.material.icons.filled.FrontHand
@@ -50,6 +53,7 @@ import com.personal.requestmobility.core.composables.combo.MA_Combo
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
+import com.personal.requestmobility.core.composables.imagenes.MA_Icono
 import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.composables.labels.MA_Titulo2
 import com.personal.requestmobility.core.composables.layouts.MA_2ColumnasHorizontales
@@ -227,21 +231,35 @@ fun SuccessScreenDetalleKpi(
 			MA_Titulo2("KPI")
 			MA_Card {
 				Box(modifier = Modifier.height(100.dp)) {
-					MA_ComboLista<KpiUI>(titulo = "",
-										 descripcion = "Seleccione el KPI a enlazar",
-										 valorInicial = {
-											 KpiComboItem(kpiUI = panelUI.kpi)
-											 
-										 },
-										 elementosSeleccionables = uiState.kpiDisponibles,
-										 item = { kpiUI ->
-											 KpiComboItem(kpiUI = kpiUI)
-										 },
-										 onClickSeleccion = { kpiUI ->
-											 viewModel.onEvent(DetallePanelVM.Eventos.OnChangeKpiSeleccionado(
+					Row(verticalAlignment = Alignment.CenterVertically){
+						MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "",
+											 descripcion = "Seleccione el KPI a enlazar",
+											 valorInicial = {
+												 KpiComboItem(kpiUI = panelUI.kpi)
+
+											 },
+											 elementosSeleccionables = uiState.kpiDisponibles,
+											 item = { kpiUI ->
+												 KpiComboItem(kpiUI = kpiUI)
+											 },
+											 onClickSeleccion = { kpiUI ->
+												 viewModel.onEvent(DetallePanelVM.Eventos.OnChangeKpiSeleccionado(
 													 kpiUI.id))
-										 })
+											 })
+
+						Box( modifier = Modifier
+							.clickable(enabled = true, onClick = {
+								navegacion(EventosNavegacion.CargarKPI(panelUI.kpi.id)) })) {
+							MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+						}
+
+					}
+
+
+
 				}
+
+
 			}
 			
 			MA_Titulo2(valor = "Generales")

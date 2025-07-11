@@ -21,39 +21,33 @@ import androidx.compose.ui.unit.dp
 
 @Preview
 @Composable
-fun Test_MA_Card(){
+fun Test_MA_Card() {
 
-    MA_Card {
-        Column {
-            Text("pruebas")
-            Text("pruebas1")
-            Text("pruebas2")
-            Text("pruebas3")
+	MA_Card {
+		Column {
+			Text("pruebas")
+			Text("pruebas1")
+			Text("pruebas2")
+			Text("pruebas3")
 
-        }
+		}
 
 
-    }
+	}
 }
+
 @Composable
 fun MA_Card(modifier: Modifier = Modifier, contenido: @Composable () -> Unit) {
 
-    Box(modifier.padding(4.dp)){
-        ElevatedCard(
+	Box(modifier) {
+		ElevatedCard(
 
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 4.dp
-            ),
-            shape = RoundedCornerShape(2.dp),
-            modifier = Modifier.fillMaxWidth(),
-colors = CardDefaults.cardColors().copy(containerColor = Color.White)
-        ) {
-            Box(Modifier.padding(10.dp)){
-                contenido()
-            }
-        }
-    }
-
+			elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), shape = RoundedCornerShape(2.dp), modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors().copy(containerColor = Color.White)) {
+			Box(Modifier.padding(2.dp)) {
+				contenido()
+			}
+		}
+	}
 
 
 }

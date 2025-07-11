@@ -43,7 +43,7 @@ fun <T> MA_ComboLista(modifier: Modifier = Modifier,
 
 
 
-    MA_Box(modifier = Modifier.clickable(enabled = true, onClick = { scope.launch { sheetState.show() } })) {
+    MA_Box(modifier = modifier.clickable(enabled = true, onClick = { scope.launch { sheetState.show() } })) {
         Column {
             MA_LabelEtiqueta(titulo)
             Row {

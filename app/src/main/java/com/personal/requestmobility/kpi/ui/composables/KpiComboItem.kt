@@ -35,7 +35,7 @@ fun KpiComboItem(kpiUI: KpiUI) {
 
         Row(
             modifier = Modifier.Companion
-                .fillMaxWidth()
+                //.fillMaxWidth()
                 .padding(15.dp),
             verticalAlignment = Alignment.Companion.CenterVertically
         ) {

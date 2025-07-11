@@ -1,6 +1,8 @@
 package com.personal.requestmobility.dashboards.ui.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.labels.MA_LabelEtiqueta
@@ -26,16 +29,16 @@ fun SeleccionPanelItemDashboard(panelUI: PanelUI,
                                 onClickItem: (PanelUI) -> Unit) {
 
     var modifier: Modifier = Modifier
-
-
     val transparencia = if3 (panelUI.seleccionado, 1f, 0.2f)
 
-    Column(
+    Column(verticalArrangement = Arrangement.Center,
+
         modifier = modifier
-            .fillMaxWidth()
+            //.fillMaxWidth()
             .clickable { onClickItem(panelUI) }
-            .padding(16.dp)
-            .alpha(transparencia),
+            .padding(8.dp)
+            .alpha(transparencia)
+
 
         ) {
 
@@ -43,22 +46,23 @@ fun SeleccionPanelItemDashboard(panelUI: PanelUI,
         // Nombre y detalles
         Row() {
 
-            MA_Avatar(panelUI.titulo)
+            Column (horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
+                MA_Avatar(panelUI.titulo)
+                MA_InfoPanel(panelUI)
+            }
+
             Spacer(modifier = Modifier.padding(8.dp))
             Column {
                 MA_LabelEtiqueta(valor = panelUI.titulo)
-                
-                Row (modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-                    MA_InfoPanel(panelUI)
-                    MA_LabelMini(valor = " - ")
-                    MA_LabelMini(valor = "${panelUI.descripcion} ")
-                }
+                MA_LabelMini(valor = "${panelUI.descripcion} ")
+
             }
             Spacer(modifier = Modifier.padding(8.dp))
 
         }
-        Spacer(modifier = Modifier.Companion.width(16.dp))
+
         HorizontalDivider()
+
     }
 
 

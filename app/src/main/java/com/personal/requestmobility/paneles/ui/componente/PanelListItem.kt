@@ -49,34 +49,39 @@ fun PanelListItem(
 					modifier = Modifier.Companion
 						.fillMaxWidth()
 						.clickable { onClickItem(panelUI)/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/ }
-						.padding(16.dp),
+						.padding(5.dp),
 					verticalAlignment = Alignment.Companion.CenterVertically
 			   ) {
-				
-				
-				MA_Avatar(panelUI.titulo)
-				Spacer(modifier = Modifier.Companion.width(10.dp))
+
+
+				Column (horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
+					MA_Avatar(panelUI.titulo)
+					MA_InfoPanel(panelUI)
+				}
+				Spacer(modifier = Modifier.Companion.width(5.dp))
 				
 				// Nombre y detalles
 				Column {
 					Row (verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start){
 						
-						MA_LabelNegrita(modifier = Modifier.weight(1f), valor = "${panelUI.titulo}")
-						
+						//MA_LabelNegrita(modifier = Modifier.weight(1f), valor = "${panelUI.titulo}")
+
 						
 					}
-					
+					MA_LabelNegrita( valor = "${panelUI.titulo}")
+					MA_LabelMini(valor = "${panelUI.descripcion}")
+
 					Row (modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-						MA_InfoPanel(panelUI)
-						MA_LabelMini(valor = " - ")
-						MA_LabelMini(valor = "${panelUI.descripcion} ")
+								//MA_InfoPanel(panelUI)
+						//MA_LabelMini(valor = " - ")
+						//MA_LabelMini(valor = "${panelUI.descripcion} ")
 					}
 					
 					
-					MA_LabelMini(modifier = Modifier,
+					/*MA_LabelMini(modifier = Modifier,
 								 valor = "${panelUI.kpi.titulo}",
 								 color = MaterialTheme.colorScheme.primary,
-								 fontStyle = FontStyle.Normal )
+								 fontStyle = FontStyle.Normal )*/
 					
 					
 					HorizontalDivider()
@@ -84,21 +89,19 @@ fun PanelListItem(
 			}
 			
 			//
-			
-			
+
+			Spacer(Modifier.width(18.dp))	//}
 		}
-	//}
+
 	
 }
 
 @Composable
 fun MA_InfoPanel(panel: PanelUI, mostrarNombre : Boolean = false){
-	
-		
-		
 		
 			
-			Row (modifier = Modifier, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+			Row (modifier = Modifier.padding(3.dp),
+				 horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
 				
 				if (mostrarNombre){
 					MA_LabelMini(panel.titulo)

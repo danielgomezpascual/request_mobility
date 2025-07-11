@@ -86,7 +86,7 @@ fun MA_ScaffoldGenerico(
             contenidoBottomBar()
         }
     ) { paddingValues ->
-        Box(Modifier.padding(5.dp)) {
+        Box(Modifier.padding(8.dp)) {
 
             Box(modifier = Modifier.padding(paddingValues)) {
                 contenido()

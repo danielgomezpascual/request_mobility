@@ -210,7 +210,7 @@ fun DetalleDashboardUIScreen(
 
 						if (dashboardUI.tipo == TipoDashboard.Dinamico()) {
 
-							Column(modifier = Modifier.fillMaxWidth()) {
+							Row(modifier = Modifier.fillMaxWidth()) {
 
 
 								MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "", descripcion = "Seleccione el KPI a enlazar", valorInicial = {
@@ -223,8 +223,7 @@ fun DetalleDashboardUIScreen(
 								})
 
 								Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier
-									.fillMaxWidth()
-									.clickable(enabled = true, onClick = { navegacion(EventosNavegacion.CargarKPI(dashboardUI.kpiOrigen.id)) })) {
+																		.clickable(enabled = true, onClick = { navegacion(EventosNavegacion.CargarKPI(dashboardUI.kpiOrigen.id)) })) {
 									MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
 								}
 
@@ -252,9 +251,9 @@ fun DetalleDashboardUIScreen(
 							// Tu Composable para el ítem.
 							// Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
 							// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
-							Column(modifier = Modifier.fillMaxWidth()) {
+							Row(modifier = Modifier.fillMaxWidth()) {
 
-								Box(modifier = Modifier.fillMaxWidth()) {
+								Box(modifier = Modifier.weight(1f)) {
 									SeleccionPanelItemDashboard(panel) { panelSeleccionado ->
 										App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
 										val panelesR: List<PanelUI> = paneles.map { panel ->
@@ -274,8 +273,8 @@ fun DetalleDashboardUIScreen(
 									}
 								}
 
-								Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier
-									.fillMaxWidth()
+								Box(contentAlignment = Alignment.Center, modifier = Modifier
+
 									.clickable(enabled = true, onClick = {
 										navegacion(EventosNavegacion.CargarPanel(panel.id))
 									})) {
