@@ -16,6 +16,7 @@ import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
+import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
@@ -67,9 +68,11 @@ fun HerramientasScreen(navegacion: (EventosNavegacion) -> Unit) {
                             enabled = true,
                             onClick = { navegacion(EventosNavegacion.MenuDashboard) })
                 ) {
-                    Column(modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.Center,  horizontalAlignment = Alignment.CenterHorizontally) {
-                        MA_Avatar(Features.Dashboard().texto)
+                    Row (modifier = Modifier.fillMaxWidth().padding(15.dp),
+                        horizontalArrangement =  Arrangement.Start,
+                         verticalAlignment = Alignment.CenterVertically) {
+                        //MA_Avatar(Features.Dashboard().texto)
+                        MA_ImagenDrawable(TituloScreen.DashboardLista.icono)
                         MA_LabelNormal(
                             modifier = Modifier.padding(2.dp),
                             valor = Features.Dashboard().texto
@@ -88,8 +91,11 @@ fun HerramientasScreen(navegacion: (EventosNavegacion) -> Unit) {
 
                                 navegacion(EventosNavegacion.MenuPaneles) })
                 ) {
-                    Column(modifier = Modifier.fillMaxWidth(),horizontalAlignment = Alignment.CenterHorizontally) {
-                        MA_Avatar(Features.Paneles().texto)
+                    Row (modifier = Modifier.fillMaxWidth().padding(15.dp),
+                         horizontalArrangement =  Arrangement.Start,
+                         verticalAlignment = Alignment.CenterVertically) {
+
+                        MA_ImagenDrawable(TituloScreen.Paneles.icono)
                         MA_LabelNormal(
                             modifier = Modifier.padding(2.dp),
                             valor = Features.Paneles().texto
@@ -105,8 +111,11 @@ fun HerramientasScreen(navegacion: (EventosNavegacion) -> Unit) {
                             enabled = true,
                             onClick = { navegacion(EventosNavegacion.MenuKpis) })
                 ) {
-                    Column(modifier = Modifier.fillMaxWidth(),horizontalAlignment = Alignment.CenterHorizontally) {
-                        MA_Avatar(Features.Kpi().texto)
+                    Row (modifier = Modifier.fillMaxWidth().padding(15.dp),
+                         horizontalArrangement =  Arrangement.Start,
+                         verticalAlignment = Alignment.CenterVertically) {
+
+                        MA_ImagenDrawable(TituloScreen.Kpi.icono)
                         MA_LabelNormal(
                             modifier = Modifier.padding(2.dp),
                             valor = Features.Kpi().texto
@@ -115,35 +124,6 @@ fun HerramientasScreen(navegacion: (EventosNavegacion) -> Unit) {
                 }
 
             }
-            /* MA_IconBottom(
-                       //  modifier = Modifier.weight(1f),
-                       icon = Features.Dashboard().icono,
-                       labelText = Features.Dashboard().texto,
-                       onClick = { navegacion(EventosNavegacion.MenuDashboard) }
-                   )
-                   MA_IconBottom(
-                       //   modifier = Modifier.weight(1f),
-                       icon = Features.Paneles().icono,
-                       labelText = Features.Paneles().texto,
-                       onClick = { navegacion(EventosNavegacion.MenuPaneles) }
-                   )
-
-                   MA_IconBottom(
-                       // modifier = Modifier.weight(1f),
-                       icon = Features.Kpi().icono,
-                       labelText = Features.Kpi().texto,
-                       onClick = { navegacion(EventosNavegacion.MenuKpis) }
-                   )*/
-            /*val scroll = rememberScrollState()
-
-            Box(Modifier) {
-                Column(modifier = Modifier.verticalScroll(state = scroll)) {
-
-                    uiState.paneles.forEach { panelUI ->
-                        MA_Panel(panelData = PanelData().fromPanelUI(panelUI))
-                    }
-                }
-            }*/
 
 
         }

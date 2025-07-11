@@ -7,60 +7,51 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.TableView
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.R
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
-import com.personal.requestmobility.core.composables.imagenes.MA_ImagenDrawable
+import com.personal.requestmobility.core.composables.labels.MA_LabelMini
+import com.personal.requestmobility.core.composables.labels.MA_LabelNegrita
+import com.personal.requestmobility.core.composables.listas.MA_Divider
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
-import com.personal.requestmobility.transacciones.ui.screens.composables.ModalInferiorFiltros
+import java.nio.file.WatchEvent
 
 @Composable
-fun KpiListItem(kpiUI: KpiUI,
-                onClickItem: (KpiUI) -> Unit) {
+fun KpiListItem(
+	kpiUI: KpiUI,
+	onClickItem: (KpiUI) -> Unit,
+) {
 
-    Column {
-
-
-        Row(
-            modifier = Modifier.Companion
-                .fillMaxWidth()
-                .clickable (  onClick = {onClickItem(kpiUI)}/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/ )
-                .padding(10.dp),
-            verticalAlignment = Alignment.Companion.CenterVertically
-        ) {
-
-            //  MA_ImagenDrawable(imagen = R.drawable.database, s = 26.dp)
-            MA_Avatar(kpiUI.titulo)
-            Spacer(modifier = Modifier.padding(4.dp))
-            Column {
+	Column {
 
 
-                Text(
-                    text = "${kpiUI.titulo}",
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Companion.Bold
-                )
-                Text(
-                    text = "${kpiUI.descripcion} ",
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Companion.Normal
-                )
+		Row(modifier = Modifier.Companion
+			.fillMaxWidth()
+			.clickable(onClick = { onClickItem(kpiUI) }/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/)
+			.padding(10.dp), verticalAlignment = Alignment.Companion.CenterVertically) {
+
+			//  MA_ImagenDrawable(imagen = R.drawable.database, s = 26.dp)
+			MA_Avatar(kpiUI.titulo)
+			Spacer(modifier = Modifier.padding(4.dp))
+			Column {
 
 
-            }
-        }
+				MA_LabelNegrita("${kpiUI.titulo}")
+
+				Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+					MA_Avatar("", color = kpiUI.dameColorDinamico(), size = 10.dp)
+					Spacer(modifier = Modifier.padding(3.dp))
+					MA_LabelMini("${kpiUI.descripcion}")
+				}
 
 
-    }
+			}
+		}
+
+		MA_Divider()
+
+	}
 }

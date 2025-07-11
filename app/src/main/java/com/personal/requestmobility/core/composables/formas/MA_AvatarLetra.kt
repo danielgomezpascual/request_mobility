@@ -42,7 +42,7 @@ fun Test_MA_Avatar() {
 
 @Composable
 fun MA_Avatar(
-	texto: String, size: Dp = 40.dp, color: Color = getRandomColor(),
+	texto: String, size: Dp = 35.dp, color: Color = getRandomColor(),
 	fontSize: TextUnit = 18.sp,
 			 ) {
 	// Avatar

@@ -19,9 +19,9 @@ fun <T> MA_Columnas(modifier: Modifier = Modifier, data: List<T>, columnas: Int 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columnas), // Define exactamente 2 columnas
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(8.dp), // Espaciado alrededor de la cuadrícula
-        verticalArrangement = Arrangement.spacedBy(8.dp), // Espaciado vertical entre items
-        horizontalArrangement = Arrangement.spacedBy(8.dp) // Espaciado horizontal entre items
+        //contentPadding = PaddingValues(8.dp), // Espaciado alrededor de la cuadrícula
+        verticalArrangement = Arrangement.spacedBy(4.dp), // Espaciado vertical entre items
+        horizontalArrangement = Arrangement.spacedBy(4.dp) // Espaciado horizontal entre items
     ) {
 
         items(items = data) { ds ->

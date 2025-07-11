@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
@@ -153,9 +154,9 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
 
         },
         contenido = {
-
             val scrollState = rememberScrollState() // 1. Recuerda el estado del scroll
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
+            Column(modifier = Modifier.verticalScroll(scrollState)){
+
 
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     MA_Avatar(kpiUI.titulo)
@@ -163,51 +164,51 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
                 }
 
                 val visible: Boolean = false
+
                 if (visible) {
-                    MA_TextoNormal(
-                        valor = kpiUI.id.toString(),
-                        titulo = "ID",
-                        onValueChange = { valor -> null }
-                    )
+                    MA_TextoNormal(valor = kpiUI.id.toString(), titulo = "ID", onValueChange = { valor -> null })
+                }
+
+                MA_Titulo2("Definicion")
+                MA_Card {
+
+                    Column() {
+
+
+
+
+                        MA_TextoNormal(valor = kpiUI.titulo, titulo = "Nombre", onValueChange = { valor ->
+                            viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeTitulo(valor))
+                        })
+
+                        MA_TextoNormal(valor = kpiUI.descripcion, titulo = "Descripcion", onValueChange = { valor ->
+                            viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeDescripcion(valor))
+                        })
+
+
+
+                        MA_TextoNormal(valor = kpiUI.sql, titulo = "SQL", onValueChange = { valor ->
+                            viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(valor))
+                        })
+
+
+                    }
                 }
 
 
+                MA_Titulo2("Resultado")
+                MA_Card(Modifier.height(400.dp)) {
 
-                MA_TextoNormal(
-                    valor = kpiUI.titulo, titulo = "Nombre",
-                    onValueChange = { valor ->
-                        viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeTitulo(valor))
+
+                    Column() {
+
+                        MA_Tabla(filas = ResultadoSQL.fromSqlToTabla(kpiUI.sql).filas.subList(0,10)) { }
+
+
                     }
-                )
-
-                MA_TextoNormal(
-                    valor = kpiUI.descripcion, titulo = "Descripcion",
-                    onValueChange = { valor ->
-                        viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeDescripcion(valor))
-                    }
-                )
-
-
-
-                MA_TextoNormal(
-                    valor = kpiUI.sql, titulo = "SQL",
-                    onValueChange = { valor ->
-                        viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(valor))
-                    }
-                )
-
-
-                Column(Modifier.height(400.dp)) {
-                    MA_Titulo2("Resultado")
-                    MA_Tabla(
-                        filas = ResultadoSQL.fromSqlToTabla(kpiUI.sql).filas
-                    ) { }
-
-
                 }
-
-
             }
+
 
         }
     )

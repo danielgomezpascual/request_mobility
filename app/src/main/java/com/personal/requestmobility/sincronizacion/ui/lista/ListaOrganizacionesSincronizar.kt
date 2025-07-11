@@ -24,9 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
-import com.personal.requestmobility.core.composables.dialogos.MA_Dialogo_Informacion
-import com.personal.requestmobility.core.composables.dialogos.MA_Dialogo_SiNo
-import com.personal.requestmobility.core.composables.dialogos.ResultadoDialog
 import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
 import com.personal.requestmobility.core.composables.layouts.MA_Box
 import com.personal.requestmobility.core.composables.listas.MA_Lista
@@ -34,7 +31,6 @@ import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGeneric
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
-import com.personal.requestmobility.core.utils.K
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.sincronizacion.ui.composables.OrganizacionListItem
 import com.personal.requestmobility.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM.UIState

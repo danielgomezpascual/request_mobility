@@ -16,9 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DoubleArrow
-import androidx.compose.material.icons.filled.OpenInBrowser
-import androidx.compose.material.icons.filled.OpenInNewOff
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,13 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
@@ -44,8 +37,6 @@ import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.imagenes.MA_Icono
-import com.personal.requestmobility.core.composables.labels.MA_LabelMini
-import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.labels.MA_Titulo2
 import com.personal.requestmobility.core.composables.listas.MA_ListaReordenable_EstiloYouTube
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
@@ -53,19 +44,15 @@ import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGeneric
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
-import com.personal.requestmobility.core.utils._toJson
 import com.personal.requestmobility.core.utils.reemplazaValorFila
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItemDashboard
 import com.personal.requestmobility.kpi.ui.composables.KpiComboItem
-import com.personal.requestmobility.kpi.ui.composables.KpiListItem
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
-import com.personal.requestmobility.paneles.ui.componente.MA_CondicionCeldaPanel
 import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
-import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -112,9 +99,7 @@ fun DetalleDashboardUIScreen(
 
 
 	val dashboardUI = uiState.dashboardUI
-	MA_ScaffoldGenerico(
-		tituloScreen = TituloScreen.DashboardDetalle,
-		volver = false, titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
+	MA_ScaffoldGenerico(tituloScreen = TituloScreen.DashboardDetalle, volver = false, titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
 		// 'navegacion' en ScaffoldGenerico del ejemplo original es la acción del icono de navegación del TopAppBar
 						navegacion = { }, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'
 						contenidoBottomBar = {
@@ -156,8 +141,6 @@ fun DetalleDashboardUIScreen(
 
 						}, contenido = {
 			Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-
-				.padding(horizontal = 16.dp) // Padding adicional para el contenido interno
 				.fillMaxSize()
 				.verticalScroll(rememberScrollState()) // Para que el contenido sea scrollable
 			) {
