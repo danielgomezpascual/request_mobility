@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
+import com.personal.requestmobility.core.composables.listas.MA_NoData
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -134,15 +136,19 @@ fun SuccessMenu(viewModel: HomeVM,
 
                 val scroll = rememberScrollState()
 
-                Box(Modifier) {
-                    Column(modifier = Modifier.verticalScroll(state = scroll)) {
+                Box(Modifier.fillMaxSize()) {
+                    Column(modifier = Modifier.verticalScroll(state = scroll), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (uiState.paneles.size > 0){
+                            uiState.paneles.forEach { panelUI ->
+                                MA_Card {
+                                    MA_Panel(panelData = PanelData.fromPanelUI(panelUI))
+                                }
 
-                        uiState.paneles.forEach { panelUI ->
-                          MA_Card {
-                              MA_Panel(panelData = PanelData.fromPanelUI(panelUI))
-                          }
-
+                            }
+                        }else{
+                            MA_NoData()
                         }
+
                     }
                 }
 

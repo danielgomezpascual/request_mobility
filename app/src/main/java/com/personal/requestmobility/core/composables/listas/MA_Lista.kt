@@ -23,10 +23,7 @@ fun <T> MA_Lista(data: List<T>, itemContent: @Composable (T) -> Unit) {
    // val its = remember { mutableStateOf(data) }
 
     if (data.isEmpty()){
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-            MA_ImagenDrawable(R.drawable.no_data, s = 256.dp)
-            MA_LabelNormal(_t(R.string.datos_no_encotrados))
-        }
+       MA_NoData()
 
 
     }else {

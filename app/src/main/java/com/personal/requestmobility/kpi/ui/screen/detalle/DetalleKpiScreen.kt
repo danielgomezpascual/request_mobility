@@ -30,6 +30,7 @@ import com.personal.requestmobility.core.composables.tabla.MA_Tabla
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiVM.UIState
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
@@ -196,15 +197,15 @@ fun SuccessScreenDetalleKpi(viewModel: DetalleKpiVM,
                 }
 
 
+
+
+                val filas = ResultadoSQL.fromSqlToTabla(kpiUI.sql).filas.take(10)
+
+
                 MA_Titulo2("Resultado")
                 MA_Card(Modifier.height(400.dp)) {
-
-
                     Column() {
-
-                        MA_Tabla(filas = ResultadoSQL.fromSqlToTabla(kpiUI.sql).filas.subList(0,10)) { }
-
-
+                        MA_Tabla(filas = filas ) { }
                     }
                 }
             }

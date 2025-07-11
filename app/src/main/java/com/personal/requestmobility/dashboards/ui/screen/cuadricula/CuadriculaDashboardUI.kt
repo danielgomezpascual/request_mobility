@@ -71,7 +71,7 @@ fun SuccessCuadriculaDashboard(
 	MA_ScaffoldGenerico(
 
 			titulo = "C-Dashboards", // Título adaptado
-			tituloScreen = TituloScreen.Cuadriculas,
+			tituloScreen = TituloScreen.DashboardLista,
 			contenidoBottomBar = {
 				BottomAppBar {
 					Row(
@@ -117,14 +117,16 @@ fun SuccessCuadriculaDashboard(
 					MA_Columnas(data = uiState.lista) { item ->
 						
 						MA_Card(
-								modifier = Modifier.clickable(
+								modifier = Modifier.padding(2.dp).clickable(
 										enabled = true,
 										onClick = {
 											navegacion(EventosNavegacion.VisualizadorDashboard(item.id, _toJson(item.parametros)))
 										})
 							   ) {
 							
-							Column(horizontalAlignment = Alignment.CenterHorizontally) {
+							Column(modifier = Modifier.padding(6.dp), verticalArrangement = Arrangement.Center,
+								   horizontalAlignment = Alignment.CenterHorizontally) {
+
 								MA_Avatar(item.nombre)
 								
 								

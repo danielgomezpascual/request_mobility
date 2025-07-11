@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
@@ -16,7 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.componentes.MA_Marco
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoAnillo
 import com.personal.requestmobility.core.composables.graficas.MA_GraficoBarras
@@ -195,27 +198,31 @@ fun MA_Panel(
 				
 			}
 								   )
-	
-	
-	when (configuracion.orientacion) {
-		PanelOrientacion.VERTICAL   -> {
-			MA_GraficaConTablaVertical(
+
+	MA_Card(modifier = Modifier.padding(6.dp)) {
+		when (configuracion.orientacion) {
+			PanelOrientacion.VERTICAL   -> {
+
+
+				MA_GraficaConTablaVertical(
 					modifier = modifier,
 					panelConfiguracion = configuracion,
 					grafica = { graficaComposable() },
 					tabla = { tablaComposable() }
-									  )
-		}
-		
-		PanelOrientacion.HORIZONTAL -> {
-			MA_GraficaConTablaHorizontal(
+				)
+			}
+
+			PanelOrientacion.HORIZONTAL -> {
+				MA_GraficaConTablaHorizontal(
 					modifier = modifier,
 					panelConfiguracion = configuracion,
 					grafica = { graficaComposable() },
 					tabla = { tablaComposable() }
-										)
+				)
+			}
 		}
 	}
+
 	
 	
 }

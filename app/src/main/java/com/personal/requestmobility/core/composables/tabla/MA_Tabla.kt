@@ -26,7 +26,7 @@ import com.personal.requestmobility.transacciones.ui.screens.composables.ModalIn
 fun TestTablaDatos() {
 
 
-    // TablaDatos(Modifier, "Test", dameValoresTestTabla())
+	// TablaDatos(Modifier, "Test", dameValoresTestTabla())
 }
 
 /*fun dameValoresTestTabla(): ValoresTabla {
@@ -67,10 +67,11 @@ fun TestTablaDatos() {
 }*/
 
 @Composable
-fun TablaDatos(modifier: Modifier = Modifier,
-               titulo: String = "",
-               tabla: ValoresTabla) {
-    /*
+fun TablaDatos(
+    modifier: Modifier = Modifier,
+    titulo: String = "",
+    tabla: ValoresTabla,
+) {/*
         Marco(modifier = modifier, titulo = titulo) {
             Tabla(modifier, tabla)
         }*/
@@ -78,87 +79,80 @@ fun TablaDatos(modifier: Modifier = Modifier,
 
 
 @Composable
-fun MA_Tabla(modifier: Modifier = Modifier,
-             panelConfiguracion: PanelConfiguracion = PanelConfiguracion(
-                 ajustarContenidoAncho = false,
-                 indicadorColor = false,
-                 filasColor = false
+fun MA_Tabla(
+    modifier: Modifier = Modifier,
+    panelConfiguracion: PanelConfiguracion = PanelConfiguracion(ajustarContenidoAncho = false, indicadorColor = false, filasColor = false
 
-             ),
-             filas: List<Fila>,
-             celdasFiltro: List<Celda> = emptyList<Celda>(),
-             mostrarTitulos: Boolean = true,
-             onClickSeleccionarFiltro: (Celda) -> Unit = {},
-             onClickInvertir: (Celda) -> Unit = {},
-             onClickSeleccionarFila: (Fila) -> Unit = {}) {
+    ),
+    filas: List<Fila>,
+    celdasFiltro: List<Celda> = emptyList<Celda>(),
+    mostrarTitulos: Boolean = true,
+    onClickSeleccionarFiltro: (Celda) -> Unit = {},
+    onClickInvertir: (Celda) -> Unit = {},
+    onClickSeleccionarFila: (Fila) -> Unit = {},
+) {
 
-    val estadoScroll = rememberScrollState()
-    val indicadorColor = panelConfiguracion.indicadorColor
-    val filasColor = panelConfiguracion.filasColor
-    val ajustarContenidoAncho = panelConfiguracion.ajustarContenidoAncho
-    var modifierColumn = modifier
-    if (!ajustarContenidoAncho) {
-        modifierColumn = modifierColumn.horizontalScroll(estadoScroll)
-    }
-
+	val estadoScroll = rememberScrollState()
+	val indicadorColor = panelConfiguracion.indicadorColor
+	val filasColor = panelConfiguracion.filasColor
+	val ajustarContenidoAncho = panelConfiguracion.ajustarContenidoAncho
+	var modifierColumn = modifier
+	if (!ajustarContenidoAncho) {
+		modifierColumn = modifierColumn.horizontalScroll(estadoScroll)
+	}
 
 
 
-    Column(modifierColumn) {
-        if (celdasFiltro.isNotEmpty()) {
-            ModalInferiorFiltros() {
-                Column {
-                    MA_Titulo("Filtro")
-                    MA_Lista(celdasFiltro) { celdaFiltro ->
-                        MA_CeldaFiltro(
-                            celda = celdaFiltro,
-                            onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
-                            onClickInvertir = { cf -> onClickInvertir(cf) })
-                    }
-                }
+
+	Column(modifierColumn) {
+		if (celdasFiltro.isNotEmpty()) {
+			ModalInferiorFiltros() {
+				Column {
+					MA_Titulo("Filtro")
+					MA_Lista(celdasFiltro) { celdaFiltro ->
+						MA_CeldaFiltro(celda = celdaFiltro, onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) }, onClickInvertir = { cf -> onClickInvertir(cf) })
+					}
+				}
 
 
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(4.dp)
-                .fillMaxWidth()
-        ) {
+			}
+		}
+		Row(modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()) {
 
 
-            if (mostrarTitulos && !filas.isEmpty()) {
-                //todo: si no hay filas se jode el sistema, poner una pantalla oalgo de sin informacion
-                filas.first().celdas.forEachIndexed { int, celda ->
+			if (mostrarTitulos && !filas.isEmpty()) {
+				//todo: si no hay filas se jode el sistema, poner una pantalla oalgo de sin informacion
+				filas.first().celdas.forEachIndexed { int, celda ->
 
-                    var modifierBox: Modifier = Modifier
-                    modifierBox = if (ajustarContenidoAncho) {
-                        modifierBox
+					var modifierBox: Modifier = Modifier
+					modifierBox = if (ajustarContenidoAncho) {
+						modifierBox
                             .fillMaxWidth()
                             .weight(1f)
-                    } else {
-                        modifierBox.width(celda.size)
-                    }
-                    Box(
-                        modifier = modifierBox.background(Color.Gray)
+					} else {
+						modifierBox.width(celda.size)
+					}
+					Box(modifier = modifierBox.background(Color.Gray)
 
-                    ) {
-                        celda.celdaTitulo(modifier)
-                    }
+					) {
+						celda.celdaTitulo(modifier)
+					}
 
-                }
-            }
-        }
-
-
-        MA_Lista(filas) { fila ->
-            MA_FilaTablaDatos(fila, panelConfiguracion) { fila ->
-                onClickSeleccionarFila(fila)
-            }
-        }
+				}
+			}
+		}
 
 
-    }
+		MA_Lista(filas) { fila ->
+			MA_FilaTablaDatos(fila, panelConfiguracion) { fila ->
+				onClickSeleccionarFila(fila)
+			}
+		}
+
+
+	}
 
 
 }
