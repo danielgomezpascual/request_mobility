@@ -22,18 +22,21 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
@@ -44,17 +47,25 @@ import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
 import com.personal.requestmobility.core.composables.labels.MA_Titulo2
 import com.personal.requestmobility.core.composables.listas.MA_ListaReordenable_EstiloYouTube
+import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.core.utils._toJson
+import com.personal.requestmobility.core.utils.reemplazaValorFila
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItemDashboard
 import com.personal.requestmobility.kpi.ui.composables.KpiComboItem
 import com.personal.requestmobility.kpi.ui.composables.KpiListItem
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.menu.Features
+import com.personal.requestmobility.paneles.domain.entidades.PanelData
+import com.personal.requestmobility.paneles.ui.componente.MA_CondicionCeldaPanel
+import com.personal.requestmobility.paneles.ui.componente.MA_Panel
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
+import com.personal.requestmobility.paneles.ui.screen.detalle.DetallePanelVM
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -94,6 +105,12 @@ fun DetalleDashboardUIScreen(
 	navegacion: (EventosNavegacion) -> Unit,
 ) {
 
+	val sheetStateCondicionCelda = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+	val scroll = rememberScrollState()
+	val scope = rememberCoroutineScope() // Se mantiene dentro del componente
+
+
+
 	val dashboardUI = uiState.dashboardUI
 	MA_ScaffoldGenerico(volver = false, titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
 		// 'navegacion' en ScaffoldGenerico del ejemplo original es la acción del icono de navegación del TopAppBar
@@ -107,6 +124,14 @@ fun DetalleDashboardUIScreen(
 									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Menu().icono, labelText = Features.Menu().texto, onClick = {
 										navegacion(EventosNavegacion.MenuDashboard)
 									})
+
+
+									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Previo().icono, labelText = Features.Previo().texto, color = Features.Previo().color, onClick = {
+//										navegacion(EventosNavegacion.VisualizadorDashboard(uiState.dashboardUI.id, ""))
+										scope.launch { sheetStateCondicionCelda.show() }
+
+									})
+
 
 									Spacer(modifier = Modifier
 										.fillMaxWidth()
@@ -271,6 +296,43 @@ fun DetalleDashboardUIScreen(
 						)
 					}
 				}
+
+
+				//------------------
+
+					MA_BottomSheet(sheetStateCondicionCelda, onClose = {
+						{ scope.launch { sheetStateCondicionCelda.hide() } }
+					}, contenido = {
+
+						Box(Modifier) {
+							Column(modifier = Modifier.verticalScroll(state = scroll)) {
+
+								MA_BotonSecundario(texto = "Cerrar") { scope.launch { sheetStateCondicionCelda.hide() } }
+
+
+
+								dashboardUI.listaPaneles.filter { it.seleccionado }.forEach { panelUI ->
+									lateinit var p: PanelUI
+									if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()) {
+										val sql = panelUI.kpi.sql
+										p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
+									} else {
+										p = panelUI
+									}
+
+									MA_Panel(panelData = PanelData.fromPanelUI(p))
+
+								}
+
+							}
+						}
+					})
+
+
+
+
+
+				//------------------
 
 
 			}
