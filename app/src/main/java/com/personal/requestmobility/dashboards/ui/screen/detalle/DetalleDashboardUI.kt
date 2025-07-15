@@ -1,7 +1,9 @@
 package com.personal.requestmobility.dashboards.ui.screen.detalle
 
 import MA_IconBottom
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
@@ -37,6 +40,7 @@ import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.imagenes.MA_Icono
+import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.labels.MA_Titulo2
 import com.personal.requestmobility.core.composables.listas.MA_ListaReordenable_EstiloYouTube
 import com.personal.requestmobility.core.composables.modales.MA_BottomSheet
@@ -151,8 +155,6 @@ fun DetalleDashboardUIScreen(
 
 				Column {
 					MA_Titulo2("Informacion")
-
-
 					MA_SwitchNormal(valor = dashboardUI.home, titulo = "Home", icono = Icons.Default.Star) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
 
 				}
@@ -185,36 +187,39 @@ fun DetalleDashboardUIScreen(
 
 				MA_Titulo2("KPI")
 				MA_Card {
-					Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(125.dp)) {
+					Column {
+						Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(125.dp)) {
+							MA_SwitchNormal(valor = (dashboardUI.tipo == TipoDashboard.Dinamico()), titulo = "Dinamico", icono = Icons.Default.Star) { valor ->
+								viewModel.onEvento(DetalleDashboardVM.Eventos.onChangeTipoDashboard(valor))
+							}
 
 
-						MA_SwitchNormal(valor = (dashboardUI.tipo == TipoDashboard.Dinamico()), titulo = "Dinamico", icono = Icons.Default.Star) { valor ->
-							viewModel.onEvento(DetalleDashboardVM.Eventos.onChangeTipoDashboard(valor))
-						}
+							if (dashboardUI.tipo == TipoDashboard.Dinamico()) {
 
 
-						if (dashboardUI.tipo == TipoDashboard.Dinamico()) {
-
-							Row(modifier = Modifier.fillMaxWidth()) {
+								Row(modifier = Modifier.fillMaxWidth()) {
 
 
-								MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "", descripcion = "Seleccione el KPI a enlazar", valorInicial = {
-									KpiComboItem(kpiUI = dashboardUI.kpiOrigen ?: KpiUI())
+									MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "", descripcion = "Seleccione el KPI a enlazar", valorInicial = {
+										KpiComboItem(kpiUI = dashboardUI.kpiOrigen ?: KpiUI())
 
-								}, elementosSeleccionables = uiState.kpisDisponibles, item = { kpiUI ->
-									KpiComboItem(kpiUI = kpiUI)
-								}, onClickSeleccion = { kpiUI ->
-									viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeKpiSeleccionado(kpiUI))
-								})
+									}, elementosSeleccionables = uiState.kpisDisponibles, item = { kpiUI ->
+										KpiComboItem(kpiUI = kpiUI)
+									}, onClickSeleccion = { kpiUI ->
+										viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeKpiSeleccionado(kpiUI))
+									})
 
-								Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.clickable(enabled = true, onClick = { navegacion(EventosNavegacion.CargarKPI(dashboardUI.kpiOrigen.id)) })) {
-									MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+									Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.clickable(enabled = true, onClick = { navegacion(EventosNavegacion.CargarKPI(dashboardUI.kpiOrigen.id)) })) {
+										MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+									}
+
+
+									/*MA_Icono(modifier = Modifier/*.weight(1f)*/, icono = Icons.Default.PlayArrow, onClick = {
+
+									})*/
 								}
 
 
-								/*MA_Icono(modifier = Modifier/*.weight(1f)*/, icono = Icons.Default.PlayArrow, onClick = {
-
-								})*/
 							}
 
 
@@ -222,6 +227,16 @@ fun DetalleDashboardUIScreen(
 
 
 					}
+					val sc = rememberScrollState()
+					Row(modifier = Modifier
+						.horizontalScroll(sc)
+						.background(color = Color(255, 248, 225, 255))) {
+						dashboardUI.kpiOrigen.dameColumnasSQL().forEach { columna ->
+							MA_LabelMini(columna.nombre)
+						}
+					}
+
+
 				}
 
 				MA_Titulo2("Paneles")
@@ -238,12 +253,9 @@ fun DetalleDashboardUIScreen(
 							Row(modifier = Modifier.fillMaxWidth()) {
 
 								Box(modifier = Modifier.weight(1f)) {
-									SeleccionPanelItemDashboard(panel) { panelSeleccionado ->
-										App.log.d("[PREV] ${panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
+									SeleccionPanelItemDashboard(panel, dashboardUI.kpiOrigen.dameColumnasSQL()) { panelSeleccionado ->
 										val panelesR: List<PanelUI> = paneles.map { panel ->
 											if (panel.id == panelSeleccionado.id) {
-												App.log.d("Encontrado")
-												App.log.d("${!panelSeleccionado.seleccionado} ${panelSeleccionado.titulo}")
 												panel.copy(seleccionado = !panelSeleccionado.seleccionado)
 											} else {
 												panel
@@ -251,14 +263,12 @@ fun DetalleDashboardUIScreen(
 										}
 
 										val p = panelesR.first { it.id == panelSeleccionado.id }
-										App.log.d("[POST] ${p.seleccionado} ${p.titulo}")
 										viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
 
 									}
 								}
 
 								Box(contentAlignment = Alignment.Center, modifier = Modifier
-
 									.clickable(enabled = true, onClick = {
 										navegacion(EventosNavegacion.CargarPanel(panel.id))
 									})) {
@@ -296,14 +306,14 @@ fun DetalleDashboardUIScreen(
 
 							dashboardUI.listaPaneles.filter { it.seleccionado }.forEach { panelUI ->
 								lateinit var p: PanelUI
-								if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()) {
-									val sql = panelUI.kpi.sql
-									p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
-								} else {
-									p = panelUI
-								}
+								/*	if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()) {
+										val sql = panelUI.kpi.sql
+										p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
+									} else {
+										p = panelUI
+									}*/
 
-								MA_Panel(panelData = PanelData.fromPanelUI(p))
+								MA_Panel(panelData = PanelData.fromPanelUI(panelUI, dashboardUI.parametros))
 
 							}
 

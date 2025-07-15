@@ -3,7 +3,6 @@ package com.personal.requestmobility.core.utils
 import android.content.Context
 import com.google.gson.Gson
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.tabla.Fila
 import org.jsoup.Jsoup
 import kotlin.jvm.java
 
@@ -72,9 +71,6 @@ fun String.getValueFromTagWithJsoup(tagName: String): String? {
 }
 
 
-
-data class Parametros(val ps:List<Parametro> = emptyList<Parametro>())
-data class Parametro(val key: String , val valor: String)
 fun String.reemplazaValorFila(parametros: Parametros, addComillas : Boolean = true ): String {
 	var cadena = this
 	parametros.ps.forEach { parametro ->

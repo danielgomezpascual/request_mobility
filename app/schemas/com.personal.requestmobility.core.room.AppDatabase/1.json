@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cb1cb15fa45bc6d5f462a41f369ac4a2",
+    "identityHash": "66c81ed8e8348552782487c312aa0575",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -194,7 +194,7 @@
       },
       {
         "tableName": "Kpis",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `origen` TEXT NOT NULL, `sql` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `origen` TEXT NOT NULL, `sql` TEXT NOT NULL, `parametros` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -223,6 +223,12 @@
           {
             "fieldPath": "sql",
             "columnName": "sql",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parametros",
+            "columnName": "parametros",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -346,7 +352,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cb1cb15fa45bc6d5f462a41f369ac4a2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '66c81ed8e8348552782487c312aa0575')"
     ]
   }
 }

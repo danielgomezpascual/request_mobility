@@ -4,15 +4,12 @@ package com.personal.requestmobility.dashboards.ui.screen.cuadricula
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.utils.reemplazaValorFila
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
-import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardCU
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardsCU
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
 import com.personal.requestmobility.dashboards.ui.entidades.fromDashboard
-import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -55,8 +52,11 @@ class CuadriculaDashboardVM(
 					
 					var listaDashboard: List<Dashboard> = emptyList()
 					listaDashboardsDomain.filter { it.tipo == TipoDashboard.Dinamico() }.forEach { dsh ->
-						ResultadoSQL.fromSqlToTabla(dsh.kpi.sql).filas.forEach { f ->
+
+						ResultadoSQL.fromSqlToTabla(dsh.kpiOrigenDatos.sql).filas.forEach { f ->
 							val ds: Dashboard = dsh.copy(nombre = dsh.nombre.reemplazaValorFila(f.toParametros(), addComillas = false))
+
+							App.log.d("!->  ${f.toParametros()}")
 							listaDashboard = listaDashboard.plus(ds.copy(parametros = f.toParametros()))
 						}
 					}
@@ -68,8 +68,8 @@ class CuadriculaDashboardVM(
 					listaDashboard = listaDashboard.plus(listaDshEstaticos)
 					
 					
-					App.log.lista("Dashboard", listaDashboard)
-					App.log.d("Dentro anaclertro...")
+					/*App.log.lista("Dashboard", listaDashboard)
+					App.log.d("Dentro anaclertro...")*/
 					_uiState.value = UIState.Success(lista = listaDashboard.map {
 						DashboardUI().fromDashboard(it)
 					})

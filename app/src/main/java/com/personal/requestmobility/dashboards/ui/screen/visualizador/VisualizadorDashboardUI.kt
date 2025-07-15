@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
+import com.personal.requestmobility.core.composables.labels.MA_LabelMini
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -97,18 +98,11 @@ fun Success(
 				val scroll = rememberScrollState()
 				Box(Modifier) {
 					Column(modifier = Modifier.verticalScroll(state = scroll)) {
-						
-						
+
+
 						uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->
 							lateinit var p: PanelUI
-							if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()) {
-								val sql = panelUI.kpi.sql
-								p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
-							} else {
-								p = panelUI
-							}
-							
-							MA_Panel(panelData = PanelData.fromPanelUI(p))
+							MA_Panel(panelData = PanelData.fromPanelUI(panelUI, uiState.dashboardUI.parametros))
 							
 						}
 						

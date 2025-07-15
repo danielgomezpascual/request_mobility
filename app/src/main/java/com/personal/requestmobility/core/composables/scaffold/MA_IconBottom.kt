@@ -29,7 +29,7 @@ import com.personal.requestmobility.ui.theme.RequestMobilityTheme
 fun MA_IconBottom(
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    labelText: String,
+    labelText: String="",
     destacado: Boolean = false,
     seleccionado: Boolean = false,
     color : Color  = MaterialTheme.colorScheme.primary,

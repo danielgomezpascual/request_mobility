@@ -123,8 +123,7 @@ fun SuccessScreenDetalleKpi(
 	val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 	val sheetStateCondicionFila = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 	val sheetStateCondicionCelda = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-	
-	val scope = rememberCoroutineScope() // Se mantiene dentro del componente
+		val scope = rememberCoroutineScope() // Se mantiene dentro del componente
 	
 	
 	
@@ -672,8 +671,12 @@ fun SuccessScreenDetalleKpi(
 		}, contenido = {
 			Column {
 				MA_BotonPrincipal("Cerrar") { scope.launch { sheetState.hide() } }
-				
-				
+
+
+
+				panelUI.kpi.parametros.ps.forEach { p-> App.log.d(p.toString()) }
+
+
 				MA_Panel(
 						panelData = PanelData(
 								panel = panelUI.toPanel(),

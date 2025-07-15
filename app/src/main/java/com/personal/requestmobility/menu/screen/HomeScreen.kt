@@ -138,7 +138,7 @@ fun SuccessMenu(viewModel: HomeVM,
 
                 Box(Modifier.fillMaxSize()) {
                     Column(modifier = Modifier.verticalScroll(state = scroll), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (uiState.paneles.size > 0){
+                       /* if (uiState.paneles.size > 0){
                             uiState.paneles.forEach { panelUI ->
                                 MA_Card {
                                     MA_Panel(panelData = PanelData.fromPanelUI(panelUI))
@@ -147,7 +147,7 @@ fun SuccessMenu(viewModel: HomeVM,
                             }
                         }else{
                             MA_NoData()
-                        }
+                        }*/
 
                     }
                 }

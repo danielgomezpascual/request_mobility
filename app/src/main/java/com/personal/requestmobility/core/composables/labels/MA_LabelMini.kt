@@ -24,9 +24,10 @@ fun MA_LabelMini(
     icono: Icons? = null,
 
 ) {
-    Text(text = valor, modifier = modifier.padding(1.dp), color = color,
-         fontSize = 12.sp,
+    Text(text = valor,
+         modifier = modifier.padding(1.dp), color = color,
+         fontSize = 10.sp,
         
         /*style = MaterialTheme.typography.bodySmall,*/ textAlign = alineacion,
-        fontStyle =fontStyle)
+        )
 }

@@ -1,8 +1,6 @@
 package com.personal.requestmobility.dashboards.ui.entidades
 
-import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.utils.Parametros
-import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
@@ -27,17 +25,21 @@ data class DashboardUI(
 // Mapper from Domain to UI
 // Se usa como: DashboardUI().fromDashboard(dashboardDomain)
 fun DashboardUI.fromDashboard(dashboard: Dashboard): DashboardUI {
-	
+
+
+
+
+	val nombre = Parametros.reemplazar(dashboard.nombre, dashboard.kpiOrigenDatos.parametros, dashboard.parametros)
 	return DashboardUI(
-			id = dashboard.id,
-			tipo = dashboard.tipo,
-			nombre = dashboard.nombre,
-			home = dashboard.home,
-			logo = dashboard.logo,
-			descripcion = dashboard.descripcion,
-			kpiOrigen = KpiUI().fromKPI(dashboard.kpi),
-			listaPaneles = dashboard.paneles.map { PanelUI().fromPanel(it) },
-			parametros = dashboard.parametros
+		id = dashboard.id,
+		tipo = dashboard.tipo,
+		nombre = nombre,
+		home = dashboard.home,
+		logo = dashboard.logo,
+		descripcion = dashboard.descripcion,
+		kpiOrigen = KpiUI().fromKPI(dashboard.kpiOrigenDatos),
+		listaPaneles = dashboard.paneles.map { PanelUI().fromPanel(it) },
+		parametros = dashboard.parametros
 					  )
 	
 }
@@ -51,17 +53,17 @@ fun DashboardUI.toDashboard(): Dashboard {
 	
 	
 	return Dashboard(
-			id = this.id,
-			tipo = this.tipo,
-			nombre = this.nombre,
-			home = this.home,
-			logo = this.logo,
-			descripcion = this.descripcion,
-			kpi = this.kpiOrigen.toKpi(),
-			paneles = this.listaPaneles.map {
+		id = this.id,
+		tipo = this.tipo,
+		nombre = this.nombre,
+		home = this.home,
+		logo = this.logo,
+		descripcion = this.descripcion,
+		kpiOrigenDatos = this.kpiOrigen.toKpi(),
+		paneles = this.listaPaneles.map {
 				it.toPanel()
 			},
-			parametros = this.parametros
+		parametros = this.parametros
 			 )
 }
 

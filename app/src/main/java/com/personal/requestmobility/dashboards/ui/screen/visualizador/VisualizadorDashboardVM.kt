@@ -4,7 +4,6 @@ package com.personal.requestmobility.dashboards.ui.screen.visualizador
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils._toObjectFromJson
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardCU
@@ -47,7 +46,8 @@ class VisualizadorDashboardVM(
 	
 	fun onEvent(evento: Eventos) {
 		when (evento) {
-			is Eventos.Carga -> cargaInicial(evento.idenificador, evento.parametrosJSON)
+			is Eventos.Carga -> cargaInicial(evento.idenificador,
+											 evento.parametrosJSON)
 		}
 	}
 	

@@ -8,6 +8,7 @@ import com.personal.requestmobility.core.composables.tabla.Celda
 import com.personal.requestmobility.core.composables.tabla.Columnas
 import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
+import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils.esNumerico
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.entidades.toPanel
@@ -24,9 +25,16 @@ data class PanelData(
 	
 	companion object{
 		
-		fun fromPanelUI(panelUI: PanelUI): PanelData {
+		fun fromPanelUI(panelUI: PanelUI, parametrosOrigenDatos: Parametros): PanelData {
+
+
+
+
+
+
+
 			val panelConfiguracion = panelUI.configuracion
-			val tabla: ValoresTabla = ResultadoSQL.fromSqlToTabla(panelUI.kpi.sql)
+			val tabla: ValoresTabla = ResultadoSQL.fromSqlToTabla(sql = panelUI.kpi.sql, parametrosKpi =  panelUI.kpi.parametros, parametrosOrigenDatos = parametrosOrigenDatos)
 			App.log.d("${panelUI.titulo} - ${panelUI.orden} - ${panelUI.seleccionado} - ")
 			
 			

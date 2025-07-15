@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.personal.requestmobility.App
-import com.personal.requestmobility.core.composables.dialogos.AppGlobalDialogs
 import com.personal.requestmobility.core.room.IRoom
 import com.personal.requestmobility.core.utils.Utils.esTrue
 import com.personal.requestmobility.core.utils.Utils.toSiNo
@@ -13,10 +12,6 @@ import com.personal.requestmobility.core.utils._toJson
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
-import com.personal.requestmobility.paneles.data.ds.local.entidades.PanelesRoom
-import com.personal.requestmobility.paneles.data.ds.local.entidades.fromPanel
-import com.personal.requestmobility.paneles.domain.entidades.Panel
-import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelCU
 import com.personal.requestmobility.paneles.domain.interactors.ObtenerPanelesCU
 import kotlinx.coroutines.flow.first
 import org.koin.java.KoinJavaComponent.getKoin
@@ -66,14 +61,14 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 	// pero de manera no bloqueante gracias a 'suspend'.
 	
 	return Dashboard(
-			id = this.id,
-			tipo = TipoDashboard.fromId(this.tipo),
-			nombre = this.nombre,
-			home = esTrue(valor = this.home.toString()),
-			logo = this.logo,
-			descripcion = this.descripcion,
-			kpi = obtenerKpi.obtener(this.idKpi), // Asumo que esta también es una función suspend
-			paneles = listaPanelesActualizado)
+		id = this.id,
+		tipo = TipoDashboard.fromId(this.tipo),
+		nombre = this.nombre,
+		home = esTrue(valor = this.home.toString()),
+		logo = this.logo,
+		descripcion = this.descripcion,
+		kpiOrigenDatos = obtenerKpi.obtener(this.idKpi), // Asumo que esta también es una función suspend
+		paneles = listaPanelesActualizado)
 	
 }
 
@@ -88,13 +83,13 @@ fun DashboardRoom.fromDashboard(dashboard: Dashboard): DashboardRoom {
 	
 	
 	return DashboardRoom(
-			id = dashboard.id, // Room maneja la autogeneración si id es 0 en la inserción.
-			tipo = idTipo,
-			nombre = dashboard.nombre,
-			home = toSiNo(dashboard.home),
-			logo = dashboard.logo,
-			descripcion = dashboard.descripcion,
-			idKpi = dashboard.kpi.id,
-			paneles = _toJson(dashboard.paneles.map { PanelDashboardRoom.fromPanel(it) })
+		id = dashboard.id, // Room maneja la autogeneración si id es 0 en la inserción.
+		tipo = idTipo,
+		nombre = dashboard.nombre,
+		home = toSiNo(dashboard.home),
+		logo = dashboard.logo,
+		descripcion = dashboard.descripcion,
+		idKpi = dashboard.kpiOrigenDatos.id,
+		paneles = _toJson(dashboard.paneles.map { PanelDashboardRoom.fromPanel(it) })
 						)
 }

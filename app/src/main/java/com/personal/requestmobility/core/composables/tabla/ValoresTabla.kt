@@ -7,8 +7,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.componentes.MA_Colores
-import com.personal.requestmobility.core.composables.graficas.ValoresGrafica
-import com.personal.requestmobility.core.composables.graficas.ElementoGrafica
 import com.personal.requestmobility.core.utils.Parametro
 import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils.esNumerico

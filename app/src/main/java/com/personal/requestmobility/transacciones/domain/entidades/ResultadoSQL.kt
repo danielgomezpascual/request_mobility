@@ -7,6 +7,10 @@ import com.personal.requestmobility.core.composables.tabla.Fila
 import com.personal.requestmobility.core.composables.tabla.ValoresTabla
 import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.core.room.ResultadoEjecucionSQL
+import com.personal.requestmobility.core.utils.Parametro
+import com.personal.requestmobility.core.utils.Parametros
+import com.personal.requestmobility.core.utils.if3
+import com.personal.requestmobility.kpi.domain.entidades.Kpi
 import org.koin.mp.KoinPlatform.getKoin
 
 data class ResultadoSQL(
@@ -16,10 +20,38 @@ data class ResultadoSQL(
 	companion object {
 		fun from(execSQL: ResultadoEjecucionSQL) = ResultadoSQL(titulos = execSQL.titulos,
 				filas = execSQL.filas)
-		
-		fun fromSqlToTabla(sql: String): ValoresTabla {
+
+
+		fun fromSqlToTabla(kpi: Kpi): ValoresTabla {
+			val sql = kpi.sql
+			val parametors = kpi.parametros
+			return fromSqlToTabla(sql, parametors)
+		}
+
+		fun fromSqlToTabla(sql: String, parametrosKpi: Parametros = Parametros(), parametrosOrigenDatos: Parametros = Parametros()): ValoresTabla {
+
+
+			//var sqlConReemplazos = sql
+			/*parametrosKpi.ps.forEach { parametro ->
+
+				val key = parametro.key
+				val parametroOrigenDatos: Parametro? = parametrosOrigenDatos.ps.firstOrNull{it.key.equals(key)}
+
+				var valor = if3 (parametro.valor.isEmpty(), parametro.defecto, parametro.valor)
+				if (!parametro.fijo &&  parametroOrigenDatos != null){
+					valor  = parametroOrigenDatos.valor
+				}
+
+				sqlConReemplazos = sqlConReemplazos.replace("\$$key", "$valor", ignoreCase = true)
+			}*/
+
+			val sqlConReemplazos = Parametros.reemplazar(str = sql, parametrosKpi = parametrosKpi, parametrosDashboard = parametrosOrigenDatos)
+
+
+			App.log.lista("Parametors", parametrosKpi.ps)
+			App.log.d("SQL: $sqlConReemplazos")
 			val trxDao = getKoin().get<AppDatabase>().transaccionesDao()
-			val lista = trxDao.sqlToListString(sql)
+			val lista = trxDao.sqlToListString(sqlConReemplazos)
 			return from(lista).toValoresTabla()
 		}
 		

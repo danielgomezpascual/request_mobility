@@ -152,7 +152,8 @@ class DetallePanelVM(
 								val kpi =
 									estado.kpiDisponibles.first { it.id == evento.identificador }
 								
-								val valoresTabla = ResultadoSQL.fromSqlToTabla(kpi.sql)
+								val valoresTabla = ResultadoSQL.fromSqlToTabla(kpi.sql, kpi.parametros)
+
 								estado.copy(valoresTabla = valoresTabla,
 											panelUI = estado.panelUI.copy(kpi = kpi)
 										   
@@ -500,7 +501,7 @@ class DetallePanelVM(
 				} else {
 					val panelUI: PanelUI =
 						PanelUI().fromPanel(obtenerPanelCU.obtener(id = identificador))
-					val valoresTabla = ResultadoSQL.fromSqlToTabla(panelUI.kpi.sql)
+					val valoresTabla = ResultadoSQL.fromSqlToTabla(panelUI.kpi.sql, panelUI.kpi.parametros)
 					_uiState.value = UIState.Success(panelUI = panelUI, valoresTabla = valoresTabla)
 				}
 			}
@@ -520,6 +521,8 @@ class DetallePanelVM(
 						} else {
 							estado
 						}
+						//10.201.6.2
+						//
 					}
 				}
 			

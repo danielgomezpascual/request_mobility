@@ -3,6 +3,9 @@ package com.personal.requestmobility.kpi.data.ds.local.entidades
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.personal.requestmobility.core.room.IRoom
+import com.personal.requestmobility.core.utils.Parametros
+import com.personal.requestmobility.core.utils._toJson
+import com.personal.requestmobility.core.utils._toObjectFromJson
 import com.personal.requestmobility.kpi.domain.entidades.Kpi
 
 
@@ -14,6 +17,7 @@ data class KpisRoom(
     val descripcion: String = "",
     val origen : String = "",
     val sql: String = "",
+    val parametros: String = ""
   //  val configuracion: String = ""
 ) : IRoom
 
@@ -29,7 +33,9 @@ return  Kpi(
         id = this.id,
         titulo = this.titulo,
         descripcion = this.descripcion,
-        sql = this.sql
+        sql = this.sql,
+        parametros = _toObjectFromJson<Parametros>(parametros) ?: Parametros()
+
         /*configuracion = configuracion*/)
 }
 
@@ -42,6 +48,7 @@ fun KpisRoom.fromKPI(kpi: Kpi)
         titulo = kpi.titulo,
         descripcion = kpi.descripcion,
         sql = kpi.sql,
+        parametros =  _toJson( kpi.parametros)
         /*configuracion = _toJson(kpi.configuracion)*/
     )
 
