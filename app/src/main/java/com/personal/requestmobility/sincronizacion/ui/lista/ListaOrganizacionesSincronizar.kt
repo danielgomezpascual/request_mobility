@@ -156,9 +156,9 @@ fun Success(viewModel: ListaOrganizacionesSincronizarVM,
                 }
 
 
-                MA_Lista(data = uiState.organizaciones) { organizacionUI ->
+                MA_Lista(data = uiState.organizaciones.filter { it.visible }) { organizacionUI ->
                     OrganizacionListItem(organizacionUI = organizacionUI, onClickItem = {
-                        App.log.d(organizacionUI.toString())
+
                         viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.OnChangeSeleccionCheck(organizacionUI))
                     })
                 }

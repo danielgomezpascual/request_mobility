@@ -108,6 +108,8 @@ class ListaOrganizacionesSincronizarVM(
 	private fun onChangeSeleccion(organizacionUI: OrganizacionesSincronizarUI) {
 		if (_uiState.value is UIState.Success) {
 
+			listaOrganizacionesSincronizarUI = ((_uiState.value) as UIState.Success).organizaciones
+
 			listaOrganizacionesSincronizarUI = listaOrganizacionesSincronizarUI.map { org ->
 				if (organizacionUI.organizationCode.equals(org.organizationCode)) {
 					val estado = organizacionUI.seleccionado
@@ -122,26 +124,48 @@ class ListaOrganizacionesSincronizarVM(
 
 
 	private fun modificarTextoBusqueta(texto: String) {
+
 		if (_uiState.value is UIState.Success) {
 			textoBuscar = texto
 
-			val l = if (!texto.isEmpty()) {
+			_uiState.update { estado ->
+				if (estado is ListaOrganizacionesSincronizarVM.UIState.Success){
+					if (texto.isEmpty()){
+						estado.copy(textoBuscar ="", organizaciones = listaOrganizacionesSincronizarUI.map { it.copy(visible = true) })
+					}else{
+
+
+						estado.copy(textoBuscar = textoBuscar,
+									organizaciones = listaOrganizacionesSincronizarUI.map { it.copy(visible = (it.organizationName.contains(textoBuscar, ignoreCase = true))) })
+					}
+
+				}else{
+					estado
+				}
+
+			}
+
+				/*if (estado is ListaOrganizacionesSincronizarVM.UIState.Success) {
+					estado.copy(textoBuscar = texto, organizaciones = l)
+				} else {
+					estado
+				}*/
+
+
+
+
+
+			/*val l = if (!texto.isEmpty()) {
 
 				listaOrganizacionesSincronizarUI.filter {
 					it.organizationName.contains(other = textoBuscar, ignoreCase = true) || it.organizationCode.contains(other = textoBuscar, ignoreCase = true)
 
 				}
 			} else {
-				listaOrganizacionesSincronizarUI
-			}
+				listaOrganizacionesSincronizarUI.forEach { i }
+			}*/
 
-			_uiState.update { estado ->
-				if (estado is ListaOrganizacionesSincronizarVM.UIState.Success) {
-					estado.copy(textoBuscar = texto, organizaciones = l)
-				} else {
-					estado
-				}
-			}
+
 		}
 	}
 

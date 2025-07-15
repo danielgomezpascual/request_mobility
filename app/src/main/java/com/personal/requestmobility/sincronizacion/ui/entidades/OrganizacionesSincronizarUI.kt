@@ -7,7 +7,9 @@ data class OrganizacionesSincronizarUI(
     val organizationName: String = "",
     val organizationId: String = "",
     val masterOrganizationId: String = "",
-    val seleccionado: Boolean = false
+    val seleccionado: Boolean = false,
+    val visible: Boolean = true
+
 
     )
 
