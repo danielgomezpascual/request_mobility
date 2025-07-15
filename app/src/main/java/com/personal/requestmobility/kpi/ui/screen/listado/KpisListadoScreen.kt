@@ -120,7 +120,9 @@ fun SucessListadoLectoras(viewModel: KpisListadoVM,
 
 
                         MA_Lista(data = uiState.lista) { item ->
-                            KpiListItem(item, onClickItem = { navegacion(EventosNavegacion.CargarKPI(item.id)) })
+                            KpiListItem(item,
+                                        onClickItem = { navegacion(EventosNavegacion.CargarKPI(item.id)) })
+
                         }
                     }
                 }

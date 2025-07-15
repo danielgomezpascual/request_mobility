@@ -17,10 +17,10 @@ fun NavegacionGuia() {
 
     NavHost(navController = navController, startDestination = ScreenMenu) {
         NavegavionMenu(navController)
-        NavegacionDashboard(navController)
         NavegacionTransacciones(navController)
         NavegacionKpis(navController)
         NavegacionPaneles(navController)
         NavegacionSincronizacion(navController)
+        NavegacionDashboard(navController)
     }
 }

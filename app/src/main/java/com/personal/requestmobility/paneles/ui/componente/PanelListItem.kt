@@ -50,7 +50,9 @@ fun PanelListItem(
 
 		Row(modifier = Modifier.Companion
 			.fillMaxWidth()
-			.clickable { onClickItem(panelUI)/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/ }
+			.clickable {
+				onClickItem(panelUI)/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/
+			}
 			.padding(5.dp), verticalAlignment = Alignment.Companion.CenterVertically) {
 
 

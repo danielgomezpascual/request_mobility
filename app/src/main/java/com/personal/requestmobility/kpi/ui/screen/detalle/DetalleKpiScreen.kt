@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
 import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.card.MA_Card
@@ -50,12 +49,8 @@ import com.personal.requestmobility.core.composables.tabla.MA_Tabla
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
-import com.personal.requestmobility.core.utils.if3
 import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiVM.UIState
 import com.personal.requestmobility.menu.Features
-import com.personal.requestmobility.paneles.domain.entidades.PanelData
-import com.personal.requestmobility.paneles.ui.componente.MA_Panel
-import com.personal.requestmobility.paneles.ui.entidades.toPanel
 import com.personal.requestmobility.transacciones.domain.entidades.ResultadoSQL
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -248,7 +243,7 @@ fun SuccessScreenDetalleKpi(
 									Spacer(modifier = Modifier.padding(5.dp))
 									MA_LabelNormal(parametro.defecto)
 
-									if (parametro.fijo){
+									if (parametro.fijo) {
 										Spacer(modifier = Modifier.padding(5.dp))
 										MA_Icono(Icons.Default.PushPin, modifier = Modifier.size(15.dp))
 									}
@@ -258,7 +253,7 @@ fun SuccessScreenDetalleKpi(
 											viewModel.onEvent(DetalleKpiVM.Eventos.EliminarParametro(parametro))
 
 										})
-									){
+									) {
 										MA_Icono(Icons.Default.Delete, color = Color.Red)
 									}
 
@@ -271,8 +266,6 @@ fun SuccessScreenDetalleKpi(
 						}
 					}
 				}
-
-
 
 
 				val filas = ResultadoSQL.fromSqlToTabla(kpiUI.sql, kpiUI.parametros).filas.take(10)
