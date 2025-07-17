@@ -13,6 +13,8 @@ import com.personal.requestmobility.inicializador.modulosInicializador
 import com.personal.requestmobility.kpi.moduloKpis
 import com.personal.requestmobility.organizaciones.moduloOrganizaciones
 import com.personal.requestmobility.paneles.moduloPaneles
+import com.personal.requestmobility.sincronizacion.domain.SincronizacionUrl
+import com.personal.requestmobility.sincronizacion.domain.interactors.ObtenerDatosEndPoint
 import com.personal.requestmobility.sincronizacion.moduloSincronizacion
 import com.personal.requestmobility.transacciones.data.ds.local.entities.TransaccionesRoom
 import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepoImp
@@ -20,6 +22,16 @@ import com.personal.requestmobility.transacciones.moduloTransacciones
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.longOrNull
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -45,7 +57,14 @@ class App : Application() {
         context =  applicationContext
         dialog = DialogManager()
 
+
+      /*  val sincronizacionUrl: SincronizacionUrl = SincronizacionUrl()
+        sincronizacionUrl.testJson()
+
+        val obtenerDatosEndPoint: ObtenerDatosEndPoint = getKoin().get()
+        obtenerDatosEndPoint.test()*/
       }
+
 
     fun initKoin() {
         startKoin {
@@ -68,5 +87,6 @@ class App : Application() {
 
         }
     }
+
 
 }

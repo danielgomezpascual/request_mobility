@@ -10,6 +10,7 @@ data class ParamTransacciones(
     val P_MOB_REQUEST_ID: String = "",
     val P_TIPO_MOV: String = "",
     val P_NUMERO: String = "",
+    val P_READER_ID: String = "DE0502",
 
 
 ) : ParamBase()
