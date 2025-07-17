@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
+import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.imagenes.MA_Icono
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
@@ -34,6 +35,7 @@ import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.core.utils._toJson
+import com.personal.requestmobility.dashboards.ui.screen.listado.DashboardListadoVM
 import com.personal.requestmobility.menu.Features
 import org.koin.androidx.compose.koinViewModel
 
@@ -112,8 +114,17 @@ fun SuccessCuadriculaDashboard(
 							.fillMaxWidth() // fillMaxWidth para la columna principal
 							.padding(16.dp) // Padding general del contenido como en el ejemplo
 					  ) {
-					
-					
+
+
+
+					MA_TextBuscador(
+						searchText = uiState.textoBuscar,
+						onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
+							viewModel.onEvento(CuadriculaDashboardVM.Eventos.Buscar(texto))
+						}
+					)
+
+
 					MA_Columnas(data = uiState.lista) { item ->
 						
 						MA_Card(
