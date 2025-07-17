@@ -204,8 +204,9 @@ class DetalleKpiVM(
 				if (resp == DialogosResultado.Si) {
 					viewModelScope.launch {
 						val kpiUI: KpiUI = (_uiState.value as UIState.Success).kpiUI
-						val panelUI: PanelUI = PanelUI(id = 0, titulo = kpiUI.titulo, descripcion = kpiUI.descripcion, configuracion = PanelConfiguracion(), kpiUI)
-						guardarPanel.guardar(panelUI)
+						//val panelUI: PanelUI = PanelUI(id = 0, titulo = kpiUI.titulo, descripcion = kpiUI.descripcion, configuracion = PanelConfiguracion(), kpiUI)
+
+						guardarPanel.guardar(PanelUI.crearPanelUI(kpiUI))
 
 						dialog.informacion(_t(R.string.panel_creado)) {
 							navegacion(EventosNavegacion.MenuApp)

@@ -2,9 +2,11 @@ package com.personal.requestmobility.menu.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardsHomeCU
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
 import com.personal.requestmobility.dashboards.ui.entidades.fromDashboard
+import com.personal.requestmobility.inicializador.domain.InicializadorManager
 import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.paneles.ui.entidades.fromPanel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class HomeVM(
-    private val obtenerDashboardHomeCU: ObtenerDashboardsHomeCU
+    private val inicalizadorManager: InicializadorManager,
+    private val obtenerDashboardHomeCU: ObtenerDashboardsHomeCU,
+    private val dialog: DialogManager
 ) : ViewModel() {
 
 
@@ -33,12 +37,14 @@ class HomeVM(
 
     sealed class Eventos {
         object Carga : Eventos()
+        object InicializadorMetricas : Eventos()
     }
 
 
     fun onEvent(evento: Eventos) {
         when (evento) {
             is Eventos.Carga -> cargaHome()
+            is Eventos.InicializadorMetricas -> inicilizarMetricas()
 
         }
     }
@@ -57,6 +63,16 @@ class HomeVM(
 
 
         }
+    }
+
+    private fun inicilizarMetricas(){
+        viewModelScope.launch {
+
+            inicalizadorManager.start()
+
+            dialog.informacion(texto =  "Incializacion de datos finalizada"){}
+        }
+
     }
 }
 

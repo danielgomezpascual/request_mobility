@@ -21,6 +21,17 @@ data class PanelUI(
     val orden : Int = 0
 ){
     fun esDinamico () = kpi.dinamico
+
+    companion object{
+        fun crearPanelUI(kpiUI: KpiUI, configuracion: PanelConfiguracion= PanelConfiguracion()): PanelUI{
+           return PanelUI(id = 0,
+                          titulo = kpiUI.titulo,
+                          descripcion = kpiUI.descripcion,
+                          configuracion = configuracion,
+						  kpi = kpiUI)
+
+        }
+    }
 }
 
 fun PanelUI.toPanel() = Panel(

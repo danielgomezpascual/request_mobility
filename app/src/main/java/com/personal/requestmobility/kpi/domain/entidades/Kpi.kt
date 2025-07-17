@@ -11,5 +11,5 @@ data class Kpi(
     val parametros: Parametros = Parametros()
     ) {
     
-    fun esDinamico(): Boolean = sql.contains("$")
+    fun esDinamico(): Boolean = sql.contains("#")
 }

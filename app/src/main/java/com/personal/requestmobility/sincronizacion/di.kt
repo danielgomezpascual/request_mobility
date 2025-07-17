@@ -1,8 +1,11 @@
 package com.personal.requestmobility.sincronizacion
 
 import com.personal.requestmobility.core.composables.dialogos.DialogManager
+import com.personal.requestmobility.dashboards.domain.interactors.GuardarDashboardCU
+import com.personal.requestmobility.kpi.domain.interactors.GuardarKpiCU
 import com.personal.requestmobility.organizaciones.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.requestmobility.paneles.domain.interactors.EliminarPanelCU
+import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
 import com.personal.requestmobility.paneles.domain.repositorios.PanelesRepositorio
 import com.personal.requestmobility.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
 import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepoImp
@@ -24,7 +27,6 @@ val moduloSincronizacion = module {
             obtenerOrganizacion = get<ObtenerOrganizacionesCU>(),
             repoTrx = get<TransaccionesRepoImp>(),
             guardar = get<GuardarTransacciones>(),
-
             dialog = get<DialogManager>()
 
         )

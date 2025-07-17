@@ -2,13 +2,25 @@ package com.personal.requestmobility.sincronizacion.ui.lista
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.personal.requestmobility.App
 import com.personal.requestmobility.R
 import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
-import com.personal.requestmobility.core.composables.dialogos.ResultadoDialog
-import com.personal.requestmobility.core.utils.K
+import com.personal.requestmobility.core.utils.Parametro
+import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils._t
+import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
+import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
+import com.personal.requestmobility.dashboards.domain.interactors.GuardarDashboardCU
+import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
+import com.personal.requestmobility.dashboards.ui.entidades.toDashboard
+import com.personal.requestmobility.inicializador.domain.InicializadorManager
+import com.personal.requestmobility.kpi.domain.interactors.GuardarKpiCU
+import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.organizaciones.domain.interactors.ObtenerOrganizacionesCU
+import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
+import com.personal.requestmobility.paneles.ui.componente.PanelListItem
+import com.personal.requestmobility.paneles.ui.entidades.PanelUI
 import com.personal.requestmobility.sincronizacion.ui.entidades.OrganizacionesSincronizarUI
 import com.personal.requestmobility.sincronizacion.ui.entidades.fromOrganizacion
 import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepoImp
@@ -27,7 +39,8 @@ class ListaOrganizacionesSincronizarVM(
 	private val repoTrx: TransaccionesRepoImp,
 	private val guardar: GuardarTransacciones,
 	private val dialog: DialogManager,
-) : ViewModel() {
+
+	) : ViewModel() {
 
 
 	private val _uiState = MutableStateFlow<UIState>(UIState.Trabajando)
@@ -63,6 +76,7 @@ class ListaOrganizacionesSincronizarVM(
 
 		object EliminarDatosActuales : Eventos()
 
+
 	}
 
 
@@ -73,11 +87,14 @@ class ListaOrganizacionesSincronizarVM(
 			is Eventos.OnChangeSeleccionCheck -> onChangeSeleccion(evento.organizacionUI)
 			is Eventos.AplicarTodos           -> aplicarTodos(evento.valor)
 			Eventos.RealizarSincronizacion    -> realizarSincronizacion()
-
 			Eventos.EliminarDatosActuales     -> eliminarDatosActuales()
+
 
 		}
 	}
+
+
+
 
 	private fun aplicarTodos(seleccion: Boolean) {
 		if (_uiState.value is UIState.Success) {
@@ -129,30 +146,27 @@ class ListaOrganizacionesSincronizarVM(
 			textoBuscar = texto
 
 			_uiState.update { estado ->
-				if (estado is ListaOrganizacionesSincronizarVM.UIState.Success){
-					if (texto.isEmpty()){
-						estado.copy(textoBuscar ="", organizaciones = listaOrganizacionesSincronizarUI.map { it.copy(visible = true) })
-					}else{
+				if (estado is UIState.Success) {
+					if (texto.isEmpty()) {
+						estado.copy(textoBuscar = "", organizaciones = listaOrganizacionesSincronizarUI.map { it.copy(visible = true) })
+					} else {
 
 
 						estado.copy(textoBuscar = textoBuscar,
 									organizaciones = listaOrganizacionesSincronizarUI.map { it.copy(visible = (it.organizationName.contains(textoBuscar, ignoreCase = true))) })
 					}
 
-				}else{
+				} else {
 					estado
 				}
 
 			}
 
-				/*if (estado is ListaOrganizacionesSincronizarVM.UIState.Success) {
-					estado.copy(textoBuscar = texto, organizaciones = l)
-				} else {
-					estado
-				}*/
-
-
-
+			/*if (estado is ListaOrganizacionesSincronizarVM.UIState.Success) {
+				estado.copy(textoBuscar = texto, organizaciones = l)
+			} else {
+				estado
+			}*/
 
 
 			/*val l = if (!texto.isEmpty()) {

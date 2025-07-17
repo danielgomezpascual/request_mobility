@@ -22,7 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.personal.requestmobility.App
+import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.checks.MA_CheckBoxNormal
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
 import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
@@ -133,6 +133,8 @@ fun Success(viewModel: ListaOrganizacionesSincronizarVM,
                     viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.AplicarTodos(it))
                 }
 
+
+
                 // Barra de búsqueda
                 MA_TextBuscador(
                     searchText = uiState.textoBuscar,
@@ -143,22 +145,13 @@ fun Success(viewModel: ListaOrganizacionesSincronizarVM,
 
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
 
-                    /*Text(
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .weight(1f),
-                        text = "${uiState.lista.size} kpis encontradas",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Black,
-                        textAlign = TextAlign.Start
-                    )*/
-
                 }
+
+
 
 
                 MA_Lista(data = uiState.organizaciones.filter { it.visible }) { organizacionUI ->
                     OrganizacionListItem(organizacionUI = organizacionUI, onClickItem = {
-
                         viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.OnChangeSeleccionCheck(organizacionUI))
                     })
                 }

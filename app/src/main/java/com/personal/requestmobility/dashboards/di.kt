@@ -20,6 +20,7 @@ import com.personal.requestmobility.dashboards.ui.screen.cuadricula.CuadriculaDa
 import com.personal.requestmobility.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.requestmobility.dashboards.ui.screen.listado.DashboardListadoVM
 import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardVM
+import com.personal.requestmobility.inicializador.domain.InicializadorManager
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpiCU
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.requestmobility.kpi.domain.repositorios.KpisRepositorio
@@ -80,7 +81,11 @@ val moduloDashboards = module {
     }
 
     viewModel {
-        HomeVM(obtenerDashboardHomeCU = get<ObtenerDashboardsHomeCU>())
+        HomeVM(
+            inicalizadorManager = get<InicializadorManager>(),
+            obtenerDashboardHomeCU = get<ObtenerDashboardsHomeCU>(),
+            dialog = get<DialogManager>()
+        )
     }
 
 

@@ -5,7 +5,7 @@ import com.personal.requestmobility.dashboards.domain.repositorios.DashboardRepo
 
 class GuardarDashboardCU(private val repo: DashboardRepositorio
 ) {
-    suspend fun guardar(dashboard: Dashboard) {
+    suspend fun guardar(dashboard: Dashboard): Long {
 
         //todo: comprobar el funcionamiento del guardado del home
 
@@ -15,9 +15,10 @@ class GuardarDashboardCU(private val repo: DashboardRepositorio
                     repo.guardar(ds.copy(home = false))
                 }
             }
-            repo.guardar(dashboard) // El repositorio.guardar podría devolver un Long (id)
-        }
 
+        }
+        val identificador = repo.guardar(dashboard) // El repositorio.guardar podría devolver un Long (id)
+        return identificador
 
     }
 }

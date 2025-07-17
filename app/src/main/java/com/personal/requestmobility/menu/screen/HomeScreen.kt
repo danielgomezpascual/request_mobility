@@ -24,6 +24,7 @@ import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGeneric
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.inicializador.domain.InicializadorManager
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.menu.screen.HomeVM.UIState
 import com.personal.requestmobility.paneles.domain.entidades.PanelData
@@ -98,6 +99,16 @@ fun SuccessMenu(viewModel: HomeVM,
                             onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
                         )
 
+                        MA_IconBottom(
+                            //   modifier = Modifier.weight(1f),
+                            icon = Features.InicializadorMetricas().icono,
+                            labelText = Features.InicializadorMetricas().texto,
+                            seleccionado = false,
+                            destacado = false,
+                            onClick = {
+                            viewModel.onEvent(HomeVM.Eventos.InicializadorMetricas)
+                            }
+                        )
                         MA_IconBottom(
                             //   modifier = Modifier.weight(1f),
                             icon = Features.Herramientas().icono,

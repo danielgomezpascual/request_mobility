@@ -4,6 +4,7 @@ package com.personal.requestmobility.dashboards.ui.screen.cuadricula
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
+import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils.reemplazaValorFila
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
@@ -54,9 +55,12 @@ class CuadriculaDashboardVM(
 					listaDashboardsDomain.filter { it.tipo == TipoDashboard.Dinamico() }.forEach { dsh ->
 
 						ResultadoSQL.fromSqlToTabla(dsh.kpiOrigenDatos.sql).filas.forEach { f ->
-							val ds: Dashboard = dsh.copy(nombre = dsh.nombre.reemplazaValorFila(f.toParametros(), addComillas = false))
+							//val ds: Dashboard = dsh.copy(nombre = dsh.nombre.reemplazaValorFila(f.toParametros(), addComillas = false))
 
-							App.log.d("!->  ${f.toParametros()}")
+							App.log.i("!->  ${f.toParametros()}")
+							val ds: Dashboard = dsh.copy(nombre = Parametros.reemplazar(dsh.nombre, parametrosKpi = f.toParametros(), parametrosDashboard = f.toParametros()))
+
+
 							listaDashboard = listaDashboard.plus(ds.copy(parametros = f.toParametros()))
 						}
 					}
