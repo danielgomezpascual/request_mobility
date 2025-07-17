@@ -4,11 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
 import com.personal.requestmobility.R
+import com.personal.requestmobility.core.composables.dialogos.AppGlobalDialogs
 import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
 import com.personal.requestmobility.core.utils.Parametro
 import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils._t
+import com.personal.requestmobility.core.utils._toJson
+import com.personal.requestmobility.core.utils._toObjectFromJson
 import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.dashboards.domain.interactors.GuardarDashboardCU
@@ -73,7 +76,6 @@ class ListaOrganizacionesSincronizarVM(
 		data class OnChangeSeleccionCheck(val organizacionUI: OrganizacionesSincronizarUI) : Eventos()
 		data class AplicarTodos(val valor: Boolean) : Eventos()
 		object RealizarSincronizacion : Eventos()
-
 		object EliminarDatosActuales : Eventos()
 
 
@@ -94,8 +96,6 @@ class ListaOrganizacionesSincronizarVM(
 	}
 
 
-
-
 	private fun aplicarTodos(seleccion: Boolean) {
 		if (_uiState.value is UIState.Success) {
 
@@ -113,12 +113,15 @@ class ListaOrganizacionesSincronizarVM(
 
 	private fun cargaInicial() {
 		viewModelScope.launch {
-			val listaOrganizaciones: List<OrganizacionesSincronizarUI> = obtenerOrganizacion.getAll().mapIndexed { indice, organzacion ->
-				OrganizacionesSincronizarUI().fromOrganizacion(organzacion)
-			}
 
-			listaOrganizacionesSincronizarUI = listaOrganizaciones
-			_uiState.value = UIState.Success(organizaciones = listaOrganizaciones)
+			listaOrganizacionesSincronizarUI = obtenerOrganizacion.getAll().mapIndexed { indice, organzacion -> OrganizacionesSincronizarUI().fromOrganizacion(organzacion) }
+			val organizacionesStr: String = App.sharedPrerfences.get<String>("ORGANIZACIONES", "")
+			val organizacionesSeleccionadasPrevias: List<String> = organizacionesStr.split(";")
+			listaOrganizacionesSincronizarUI = listaOrganizacionesSincronizarUI.map { organizacion ->
+				val seleccionado = organizacionesSeleccionadasPrevias.contains(organizacion.organizationId)
+				organizacion.copy(seleccionado = seleccionado)
+			}
+			_uiState.value = UIState.Success(organizaciones = listaOrganizacionesSincronizarUI)
 		}
 	}
 
@@ -204,7 +207,14 @@ class ListaOrganizacionesSincronizarVM(
 
 			val oraganizciones = (_uiState.value as UIState.Success).organizaciones
 
+			var cadenasOrganizacionesSeleccionadas = ""
 			val orgSeleccionadas = oraganizciones.filter { it.seleccionado == true }
+
+
+			orgSeleccionadas.forEach { cadenasOrganizacionesSeleccionadas += it.organizationId + ";" }
+
+			App.sharedPrerfences.put("ORGANIZACIONES", cadenasOrganizacionesSeleccionadas)
+
 			if (orgSeleccionadas.isEmpty()) {
 				dialog.informacion(_t(R.string.no_hay_ninguna_organizaci_n_seleccionada_seleccione_alguna_previamnete)) { }
 				return

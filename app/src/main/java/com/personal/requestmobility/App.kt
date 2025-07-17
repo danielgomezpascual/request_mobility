@@ -8,6 +8,9 @@ import com.personal.requestmobility.core.log.di.moduloLog
 import com.personal.requestmobility.core.log.domain.MyLog
 import com.personal.requestmobility.core.room.AppDatabase
 import com.personal.requestmobility.core.room.moduloDatabase
+import com.personal.requestmobility.core.utils.SharedPreferencesManager
+import com.personal.requestmobility.core.utils._toJson
+import com.personal.requestmobility.core.utils._toObjectFromJson
 import com.personal.requestmobility.dashboards.moduloDashboards
 import com.personal.requestmobility.inicializador.modulosInicializador
 import com.personal.requestmobility.kpi.moduloKpis
@@ -16,6 +19,7 @@ import com.personal.requestmobility.paneles.moduloPaneles
 import com.personal.requestmobility.sincronizacion.domain.SincronizacionUrl
 import com.personal.requestmobility.sincronizacion.domain.interactors.ObtenerDatosEndPoint
 import com.personal.requestmobility.sincronizacion.moduloSincronizacion
+import com.personal.requestmobility.sincronizacion.ui.entidades.OrganizacionesSincronizarUI
 import com.personal.requestmobility.transacciones.data.ds.local.entities.TransaccionesRoom
 import com.personal.requestmobility.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.requestmobility.transacciones.moduloTransacciones
@@ -44,7 +48,8 @@ class App : Application() {
         lateinit var context : Context
         lateinit var log: MyLog
         lateinit var dialog: DialogManager
-        
+         lateinit var sharedPrerfences: SharedPreferencesManager
+
 
     }
 
@@ -56,6 +61,9 @@ class App : Application() {
 
         context =  applicationContext
         dialog = DialogManager()
+        sharedPrerfences = SharedPreferencesManager(applicationContext)
+
+
 
 
       /*  val sincronizacionUrl: SincronizacionUrl = SincronizacionUrl()
