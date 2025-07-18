@@ -1,7 +1,9 @@
 package com.personal.requestmobility.core.composables.graficas
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -47,9 +49,9 @@ fun MA_IndicadorVertical(
     val data = listaValores.map { fila ->
 
         val x = if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
-        var y: Float = 0f
+        var y: String = "0"
         try {
-            y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
+            y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor else "0"
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -71,23 +73,28 @@ fun MA_IndicadorVertical(
      }*/
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth()
+            ,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+
     ) {
         items(items = listaValores) { fila ->
             val x = if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
-            var y: Float = 0f
+            var y: String = "0"
             try {
-                y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
+                y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor else "0"
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-            Column(
+
+            MA_Indicador( texto = x.toString(), valor = y.toString(), color = fila.color)
+            MA_Indicador(modifier = modifier, texto = x.toString(), valor = y.toString(), color = fila.color)
+           /* Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    //.width(180.dp)
+                    .defaultMinSize(100.dp, 100.dp)
                     .padding(5.dp)
                     .background(color = Color.Black)
             ) {
@@ -109,7 +116,7 @@ fun MA_IndicadorVertical(
                 //   MA_Titulo(valor = y.toString(), color = Color.Green)
                 MA_Titulo(valor = x.toString(), color = Color.White)
 
-            }
+            }*/
         }
     }
 

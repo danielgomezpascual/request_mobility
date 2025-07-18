@@ -1,8 +1,10 @@
 package com.personal.requestmobility.core.composables.graficas
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -48,9 +50,9 @@ fun MA_IndicadorHorizontal(
     val data = listaValores.map { fila ->
 
         val x = if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
-        var y: Float = 0f
+        var y: String = "0"
         try {
-            y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
+            y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor else "0"
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -76,21 +78,26 @@ fun MA_IndicadorHorizontal(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         items(items = listaValores) { fila ->
             val x = if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
-            var y: Float = 0f
+            var y: String = "0"
             try {
-                y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor.toFloat() else 0f
+                y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor else "0"
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+
+            MA_Indicador(modifier = modifier, texto = x.toString(), valor = y.toString(), color = fila.color)
+
+            /*Column(
+                horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    //.width(180.dp)
+                    .defaultMinSize(100.dp, 100.dp)
+
                     .padding(5.dp)
                     .background(color = Color.Black)
             ) {
@@ -103,8 +110,6 @@ fun MA_IndicadorHorizontal(
                     // style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight(800),
                     fontSize = TextUnit(40.0f, TextUnitType.Sp),
-
-
                     textAlign = TextAlign.Center
                 )
 
@@ -112,7 +117,7 @@ fun MA_IndicadorHorizontal(
                 //   MA_Titulo(valor = y.toString(), color = Color.Green)
                 MA_Titulo(valor = x.toString(), color = Color.White)
 
-            }
+            }*/
         }
 
     }
