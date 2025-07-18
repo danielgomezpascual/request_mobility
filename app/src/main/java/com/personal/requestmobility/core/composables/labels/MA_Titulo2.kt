@@ -42,7 +42,7 @@ fun MA_Titulo2(
 												   start = 5.dp, end = 5.dp
 	), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start){
 		if (valor.isNotEmpty()) {
-			MA_ImagenDrawable(imagen = R.drawable.tit)
+			MA_ImagenDrawable(imagen = R.drawable.caja4)
 		}
 
 		Text(text = valor,
