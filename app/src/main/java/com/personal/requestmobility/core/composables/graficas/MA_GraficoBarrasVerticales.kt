@@ -15,6 +15,8 @@ import com.himanshoe.charty.common.LabelConfig
 import com.himanshoe.charty.common.asSolidChartColor
 import com.personal.requestmobility.core.composables.componentes.MA_Marco
 import com.personal.requestmobility.core.composables.tabla.Fila
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
+
 /*
 @Preview
 @Composable
@@ -61,6 +63,7 @@ fun MA_GraficoBarrasVerticales(
     listaValores: List<Fila>,
     posicionX: Int = 0,
     posivionY: Int = 1,
+    panelConfiguracion: PanelConfiguracion
 ) {
     val data =  listaValores.map { fila ->
         BarData(
@@ -105,7 +108,7 @@ fun MA_GraficoBarrasVerticales(
         labelConfig = LabelConfig.default().copy(
             textColor = Color.Black.asSolidChartColor(),
             showXLabel = true,
-            xAxisCharCount = null,
+            xAxisCharCount = 15,
             showYLabel = true
         ),
 

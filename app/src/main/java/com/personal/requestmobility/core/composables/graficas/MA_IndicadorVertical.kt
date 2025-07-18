@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.composables.tabla.Fila
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
 
 /*
 @Preview
@@ -45,6 +46,7 @@ fun MA_IndicadorVertical(
     listaValores: List<Fila>,
     posicionX: Int = 0,
     posicionY: Int = 1,
+    panelConfiguracion: PanelConfiguracion
 ) {
     val data = listaValores.map { fila ->
 

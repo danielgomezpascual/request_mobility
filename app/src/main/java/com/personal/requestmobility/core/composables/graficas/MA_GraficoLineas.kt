@@ -13,9 +13,12 @@ import com.himanshoe.charty.line.LineChart
 import com.himanshoe.charty.line.config.InteractionTooltipConfig
 import com.himanshoe.charty.line.config.LineChartColorConfig
 import com.himanshoe.charty.line.config.LineChartConfig
+import com.himanshoe.charty.line.config.LineChartGridConfig
 import com.himanshoe.charty.line.config.LineConfig
 import com.himanshoe.charty.line.model.LineData
 import com.personal.requestmobility.core.composables.tabla.Fila
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
+
 /*
 @Preview
 @Composable
@@ -25,53 +28,61 @@ fun TestGraficoLineas() {
 
 
 @Composable
-fun MA_GraficoLineas(modifier: Modifier = Modifier,
-                     listaValores: List<Fila>,
-                     posicionX: Int = 0,
-                     posivionY: Int = 1,
-                ) {
+fun MA_GraficoLineas(
+	modifier: Modifier = Modifier,
+	listaValores: List<Fila>,
+	posicionX: Int = 0,
+	posivionY: Int = 1,
+	panelConfiguracion: PanelConfiguracion
+) {
 
 
-    val data =  listaValores.map { fila ->
-        LineData(
-            xValue = fila.celdas[posicionX].valor,
-            yValue = fila.celdas[posivionY].valor.toFloat(),
-        )
-    }
-       LineChart(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(50.dp, 5.dp),
+	val data = listaValores.map { fila ->
+		LineData(
+			xValue = fila.celdas[posicionX].valor,
+			yValue = fila.celdas[posivionY].valor.toFloat(),
+		)
+	}
+	LineChart(
 
-        target = null,
-        colorConfig = LineChartColorConfig.default().copy(
-            lineColor = ChartColor.Solid(Color(0xFF8D79F6)),
-            lineFillColor = ChartColor.Gradient(
-                listOf(
-                    Color(0x4DB09FFF), Color(0xFFFFFFFF)
-                )
-            )
-        ),
-        data = {
-         data
-        },
-        chartConfig = LineChartConfig(
-            lineConfig = LineConfig(showValueOnLine = true, drawPointerCircle = true, lineCap = StrokeCap.Round),
-            interactionTooltipConfig = InteractionTooltipConfig(
-                isLongPressDragEnabled = true,
-            ),
+		modifier = modifier
+			.fillMaxSize()
+			.padding(50.dp, 5.dp),
 
-            ),
-        onValueChange = {
-            println("Value changed to $it")
-        },
-        labelConfig = LabelConfig.default().copy(
-            showYLabel = true,
-            showXLabel = true
-        ),
+		target = null,
+		colorConfig = LineChartColorConfig.default().copy(
+			lineColor = ChartColor.Solid(Color(0xFF084CF8)),
+			/*lineFillColor = ChartColor.Gradient(
+				listOf(
+					Color(0x4DFC0013), Color(0xFFFFFFFF)
+				)
+			)*/
+		),
+		data = {
+			data
+		},
+		chartConfig = LineChartConfig(
+			lineConfig = LineConfig(showValueOnLine = panelConfiguracion.mostrarEtiquetas,
+									drawPointerCircle = true,
+									lineCap = StrokeCap.Round),
+			gridConfig = LineChartGridConfig().copy(),
+			interactionTooltipConfig = InteractionTooltipConfig(
+				isLongPressDragEnabled = true,
+			),
 
-        showFilledArea = true,
+			),
+		onValueChange = {
+			println("Value changed to $it")
+		},
+		labelConfig = LabelConfig.default().copy(
+			showYLabel = true,
+			showXLabel = true,
+			xAxisCharCount = 15
 
-        )
+		),
+
+		showFilledArea = true,
+
+		)
 
 }

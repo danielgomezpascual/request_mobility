@@ -19,6 +19,7 @@ import com.himanshoe.charty.bar.model.BarData
 import com.himanshoe.charty.common.LabelConfig
 import com.himanshoe.charty.common.asSolidChartColor
 import com.personal.requestmobility.core.composables.tabla.Fila
+import com.personal.requestmobility.paneles.domain.entidades.PanelConfiguracion
 
 /*
 @Preview
@@ -43,6 +44,7 @@ fun MA_GraficoBarras(
     listaValores: List<Fila>,
     posicionX: Int = 0,
     posicionY: Int = 1,
+    panelConfiguracion: PanelConfiguracion
 ) {
     val data = listaValores.map { fila ->
 

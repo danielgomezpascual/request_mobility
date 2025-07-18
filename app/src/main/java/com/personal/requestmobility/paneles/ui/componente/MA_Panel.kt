@@ -274,14 +274,16 @@ fun dameTipoGrafica(
 				MA_IndicadorVertical(modifier = modifier,
 									 listaValores = datosPintar,
 									 posicionX = posicionX,
-									 posicionY = posivionY)
+									 posicionY = posivionY,
+									 panelConfiguracion = panelConfiguracion)
 			}
 			
 			is PanelTipoGrafica.IndicadorHorizontal    -> {
 				MA_IndicadorHorizontal(modifier = modifier,
 									   listaValores = datosPintar,
 									   posicionX = posicionX,
-									   posicionY = posivionY)
+									   posicionY = posivionY,
+									   panelConfiguracion = panelConfiguracion)
 			}
 			
 			is PanelTipoGrafica.BarrasAnchasVerticales -> {
@@ -290,7 +292,9 @@ fun dameTipoGrafica(
 						modifier = modifier,
 						listaValores = datosPintar,
 						posicionX = posicionX,
-						posicionY = posivionY
+						posicionY = posivionY,
+						panelConfiguracion = panelConfiguracion,
+
 								)
 				
 			}
@@ -300,7 +304,8 @@ fun dameTipoGrafica(
 						modifier = modifier,
 						listaValores = datosPintar,
 						posicionX = posicionX,
-						posivionY = posivionY
+						posivionY = posivionY,
+						panelConfiguracion = panelConfiguracion
 										  )
 			}
 			
@@ -309,7 +314,8 @@ fun dameTipoGrafica(
 						modifier = modifier,
 						listaValores = datosPintar,
 						posicionX = posicionX,
-						posivionY = posivionY
+						posivionY = posivionY,
+						panelConfiguracion = panelConfiguracion
 								  )
 			}
 			
@@ -318,7 +324,8 @@ fun dameTipoGrafica(
 						modifier = modifier,
 						listaValores = datosPintar,
 						posicionX = posicionX,
-						posivionY = posivionY
+						posivionY = posivionY,
+						panelConfiguracion = panelConfiguracion
 								)
 			}
 			
@@ -327,7 +334,8 @@ fun dameTipoGrafica(
 						modifier = modifier,
 						listaValores = datosPintar,
 						posicionX = posicionX,
-						posivionY = posivionY
+						posivionY = posivionY,
+						panelConfiguracion = panelConfiguracion
 								)
 			}
 		}
