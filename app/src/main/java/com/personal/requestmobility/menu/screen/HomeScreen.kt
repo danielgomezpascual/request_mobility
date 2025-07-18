@@ -24,6 +24,7 @@ import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGeneric
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
 import com.personal.requestmobility.core.screen.LoadingScreen
+import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.inicializador.domain.InicializadorManager
 import com.personal.requestmobility.menu.Features
 import com.personal.requestmobility.menu.screen.HomeVM.UIState
@@ -149,16 +150,16 @@ fun SuccessMenu(viewModel: HomeVM,
 
                 Box(Modifier.fillMaxSize()) {
                     Column(modifier = Modifier.verticalScroll(state = scroll), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                       /* if (uiState.paneles.size > 0){
+                        if (uiState.paneles.size > 0){
                             uiState.paneles.forEach { panelUI ->
                                 MA_Card {
-                                    MA_Panel(panelData = PanelData.fromPanelUI(panelUI))
+                                    MA_Panel(panelData = PanelData.fromPanelUI(panelUI, Parametros()))
                                 }
 
                             }
                         }else{
                             MA_NoData()
-                        }*/
+                        }
 
                     }
                 }

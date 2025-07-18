@@ -15,9 +15,11 @@ import androidx.compose.ui.unit.dp
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
 import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
+import com.personal.requestmobility.core.composables.combo.MA_ComboColores
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.labels.MA_LabelNormal
+import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.composables.tabla.Columnas
 import com.personal.requestmobility.paneles.domain.entidades.EsquemaColores
 import com.personal.requestmobility.paneles.ui.entidades.ColoresSeleccion
@@ -43,8 +45,10 @@ fun MA_CondicionPanel(
 	
 	
 	Column {
+
+		MA_Titulo("Condiciones a aplicar sobre la fila")
 		MA_ComboLista<Columnas>(
-				modifier = Modifier.weight(1f),
+				modifier = Modifier,
 				titulo = "Columna ",
 				descripcion = "Columna",
 				valorInicial = { if (condicion.columna != null) MA_ColumnaItemSeleccionable(condicion.columna) },
@@ -66,7 +70,7 @@ fun MA_CondicionPanel(
 		
 		//MA_LabelNormal(valor = condicion.id.toString())
 		Row(){
-			MA_ComboLista(
+			/*MA_ComboLista(
 					/*modifier = Modifier.weight(1f),*/
 					titulo = "",
 					descripcion = "Color para la condicion",
@@ -84,7 +88,23 @@ fun MA_CondicionPanel(
 						//onClickAceptar(condicion)
 					}
 						 
-						 )
+						 )*/
+
+			MA_ComboColores(modifier = Modifier.weight(1f),
+							titulo = "",
+							descripcion = "Color para la condicion",
+							valorInicial = {
+								val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
+								val color = esquemaColores.colores.get(indicadorColorCondicion)
+								MA_SeleccionColor(color)
+							},
+							elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+							item = { colorSeleccion ->
+								MA_SeleccionColor(colorSeleccion.color)
+							},
+							onClickSeleccion = { colorSeleccion ->
+								condicion = condicion.copy(color = colorSeleccion.indice) //   onClickAceptar(condicion)
+							})
 			
 			MA_TextoNormal(/*modifier = Modifier.weight(1f),*/ valor = condicion.predicado, titulo = "Condición", onValueChange = { it ->
 				condicion = condicion.copy(predicado = it)
