@@ -18,6 +18,7 @@ import com.personal.requestmobility.dashboards.domain.interactors.ObtenerSelecci
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
 import com.personal.requestmobility.dashboards.ui.entidades.fromDashboard
 import com.personal.requestmobility.dashboards.ui.entidades.toDashboard
+import com.personal.requestmobility.dashboards.ui.screen.cuadricula.CuadriculaDashboardVM
 import com.personal.requestmobility.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.kpi.ui.entidades.fromKPI
@@ -50,11 +51,12 @@ class DetalleDashboardVM(
 	val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
 
-	private var listaPaneles: List<SeleccionPanelUI> = emptyList()
+	private var listaPanelesOriginal: List<PanelUI> = emptyList()
 
 	sealed class UIState {
 		data class Success(
 			val dashboardUI: DashboardUI,
+			val textoBuscarPaneles: String = "",
 			val kpisDisponibles: List<KpiUI> = emptyList<KpiUI>(),
 		) : UIState()
 
@@ -71,27 +73,14 @@ class DetalleDashboardVM(
 
 		data class Guardar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()  // Renombrado para claridad
 		data class OnChangeNombre(val valor: String) : Eventos()     // Adaptado desde OnChangeItem
-		data class OnChangeDescripcion(
-			val valor: String,
-		) : Eventos() // Adaptado desde OnChangeProveedor
-
+		data class OnChangeDescripcion(val valor: String) : Eventos() // Adaptado desde OnChangeProveedor
 		data class OnChangeInicial(val valor: Boolean) : Eventos() //
-		data class OnActualizarPaneles(
-			val panelesUI: List<PanelUI>,
-		) : Eventos() // Adaptado desde OnChangeProveedor
-
-		data class ActualizarLogo(
-			val rutaLogo: String,
-		) : Eventos() // Adaptado desde OnChangeProveedor
-
-		data class OnChangeKpiSeleccionado(
-			val kpi: KpiUI,
-		) : Eventos() // Adaptado desde OnChangeProveedor
-
-		data class onChangeTipoDashboard(
-			val valor: Boolean,
-		) : Eventos() // Adaptado desde OnChangeProveedor
-		// Los otros OnChange (global, codigoOrganizacion, codigo) no aplican a Dashboard
+		data class OnSeleccionarPanel(val panelUI: PanelUI) : Eventos() // Adaptado desde OnChangeProveedor
+		data class OnActualizarPaneles(val panelesUI: List<PanelUI>) : Eventos() // Adaptado desde OnChangeProveedor
+		data class ActualizarLogo(val rutaLogo: String) : Eventos() // Adaptado desde OnChangeProveedor
+		data class OnChangeKpiSeleccionado(val kpi: KpiUI) : Eventos() // Adaptado desde OnChangeProveedor
+		data class onChangeTipoDashboard(val valor: Boolean) : Eventos() // Adaptado desde OnChangeProveedor
+		data class OnChangeBuscadorPaneles(val valor: String) : Eventos()
 	}
 
 
@@ -107,6 +96,7 @@ class DetalleDashboardVM(
 							is Eventos.OnChangeNombre          -> estado.copy(dashboardUI = estado.dashboardUI.copy(nombre = eventos.valor))
 							is Eventos.OnChangeDescripcion     -> estado.copy(dashboardUI = estado.dashboardUI.copy(descripcion = eventos.valor))
 							is Eventos.OnActualizarPaneles     -> {
+
 								estado.copy(dashboardUI = estado.dashboardUI.copy(listaPaneles = eventos.panelesUI))
 							}
 
@@ -121,6 +111,12 @@ class DetalleDashboardVM(
 								estado.copy(dashboardUI = estado.dashboardUI.copy(kpiOrigen = eventos.kpi))
 							}
 
+							is Eventos.OnChangeBuscadorPaneles->{
+								val buscar = eventos.valor
+								estado.copy(textoBuscarPaneles =buscar,
+											dashboardUI = estado.dashboardUI.copy (
+												listaPaneles =estado.dashboardUI.listaPaneles.map { it.copy(visible = it.titulo.contains(buscar, ignoreCase = true))  }))
+							}
 							else                               -> estado // No debería llegar aquí si los eventos están bien definidos
 						}
 					} else {
@@ -147,6 +143,7 @@ class DetalleDashboardVM(
 					if (id != 0) {
 						val ds: DashboardUI = DashboardUI().fromDashboard(cargarDashboardCU.cargar(id))
 						val listaPaneles = paneles.map { p -> (ds.listaPaneles.find { it.id == p.id }) ?: p }
+						listaPanelesOriginal = listaPaneles
 						_uiState.value = UIState.Success(dashboardUI = ds.copy(listaPaneles = listaPaneles))
 					} else {
 						_uiState.value = UIState.Success(dashboardUI = DashboardUI(listaPaneles = paneles))

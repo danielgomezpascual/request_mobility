@@ -37,6 +37,7 @@ import com.personal.requestmobility.core.composables.card.MA_Card
 import com.personal.requestmobility.core.composables.checks.MA_SwitchNormal
 import com.personal.requestmobility.core.composables.combo.MA_ComboLista
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
+import com.personal.requestmobility.core.composables.edittext.MA_TextBuscador
 import com.personal.requestmobility.core.composables.edittext.MA_TextoNormal
 import com.personal.requestmobility.core.composables.formas.MA_Avatar
 import com.personal.requestmobility.core.composables.imagenes.MA_Icono
@@ -51,6 +52,7 @@ import com.personal.requestmobility.core.screen.LoadingScreen
 import com.personal.requestmobility.core.utils.reemplazaValorFila
 import com.personal.requestmobility.dashboards.domain.entidades.TipoDashboard
 import com.personal.requestmobility.dashboards.ui.composables.SeleccionPanelItemDashboard
+import com.personal.requestmobility.dashboards.ui.screen.cuadricula.CuadriculaDashboardVM
 import com.personal.requestmobility.kpi.ui.composables.KpiComboItem
 import com.personal.requestmobility.kpi.ui.entidades.KpiUI
 import com.personal.requestmobility.menu.Features
@@ -246,11 +248,20 @@ fun DetalleDashboardUIScreen(
 
 						val paneles: List<PanelUI> = dashboardUI.listaPaneles
 
-						MA_ListaReordenable_EstiloYouTube(data = dashboardUI.listaPaneles.sortedBy { it.orden }, itemContent = { panel, isDragging ->
-							// Tu Composable para el ítem.
-							// Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
-							// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
-							Row(modifier = Modifier.fillMaxWidth()) {
+						Column() {
+							MA_TextBuscador(
+								searchText = uiState.textoBuscarPaneles,
+								onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
+									viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeBuscadorPaneles(texto))
+								}
+							)
+
+
+							MA_ListaReordenable_EstiloYouTube(data = dashboardUI.listaPaneles.filter { it.visible }.sortedBy { it.orden }, itemContent = { panel, isDragging ->
+								// Tu Composable para el ítem.
+								// Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
+								// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
+								Row(modifier = Modifier.fillMaxWidth()) {
 
 								Box(modifier = Modifier.weight(1f)) {
 									SeleccionPanelItemDashboard(panel, dashboardUI.kpiOrigen.dameColumnasSQL()) { panelSeleccionado ->
@@ -265,28 +276,31 @@ fun DetalleDashboardUIScreen(
 										val p = panelesR.first { it.id == panelSeleccionado.id }
 										viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
 
+										}
 									}
+
+									Box(contentAlignment = Alignment.Center, modifier = Modifier
+										.clickable(enabled = true, onClick = {
+											navegacion(EventosNavegacion.CargarPanel(panel.id))
+										})) {
+										MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+									}
+
 								}
 
-								Box(contentAlignment = Alignment.Center, modifier = Modifier
-									.clickable(enabled = true, onClick = {
-										navegacion(EventosNavegacion.CargarPanel(panel.id))
-									})) {
-									MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+							}, onItemClick = { /* ... */ }, onListReordered = { listaReordenada ->
+
+								var listaR: List<PanelUI> = emptyList()
+								listaReordenada.forEachIndexed { indice, panel ->
+									listaR = listaR.plus(panel.copy(orden = indice))
 								}
+								viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(listaR))
 
-							}
+							}, itemHeight = 72.dp // ¡IMPORTANTE! Ajusta esto a la altura real de tus ítems
+							)
+						}
 
-						}, onItemClick = { /* ... */ }, onListReordered = { listaReordenada ->
 
-							var listaR: List<PanelUI> = emptyList()
-							listaReordenada.forEachIndexed { indice, panel ->
-								listaR = listaR.plus(panel.copy(orden = indice))
-							}
-							viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(listaR))
-
-						}, itemHeight = 72.dp // ¡IMPORTANTE! Ajusta esto a la altura real de tus ítems
-						)
 					}
 				}
 

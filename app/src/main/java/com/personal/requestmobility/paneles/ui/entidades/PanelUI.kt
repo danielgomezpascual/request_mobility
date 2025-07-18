@@ -18,7 +18,8 @@ data class PanelUI(
     val configuracion: PanelConfiguracion = PanelConfiguracion(),
     val kpi: KpiUI = KpiUI(),
     val seleccionado: Boolean = false,
-    val orden : Int = 0
+    val orden : Int = 0,
+    val visible : Boolean = true
 ){
     fun esDinamico () = kpi.dinamico
 

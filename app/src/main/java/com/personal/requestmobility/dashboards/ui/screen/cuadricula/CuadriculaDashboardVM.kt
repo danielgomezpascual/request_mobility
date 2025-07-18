@@ -20,40 +20,35 @@ import kotlinx.coroutines.launch
 
 class CuadriculaDashboardVM(
 	private val obtenerDashboardsCU: ObtenerDashboardsCU,
-	
+
 	) : ViewModel() {
-	
+
 	private val _uiState = MutableStateFlow<UIState>(UIState.Loading("Cargando"))
 	val uiState: StateFlow<UIState> = _uiState.asStateFlow()
-	
-	lateinit var  listaOriginalDashboard : List<DashboardUI>
+
+	lateinit var listaOriginalDashboard: List<DashboardUI>
 
 	sealed class UIState {
 		data class Success(val textoBuscar: String = "", val lista: List<DashboardUI> = emptyList()) : UIState()
 		data class Error(val mensaje: String) : UIState()
 		data class Loading(val mensaje: String) : UIState()
 	}
-	
+
 	sealed class Eventos {
 		object Cargar : Eventos()
 		data class Buscar(val s: String) : Eventos()
 	}
-	
+
 	fun onEvento(evento: Eventos) {
 		when (evento) {
-			Eventos.Cargar -> cargarDatos()
+			Eventos.Cargar    -> cargarDatos()
 			is Eventos.Buscar -> buscar(evento.s)
 		}
 	}
 
-	private fun buscar(buscar : String = ""){
-		_uiState.value = if (buscar.isEmpty()){
+	private fun buscar(buscar: String = "") {
+		_uiState.value = UIState.Success(textoBuscar = buscar, lista = listaOriginalDashboard.filter { it.nombre.contains(buscar, ignoreCase = true) })
 
-			UIState.Success(textoBuscar =  "", lista = listaOriginalDashboard )
-		}else{
-
-			UIState.Success(textoBuscar =  buscar, lista = listaOriginalDashboard.filter { it.nombre.contains(buscar, ignoreCase = true) })
-		}
 
 	}
 
@@ -63,8 +58,8 @@ class CuadriculaDashboardVM(
 			obtenerDashboardsCU.getAll()
 				.catch { e -> _uiState.value = UIState.Error("Error al cargar: ${e.message}") }
 				.collect { listaDashboardsDomain ->
-					
-					
+
+
 					var listaDashboard: List<Dashboard> = emptyList()
 					listaDashboardsDomain.filter { it.tipo == TipoDashboard.Dinamico() }.forEach { dsh ->
 
@@ -78,20 +73,19 @@ class CuadriculaDashboardVM(
 							listaDashboard = listaDashboard.plus(ds.copy(parametros = f.toParametros()))
 						}
 					}
-					
-					
+
+
 					val listaDshEstaticos =
 						listaDashboardsDomain.filter { it.tipo == TipoDashboard.Estatico() }
-					
+
 					listaDashboard = listaDashboard.plus(listaDshEstaticos)
-					listaOriginalDashboard =  listaDashboard.map {
+					listaOriginalDashboard = listaDashboard.map {
 						DashboardUI().fromDashboard(it)
 					}
-						/*App.log.lista("Dashboard", listaDashboard)
-					App.log.d("Dentro anaclertro...")*/
-						_uiState.value = UIState.Success(lista = listaOriginalDashboard)
 
-					}
+					_uiState.value = UIState.Success(lista = listaOriginalDashboard)
+
+				}
 		}
 	}
 }
