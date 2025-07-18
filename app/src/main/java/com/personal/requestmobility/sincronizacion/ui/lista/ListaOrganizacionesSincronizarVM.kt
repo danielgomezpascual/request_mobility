@@ -7,6 +7,7 @@ import com.personal.requestmobility.R
 import com.personal.requestmobility.core.composables.dialogos.AppGlobalDialogs
 import com.personal.requestmobility.core.composables.dialogos.DialogManager
 import com.personal.requestmobility.core.composables.dialogos.DialogosResultado
+import com.personal.requestmobility.core.utils.K
 import com.personal.requestmobility.core.utils.Parametro
 import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils._t
@@ -115,7 +116,9 @@ class ListaOrganizacionesSincronizarVM(
 		viewModelScope.launch {
 
 			listaOrganizacionesSincronizarUI = obtenerOrganizacion.getAll().mapIndexed { indice, organzacion -> OrganizacionesSincronizarUI().fromOrganizacion(organzacion) }
-			val organizacionesStr: String = App.sharedPrerfences.get<String>("ORGANIZACIONES", "")
+
+
+			val organizacionesStr: String = App.sharedPrerfences.get<String>(K.ORGANIZACIONES, "")
 			val organizacionesSeleccionadasPrevias: List<String> = organizacionesStr.split(";")
 			listaOrganizacionesSincronizarUI = listaOrganizacionesSincronizarUI.map { organizacion ->
 				val seleccionado = organizacionesSeleccionadasPrevias.contains(organizacion.organizationId)
@@ -213,7 +216,7 @@ class ListaOrganizacionesSincronizarVM(
 
 			orgSeleccionadas.forEach { cadenasOrganizacionesSeleccionadas += it.organizationId + ";" }
 
-			App.sharedPrerfences.put("ORGANIZACIONES", cadenasOrganizacionesSeleccionadas)
+			App.sharedPrerfences.put(K.ORGANIZACIONES, cadenasOrganizacionesSeleccionadas)
 
 			if (orgSeleccionadas.isEmpty()) {
 				dialog.informacion(_t(R.string.no_hay_ninguna_organizaci_n_seleccionada_seleccione_alguna_previamnete)) { }
