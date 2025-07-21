@@ -16,6 +16,6 @@ import com.personal.requestmobility.core.utils._t
 fun MA_NoData(){
 	Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
 		MA_ImagenDrawable(R.drawable.no_data, s = 256.dp)
-		MA_LabelNormal(_t(R.string.datos_no_encotrados))
+		MA_LabelNormal(_t(R.string.sin_informacion))
 	}
 }

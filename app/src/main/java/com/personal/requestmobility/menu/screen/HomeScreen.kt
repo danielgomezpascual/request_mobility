@@ -35,140 +35,116 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeVM = koinViewModel(),
-    navegacion: (EventosNavegacion) -> Unit
+	viewModel: HomeVM = koinViewModel(),
+	navegacion: (EventosNavegacion) -> Unit,
 ) {
 
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(HomeVM.Eventos.Carga)
-    }
-    val uiState by viewModel.uiState.collectAsState()
+	LaunchedEffect(Unit) {
+		viewModel.onEvent(HomeVM.Eventos.Carga)
+	}
+	val uiState by viewModel.uiState.collectAsState()
 
-    when (uiState) {
-        is UIState.Error -> ErrorScreen((uiState as UIState.Error).message)
-        UIState.Loading -> LoadingScreen()
-        is UIState.Success -> {
-            SuccessMenu(viewModel, (uiState as UIState.Success), navegacion)
-        }
-    }
+	when (uiState) {
+		is UIState.Error   -> ErrorScreen((uiState as UIState.Error).message)
+		UIState.Loading    -> LoadingScreen()
+		is UIState.Success -> {
+			SuccessMenu(viewModel, (uiState as UIState.Success), navegacion)
+		}
+	}
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SuccessMenu(viewModel: HomeVM,
-                uiState: UIState.Success,
-                navegacion: (EventosNavegacion) -> Unit) {
-  /*  Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-    ) {*/
+fun SuccessMenu(
+	viewModel: HomeVM,
+	uiState: UIState.Success,
+	navegacion: (EventosNavegacion) -> Unit,
+) {
+	/*  Column(
+		  verticalArrangement = Arrangement.Center,
+		  horizontalAlignment = Alignment.CenterHorizontally,
+		  modifier = Modifier.fillMaxSize()
+	  ) {*/
 
-        MA_ScaffoldGenerico(
-            titulo = "",
-            tituloScreen = TituloScreen.Home,
-            volver = false,
-            navegacion = { },
-            contenidoBottomBar = {
+	MA_ScaffoldGenerico(
+		titulo = "",
+		tituloScreen = TituloScreen.Home,
+		volver = false,
+		navegacion = { },
+		contenidoBottomBar = {
 
-                BottomAppBar() {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.Bottom
+			BottomAppBar() {
+				Row(
+					modifier = Modifier.fillMaxWidth(),
+					horizontalArrangement = Arrangement.Center,
+					verticalAlignment = Alignment.Bottom
 
-                    ) {
+				) {
 
-                        MA_IconBottom(
-                            //   modifier = Modifier.weight(1f),
-                            icon = Features.Sincronizar().icono,
-                            labelText = Features.Sincronizar().texto,
-                            seleccionado = false,
-                            destacado = false,
-                            onClick = { navegacion(EventosNavegacion.Sincronizacion) }
-                        )
-
-
-
-                        MA_IconBottom(
-                            //   modifier = Modifier.weight(1f),
-                            icon = Features.Cuadriculas().icono,
-                            labelText = Features.Cuadriculas().texto,
-                            seleccionado = true,
-                            destacado = true,
-                            onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
-                        )
-
-                        MA_IconBottom(
-                            //   modifier = Modifier.weight(1f),
-                            icon = Features.InicializadorMetricas().icono,
-                            labelText = Features.InicializadorMetricas().texto,
-                            seleccionado = false,
-                            destacado = false,
-                            onClick = {
-                            viewModel.onEvent(HomeVM.Eventos.InicializadorMetricas)
-                            }
-                        )
-                        MA_IconBottom(
-                            //   modifier = Modifier.weight(1f),
-                            icon = Features.Herramientas().icono,
-                            labelText = Features.Herramientas().texto,
-                            seleccionado = false,
-                            destacado = false,
-                            onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
-                        )
-                       /* MA_IconBottom(
-                            //  modifier = Modifier.weight(1f),
-                            icon = Features.Dashboard().icono,
-                            labelText = Features.Dashboard().texto,
-                            onClick = { navegacion(EventosNavegacion.MenuDashboard) }
-                        )
-                        MA_IconBottom(
-                            //   modifier = Modifier.weight(1f),
-                            icon = Features.Paneles().icono,
-                            labelText = Features.Paneles().texto,
-                            onClick = { navegacion(EventosNavegacion.MenuPaneles) }
-                        )
-
-                        MA_IconBottom(
-                            // modifier = Modifier.weight(1f),
-                            icon = Features.Kpi().icono,
-                            labelText = Features.Kpi().texto,
-                            onClick = { navegacion(EventosNavegacion.MenuKpis) }
-                        )*/
-                    }
-
-
-                }
-            },
-            contenido = {
+					MA_IconBottom(
+						//   modifier = Modifier.weight(1f),
+						icon = Features.Sincronizar().icono,
+						labelText = Features.Sincronizar().texto,
+						seleccionado = false,
+						destacado = false,
+						onClick = { navegacion(EventosNavegacion.Sincronizacion) }
+					)
 
 
 
-                val scroll = rememberScrollState()
+					MA_IconBottom(
+						//   modifier = Modifier.weight(1f),
+						icon = Features.Cuadriculas().icono,
+						labelText = Features.Cuadriculas().texto,
+						seleccionado = true,
+						destacado = true,
+						onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
+					)
 
-                Box(Modifier.fillMaxSize()) {
-                    Column(modifier = Modifier.verticalScroll(state = scroll), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (uiState.paneles.size > 0){
-                            uiState.paneles.forEach { panelUI ->
-                                MA_Card {
-                                    MA_Panel(panelData = PanelData.fromPanelUI(panelUI, Parametros()))
-                                }
+					MA_IconBottom(
+						//   modifier = Modifier.weight(1f),
+						icon = Features.Herramientas().icono,
+						labelText = Features.Herramientas().texto,
+						seleccionado = false,
+						destacado = false,
+						onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
+					)
 
-                            }
-                        }else{
-                            MA_NoData()
-                        }
-
-                    }
-                }
-
-
-            }
-        )
+				}
 
 
-   // }
+			}
+		},
+		contenido = {
+
+
+			val scroll = rememberScrollState()
+
+
+			Column(modifier = Modifier
+				.fillMaxSize()
+				.verticalScroll(state = scroll),
+				   verticalArrangement = Arrangement.Center,
+				   horizontalAlignment = Alignment.CenterHorizontally) {
+				if (uiState.paneles.size > 0) {
+					uiState.paneles.forEach { panelUI ->
+						MA_Card {
+							MA_Panel(panelData = PanelData.fromPanelUI(panelUI, Parametros()))
+						}
+
+					}
+				} else {
+					MA_NoData()
+				}
+
+			}
+
+
+		}
+	)
+
+
+	// }
 }
 

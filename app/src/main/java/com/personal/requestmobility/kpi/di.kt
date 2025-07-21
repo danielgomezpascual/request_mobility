@@ -54,7 +54,8 @@ val moduloKpis = module {
         get <DialogManager>()
 
 
-    ) }
+    )
+    }
 
 
 }

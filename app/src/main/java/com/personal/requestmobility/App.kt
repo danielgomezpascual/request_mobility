@@ -14,6 +14,7 @@ import com.personal.requestmobility.core.utils._toObjectFromJson
 import com.personal.requestmobility.dashboards.moduloDashboards
 import com.personal.requestmobility.inicializador.modulosInicializador
 import com.personal.requestmobility.kpi.moduloKpis
+import com.personal.requestmobility.menu.modulosMenu
 import com.personal.requestmobility.organizaciones.moduloOrganizaciones
 import com.personal.requestmobility.paneles.moduloPaneles
 import com.personal.requestmobility.sincronizacion.domain.SincronizacionUrl
@@ -90,7 +91,8 @@ class App : Application() {
                 moduloDashboards,
                 moduloPaneles,
                 moduloSincronizacion,
-                modulosInicializador
+                modulosInicializador,
+                modulosMenu
             )
 
         }

@@ -7,20 +7,19 @@ import com.personal.requestmobility.inicializador.domain.InicializadorOperacione
 import com.personal.requestmobility.kpi.domain.interactors.GuardarKpiCU
 import com.personal.requestmobility.paneles.domain.interactors.GuardarPanelCU
 import org.koin.dsl.module
-import kotlin.math.sin
 
-val modulosInicializador = module{
+val modulosInicializador = module {
 
-	single<InicializadorOperaciones>{
+	single<InicializadorOperaciones> {
 
 		InicializadorOperaciones(
-			guardarKpis =  get<GuardarKpiCU>(),
+			guardarKpis = get<GuardarKpiCU>(),
 			guardarPaneles = get<GuardarPanelCU>(),
 			guardarDashboard = get<GuardarDashboardCU>()
 		)
 	}
 
-	single<InicializadorManager>{
+	single<InicializadorManager> {
 
 		InicializadorManager(
 			operaciones = get<InicializadorOperaciones>(),
