@@ -19,7 +19,8 @@ data class PanelUI(
     val kpi: KpiUI = KpiUI(),
     val seleccionado: Boolean = false,
     val orden : Int = 0,
-    val visible : Boolean = true
+    val visible : Boolean = true,
+    val autogenerado: Boolean = false
 ){
     fun esDinamico () = kpi.dinamico
 
@@ -42,7 +43,8 @@ fun PanelUI.toPanel() = Panel(
     configuracion = this.configuracion,
     kpi = this.kpi.toKpi(),
     orden = this.orden,
-    seleccionado = this.seleccionado
+    seleccionado = this.seleccionado,
+    autogenerado = this.autogenerado
 
 )
 
@@ -56,6 +58,7 @@ fun PanelUI.fromPanel(panel: Panel): PanelUI {
         configuracion = panel.configuracion,
         kpi = KpiUI().fromKPI(panel.kpi),
         orden = panel.orden,
-        seleccionado = panel.seleccionado
+        seleccionado = panel.seleccionado,
+        autogenerado = panel.autogenerado
     )
 }

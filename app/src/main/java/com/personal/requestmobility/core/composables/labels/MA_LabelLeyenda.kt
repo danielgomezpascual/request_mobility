@@ -21,6 +21,7 @@ fun MA_LabelLeyenda(
 	) {
 	Text(text = valor, modifier = modifier, color = color,
 		 style = MaterialTheme.typography.bodySmall,
-		 fontStyle = FontStyle.Italic
+		 fontStyle = FontStyle.Italic, textAlign = alineacion
+
 	)
 }

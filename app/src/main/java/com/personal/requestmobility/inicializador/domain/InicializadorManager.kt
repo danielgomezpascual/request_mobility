@@ -33,10 +33,12 @@ class InicializadorManager(
 		val appDatabase = getKoin().get<AppDatabase>()
 
 		val db: SupportSQLiteDatabase = appDatabase.openHelper.writableDatabase // Usamos readableDatabase para operaciones de lectura
-		db.execSQL("DELETE FROM DASHBOARD")
-		db.execSQL("DELETE FROM PANELES")
-		db.execSQL("DELETE FROM KPIS")
+		db.execSQL("DELETE FROM DASHBOARD WHERE autogenerado = 'Y'")
+		db.execSQL("DELETE FROM PANELES WHERE autogenerado = 'Y'")
+		db.execSQL("DELETE FROM KPIS WHERE autogenerado = 'Y'")
 
+		db.execSQL("DROP VIEW  IF EXISTS TRX_7 ")
+		db.execSQL("CREATE VIEW  TRX_7 AS SELECT * FROM TRANSACCIONES  WHERE DATE(CREATION_DATE) >= DATE('now', '-7 days')")
 	}
 
 	suspend fun start() {
@@ -142,10 +144,9 @@ class InicializadorManager(
 					END ESTADO,
 					COUNT(MOB_REQUEST_ID) AS TRX
 				FROM
-					TRANSACCIONES
-				WHERE
-					DATE(CREATION_DATE) = (SELECT MAX(DATE(CREATION_DATE)) FROM TRANSACCIONES)
-					AND LECTORA_FISICA_ID = '#LECTORA_FISICA_ID'
+					TRX_7
+				WHERE		
+					 LECTORA_FISICA_ID = '#LECTORA_FISICA_ID'
 				GROUP BY
 					REQ_STATUS		
 			""".trimIndent(),
@@ -177,10 +178,9 @@ class InicializadorManager(
 							PROGRAM_VERSION,
 							ETIQUETAS					
 				FROM
-					TRANSACCIONES
-				WHERE
-					DATE(CREATION_DATE) = (SELECT MAX(DATE(CREATION_DATE)) FROM TRANSACCIONES)
-					AND LECTORA_FISICA_ID = '#LECTORA_FISICA_ID'
+					TRX_7
+				WHERE		
+					 LECTORA_FISICA_ID = '#LECTORA_FISICA_ID'
 				ORDER BY MOB_REQUEST_ID DESC
 			""".trimIndent(),
 			dinamico = true,
@@ -197,17 +197,23 @@ class InicializadorManager(
 					SELECT 
 							TIPO_MOV, 
 							COUNT(*)
+					
 					FROM
-						TRANSACCIONES
-					WHERE
-						DATE(CREATION_DATE) = (SELECT MAX(DATE(CREATION_DATE)) FROM TRANSACCIONES)
-						AND LECTORA_FISICA_ID = '#LECTORA_FISICA_ID'
+						TRX_7
+					WHERE		
+						LECTORA_FISICA_ID = '#LECTORA_FISICA_ID'
 					GROUP BY TIPO_MOV
 					ORDER BY 2 DESC
 			""".trimIndent(),
 			dinamico = true,
 			parametros = Parametros(ps = listOf<Parametro>(Parametro(key = "LECTORA_FISICA_ID", valor = "", defecto = "AU0604", fijo = false)))
 		)
+
+
+
+
+
+
 		val panelTransacciones = operaciones.crearPanel(kpiTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.IndicadorVertical(), mostrarGrafica = true, mostrarTabla = false, height = 200.dp) )
 		val panelTransaccionesEstados = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDiaPorLectora, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.IndicadorVertical(), mostrarGrafica = false, height = 200.dp) )
 		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesRealizadas, true, PanelConfiguracion().copy(mostrarGrafica = false, indicadorColor = false, colores = 3, ajustarContenidoAncho = false))
@@ -257,9 +263,8 @@ class InicializadorManager(
 					END ESTADO,
 					COUNT(MOB_REQUEST_ID) AS TRX
 				FROM
-					TRANSACCIONES
-				WHERE
-					DATE(CREATION_DATE) = (SELECT MAX(DATE(CREATION_DATE)) FROM TRANSACCIONES)
+					TRX_7
+				
 				GROUP BY
 					REQ_STATUS		
 			""".trimIndent(),
@@ -277,9 +282,7 @@ class InicializadorManager(
 					PROGRAM_VERSION as Version,
 					COUNT(MOB_REQUEST_ID) AS  Trx
 				FROM
-					TRANSACCIONES
-				WHERE
-					DATE(CREATION_DATE) = (SELECT MAX(DATE(CREATION_DATE)) FROM TRANSACCIONES)
+					TRX_7				
 				GROUP BY
 					PROGRAM_VERSION
 				ORDER BY
@@ -301,8 +304,7 @@ class InicializadorManager(
 					COUNT(MOB_REQUEST_ID) AS NumeroDeTransacciones
 				FROM
 					TRANSACCIONES
-				/*WHERE
-					DATE(CREATION_DATE) = (SELECT MAX(DATE(CREATION_DATE)) FROM TRANSACCIONES)*/
+				
 				GROUP BY
 					Hora
 				ORDER BY
@@ -335,17 +337,16 @@ class InicializadorManager(
 		)
 
 		val kpiTransaccionesLectoras = KpiUI(
-			titulo = "Transacciones Lectoras",
-			descripcion = "Esta mal, no esta tomando la medida en el mismo diaTransacciones realizadas cada lectora en el dia",
+			titulo = "Transacciones Lectoras 7 días",
+			descripcion = "Número de transacciones que ha realziado cada lectora en los ultimos 7 dias",
 			origen = "",
 			sql = """
 				SELECT
 					LECTORA_FISICA_ID as LECTORA,
 					COUNT(MOB_REQUEST_ID) AS TRX
 				FROM
-					TRANSACCIONES
-				WHERE
-					DATE(CREATION_DATE) = (SELECT MAX(DATE(CREATION_DATE)) FROM TRANSACCIONES)
+					TRX_7
+				
 				GROUP BY
 					LECTORA_FISICA_ID
 				ORDER BY
@@ -355,13 +356,37 @@ class InicializadorManager(
 			parametros = Parametros()
 		)
 
+
+		//ultimas transaccion realizada
+		val kpiUltimaTransaccionRealizada = KpiUI(
+			titulo = "Ultima TRX de cada lectora",
+			descripcion = "Obtiene la última transaccionrealizada de cada lectora y los dias transcurridos",
+			origen = "",
+			sql = """				 
+				SELECT
+					LECTORA_FISICA_ID AS LECTORA,
+					MAX(DATE(CREATION_DATE)) AS 'ULT TRX',					
+					CAST(julianday('now') - julianday(MAX(DATE(CREATION_DATE))) AS INTEGER) AS DIAS
+				FROM
+					TRANSACCIONES
+				GROUP BY
+					LECTORA_FISICA_ID				
+				ORDER BY DIAS DESC
+   
+			""".trimIndent(),
+			dinamico = true,
+			parametros = Parametros()
+		)
+
+
 		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesDiarias, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales()))
 		val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDia, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Circular()))
 		val panelFragmentacion = operaciones.crearPanel(kpiVersionesUltimoDia, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Anillo()))
 		val panelHoras = operaciones.crearPanel(kpiHorasTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales()))
 		val panelErroresDiarios = operaciones.crearPanel(kpiErroresDiarios, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Lineas(), agruparResto = false, limiteElementos = 7))
-		val panelTransaccionesLectoras = operaciones.crearPanel(kpiTransaccionesLectoras, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Lineas(), agruparResto = false, limiteElementos = 7))
-		operaciones.guardarDashboard(nombre = "General", listOf<PanelUI>(panelTransaccionesDiarias, panelTransaccionesUltimoDia, panelFragmentacion, panelHoras, panelErroresDiarios, panelTransaccionesLectoras))
+		val panelTransaccionesLectoras = operaciones.crearPanel(kpiTransaccionesLectoras, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales(), agruparResto = false, limiteElementos = 7))
+		val panelUltimaTransaccionRalizada = operaciones.crearPanel(kpiUltimaTransaccionRealizada, true, PanelConfiguracion().copy(mostrarGrafica = false, agruparResto = false, limiteElementos = 0, columnaY = 2))
+		operaciones.guardarDashboard(nombre = "General", listOf<PanelUI>(panelTransaccionesDiarias, panelTransaccionesUltimoDia, panelFragmentacion, panelHoras, panelErroresDiarios, panelTransaccionesLectoras, panelUltimaTransaccionRalizada))
 
 	}
 }

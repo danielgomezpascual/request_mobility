@@ -13,7 +13,9 @@ data class Dashboard(
 	val descripcion: String,
 	val kpiOrigenDatos: Kpi,
 	val paneles: List<Panel> = listOf<Panel>(),
-	val parametros : Parametros = Parametros()
+	val parametros : Parametros = Parametros(),
+	val autogenerado :Boolean = false,
+
 	){
 	
 }

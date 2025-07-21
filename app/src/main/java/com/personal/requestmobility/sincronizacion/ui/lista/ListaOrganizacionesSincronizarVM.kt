@@ -233,6 +233,7 @@ class ListaOrganizacionesSincronizarVM(
 
 
 					val l: List<Transacciones> = trx.map {
+						it.cXmlField = ""
 						it.organizationCode = organizacion.organizationCode
 						it.organizationName = organizacion.organizationName
 						it.organizationId = organizacion.organizationId

@@ -29,7 +29,7 @@ fun MA_Indicador(modifier : Modifier = Modifier, texto: String, valor: String, c
 			verticalArrangement = Arrangement.Center,
 			horizontalAlignment = Alignment.CenterHorizontally,
 			modifier = Modifier
-				.defaultMinSize(100.dp, 100.dp)
+				.defaultMinSize(150.dp, 150.dp)
 				.padding(5.dp)
 				.background(color = Color.Black)
 		) {

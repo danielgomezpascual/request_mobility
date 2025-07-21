@@ -92,7 +92,7 @@ fun MA_IndicadorVertical(
 
 
             MA_Indicador( texto = x.toString(), valor = y.toString(), color = fila.color)
-            MA_Indicador(modifier = modifier, texto = x.toString(), valor = y.toString(), color = fila.color)
+
            /* Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier

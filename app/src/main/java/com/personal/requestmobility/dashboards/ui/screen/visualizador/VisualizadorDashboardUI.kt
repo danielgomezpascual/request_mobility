@@ -17,8 +17,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import com.personal.requestmobility.core.composables.componentes.TituloScreen
+import com.personal.requestmobility.core.composables.labels.MA_LabelLeyenda
 import com.personal.requestmobility.core.composables.labels.MA_LabelMini
+import com.personal.requestmobility.core.composables.labels.MA_Titulo
 import com.personal.requestmobility.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.requestmobility.core.navegacion.EventosNavegacion
 import com.personal.requestmobility.core.screen.ErrorScreen
@@ -98,6 +101,9 @@ fun Success(
 				val scroll = rememberScrollState()
 				Box(Modifier) {
 					Column(modifier = Modifier.verticalScroll(state = scroll)) {
+
+						MA_Titulo(uiState.dashboardUI.nombre)
+						MA_LabelLeyenda(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Center, valor = uiState.dashboardUI.descripcion)
 
 
 						uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->

@@ -16,7 +16,8 @@ data class KpiUI(
     val origen : String = "",
     val sql: String = "",
     val dinamico : Boolean = false,
-    val parametros: Parametros =  Parametros()
+    val parametros: Parametros =  Parametros(),
+    val autogenerado: Boolean = false
     /*var panelData: PanelData = PanelData(),
     var resultadoSQL: ResultadoSQL = ResultadoSQL()*/
 ) {
@@ -37,7 +38,9 @@ data class KpiUI(
                 titulo = kpi.titulo,
                 sql = kpi.sql,
                 dinamico =  kpi.esDinamico(), 
-                parametros =  kpi.parametros
+                parametros =  kpi.parametros,
+                autogenerado = kpi.autogenerado
+
                 
             )
 
@@ -54,7 +57,8 @@ fun KpiUI.toKpi() = Kpi(
     titulo = this.titulo,
     descripcion = this.descripcion,
     sql = this.sql,
-    parametros =  this.parametros
+    parametros =  this.parametros, 
+    autogenerado = this.autogenerado
   //  configuracion = this.panelData.panelConfiguracion,
 )
 
@@ -65,7 +69,8 @@ fun KpiUI.fromKPI(kpi: Kpi) = KpiUI(
     descripcion = kpi.descripcion,
     sql = kpi.sql,
     dinamico =  kpi.esDinamico(),
-    parametros = kpi.parametros
+    parametros = kpi.parametros,
+    autogenerado = kpi.autogenerado
 
    // panelData = PanelData(panelConfiguracion = kpi.configuracion)
 )

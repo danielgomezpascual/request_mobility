@@ -25,7 +25,7 @@ data class PanelesRoom(
     val descripcion: String = "",
     val configuracion: String = "",
     val idKpi: Int = 0,
-  
+	val autogenerado : String = "N"
                       ) : IRoom
 
 
@@ -43,6 +43,7 @@ suspend fun PanelesRoom.toPanel(): Panel {
 			descripcion = this.descripcion,
 			configuracion = configuracionRoom.toConfiguracion(),
 			kpi = obtenerKpi.obtener(this.idKpi),
+			autogenerado = esTrue(this.autogenerado, "Y", false)
 			)
 
 	
@@ -58,5 +59,6 @@ fun PanelesRoom.fromPanel(panel: Panel) = PanelesRoom(
 		descripcion = panel.descripcion,
 		configuracion = _toJson(PanelConfiguracionRoom.fromConfiguracion(panel.configuracion)),
 		idKpi = panel.kpi.id,
+		autogenerado = Utils.toSiNo(panel.autogenerado)
 		)
 

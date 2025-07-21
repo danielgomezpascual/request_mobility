@@ -20,6 +20,7 @@ data class DashboardUI(
 	val kpiOrigen: KpiUI = KpiUI(),
 	val listaPaneles: List<PanelUI> = emptyList<PanelUI>(),
 	val parametros: Parametros = Parametros(),
+	val autogenerado: Boolean = false ,
 					  )
 
 // Mapper from Domain to UI
@@ -39,7 +40,9 @@ fun DashboardUI.fromDashboard(dashboard: Dashboard): DashboardUI {
 		descripcion = dashboard.descripcion,
 		kpiOrigen = KpiUI().fromKPI(dashboard.kpiOrigenDatos),
 		listaPaneles = dashboard.paneles.map { PanelUI().fromPanel(it) },
-		parametros = dashboard.parametros
+		parametros = dashboard.parametros,
+		autogenerado = dashboard.autogenerado
+
 					  )
 	
 }
@@ -63,7 +66,9 @@ fun DashboardUI.toDashboard(): Dashboard {
 		paneles = this.listaPaneles.map {
 				it.toPanel()
 			},
-		parametros = this.parametros
+		parametros = this.parametros,
+		autogenerado = this.autogenerado
+
 			 )
 }
 

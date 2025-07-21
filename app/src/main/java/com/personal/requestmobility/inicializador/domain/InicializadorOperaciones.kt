@@ -20,20 +20,19 @@ class InicializadorOperaciones(
 ) {
 
 	suspend fun guardarKpi(kpiUI: KpiUI): KpiUI {
-		val identificadorKpi = guardarKpis.guardar(kpiUI)
-		val nuevoKpi = kpiUI.copy(id = identificadorKpi.toInt())
+		val k = kpiUI.copy(autogenerado = true)
+		val identificadorKpi = guardarKpis.guardar(k)
+		val nuevoKpi = k.copy(id = identificadorKpi.toInt())
 		return nuevoKpi
 	}
 
 
 	suspend fun crearPanel(kpiUI: KpiUI, crearKPI: Boolean, configuracion : PanelConfiguracion= PanelConfiguracion()): PanelUI {
-
 		val kpi = if3(crearKPI, guardarKpi(kpiUI), kpiUI)
-
 		val panel = PanelUI.Companion.crearPanelUI(kpi, configuracion)
-
-		val identificadorPanel = guardarPaneles.guardar(panel)
-		val nuevoPanel = panel.copy(id = identificadorPanel.toInt())
+		val p = panel.copy(autogenerado = true)
+		val identificadorPanel = guardarPaneles.guardar(p)
+		val nuevoPanel = p.copy(id = identificadorPanel.toInt())
 		return nuevoPanel
 
 	}
@@ -68,7 +67,8 @@ class InicializadorOperaciones(
 			descripcion = panelInicial.descripcion,
 			kpiOrigen = kpi,
 			listaPaneles = listaPaneles,
-			parametros = Parametros())
+			parametros = Parametros(), 
+			autogenerado = true)
 
 		val identidicador: Long = guardarDashboard.guardar(dashboardUI.toDashboard())
 		val nuevoDashboard = dashboardUI.copy(id = identidicador.toInt())

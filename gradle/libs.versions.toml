@@ -15,6 +15,8 @@ kotlin-serializacion = "1.6.3"
 kotlinParcelize = "1.8.10"
 
 lifecycle = "2.6.2"
+graphicsShapesAndroid = "1.0.1"
+material3Jvmstubs = "1.4.0-alpha18"
 
 
 [libraries]
@@ -39,6 +41,8 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+androidx-graphics-shapes-android = { group = "androidx.graphics", name = "graphics-shapes-android", version.ref = "graphicsShapesAndroid" }
+androidx-material3-jvmstubs = { group = "androidx.compose.material3", name = "material3-jvmstubs", version.ref = "material3Jvmstubs" }
 
 
 [plugins]

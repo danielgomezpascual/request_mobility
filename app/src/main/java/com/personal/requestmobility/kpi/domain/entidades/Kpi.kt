@@ -8,7 +8,8 @@ data class Kpi(
     val descripcion: String = "",
     val origen : String = "",
     val sql: String = "",
-    val parametros: Parametros = Parametros()
+    val parametros: Parametros = Parametros(),
+    val autogenerado: Boolean = false
     ) {
     
     fun esDinamico(): Boolean = sql.contains("#")

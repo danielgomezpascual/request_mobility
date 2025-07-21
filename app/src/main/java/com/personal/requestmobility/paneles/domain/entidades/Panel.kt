@@ -11,7 +11,8 @@ data class Panel(val id: Int,
                  val configuracion: PanelConfiguracion = PanelConfiguracion(),
                  val kpi: Kpi,
                  val orden: Int = 0,
-                 val seleccionado: Boolean = false
+                 val seleccionado: Boolean = false,
+                 val autogenerado : Boolean = false
 ){
     fun esDinamico(): Boolean = kpi.esDinamico()
 }

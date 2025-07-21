@@ -9,7 +9,7 @@ data class PanelConfiguracion(
 	val titulo: String = "",
 	val descripcion: String = "",
 	val limiteElementos: Int = 0,
-	val mostrarEtiquetas: Boolean = false,
+	val mostrarEtiquetas: Boolean = true,
 	val agruparResto: Boolean = true,
 	val target: Float = 0f,
 	val ordenado: Boolean = false,

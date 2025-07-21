@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.personal.requestmobility.App
 import com.personal.requestmobility.core.utils.Parametros
 import com.personal.requestmobility.core.utils._toObjectFromJson
+import com.personal.requestmobility.dashboards.domain.entidades.Dashboard
 import com.personal.requestmobility.dashboards.domain.interactors.ObtenerDashboardCU
 import com.personal.requestmobility.dashboards.ui.entidades.DashboardUI
 import com.personal.requestmobility.dashboards.ui.entidades.fromDashboard
@@ -58,14 +59,17 @@ class VisualizadorDashboardVM(
 		viewModelScope.launch {
 			val ds = obtenerDashboardCU.getID(idenificadorDS)
 			var dsUI : DashboardUI= DashboardUI().fromDashboard(ds)
-			
+
 			dsUI.listaPaneles.forEach { panel ->
 				App.log.d("${panel.titulo} - ${panel.seleccionado} - ${panel.orden}  ")
 			}
 			if (!parametrosJSON.isEmpty()) {
 				dsUI = dsUI.copy(parametros = _toObjectFromJson<Parametros>(parametrosJSON) ?: Parametros())
 			}
-			_uiState.value = UIState.Success(dashboardUI = dsUI, paneles = dsUI.listaPaneles)
+
+			val d: DashboardUI = dsUI.copy(nombre = Parametros.reemplazar(dsUI.nombre, parametrosKpi = dsUI.parametros, parametrosDashboard = dsUI.parametros))
+
+			_uiState.value = UIState.Success(dashboardUI = d, paneles = d.listaPaneles)
 			
 		}
 	}
