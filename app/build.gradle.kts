@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.personal.requestmobility"
+    namespace = "com.personal.metricas"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.personal.requestmobility"
+        applicationId = "com.personal.metricas"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Request Mobility</string>
+    <string name="app_name" translatable="false">Metricas</string>
     <string name="panel_creado">Panel creado</string>
     <string name="quieres_crear_un_panel_directamente_desde_esta_kpi">¿Quieres crear un panel directamente desde esta KPI?</string>
     <string name="debe_proporcionar_un_nombre_para_mejorar_su_localizacion">Debe proporcionar un nombre para mejorar su localizacion</string>
