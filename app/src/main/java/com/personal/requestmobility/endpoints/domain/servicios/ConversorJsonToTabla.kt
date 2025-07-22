@@ -1,4 +1,4 @@
-package com.personal.requestmobility.sincronizacion.domain
+package com.personal.requestmobility.endpoints.domain.servicios
 
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.personal.requestmobility.App
@@ -7,24 +7,19 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.doubleOrNull
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.longOrNull
-import org.koin.mp.KoinPlatform.getKoin
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.toList
+import org.koin.mp.KoinPlatform
+import kotlin.collections.iterator
 
-class SincronizacionUrl {
+class ConversorJsonToTabla {
 
-	val appDatabase = getKoin().get<AppDatabase>()
+	val appDatabase = KoinPlatform.getKoin().get<AppDatabase>()
 	val db: SupportSQLiteDatabase = appDatabase.openHelper.writableDatabase // Usamos readableDatabase para operaciones de lectura
-
-
-
 
 
 	fun testJson() {
@@ -33,28 +28,41 @@ class SincronizacionUrl {
 
 		str = "{\"UserInfo\":[{\"USUARIO\":\"TESTUSER\",\"TIPO\":\"L\",\"PASSWORD\":\"050415\",\"NOMBRE_VISIBLE\":\"TESTUSER\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"LPT\",\"TIPO\":\"B\",\"PASSWORD\":\"\",\"NOMBRE_VISIBLE\":\"Puente Tobar, Luis Manuel\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"Lerida\",\"TIPO\":\"B\",\"PASSWORD\":\"6548\",\"NOMBRE_VISIBLE\":\"Sotillos Pey, Aarón\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"SMV\",\"TIPO\":\"B\",\"PASSWORD\":\"4321\",\"NOMBRE_VISIBLE\":\"Martí Vidal, Severino\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"amartinez\",\"TIPO\":\"L\",\"PASSWORD\":\"1234\",\"NOMBRE_VISIBLE\":\"amartinez\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"csita\",\"TIPO\":\"B\",\"PASSWORD\":\"1234\",\"NOMBRE_VISIBLE\":\"Sita, Catalin\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"cpertoldi\",\"TIPO\":\"B\",\"PASSWORD\":\"\",\"NOMBRE_VISIBLE\":\"Pertoldi, Carlo\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"mpolo\",\"TIPO\":\"B\",\"PASSWORD\":\"\",\"NOMBRE_VISIBLE\":\"Polo, Mauro\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"albex\",\"TIPO\":\"B\",\"PASSWORD\":\"pixu1806%\",\"NOMBRE_VISIBLE\":\"Navarro Sanchez, Elisabeth\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"ndesabbata\",\"TIPO\":\"B\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"De Sabbata, Nadia\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"lbutum\",\"TIPO\":\"B\",\"PASSWORD\":\"\",\"NOMBRE_VISIBLE\":\"Butum, Lucian\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"Butu-PDA\",\"TIPO\":\"L\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"Butum\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"atesolat\",\"TIPO\":\"B\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"Tesolat, Ángela\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"jllor\",\"TIPO\":\"L\",\"PASSWORD\":\"2305\",\"NOMBRE_VISIBLE\":\"José Llor\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"LUCIAN-PDA\",\"TIPO\":\"L\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"LUCIAN-PDA\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"jdiaz\",\"TIPO\":\"L\",\"PASSWORD\":\"1968\",\"NOMBRE_VISIBLE\":\"Javier Díaz Recuero\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"jgonzalezh\",\"TIPO\":\"B\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"González Hermida, Juan Carlos\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"}]}"
 
-		val resultado = jsonToTable(str, "UserInfo")
+		val resultado = jsonToMap(str, "UserInfo")
 
 
 		resultado.forEachIndexed { index, row ->
-			App.log.d("Fila ${index + 1}:")
+			App.Companion.log.d("Fila ${index + 1}:")
 			row.forEach { (key, value) ->
-				App.log.d("  $key: $value")
+				App.Companion.log.d("  $key: $value")
 			}
 		}
-		App.log.linea()
-		toTabla("PRUEBAS", resultado)
+		App.Companion.log.linea()
+		mapToTable("PRUEBAS", resultado)
 	}
 
-	fun toTabla(nombreTabla: String, tabla: List<Map<String, Any?>>) {
+	fun jsonToTabla(str: String, nodoIdentificadorFila: String, tablaAlmacenar: String): Boolean {
+		try {
+			mapToTable(tablaAlmacenar, jsonToMap(str, nodoIdentificadorFila))
+			return true;
+		}
+		catch (e: Exception) {
+			e.printStackTrace()
+			return false
+		}
+
+	}
+
+
+	private fun mapToTable(nombreTabla: String, tabla: List<Map<String, Any?>>) {
 		if (tabla.isEmpty()) {
-			App.log.i("Tabla con datos vacia, no se rellena $nombreTabla")
+			App.Companion.log.i("Tabla con datos vacia, no se rellena $nombreTabla")
 			return
 		}
 		var columnas: MutableList<String> = mutableListOf()
 		tabla.first().forEach { key, value -> columnas.add(key) }
 
-		App.log.lista("Columnas", columnas)
+		App.Companion.log.lista("Columnas", columnas)
 		//val nombreTabla = "TEST"
 		var sqlCreate: String = "CREATE TABLE IF NOT EXISTS $nombreTabla ( " +
 								"ID INTEGER NOT NULL "
@@ -71,21 +79,21 @@ class SincronizacionUrl {
 			row.forEach { (key, value) ->
 				sqlValores += "'${value.toString().replace("'", "''")}',"
 			}
-			sqlValores = sqlValores.substring(0,sqlValores.length-1)
+			sqlValores = sqlValores.substring(0, sqlValores.length - 1)
 			sqlInserts.add(" INSERT INTO $nombreTabla ($sqlColumnas) VALUES ($sqlValores);")
 		}
 
 		runBlocking {
 			db.execSQL("DROP TABLE IF EXISTS $nombreTabla")
 			db.execSQL(sqlCreate)
-			sqlInserts.forEach { sql -> db.execSQL(sql)}
+			sqlInserts.forEach { sql -> db.execSQL(sql) }
 
 		}
 
 
 	}
 
-	fun jsonToTable(jsonString: String, rowElementKey: String? = null): List<Map<String, Any?>> {
+	private fun jsonToMap(jsonString: String, rowElementKey: String? = null): List<Map<String, Any?>> {
 		val json = Json { ignoreUnknownKeys = true }
 
 		try {
@@ -98,7 +106,7 @@ class SincronizacionUrl {
 
 				rows = if (foundElement is JsonArray) {
 					foundElement.toList()
-				} else if (foundElement is kotlinx.serialization.json.JsonObject) {
+				} else if (foundElement is JsonObject) {
 					// Si encontramos un objeto, lo tratamos como una única fila
 					return listOf(parseJsonObjectToMap(foundElement))
 				} else {
@@ -109,7 +117,7 @@ class SincronizacionUrl {
 				// Lógica original si no se proporciona rowElementKey
 				if (parsedJson is JsonArray) {
 					rows = parsedJson.toList()
-				} else if (parsedJson is kotlinx.serialization.json.JsonObject) {
+				} else if (parsedJson is JsonObject) {
 					rows = listOf(parsedJson) // Si es un objeto, lo tratamos como una única fila
 				} else {
 					return emptyList() // JSON vacío o no válido (e.g., solo un primitivo en la raíz).
@@ -122,12 +130,13 @@ class SincronizacionUrl {
 
 			val tableData = mutableListOf<Map<String, Any?>>()
 			for (rowElement in rows) {
-				if (rowElement is kotlinx.serialization.json.JsonObject) {
+				if (rowElement is JsonObject) {
 					tableData.add(parseJsonObjectToMap(rowElement))
 				}
 			}
 			return tableData
-		} catch (e: Exception) {
+		}
+		catch (e: Exception) {
 			println("Error al parsear o procesar el JSON: ${e.message}")
 			return emptyList()
 		}
@@ -141,7 +150,7 @@ class SincronizacionUrl {
 	 * @return El JsonElement encontrado, o `null` si la clave no se encuentra.
 	 */
 	private fun findJsonElementByKeyRecursively(element: JsonElement, key: String): JsonElement? {
-		if (element is kotlinx.serialization.json.JsonObject) {
+		if (element is JsonObject) {
 			// Si el objeto actual contiene la clave, la devolvemos
 			if (element.containsKey(key)) {
 				return element[key]
@@ -167,111 +176,110 @@ class SincronizacionUrl {
 	}
 
 	// Función auxiliar para parsear un JsonObject a un Map<String, Any?>
-	private fun parseJsonObjectToMap(jsonObject: kotlinx.serialization.json.JsonObject): Map<String, Any?> {
+	private fun parseJsonObjectToMap(jsonObject: JsonObject): Map<String, Any?> {
 		val rowMap = mutableMapOf<String, Any?>()
 		for ((key, value) in jsonObject) {
 			rowMap[key] = when (value) {
-				is kotlinx.serialization.json.JsonPrimitive -> {
+				is JsonPrimitive -> {
 					when {
-						value.isString -> value.content
-						value.booleanOrNull != null -> value.booleanOrNull
-						value.longOrNull != null -> value.longOrNull
-						value.doubleOrNull != null -> value.doubleOrNull
+						value.isString                -> value.content
+						value.booleanOrNull != null   -> value.booleanOrNull
+						value.longOrNull != null      -> value.longOrNull
+						value.doubleOrNull != null    -> value.doubleOrNull
 						value.contentOrNull == "null" -> null
-						else -> value.contentOrNull
+						else                          -> value.contentOrNull
 					}
 				}
 				// Si no es un JsonPrimitive (es un JsonObject o JsonArray anidado), lo tratamos como null
-				else -> null
+				else             -> null
 			}
 		}
 		return rowMap
 	}
-/*
-	fun jsonToTable(jsonString: String, rowElementKey: String? = null): List<Map<String, Any?>> {
-		val json = Json { ignoreUnknownKeys = true }
+	/*
+		fun jsonToTable(jsonString: String, rowElementKey: String? = null): List<Map<String, Any?>> {
+			val json = Json { ignoreUnknownKeys = true }
 
-		try {
-			var currentElement: JsonElement = json.parseToJsonElement(jsonString)
-			val rows: List<JsonElement>
+			try {
+				var currentElement: JsonElement = json.parseToJsonElement(jsonString)
+				val rows: List<JsonElement>
 
-			if (rowElementKey != null) {
-				// Dividimos la clave por puntos para navegar la ruta
-				val pathSegments = rowElementKey.split('.')
-				var foundElement: JsonElement? = currentElement
+				if (rowElementKey != null) {
+					// Dividimos la clave por puntos para navegar la ruta
+					val pathSegments = rowElementKey.split('.')
+					var foundElement: JsonElement? = currentElement
 
-				for (segment in pathSegments) {
-					if (foundElement is kotlinx.serialization.json.JsonObject) {
-						foundElement = foundElement[segment]
-						if (foundElement == null) {
-							println("Advertencia: Segmento de ruta '$segment' no encontrado en el JSON.")
-							return emptyList() // Ruta no encontrada
+					for (segment in pathSegments) {
+						if (foundElement is kotlinx.serialization.json.JsonObject) {
+							foundElement = foundElement[segment]
+							if (foundElement == null) {
+								println("Advertencia: Segmento de ruta '$segment' no encontrado en el JSON.")
+								return emptyList() // Ruta no encontrada
+							}
+						} else {
+							println("Advertencia: La ruta JSON no es un objeto en el segmento '$segment'.")
+							return emptyList() // No es un objeto para seguir la ruta
 						}
-					} else {
-						println("Advertencia: La ruta JSON no es un objeto en el segmento '$segment'.")
-						return emptyList() // No es un objeto para seguir la ruta
 					}
-				}
 
-				// Una vez que hemos navegado la ruta, esperamos que el elemento final sea un JsonArray
-				rows = (foundElement as? JsonArray)?.toList() ?: emptyList()
-				if (rows.isEmpty() && foundElement != null) {
-					// Si el elemento final es un objeto y no un array, tratamos como una única fila
-					if (foundElement is kotlinx.serialization.json.JsonObject) {
-						return listOf(parseJsonObjectToMap(foundElement))
+					// Una vez que hemos navegado la ruta, esperamos que el elemento final sea un JsonArray
+					rows = (foundElement as? JsonArray)?.toList() ?: emptyList()
+					if (rows.isEmpty() && foundElement != null) {
+						// Si el elemento final es un objeto y no un array, tratamos como una única fila
+						if (foundElement is kotlinx.serialization.json.JsonObject) {
+							return listOf(parseJsonObjectToMap(foundElement))
+						}
 					}
-				}
 
-			} else {
-				// Lógica original si no se proporciona rowElementKey
-				if (currentElement is JsonArray) {
-					rows = currentElement.toList()
-				} else if (currentElement is kotlinx.serialization.json.JsonObject) {
-					rows = listOf(currentElement) // Si es un objeto, lo tratamos como una única fila
 				} else {
-					return emptyList() // JSON vacío o no válido (e.g., solo un primitivo en la raíz).
+					// Lógica original si no se proporciona rowElementKey
+					if (currentElement is JsonArray) {
+						rows = currentElement.toList()
+					} else if (currentElement is kotlinx.serialization.json.JsonObject) {
+						rows = listOf(currentElement) // Si es un objeto, lo tratamos como una única fila
+					} else {
+						return emptyList() // JSON vacío o no válido (e.g., solo un primitivo en la raíz).
+					}
 				}
-			}
 
-			if (rows.isEmpty()) {
+				if (rows.isEmpty()) {
+					return emptyList()
+				}
+
+				val tableData = mutableListOf<Map<String, Any?>>()
+				for (rowElement in rows) {
+					if (rowElement is kotlinx.serialization.json.JsonObject) {
+						tableData.add(parseJsonObjectToMap(rowElement))
+					}
+				}
+				return tableData
+			} catch (e: Exception) {
+				println("Error al parsear o procesar el JSON: ${e.message}")
 				return emptyList()
 			}
-
-			val tableData = mutableListOf<Map<String, Any?>>()
-			for (rowElement in rows) {
-				if (rowElement is kotlinx.serialization.json.JsonObject) {
-					tableData.add(parseJsonObjectToMap(rowElement))
-				}
-			}
-			return tableData
-		} catch (e: Exception) {
-			println("Error al parsear o procesar el JSON: ${e.message}")
-			return emptyList()
 		}
-	}
 
-	// Función auxiliar para parsear un JsonObject a un Map<String, Any?>
-	private fun parseJsonObjectToMap(jsonObject: kotlinx.serialization.json.JsonObject): Map<String, Any?> {
-		val rowMap = mutableMapOf<String, Any?>()
-		for ((key, value) in jsonObject) {
-			rowMap[key] = when (value) {
-				is kotlinx.serialization.json.JsonPrimitive -> {
-					when {
-						value.isString -> value.content
-						value.booleanOrNull != null -> value.booleanOrNull
-						value.longOrNull != null -> value.longOrNull
-						value.doubleOrNull != null -> value.doubleOrNull
-						value.contentOrNull == "null" -> null
-						else -> value.contentOrNull
+		// Función auxiliar para parsear un JsonObject a un Map<String, Any?>
+		private fun parseJsonObjectToMap(jsonObject: kotlinx.serialization.json.JsonObject): Map<String, Any?> {
+			val rowMap = mutableMapOf<String, Any?>()
+			for ((key, value) in jsonObject) {
+				rowMap[key] = when (value) {
+					is kotlinx.serialization.json.JsonPrimitive -> {
+						when {
+							value.isString -> value.content
+							value.booleanOrNull != null -> value.booleanOrNull
+							value.longOrNull != null -> value.longOrNull
+							value.doubleOrNull != null -> value.doubleOrNull
+							value.contentOrNull == "null" -> null
+							else -> value.contentOrNull
+						}
 					}
+					// Si no es un JsonPrimitive (es un JsonObject o JsonArray anidado), lo tratamos como null
+					else -> null
 				}
-				// Si no es un JsonPrimitive (es un JsonObject o JsonArray anidado), lo tratamos como null
-				else -> null
 			}
-		}
-		return rowMap
-	}*/
-
+			return rowMap
+		}*/
 
 
 }

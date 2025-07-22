@@ -1,4 +1,4 @@
-package com.personal.requestmobility.sincronizacion.data.ds.remote.servicio
+package com.personal.requestmobility.endpoints.data.ds.remote.servicio
 
 import okhttp3.Response
 import okhttp3.ResponseBody

@@ -66,6 +66,7 @@ class DetalleKpiVM(
 		data class ModificarValorParametrosSeleccionado(val valor: String) : Eventos()
 		data class ModificarValorPorDefectoParametrosSeleccionado(val valor: String) : Eventos()
 		data class ModificarValorFijoeParametrosSeleccionado(val valor: Boolean) : Eventos()
+
 		data class SeleccionarParametro(val valor: Parametro) : Eventos()
 		data class EliminarParametro(val valor: Parametro) : Eventos()
 		data object NuevoParametro : Eventos()

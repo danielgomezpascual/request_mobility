@@ -92,6 +92,15 @@ fun SuccessMenu(
 					)
 
 
+					MA_IconBottom(
+						//   modifier = Modifier.weight(1f),
+						icon = Features.EndPoints().icono,
+						labelText = Features.EndPoints().texto,
+						seleccionado = false,
+						destacado = false,
+						onClick = { navegacion(EventosNavegacion.MenuEndPoints) }
+					)
+
 
 					MA_IconBottom(
 						//   modifier = Modifier.weight(1f),

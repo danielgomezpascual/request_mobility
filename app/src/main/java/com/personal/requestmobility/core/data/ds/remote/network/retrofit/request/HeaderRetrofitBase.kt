@@ -28,7 +28,9 @@ fun HeaderRetrofitBase.objectToHeaderMap(): Map<String, String> {
 
 
 fun HeaderRetrofitBase.convertirABase64(nombre: String, valor: String, urlSafe: Boolean = false): String {
-    val listaParametrosSinBase64: List<String> = listOf<String>("Authorization", "ORACLE_MOBILE_BACKEND_ID", "ORACLE-MOBILE-BACKEND-ID",
+    val listaParametrosSinBase64: List<String> = listOf<String>(
+        "Authorization", "ORACLE_MOBILE_BACKEND_ID",
+        "ORACLE-MOBILE-BACKEND-ID",
         "Oracle-Mobile-Backend-Id", "Oracle_Mobile_Backend_Id")
     if (listaParametrosSinBase64.contains(nombre)) return valor
     val bytes = valor.toByteArray()

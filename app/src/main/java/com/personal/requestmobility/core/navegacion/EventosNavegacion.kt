@@ -27,6 +27,13 @@ sealed class EventosNavegacion {
 	object MenuVisualizadorDashboard : EventosNavegacion()
 
 
+
+	//======== EndPoints =============
+	object MenuEndPoints : EventosNavegacion()
+	data class CargarEndPoint(val identificador: Int) : EventosNavegacion()
+	object NuevoEndPonint : EventosNavegacion()
+
+
 	object Sincronizacion : EventosNavegacion()
 
 

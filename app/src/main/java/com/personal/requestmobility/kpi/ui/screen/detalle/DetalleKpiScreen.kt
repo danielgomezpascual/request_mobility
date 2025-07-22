@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.personal.requestmobility.core.composables.MA_Spacer
 import com.personal.requestmobility.core.composables.botones.MA_BotonPrincipal
 import com.personal.requestmobility.core.composables.botones.MA_BotonSecundario
 import com.personal.requestmobility.core.composables.card.MA_Card
@@ -240,7 +241,7 @@ fun SuccessScreenDetalleKpi(
 
 
 									MA_LabelNegrita(parametro.key)
-									Spacer(modifier = Modifier.padding(5.dp))
+									MA_Spacer()
 									MA_LabelNormal(parametro.defecto)
 
 									if (parametro.fijo) {

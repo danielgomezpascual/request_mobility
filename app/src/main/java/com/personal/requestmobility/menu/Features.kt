@@ -2,6 +2,7 @@ package com.personal.requestmobility.menu
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ContentCopy
@@ -34,6 +35,7 @@ sealed class Features {
     data class Sincronizar(val texto: String = "Sincronizar", val icono: ImageVector = Icons.Filled.Sync) : Features()
     data class Herramientas(val texto: String = "Herramientas", val icono: ImageVector = Icons.Filled.Settings) : Features()
     data class InicializadorMetricas(val texto: String = "Cargar Metricas", val icono: ImageVector = Icons.Filled.Storm) : Features()
+    data class EndPoints(val texto: String = "End Points", val icono: ImageVector = Icons.Filled.Api) : Features()
 
 
     data class Nuevo(val texto: String = "Nuevo", val icono: ImageVector = Icons.Filled.Add, val color : Color = Color(210, 141, 1, 255)) : Features()

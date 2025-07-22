@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "db006ee8b851b11e433d3b63bfeaeb36",
+    "identityHash": "898710aa2db5aaf20a136dbd4af478b1",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -365,12 +365,68 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "EndPoints",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `url` TEXT NOT NULL, `parametros` TEXT NOT NULL, `tabla` TEXT NOT NULL, `nodoIdentificadorFila` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descripcion",
+            "columnName": "descripcion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parametros",
+            "columnName": "parametros",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tabla",
+            "columnName": "tabla",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nodoIdentificadorFila",
+            "columnName": "nodoIdentificadorFila",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'db006ee8b851b11e433d3b63bfeaeb36')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '898710aa2db5aaf20a136dbd4af478b1')"
     ]
   }
 }

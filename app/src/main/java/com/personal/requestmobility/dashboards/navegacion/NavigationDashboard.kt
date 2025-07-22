@@ -12,6 +12,8 @@ import com.personal.requestmobility.dashboards.ui.screen.cuadricula.CuadriculDas
 import com.personal.requestmobility.dashboards.ui.screen.detalle.DetalleDashboardUI
 import com.personal.requestmobility.dashboards.ui.screen.listado.DashboardListadoUI
 import com.personal.requestmobility.dashboards.ui.screen.visualizador.VisualizadorDashboardUI
+import com.personal.requestmobility.endpoints.navegacion.ScreenDetalleEndPoints
+import com.personal.requestmobility.endpoints.navegacion.ScreenListadoEndPoints
 import com.personal.requestmobility.kpi.navegacion.ScreenDetalleKpi
 import com.personal.requestmobility.kpi.navegacion.ScreenListadoKpis
 import com.personal.requestmobility.kpi.ui.screen.detalle.DetalleKpiScreen
@@ -96,31 +98,14 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 
 
 		//======= Paneles =========
-		EventosNavegacion.MenuPaneles               -> {
-			App.log.d("Abrimos paneels")
-			navController.navigate(ScreenListadoPaneles)
-		}
-
-		EventosNavegacion.NuevoPanel                -> {
-
-			navController.navigate(ScreenDetallePanel(0))
-		}
-
-		is EventosNavegacion.CargarPanel            -> {
-			App.log.d("Cargamos.-->" + navegacion.identificador)
-
-
-			navController.navigate(ScreenDetallePanel(navegacion.identificador))
-		}
-
+		EventosNavegacion.MenuPaneles               -> navController.navigate(ScreenListadoPaneles)
+		EventosNavegacion.NuevoPanel                -> navController.navigate(ScreenDetallePanel(0))
+		is EventosNavegacion.CargarPanel            -> navController.navigate(ScreenDetallePanel(navegacion.identificador))
 
 		//==== Dashboard =======================
 		EventosNavegacion.MenuDashboard             -> navController.navigate(ListadoDashboards)
 		EventosNavegacion.NuevoDashboard            -> navController.navigate(DetalleDashboard(0))
-		is EventosNavegacion.CargarDashboard        -> {
-			navController.navigate(DetalleDashboard(navegacion.identificador))
-		}
-
+		is EventosNavegacion.CargarDashboard        -> navController.navigate(DetalleDashboard(navegacion.identificador))
 		EventosNavegacion.MenuVisualizadorDashboard -> navController.navigate(CuadriculaDashboards)
 
 
@@ -130,5 +115,11 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 
 		//==== Herramientas =======================
 		EventosNavegacion.MenuHerramientas          -> navController.navigate(ScreenHerramientas)
+
+
+		//==== End Points =======================
+		is EventosNavegacion.CargarEndPoint         -> navController.navigate(ScreenDetalleEndPoints(navegacion.identificador))
+		EventosNavegacion.MenuEndPoints             -> navController.navigate(ScreenListadoEndPoints)
+		EventosNavegacion.NuevoEndPonint            -> navController.navigate(ScreenDetalleEndPoints(0))
 	}
 }
