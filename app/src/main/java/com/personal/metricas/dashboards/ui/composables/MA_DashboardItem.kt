@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HdrAuto
 import androidx.compose.material.icons.filled.Stars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,6 +52,7 @@ fun MA_DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -
 
 				Row(verticalAlignment = Alignment.CenterVertically) {
 					if (dashboardUI.home) MA_Icono(Icons.Default.Stars, Modifier.size(16.dp))
+					if (dashboardUI.autogenerado) MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
 					MA_LabelNegrita(valor = dashboardUI.nombre)
 				}
 
@@ -61,11 +63,12 @@ fun MA_DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -
 			}
 		}
 
-		MA_Columnas(modifier = Modifier.sizeIn(minHeight = 0.dp, maxHeight = 250.dp), columnas = 3, data = dashboardUI.listaPaneles.filter { it.seleccionado }) {
+		val m = Modifier.sizeIn(minHeight = 0.dp, maxHeight = 250.dp)
+		MA_Columnas(modifier = m, columnas = 3, data = dashboardUI.listaPaneles.filter { it.seleccionado }) {
 			Box(contentAlignment = Alignment.Center, modifier = Modifier.background(color = Color(233, 244, 255, 255))
 				//.padding(4.dp)
 			) {
-				MA_InfoPanelVertical(panel = it, mostrarNombre = true)
+				MA_InfoPanelVertical(modifier = m, panel = it, mostrarNombre = true)
 			}
 
 		}

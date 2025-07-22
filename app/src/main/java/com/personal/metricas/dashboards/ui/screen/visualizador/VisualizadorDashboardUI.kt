@@ -38,13 +38,13 @@ fun VisualizadorDashboardUI(
 	paramtrosJSON: String,
 	viewModel: VisualizadorDashboardVM = koinViewModel(),
 	navegacion: (EventosNavegacion) -> Unit,
-						   ) {
-	
+) {
+
 	LaunchedEffect(Unit) {
 		viewModel.onEvent(VisualizadorDashboardVM.Eventos.Carga(identificador, paramtrosJSON))
 	}
-	
-	
+
+
 	val uiState by viewModel.uiState.collectAsState()
 	when (uiState) {
 		is UIState.Error   -> ErrorScreen((uiState as UIState.Error).message)
@@ -60,61 +60,61 @@ fun Success(
 	viewModel: VisualizadorDashboardVM,
 	uiState: UIState.Success,
 	navegacion: (EventosNavegacion) -> Unit,
-		   ) {
-	
-	
+) {
+
+
 	MA_ScaffoldGenerico(
-			titulo = "",
-			tituloScreen = TituloScreen.DashboardLista,
-			navegacion = {},
-			contenidoBottomBar = {
-				
-				BottomAppBar() {
-					Row(
-							modifier = Modifier.fillMaxWidth(),
-							horizontalArrangement = Arrangement.Start,
-							verticalAlignment = Alignment.Bottom
-					   
-					   ) {
-						
-						MA_IconBottom(
-								modifier = Modifier.weight(1f),
-								icon = Features.Menu().icono,
-								labelText = Features.Menu().texto,
-								onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
-									 )
-						Spacer(modifier = Modifier
-							.fillMaxWidth()
-							.weight(1f))
-						
-						
-					}
-					
-					
+		titulo = "",
+		tituloScreen = TituloScreen.DashboardLista,
+		navegacion = {},
+		contenidoBottomBar = {
+
+			BottomAppBar() {
+				Row(
+					modifier = Modifier.fillMaxWidth(),
+					horizontalArrangement = Arrangement.Start,
+					verticalAlignment = Alignment.Bottom
+
+				) {
+
+					MA_IconBottom(
+						modifier = Modifier.weight(1f),
+						icon = Features.Menu().icono,
+						labelText = Features.Menu().texto,
+						onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
+					)
+					Spacer(modifier = Modifier
+						.fillMaxWidth()
+						.weight(1f))
+
+
 				}
-			},
-			contenido = {
-				
-				val scroll = rememberScrollState()
-				Box(Modifier) {
-					Column(modifier = Modifier.verticalScroll(state = scroll)) {
-
-						MA_Titulo(uiState.dashboardUI.nombre)
-						MA_LabelLeyenda(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Center, valor = uiState.dashboardUI.descripcion)
 
 
-						uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->
-							lateinit var p: PanelUI
-							MA_Panel(panelData = PanelData.fromPanelUI(panelUI, uiState.dashboardUI.parametros))
-							
-						}
-						
+			}
+		},
+		contenido = {
+
+			val scroll = rememberScrollState()
+			Box(Modifier) {
+				Column(modifier = Modifier.verticalScroll(state = scroll)) {
+
+					MA_Titulo(uiState.dashboardUI.nombre)
+					MA_LabelLeyenda(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Center, valor = uiState.dashboardUI.descripcion)
+
+
+					uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->
+						lateinit var p: PanelUI
+						MA_Panel(panelData = PanelData.fromPanelUI(panelUI, uiState.dashboardUI.parametros))
+
 					}
+
 				}
 			}
-					   )
-	
-	
+		}
+	)
+
+
 }
 
 

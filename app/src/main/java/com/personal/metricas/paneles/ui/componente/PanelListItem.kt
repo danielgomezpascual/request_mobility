@@ -5,9 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HdrAuto
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +20,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.personal.metricas.R
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.formas.MA_Avatar
+import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
@@ -50,11 +57,12 @@ fun PanelListItem(
 			Column {
 				Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
 
-					//MA_LabelNegrita(modifier = Modifier.weight(1f), valor = "${panelUI.titulo}")
-
+					if (panelUI.autogenerado) MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
+					MA_Spacer(Modifier.padding(3.dp))
+					MA_LabelNegrita(valor = "${panelUI.titulo}")
 
 				}
-				MA_LabelNegrita(valor = "${panelUI.titulo}")
+
 				MA_LabelMini(valor = "${panelUI.descripcion}")
 
 
@@ -106,9 +114,9 @@ fun MA_InfoPanel(panel: PanelUI, mostrarNombre: Boolean = false) {
 
 
 @Composable
-fun MA_InfoPanelVertical(panel: PanelUI, mostrarNombre: Boolean = false) {
+fun MA_InfoPanelVertical(modifier  : Modifier = Modifier, panel: PanelUI, mostrarNombre: Boolean = false) {
 
-	Column (horizontalAlignment = Alignment.CenterHorizontally){
+	Column (modifier = modifier.height(height = 75.dp), horizontalAlignment = Alignment.CenterHorizontally){
 
 		if (mostrarNombre) {
 			MA_LabelMini(panel.titulo, alineacion = TextAlign.Center)
