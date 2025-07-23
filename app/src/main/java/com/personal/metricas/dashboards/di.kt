@@ -13,6 +13,7 @@ import com.personal.metricas.dashboards.domain.interactors.GuardarDashboardCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardsCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardsHomeCU
+import com.personal.metricas.dashboards.domain.interactors.ObtenerEtiquetasDashboardCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerKpisDashboard
 import com.personal.metricas.dashboards.domain.interactors.ObtenerSeleccionPanel
 import com.personal.metricas.dashboards.domain.repositorios.DashboardRepositorio
@@ -27,6 +28,7 @@ import com.personal.metricas.menu.screen.HomeVM
 import com.personal.metricas.paneles.domain.repositorios.PanelesRepositorio
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import kotlin.math.sin
 
 val moduloDashboards = module {
 
@@ -58,10 +60,13 @@ val moduloDashboards = module {
                                                         get<ObtenerKpiCU>()) }
     single<ObtenerDashboardsHomeCU> { ObtenerDashboardsHomeCU(get<DashboardRepositorio>()) }
 
+    single<ObtenerEtiquetasDashboardCU> { ObtenerEtiquetasDashboardCU(get<ObtenerDashboardsCU>()) }
 
     // ViewModels for Dashboards
     viewModel {
-        CuadriculaDashboardVM(obtenerDashboardsCU = get<ObtenerDashboardsCU>())
+        CuadriculaDashboardVM(
+            obtenerDashboardsCU = get<ObtenerDashboardsCU>(),
+            obtenerEtiquetasDashboardCU = get<ObtenerEtiquetasDashboardCU>())
     }
 
 
@@ -89,12 +94,13 @@ val moduloDashboards = module {
 
     viewModel {
         DetalleDashboardVM(
-                cargarDashboardCU = get<CargarDashboardCU>(),
-                eliminarDashboardCU = get<EliminarDashboardCU>(),
-                guardarDashboardCU = get<GuardarDashboardCU>(),
-                obtenerSeleccionPanel = get<ObtenerSeleccionPanel>(),
-                obtenerKpisCU = get<ObtenerKpisCU>(),
-                dialog =  get<DialogManager>()
+            cargarDashboardCU = get<CargarDashboardCU>(),
+            eliminarDashboardCU = get<EliminarDashboardCU>(),
+            guardarDashboardCU = get<GuardarDashboardCU>(),
+            obtenerSeleccionPanel = get<ObtenerSeleccionPanel>(),
+            obtenerKpisCU = get<ObtenerKpisCU>(),
+            obtenerEtiquetas = get<ObtenerEtiquetasDashboardCU>(),
+            dialog =  get<DialogManager>()
         )
     }
 }

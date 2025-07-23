@@ -46,7 +46,8 @@ fun <T> MA_ComboLista(modifier: Modifier = Modifier,
         Column {
             MA_LabelEtiqueta(titulo)
             Row {
-                elemntoSeleccionado()
+                //elemntoSeleccionado()
+                valorInicial()
             }
         }
     }

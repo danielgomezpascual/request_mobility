@@ -10,12 +10,15 @@ import com.personal.metricas.core.utils.Utils
 import com.personal.metricas.core.utils.Utils.esTrue
 import com.personal.metricas.core.utils.Utils.toSiNo
 import com.personal.metricas.core.utils._toJson
+import com.personal.metricas.core.utils._toObjectFromJson
 import com.personal.metricas.dashboards.domain.entidades.Dashboard
 import com.personal.metricas.dashboards.domain.entidades.TipoDashboard
+import com.personal.metricas.dashboards.ui.entidades.Etiquetas
 import com.personal.metricas.kpi.domain.interactors.ObtenerKpiCU
 import com.personal.metricas.paneles.domain.interactors.ObtenerPanelesCU
 import kotlinx.coroutines.flow.first
 import org.koin.java.KoinJavaComponent.getKoin
+import kotlin.String
 
 @Entity(tableName = "Dashboard")
 class DashboardRoom(
@@ -29,6 +32,7 @@ class DashboardRoom(
 	val idKpi: Int = 0,
 	val paneles: String = "",
 	val autogenerado: String = "N",
+	val etiqueta: String = "",
 ) : IRoom
 
 suspend fun DashboardRoom.toDashboard(): Dashboard {
@@ -71,7 +75,8 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 		descripcion = this.descripcion,
 		kpiOrigenDatos = obtenerKpi.obtener(this.idKpi), // Asumo que esta también es una función suspend
 		paneles = listaPanelesActualizado,
-		autogenerado = esTrue(this.autogenerado, "Y", false)
+		autogenerado = esTrue(this.autogenerado, "Y", false),
+		etiqueta = _toObjectFromJson<Etiquetas>(this.etiqueta) ?: Etiquetas.EtiquetaVacia()
 	)
 
 }
@@ -95,6 +100,7 @@ fun DashboardRoom.fromDashboard(dashboard: Dashboard): DashboardRoom {
 		descripcion = dashboard.descripcion,
 		idKpi = dashboard.kpiOrigenDatos.id,
 		paneles = _toJson(dashboard.paneles.map { PanelDashboardRoom.fromPanel(it) }),
-		autogenerado = Utils.toSiNo(dashboard.autogenerado)
+		autogenerado = Utils.toSiNo(dashboard.autogenerado),
+		etiqueta = _toJson(dashboard.etiqueta)
 	)
 }

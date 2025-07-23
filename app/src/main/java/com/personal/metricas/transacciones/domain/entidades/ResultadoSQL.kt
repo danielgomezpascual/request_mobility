@@ -44,10 +44,6 @@ data class ResultadoSQL(
 			}*/
 
 			val sqlConReemplazos = Parametros.reemplazar(str = sql, parametrosKpi = parametrosKpi, parametrosDashboard = parametrosOrigenDatos)
-
-
-			App.log.lista("Parametors", parametrosKpi.ps)
-			App.log.d("SQL: $sqlConReemplazos")
 			val trxDao = getKoin().get<AppDatabase>().transaccionesDao()
 			val lista = trxDao.sqlToListString(sqlConReemplazos)
 			return from(lista).toValoresTabla()

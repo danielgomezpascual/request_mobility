@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DoubleArrow
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,16 +32,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.personal.metricas.App
+import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
 import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_SwitchNormal
 import com.personal.metricas.core.composables.combo.MA_ComboLista
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextBuscador
+import com.personal.metricas.core.composables.edittext.MA_TextoEditable
 import com.personal.metricas.core.composables.edittext.MA_TextoNormal
 import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
+import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo2
 import com.personal.metricas.core.composables.listas.MA_ListaReordenable_EstiloYouTube
 import com.personal.metricas.core.composables.modales.MA_BottomSheet
@@ -48,7 +54,9 @@ import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.dashboards.domain.entidades.TipoDashboard
+import com.personal.metricas.dashboards.ui.composables.MA_EtiquetaItem
 import com.personal.metricas.dashboards.ui.composables.SeleccionPanelItemDashboard
+import com.personal.metricas.dashboards.ui.entidades.Etiquetas
 import com.personal.metricas.kpi.ui.composables.KpiComboItem
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.menu.Features
@@ -96,6 +104,7 @@ fun DetalleDashboardUIScreen(
 ) {
 
 	val sheetStateCondicionCelda = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+	val sheetEtiqueta = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 	val scroll = rememberScrollState()
 	val scope = rememberCoroutineScope() // Se mantiene dentro del componente
 
@@ -183,6 +192,48 @@ fun DetalleDashboardUIScreen(
 				}
 
 
+
+
+
+
+				MA_Titulo2("Etiqueta")
+
+				MA_Card {
+					Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+						.fillMaxWidth()
+					)
+					{
+						MA_IconBottom(icon = Icons.Default.Add) {
+							viewModel.onEvento(DetalleDashboardVM.Eventos.OnNuevaEtiqueta)
+							scope.launch { sheetEtiqueta.show() }
+						}
+
+
+						MA_ComboLista<Etiquetas>(modifier = Modifier
+							.fillMaxWidth()
+							.weight(1f),
+												 titulo = "",
+												 descripcion = "Seleccione la etiqueta para el elemento",
+												 valorInicial = {
+													 MA_EtiquetaItem(uiState.etiquetaSeleccionada)
+												 },
+												 elementosSeleccionables = uiState.etiquetasDisponibles,
+												 item = { etiqueta ->
+													 MA_EtiquetaItem(etiqueta)
+
+												 },
+												 onClickSeleccion = { etiqueta ->
+													 viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeEtiqueta(etiqueta))
+												 })
+
+						MA_IconBottom(icon = Icons.Default.Edit) {
+							viewModel.onEvento(DetalleDashboardVM.Eventos.OnEditarEtiqueta(uiState.etiquetaSeleccionada))
+							scope.launch { sheetEtiqueta.show() }
+						}
+
+					}
+				}
+
 				MA_Titulo2("KPI")
 				MA_Card {
 					Column {
@@ -259,18 +310,18 @@ fun DetalleDashboardUIScreen(
 								// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
 								Row(modifier = Modifier.fillMaxWidth()) {
 
-								Box(modifier = Modifier.weight(1f)) {
-									SeleccionPanelItemDashboard(panel, dashboardUI.kpiOrigen.dameColumnasSQL()) { panelSeleccionado ->
-										val panelesR: List<PanelUI> = paneles.map { panel ->
-											if (panel.id == panelSeleccionado.id) {
-												panel.copy(seleccionado = !panelSeleccionado.seleccionado)
-											} else {
-												panel
+									Box(modifier = Modifier.weight(1f)) {
+										SeleccionPanelItemDashboard(panel, dashboardUI.kpiOrigen.dameColumnasSQL()) { panelSeleccionado ->
+											val panelesR: List<PanelUI> = paneles.map { panel ->
+												if (panel.id == panelSeleccionado.id) {
+													panel.copy(seleccionado = !panelSeleccionado.seleccionado)
+												} else {
+													panel
+												}
 											}
-										}
 
-										val p = panelesR.first { it.id == panelSeleccionado.id }
-										viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
+											val p = panelesR.first { it.id == panelSeleccionado.id }
+											viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
 
 										}
 									}
@@ -315,13 +366,6 @@ fun DetalleDashboardUIScreen(
 
 
 							dashboardUI.listaPaneles.filter { it.seleccionado }.forEach { panelUI ->
-								lateinit var p: PanelUI
-								/*	if (uiState.dashboardUI.tipo == TipoDashboard.Dinamico()) {
-										val sql = panelUI.kpi.sql
-										p = panelUI.copy(kpi = panelUI.kpi.copy(sql = sql.reemplazaValorFila(uiState.dashboardUI.parametros)))
-									} else {
-										p = panelUI
-									}*/
 
 								MA_Panel(panelData = PanelData.fromPanelUI(panelUI, dashboardUI.parametros))
 
@@ -331,6 +375,41 @@ fun DetalleDashboardUIScreen(
 					}
 				})
 
+
+				//------------------
+
+
+				MA_BottomSheet(sheetEtiqueta, onClose = {
+					{ scope.launch { sheetEtiqueta.hide() } }
+				}, contenido = {
+
+					Box(Modifier) {
+						Column(modifier = Modifier.verticalScroll(state = scroll)) {
+
+
+							MA_TextoEditable(valor = uiState.etiquetaSeleccionada.etiqueta, titulo = "Etiqueta") {
+								viewModel.onEvento(DetalleDashboardVM.Eventos.ModificarValorEtiqueta(it))
+							}
+
+
+							Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+								MA_BotonSecundario("Cancelar") {
+									scope.launch { sheetEtiqueta.hide() }
+								}
+
+
+
+
+								MA_BotonPrincipal("Guardar") {
+									viewModel.onEvento(DetalleDashboardVM.Eventos.OnGuardarEtiqueta)
+									scope.launch { sheetEtiqueta.hide() }
+								}
+
+							}
+
+						}
+					}
+				})
 
 				//------------------
 

@@ -3,6 +3,7 @@ package com.personal.metricas.dashboards.ui.screen.cuadricula
 import MA_IconBottom
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.metricas.App
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextBuscador
@@ -36,6 +38,7 @@ import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.core.utils._toJson
+import com.personal.metricas.dashboards.ui.composables.MA_EtiquetaItem
 import com.personal.metricas.menu.Features
 import org.koin.androidx.compose.koinViewModel
 
@@ -112,9 +115,21 @@ fun SuccessCuadriculaDashboard(
 			Column(
 				modifier = Modifier
 					.fillMaxWidth() // fillMaxWidth para la columna principal
-					.padding(16.dp) // Padding general del contenido como en el ejemplo
 			) {
 
+
+
+				Row() {
+					uiState.etiquetasDisponibles.forEach { etiqueta ->
+						Box(modifier = Modifier.clickable(enabled = true, onClick = {
+							viewModel.onEvento(CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta))
+						})) {
+							MA_EtiquetaItem(etiqueta)
+
+
+						}
+					}
+				}
 
 				MA_TextBuscador(
 					searchText = uiState.textoBuscar,
