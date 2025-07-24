@@ -1,6 +1,9 @@
 package com.personal.metricas.core.composables.graficas
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -61,53 +64,56 @@ fun MA_IndicadorVertical(
          )
      }*/
 
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth()
-            ,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
 
-    ) {
-        items(items = listaValores) { fila ->
-            val x = if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
-            var y: String = "0"
-            try {
-                y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor else "0"
-            } catch (e: Exception) {
-                e.printStackTrace()
+    Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+        LazyColumn(
+            modifier = Modifier.fillMaxHeight()            ,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+
+        ) {
+            items(items = listaValores) { fila ->
+                val x = if (fila.celdas.size >= posicionX) fila.celdas[posicionX].valor else '-'
+                var y: String = "0"
+                try {
+                    y = if (fila.celdas.size >= posicionY) fila.celdas[posicionY].valor else "0"
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+
+                MA_Indicador( texto = x.toString(), valor = y.toString(), color = fila.color)
+
+                /* Column(
+					 horizontalAlignment = Alignment.CenterHorizontally,
+					 modifier = Modifier
+						 .defaultMinSize(100.dp, 100.dp)
+						 .padding(5.dp)
+						 .background(color = Color.Black)
+				 ) {
+
+					 Text(
+						 text = y.toString(), modifier = modifier
+							// .fillMaxWidth()
+							 .padding(6.dp),
+						 color = fila.color,
+						 // style = MaterialTheme.typography.titleLarge,
+						 fontWeight = FontWeight(800),
+						 fontSize = TextUnit(40.0f, TextUnitType.Sp),
+
+
+						 textAlign = TextAlign.Center
+					 )
+
+
+					 //   MA_Titulo(valor = y.toString(), color = Color.Green)
+					 MA_Titulo(valor = x.toString(), color = Color.White)
+
+				 }*/
             }
-
-
-            MA_Indicador( texto = x.toString(), valor = y.toString(), color = fila.color)
-
-           /* Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .defaultMinSize(100.dp, 100.dp)
-                    .padding(5.dp)
-                    .background(color = Color.Black)
-            ) {
-
-                Text(
-                    text = y.toString(), modifier = modifier
-                       // .fillMaxWidth()
-                        .padding(6.dp),
-                    color = fila.color,
-                    // style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight(800),
-                    fontSize = TextUnit(40.0f, TextUnitType.Sp),
-
-
-                    textAlign = TextAlign.Center
-                )
-
-
-                //   MA_Titulo(valor = y.toString(), color = Color.Green)
-                MA_Titulo(valor = x.toString(), color = Color.White)
-
-            }*/
         }
     }
+
 
 
 }
