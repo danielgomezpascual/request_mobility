@@ -13,6 +13,7 @@ import com.personal.metricas.endpoints.moduloEndPoints
 import com.personal.metricas.inicializador.modulosInicializador
 import com.personal.metricas.kpi.moduloKpis
 import com.personal.metricas.menu.modulosMenu
+import com.personal.metricas.notas.moduloNotas
 import com.personal.metricas.organizaciones.moduloOrganizaciones
 import com.personal.metricas.paneles.moduloPaneles
 import com.personal.metricas.sincronizacion.moduloSincronizacion
@@ -71,7 +72,8 @@ class App : Application() {
 				moduloPaneles,
 				moduloSincronizacion,
 				modulosInicializador,
-				modulosMenu
+				modulosMenu,
+				moduloNotas
 			)
 
 		}

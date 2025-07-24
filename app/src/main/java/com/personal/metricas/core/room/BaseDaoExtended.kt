@@ -3,6 +3,7 @@ package com.personal.metricas.core.room
 import android.database.Cursor
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.personal.metricas.App
+import com.personal.metricas.core.utils.K
 import org.koin.java.KoinJavaComponent.inject
 import kotlin.getValue
 
@@ -57,10 +58,18 @@ abstract class BaseDaoExtended<T : IRoom> : IBaseDao<T> {
                     return resultadoEjecucionSQL
                 } // Evitamos crear arrays vacíos innecesariamente
 
-                resultadoEjecucionSQL.titulos = (0 until columnCount).map { cursor.getColumnName(it) }
+                resultadoEjecucionSQL.titulos =
+                    (0 until columnCount).map { cursor.getColumnName(it) }
+
+                //resultadoEjecucionSQL.titulos = resultadoEjecucionSQL.titulos.plus(K.HASH_CODE)
+                //si damos la opcion de añadir notas, metemos una columna mas...
+
+                resultadoEjecucionSQL.titulos = resultadoEjecucionSQL.titulos.plus(K.HASH_CODE)
+                //resultadoEjecucionSQL.titulos = resultadoEjecucionSQL.titulos.plus("")
+
                 val results = mutableListOf<List<String>>()
                 while (cursor.moveToNext()) {
-                    val row = (0 until columnCount).map { columnIndex ->
+                    var row = (0 until columnCount).map { columnIndex ->
                         when (cursor.getType(columnIndex)) {
                             Cursor.FIELD_TYPE_NULL -> "NULL"
                             Cursor.FIELD_TYPE_INTEGER -> cursor.getInt(columnIndex).toString()
@@ -70,6 +79,9 @@ abstract class BaseDaoExtended<T : IRoom> : IBaseDao<T> {
                             else -> "Unknown"
                         }
                     }
+
+                    //si damos la opcion de añadir notas, metemos una columna mas...
+                    row = row.plus(row.hashCode().toString())
                     results.add(row)
                 }
                 resultadoEjecucionSQL.filas = results

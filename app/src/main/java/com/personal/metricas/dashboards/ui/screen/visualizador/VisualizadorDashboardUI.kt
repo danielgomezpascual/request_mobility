@@ -22,15 +22,20 @@ import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.labels.MA_LabelLeyenda
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
+import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.dashboards.ui.screen.visualizador.VisualizadorDashboardVM.UIState
 import com.personal.metricas.menu.Features
+import com.personal.metricas.notas.domain.entidades.Notas
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.ui.componente.MA_Panel
 import com.personal.metricas.paneles.ui.entidades.PanelUI
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.mp.KoinPlatform.getKoin
 
 @Composable
 fun VisualizadorDashboardUI(
@@ -105,7 +110,10 @@ fun Success(
 
 					uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->
 						lateinit var p: PanelUI
-						MA_Panel(panelData = PanelData.fromPanelUI(panelUI, uiState.dashboardUI.parametros))
+
+						//val notasManager = getKoin().get<NotasManager>()
+						val notasManager = NotasManager.instancia()
+						MA_Panel(panelData = PanelData.fromPanelUI(panelUI,notasManager,  uiState.dashboardUI.parametros))
 
 					}
 

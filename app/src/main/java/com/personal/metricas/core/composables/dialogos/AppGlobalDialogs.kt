@@ -39,6 +39,26 @@ fun AppGlobalDialogs(dialogManager: DialogManager) {
                     dialogo.onResult(res)
                 })
         }
+
+        is Dialogos.Input -> {
+            MA_Dialogo_Input (
+                visibilidad = true,
+                textoInformacion = dialogo.textoInformacion,
+                textoInicialEditText = dialogo.textoInicial,
+                resultado = { res, str ->
+                    dialogo.onResult(res, str)
+                })
+        }
+
+        is Dialogos.Nota -> {
+            MA_Dialogo_Nota (
+                visibilidad = true,
+                textoInformacion = dialogo.textoInformacion,
+                textoInicialEditText = dialogo.textoInicial,
+                resultado = { res, str ->
+                    dialogo.onResult(res, str)
+                })
+        }
     }
 
 }

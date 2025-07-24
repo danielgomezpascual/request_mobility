@@ -7,4 +7,5 @@ object K {
 
 
     const val ORGANIZACIONES: String = "ORGANIZACIONES"
+    const val HASH_CODE: String = "HC"
 }

@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.personal.metricas.App
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.MA_Marco
 import com.personal.metricas.core.composables.graficas.MA_GraficoAnillo
@@ -32,6 +31,7 @@ import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.core.composables.tabla.MA_Tabla
+import com.personal.metricas.notas.domain.entidades.Notas
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
@@ -45,53 +45,49 @@ import kotlin.collections.map
 fun MA_Panel(
 	modifier: Modifier = Modifier,
 	panelData: PanelData,
-	
+
 	) {
-	
+
 	var tieneErrores: Boolean = false
 	var mensajeError: String = ""
 	var trazaError: String = ""
-	
+
 	//variable para controlar el estado de las filas que se estan presentado en la tabla
 	var filas by remember { mutableStateOf<List<Fila>>(panelData.valoresTabla.filas) }
-	
+
 	//varaible para controlar el estadp de  las celdas y los atributos que se seleccionan
 	var celdasFiltro by remember { mutableStateOf<List<Celda>>(emptyList()) }
-	
+
 	var tablaComposable: @Composable () -> Unit = {}
 	var graficaComposable: @Composable () -> Unit = {}
-	
-	val configuracion = panelData.panelConfiguracion.copy(titulo =  panelData.panel.titulo, descripcion =  panelData.panel.descripcion)
+
+	val configuracion = panelData.panelConfiguracion.copy(titulo = panelData.panel.titulo, descripcion = panelData.panel.descripcion)
 	lateinit var fs: List<Fila>
 	lateinit var filasPintar: List<Fila>
-	
-	App.log.d("Titulo -> " + panelData.panel.titulo,)
-	App.log.d("Descripcion -->" +panelData.panel.descripcion)
-	
-	
-	
-	
+
 	try {
-	
-		
+
+
+
 		if (configuracion.limiteElementos > 0) {
 			filas = panelData.limiteElementos()
 			panelData.valoresTabla.filas = filas
 		}
-		
+
 		if (configuracion.ordenado) {
 			filas = panelData.ordenarElementos()
 		}
-		
+
 		filas = panelData.establecerColorFilas()
 
 //--------------------------------------------------
 		filasPintar = filas.filter { it.visible == true } //solo pintamos las filas que estas visibles, el resto no.
-		
-		
+
+
 		//establecemos los colores
 		val hayFilaSeleccionada: Boolean = !filasPintar.none { it.seleccionada }
 		fs = filasPintar.map { fila ->
+
 			var colorAlpha = fila.color.copy(alpha = 1.0f)
 			if (hayFilaSeleccionada) {
 				colorAlpha = fila.color.copy(alpha = 0.20f)
@@ -101,97 +97,95 @@ fun MA_Panel(
 			}
 			fila.copy(color = colorAlpha)
 		}
-		
+
 	}
 	catch (e: Exception) {
 		mensajeError = e.message.toString()
 		trazaError = e.stackTrace.take(5).toString()
 		tieneErrores = true
-		
+
 	}
-	
+
 	if (tieneErrores) {
 		MA_Marco(titulo = panelData.panel.titulo, modifier = Modifier, componente = {
 			Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-				Icon(imageVector = Icons.Default.Error, tint =  Color.Red, contentDescription = "")
+				Icon(imageVector = Icons.Default.Error, tint = Color.Red, contentDescription = "")
 				MA_LabelNegrita("ERROR", color = Color.Red)
-								MA_LabelMini( panelData.panel.descripcion)
+				MA_LabelMini(panelData.panel.descripcion)
 				MA_LabelNegrita(mensajeError)
 				MA_LabelNormal(trazaError)
-				
+
 			}
-			
-			
+
+
 		})
 		return
 	}
 	graficaComposable = dameTipoGrafica(
-			panelConfiguracion = configuracion,
-			modifier = modifier,
-			filas = fs,
-			posicionX = panelData.panelConfiguracion.columnaX,
-			posivionY = panelData.panelConfiguracion.columnaY
-									   
-									   )
-	
-	
-	
+		panelConfiguracion = configuracion,
+		modifier = modifier,
+		filas = fs,
+		posicionX = panelData.panelConfiguracion.columnaX,
+		posivionY = panelData.panelConfiguracion.columnaY
+
+	)
+
+
+
 	tablaComposable = dameTipoTabla(
-			panelConfiguracion = configuracion,
-			modifier = modifier,
-			filas = filasPintar,
-			celdasFiltro = celdasFiltro,
-			
-			onClickSeleccionarFila = { fila ->
-				filas = filas.map { f ->
-					if (fila.seleccionada) {
+		panelConfiguracion = configuracion,
+		modifier = modifier,
+		filas = filasPintar,
+		notas =  panelData.notasManager.notas,
+		celdasFiltro = celdasFiltro,
+		onClickSeleccionarFila = { fila ->
+			filas = filas.map { f ->
+				if (fila.seleccionada) {
+					f.copy(seleccionada = false)
+				} else {
+
+					if (f.equals(fila)) {
+						f.copy(seleccionada = true)
+					} else {
 						f.copy(seleccionada = false)
-						
-					} else {
-						
-						if (f.equals(fila)) {
-							
-							f.copy(seleccionada = true)
-						} else {
-							
-							f.copy(seleccionada = false)
-						}
-					}
-					
-				}
-				celdasFiltro = fila.celdas
-				panelData.valoresTabla.filas = filas
-			},
-			onClickInvertir = { cfi ->
-				celdasFiltro = celdasFiltro.map { c ->
-					if (c.titulo.equals(cfi.titulo)) {
-						if (!cfi.filtroInvertido) {
-							c.copy(filtroInvertido = true, seleccionada = true)
-						} else {
-							c.copy(filtroInvertido = false)
-						}
-					} else {
-						c
 					}
 				}
-				filas = cumplenFiltro(filas, celdasFiltro)
-				panelData.valoresTabla.filas = filas
-			},
-			onClickSeleccionarFiltro = { cf ->
-				celdasFiltro = celdasFiltro.map { c ->
-					if (c.titulo.equals(cf.titulo)) {
-						cf.copy(seleccionada = !cf.seleccionada)
-					} else {
-						c
-					}
-				}
-				
-				filas = cumplenFiltro(filas, celdasFiltro)
-				panelData.valoresTabla.filas = filas
-				
-				
+
 			}
-								   )
+			celdasFiltro = fila.celdas
+			panelData.valoresTabla.filas = filas
+		},
+		onClickInvertir = { cfi ->
+			celdasFiltro = celdasFiltro.map { c ->
+				if (c.titulo.equals(cfi.titulo)) {
+					if (!cfi.filtroInvertido) {
+						c.copy(filtroInvertido = true, seleccionada = true)
+					} else {
+						c.copy(filtroInvertido = false)
+					}
+				} else {
+					c
+				}
+			}
+			filas = cumplenFiltro(filas, celdasFiltro)
+			panelData.valoresTabla.filas = filas
+		},
+		onClickSeleccionarFiltro = { cf ->
+			celdasFiltro = celdasFiltro.map { c ->
+				if (c.titulo.equals(cf.titulo)) {
+					cf.copy(seleccionada = !cf.seleccionada)
+				} else {
+					c
+				}
+			}
+
+			filas = cumplenFiltro(filas, celdasFiltro)
+			panelData.valoresTabla.filas = filas
+
+
+		}
+
+	)
 
 	MA_Card(modifier = Modifier.padding(6.dp)) {
 		when (configuracion.orientacion) {
@@ -217,15 +211,14 @@ fun MA_Panel(
 		}
 	}
 
-	
-	
+
 }
 
 fun cumplenFiltro(filas: List<Fila>, celdasFiltro: List<Celda>): List<Fila> = filas.map { fila ->
 	var cumpleFiltro: Boolean = true
 	fila.celdas.forEach { celdaFila ->
 		celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
-			
+
 			if ((celdaFila.titulo.equals(celdaFiltro.titulo))
 				&&
 				(!celdaFiltro.filtroInvertido && !(celdaFila.valor.equals(celdaFiltro.valor)))
@@ -247,23 +240,23 @@ fun dameTipoGrafica(
 	filas: List<Fila>,
 	posicionX: Int = 0,
 	posivionY: Int = 1,
-				   ): @Composable () -> Unit {
+): @Composable () -> Unit {
 	if (!panelConfiguracion.mostrarGrafica) {
 		return {}
 	}
 	var datosPintar = filas
-	
-	
+
+
 	/*if (!graTabConfiguracion.mostrarEtiquetas) {
 		datosPintar = filas.mapIndexed {index,
 
 
 		}
 	}*/
-	
+
 	return {
 		when (panelConfiguracion.tipo) {
-			
+
 			is PanelTipoGrafica.IndicadorVertical      -> {
 				MA_IndicadorVertical(modifier = modifier,
 									 listaValores = datosPintar,
@@ -271,7 +264,7 @@ fun dameTipoGrafica(
 									 posicionY = posivionY,
 									 panelConfiguracion = panelConfiguracion)
 			}
-			
+
 			is PanelTipoGrafica.IndicadorHorizontal    -> {
 				MA_IndicadorHorizontal(modifier = modifier,
 									   listaValores = datosPintar,
@@ -279,63 +272,63 @@ fun dameTipoGrafica(
 									   posicionY = posivionY,
 									   panelConfiguracion = panelConfiguracion)
 			}
-			
-			is PanelTipoGrafica.BarrasAnchasVerticales -> {
-				
-				MA_GraficoBarras(
-						modifier = modifier,
-						listaValores = datosPintar,
-						posicionX = posicionX,
-						posicionY = posivionY,
-						panelConfiguracion = panelConfiguracion,
 
-								)
-				
+			is PanelTipoGrafica.BarrasAnchasVerticales -> {
+
+				MA_GraficoBarras(
+					modifier = modifier,
+					listaValores = datosPintar,
+					posicionX = posicionX,
+					posicionY = posivionY,
+					panelConfiguracion = panelConfiguracion,
+
+					)
+
 			}
-			
+
 			is PanelTipoGrafica.BarrasFinasVerticales  -> {
 				MA_GraficoBarrasVerticales(
-						modifier = modifier,
-						listaValores = datosPintar,
-						posicionX = posicionX,
-						posivionY = posivionY,
-						panelConfiguracion = panelConfiguracion
-										  )
+					modifier = modifier,
+					listaValores = datosPintar,
+					posicionX = posicionX,
+					posivionY = posivionY,
+					panelConfiguracion = panelConfiguracion
+				)
 			}
-			
+
 			is PanelTipoGrafica.Circular               -> {
 				MA_GraficoCircular(
-						modifier = modifier,
-						listaValores = datosPintar,
-						posicionX = posicionX,
-						posivionY = posivionY,
-						panelConfiguracion = panelConfiguracion
-								  )
+					modifier = modifier,
+					listaValores = datosPintar,
+					posicionX = posicionX,
+					posivionY = posivionY,
+					panelConfiguracion = panelConfiguracion
+				)
 			}
-			
+
 			is PanelTipoGrafica.Anillo                 -> {
 				MA_GraficoAnillo(
-						modifier = modifier,
-						listaValores = datosPintar,
-						posicionX = posicionX,
-						posivionY = posivionY,
-						panelConfiguracion = panelConfiguracion
-								)
+					modifier = modifier,
+					listaValores = datosPintar,
+					posicionX = posicionX,
+					posivionY = posivionY,
+					panelConfiguracion = panelConfiguracion
+				)
 			}
-			
+
 			is PanelTipoGrafica.Lineas                 -> {
 				MA_GraficoLineas(
-						modifier = modifier,
-						listaValores = datosPintar,
-						posicionX = posicionX,
-						posivionY = posivionY,
-						panelConfiguracion = panelConfiguracion
-								)
+					modifier = modifier,
+					listaValores = datosPintar,
+					posicionX = posicionX,
+					posivionY = posivionY,
+					panelConfiguracion = panelConfiguracion
+				)
 			}
 		}
 	}
-	
-	
+
+
 }
 
 @Composable
@@ -343,25 +336,30 @@ fun dameTipoTabla(
 	panelConfiguracion: PanelConfiguracion,
 	modifier: Modifier,
 	filas: List<Fila>,
+	notas: List<Notas>,
 	celdasFiltro: List<Celda>,
 	onClickSeleccionarFiltro: (Celda) -> Unit,
 	onClickInvertir: (Celda) -> Unit,
 	onClickSeleccionarFila: (Fila) -> Unit,
-				 ): @Composable () -> Unit {
-	
+
+): @Composable () -> Unit {
+
+
+
 	if (panelConfiguracion.mostrarTabla) {
 		return {
 			MA_Tabla(
-					modifier = Modifier.fillMaxSize(),
-					panelConfiguracion = panelConfiguracion,
-					//tabla = valoresTabla,
-					filas = filas,
-					celdasFiltro = celdasFiltro,
-					mostrarTitulos = panelConfiguracion.mostrarTituloTabla,
-					onClickSeleccionarFiltro = onClickSeleccionarFiltro,
-					onClickInvertir = onClickInvertir,
-					onClickSeleccionarFila = onClickSeleccionarFila
-					)
+				modifier = Modifier.fillMaxSize(),
+				panelConfiguracion = panelConfiguracion,
+				//tabla = valoresTabla,
+				filas = filas,
+				notas = notas,
+				celdasFiltro = celdasFiltro,
+				mostrarTitulos = panelConfiguracion.mostrarTituloTabla,
+				onClickSeleccionarFiltro = onClickSeleccionarFiltro,
+				onClickInvertir = onClickInvertir,
+				onClickSeleccionarFila = onClickSeleccionarFila
+			)
 		}
 	} else {
 		return {}

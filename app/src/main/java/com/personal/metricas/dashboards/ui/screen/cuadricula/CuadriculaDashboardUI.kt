@@ -22,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.App
@@ -29,6 +30,7 @@ import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextBuscador
 import com.personal.metricas.core.composables.formas.MA_Avatar
+import com.personal.metricas.core.composables.graficas.MA_Indicador
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
@@ -117,7 +119,7 @@ fun SuccessCuadriculaDashboard(
 					.fillMaxWidth() // fillMaxWidth para la columna principal
 			) {
 
-
+			MA_Indicador(texto = "aashdjkha", valor = "465" , color =  Color.Green)
 
 				Row() {
 					uiState.etiquetasDisponibles.forEach { etiqueta ->

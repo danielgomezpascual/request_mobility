@@ -50,6 +50,7 @@ import com.personal.metricas.core.composables.labels.MA_Titulo2
 import com.personal.metricas.core.composables.listas.MA_ListaReordenable_EstiloYouTube
 import com.personal.metricas.core.composables.modales.MA_BottomSheet
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
+import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
@@ -65,6 +66,7 @@ import com.personal.metricas.paneles.ui.componente.MA_Panel
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.mp.KoinPlatform.getKoin
 
 @Composable
 fun DetalleDashboardUI(
@@ -366,8 +368,9 @@ fun DetalleDashboardUIScreen(
 
 
 							dashboardUI.listaPaneles.filter { it.seleccionado }.forEach { panelUI ->
-
-								MA_Panel(panelData = PanelData.fromPanelUI(panelUI, dashboardUI.parametros))
+								//val notasManager = getKoin().get<NotasManager>()
+								val notasManager = NotasManager.instancia()
+								MA_Panel(panelData = PanelData.fromPanelUI(panelUI, notasManager,  dashboardUI.parametros))
 
 							}
 

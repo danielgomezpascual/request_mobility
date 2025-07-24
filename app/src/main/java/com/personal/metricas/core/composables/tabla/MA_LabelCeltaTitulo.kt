@@ -21,6 +21,8 @@ fun MA_LabelCeldaTitulo(
     icono: Icons? = null,
 ) {
 
-    Text(text = valor, modifier = modifier.fillMaxWidth().background(color =fondo),
-        color = color, style = MaterialTheme.typography.bodySmall, textAlign = alineacion  )
+    Text(text = valor,
+         modifier = modifier.fillMaxWidth().background(color =fondo),
+        color = color,
+         style = MaterialTheme.typography.bodySmall, textAlign = alineacion  )
 }

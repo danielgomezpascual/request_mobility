@@ -60,7 +60,7 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 		} ?: panel // El operador Elvis (?:) devuelve el panel original si no se encuentra
 	}.sortedBy { it.orden } // Finalmente, ordenamos la lista resultante.
 
-	App.log.lista("Paneles", listaPanelesActualizado)
+
 
 	// 3. Ahora que tenemos todos los datos, construimos y devolvemos el objeto.
 	// Todo el bloque de la función se ha ejecutado de forma secuencial y legible,

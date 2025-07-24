@@ -686,7 +686,8 @@ fun SucessScreenDetallePanel(
 						panelData = PanelData(
 							panel = panelUI.toPanel(),
 							panelConfiguracion = panelUI.configuracion,
-							valoresTabla = uiState.valoresTabla))
+							valoresTabla = uiState.valoresTabla,
+							))
 
 				}
 			})

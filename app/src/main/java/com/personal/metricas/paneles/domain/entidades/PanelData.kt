@@ -7,6 +7,7 @@ import com.personal.metricas.App
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Columnas
 import com.personal.metricas.core.composables.tabla.Fila
+import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.composables.tabla.ValoresTabla
 import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils.esNumerico
@@ -18,32 +19,26 @@ import org.apache.commons.jexl3.MapContext
 
 
 data class PanelData(
+
 	val panel: Panel,
 	val panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
 	var valoresTabla: ValoresTabla = ValoresTabla(),
+	var notasManager: NotasManager = NotasManager()
 					) {
 	
 	companion object{
 		
-		fun fromPanelUI(panelUI: PanelUI, parametrosOrigenDatos: Parametros): PanelData {
-
-
-
-
-
-
-
+		fun fromPanelUI(panelUI: PanelUI,notasManager: NotasManager,  parametrosOrigenDatos: Parametros): PanelData {
 			val panelConfiguracion = panelUI.configuracion
 			val tabla: ValoresTabla = ResultadoSQL.fromSqlToTabla(sql = panelUI.kpi.sql, parametrosKpi =  panelUI.kpi.parametros, parametrosOrigenDatos = parametrosOrigenDatos)
-			App.log.d("${panelUI.titulo} - ${panelUI.orden} - ${panelUI.seleccionado} - ")
-			
-			
-			
-			
+
+
 			return PanelData(
-					panel = panelUI.toPanel(),
-					panelConfiguracion = panelConfiguracion,
-					valoresTabla = tabla
+				panel = panelUI.toPanel(),
+				panelConfiguracion = panelConfiguracion,
+				valoresTabla = tabla,
+				notasManager = notasManager
+
 							)
 		}
 	}

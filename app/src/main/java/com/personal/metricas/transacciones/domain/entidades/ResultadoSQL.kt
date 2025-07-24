@@ -16,8 +16,7 @@ data class ResultadoSQL(
 	var filas: List<List<String>> = emptyList(),
 					   ) {
 	companion object {
-		fun from(execSQL: ResultadoEjecucionSQL) = ResultadoSQL(titulos = execSQL.titulos,
-				filas = execSQL.filas)
+		fun from(execSQL: ResultadoEjecucionSQL) = ResultadoSQL(titulos = execSQL.titulos, filas = execSQL.filas)
 
 
 		fun fromSqlToTabla(kpi: Kpi): ValoresTabla {
@@ -80,6 +79,8 @@ data class ResultadoSQL(
 			}
 			filasValoresTabla = filasValoresTabla.plus(Fila(celdas = filaVT))
 		}
+
+
 		return ValoresTabla(filas = filasValoresTabla, columnas = columnasTabla)
 		
 	}

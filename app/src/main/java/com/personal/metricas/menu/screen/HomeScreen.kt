@@ -20,6 +20,7 @@ import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.listas.MA_NoData
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
+import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
@@ -29,6 +30,7 @@ import com.personal.metricas.menu.screen.HomeVM.UIState
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.ui.componente.MA_Panel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.mp.KoinPlatform.getKoin
 
 
 @Composable
@@ -135,9 +137,13 @@ fun SuccessMenu(
 				   verticalArrangement = Arrangement.Center,
 				   horizontalAlignment = Alignment.CenterHorizontally) {
 				if (uiState.paneles.size > 0) {
+					//val notasManager = getKoin().get<NotasManager>()
+
+					val notasManager = NotasManager.instancia()
+
 					uiState.paneles.forEach { panelUI ->
 						MA_Card {
-							MA_Panel(panelData = PanelData.fromPanelUI(panelUI, Parametros()))
+							MA_Panel(panelData = PanelData.fromPanelUI(panelUI,notasManager, Parametros()))
 						}
 
 					}

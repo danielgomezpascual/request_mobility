@@ -31,6 +31,29 @@ class DialogManager {
         }
     }
 
+    fun input(texto: String,
+              textoInicial: String,
+              onResultadoDialog: (DialogosResultado, Any) -> Unit){
+        _dialogoActual.value = Dialogos.Input(texto, textoInicial= textoInicial) { resultado, str ->
+            App.log.d("Resultado del texto $str")
+            onResultadoDialog(resultado, str)
+            onDialogoDescartado()
+        }
+    }
+
+    fun nota(texto: String,
+              textoInicial: String,
+              onResultadoDialog: (DialogosResultado, Any) -> Unit){
+        _dialogoActual.value = Dialogos.Nota(
+            texto, textoInicial= textoInicial) { resultado, str ->
+            App.log.d("Resultado del texto $str")
+            onResultadoDialog(resultado, str)
+            onDialogoDescartado()
+        }
+    }
+
+
+
     fun onDialogoDescartado() {
         App.log.d("Cerramos el dialogo.")
         _dialogoActual.value = Dialogos.Vacio
