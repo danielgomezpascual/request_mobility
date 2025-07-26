@@ -28,14 +28,10 @@ import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.dashboards.ui.screen.visualizador.VisualizadorDashboardVM.UIState
 import com.personal.metricas.menu.Features
-import com.personal.metricas.notas.domain.entidades.Notas
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.ui.componente.MA_Panel
 import com.personal.metricas.paneles.ui.entidades.PanelUI
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import org.koin.mp.KoinPlatform.getKoin
 
 @Composable
 fun VisualizadorDashboardUI(
@@ -86,7 +82,7 @@ fun Success(
 						modifier = Modifier.weight(1f),
 						icon = Features.Menu().icono,
 						labelText = Features.Menu().texto,
-						onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
+						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) }
 					)
 					Spacer(modifier = Modifier
 						.fillMaxWidth()

@@ -49,6 +49,15 @@ fun HerramientasScreen(
 						labelText = Features.Menu().texto,
 						seleccionado = false,
 						destacado = false,
+						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) }
+					)
+
+					MA_IconBottom(
+						//   modifier = Modifier.weight(1f),
+						icon = Features.Menu().icono,
+						labelText = Features.Menu().texto,
+						seleccionado = false,
+						destacado = false,
 						onClick = { navegacion(EventosNavegacion.MenuApp) }
 					)
 

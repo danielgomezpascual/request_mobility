@@ -101,8 +101,8 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 		//==== Dashboard =======================
 		EventosNavegacion.MenuDashboard             -> navController.navigate(ListadoDashboards)
 		EventosNavegacion.NuevoDashboard            -> navController.navigate(DetalleDashboard(0))
-		is EventosNavegacion.CargarDashboard        -> navController.navigate(DetalleDashboard(navegacion.identificador))
-		EventosNavegacion.MenuVisualizadorDashboard -> navController.navigate(CuadriculaDashboards)
+		is EventosNavegacion.CargarDashboard  -> navController.navigate(DetalleDashboard(navegacion.identificador))
+		EventosNavegacion.CuadriculaDashboard -> navController.navigate(CuadriculaDashboards)
 
 
 		//==== Sincronizacion =======================

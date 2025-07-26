@@ -30,7 +30,6 @@ import com.personal.metricas.menu.screen.HomeVM.UIState
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.ui.componente.MA_Panel
 import org.koin.androidx.compose.koinViewModel
-import org.koin.mp.KoinPlatform.getKoin
 
 
 @Composable
@@ -108,7 +107,7 @@ fun SuccessMenu(
 						labelText = Features.Cuadriculas().texto,
 						seleccionado = true,
 						destacado = true,
-						onClick = { navegacion(EventosNavegacion.MenuVisualizadorDashboard) }
+						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) }
 					)
 
 					MA_IconBottom(
