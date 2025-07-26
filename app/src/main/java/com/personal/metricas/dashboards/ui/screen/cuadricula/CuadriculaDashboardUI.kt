@@ -119,8 +119,6 @@ fun SuccessCuadriculaDashboard(
 					.fillMaxWidth() // fillMaxWidth para la columna principal
 			) {
 
-			MA_Indicador(texto = "aashdjkha", valor = "465" , color =  Color.Green)
-
 				Row() {
 					uiState.etiquetasDisponibles.forEach { etiqueta ->
 						Box(modifier = Modifier.clickable(enabled = true, onClick = {

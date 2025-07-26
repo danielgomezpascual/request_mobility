@@ -12,6 +12,7 @@ import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.kpi.ui.entidades.fromKPI
 import com.personal.metricas.core.composables.dialogos.DialogosResultado
 import com.personal.metricas.core.navegacion.EventosNavegacion
+import com.personal.metricas.core.room.AppDatabase
 import com.personal.metricas.core.utils.Parametro
 import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils._t
@@ -25,6 +26,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.getKoin
+import org.koin.mp.KoinPlatform
 
 /*
 abstract class UIStateBase(val mostrarDialogoSiNO: Boolean = false,
@@ -43,13 +46,15 @@ class DetalleKpiVM(
 	private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
 	val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
+
+	private var _sql: String = ""
 	/*private val _dialogoActual = MutableStateFlow<Dialogos>(Dialogos.Vacio)
 	val dialogoActual: StateFlow<Dialogos> = _dialogoActual.asStateFlow()*/
 
 
 	sealed class UIState {
 
-		data class Success(val kpiUI: KpiUI, val paramtrosSeleccionado: Parametro = Parametro()) : UIState()
+		data class Success(val kpiUI: KpiUI, val paramtrosSeleccionado: Parametro = Parametro(), val estadoErrorSQL: Boolean = false, val infoSQL: String = "") : UIState()
 		data class Error(val mensaje: String) : UIState()
 		object Loading : UIState()
 	}
@@ -59,6 +64,7 @@ class DetalleKpiVM(
 		data class OnChangeTitulo(val titulo: String) : Eventos()
 		data class OnChangeDescripcion(val descripcion: String) : Eventos()
 		data class OnChangeSQL(val sql: String) : Eventos()
+		data object RunSQL : Eventos()
 
 
 		data class ModificarClaveParametrosSeleccionado(val valor: String) : Eventos()
@@ -110,20 +116,49 @@ class DetalleKpiVM(
 							is Eventos.OnChangeDescripcion                            -> estado.copy(kpiUI = estado.kpiUI.copy(descripcion = evento.descripcion))
 							is Eventos.OnChangeSQL                                    -> {
 
-								val k = KpiUI(
-									id = estado.kpiUI.id,
-									titulo = estado.kpiUI.titulo,
-									descripcion = estado.kpiUI.descripcion,
-									sql = evento.sql
-								)
 
-								estado.copy(
-									kpiUI = k
-								)
+								try {
+									_sql = evento.sql
+									val k = KpiUI(
+										id = estado.kpiUI.id,
+										titulo = estado.kpiUI.titulo,
+										descripcion = estado.kpiUI.descripcion,
+										sql = evento.sql
+									)
 
+									estado.copy(
+										kpiUI = k,
+										estadoErrorSQL = false,
+										infoSQL = "")
+								}
+								catch (e: Exception) {
+									val err = e.message ?: "Error desconocido"
+									estado.copy(
+										estadoErrorSQL = true,
+										infoSQL = err)
+								}
 
 							}
 
+							Eventos.RunSQL                                            -> {
+
+								try {
+									val database = KoinPlatform.getKoin().get<AppDatabase>()
+									database.openHelper.writableDatabase.execSQL(_sql)
+									estado.copy(estadoErrorSQL = false, infoSQL = "SQL ejecuta")
+								}
+								catch (e: Exception) {
+
+									val err = e.message ?: "Error desconocido"
+									if (!err.contains("code 0 SQLITE_OK")) {
+										estado.copy(estadoErrorSQL = true, infoSQL = "ERROR: ${err}")
+									}else{
+										estado.copy(estadoErrorSQL = false, infoSQL = "SQL ejecutada, no hay errorres")
+									}
+								}
+
+
+							}
 
 							is Eventos.ModificarClaveParametrosSeleccionado           -> {
 								App.log.d("Valor recibido : ${evento.valor.toString()}")
@@ -141,8 +176,12 @@ class DetalleKpiVM(
 							is Eventos.ModificarValorFijoeParametrosSeleccionado      -> {
 								estado.copy(paramtrosSeleccionado = estado.paramtrosSeleccionado.copy(fijo = evento.valor))
 							}
-							is Eventos.SeleccionarParametro->{estado.copy(paramtrosSeleccionado = evento.valor)}
-							is Eventos.EliminarParametro->{
+
+							is Eventos.SeleccionarParametro                           -> {
+								estado.copy(paramtrosSeleccionado = evento.valor)
+							}
+
+							is Eventos.EliminarParametro                              -> {
 
 								val paramtrosSeleccionado: Parametro = evento.valor
 
@@ -156,7 +195,7 @@ class DetalleKpiVM(
 								estado.copy(kpiUI = estado.kpiUI.copy(parametros = Parametros(ps = parametrosKpi)), paramtrosSeleccionado = Parametro())
 							}
 
-							is Eventos.NuevoParametro->{
+							is Eventos.NuevoParametro                                 -> {
 								estado.copy(paramtrosSeleccionado = Parametro())
 							}
 
@@ -169,7 +208,7 @@ class DetalleKpiVM(
 									if (parametro.key.equals(paramtrosSeleccionado.key)) {
 										parametrosKpi = parametrosKpi.plus(paramtrosSeleccionado)
 										encontrado = true
-									}else{
+									} else {
 										parametrosKpi = parametrosKpi.plus(parametro)
 									}
 								}

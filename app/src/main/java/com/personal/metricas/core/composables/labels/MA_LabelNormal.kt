@@ -20,6 +20,7 @@ fun MA_LabelNormal(
     icono: Icons? = null,
     size : TextUnit = 12.sp
 
+
     ) {
     Text(
         text = valor, modifier = modifier, color = color,

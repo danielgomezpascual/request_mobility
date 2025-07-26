@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 fun MA_LabelLeyenda(
 	valor: String,
 	modifier: Modifier = Modifier,
-	color: Color = Color.Black,
+	color: Color = Color.Blue,
 	alineacion: TextAlign = TextAlign.Unspecified,
 	icono: Icons? = null,
 

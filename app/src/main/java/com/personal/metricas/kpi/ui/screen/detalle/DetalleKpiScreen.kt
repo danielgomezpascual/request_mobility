@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
@@ -40,6 +41,7 @@ import com.personal.metricas.core.composables.edittext.MA_TextoEditable
 import com.personal.metricas.core.composables.edittext.MA_TextoNormal
 import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.imagenes.MA_Icono
+import com.personal.metricas.core.composables.labels.MA_LabelLeyenda
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo
@@ -50,6 +52,7 @@ import com.personal.metricas.core.composables.tabla.MA_Tabla
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
+import com.personal.metricas.core.utils.if3
 import com.personal.metricas.kpi.ui.screen.detalle.DetalleKpiVM.UIState
 import com.personal.metricas.menu.Features
 import com.personal.metricas.transacciones.domain.entidades.ResultadoSQL
@@ -215,9 +218,30 @@ fun SuccessScreenDetalleKpi(
 						})
 
 
-						MA_TextoNormal(valor = kpiUI.sql, titulo = "SQL", onValueChange = { valor ->
-							viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(valor))
-						})
+						Box(modifier = Modifier.fillMaxWidth()){
+							Column {
+								MA_TextoNormal(valor = kpiUI.sql, titulo = "SQL", onValueChange = { valor ->
+									viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(valor))
+								})
+
+
+								MA_BotonSecundario(texto = "RUN  SQL") {
+									viewModel.onEvent(DetalleKpiVM.Eventos.RunSQL)
+								}
+
+
+								if (!uiState.infoSQL.isEmpty()){
+
+									val color = if (uiState.estadoErrorSQL) Color.Red else Color.Black
+									MA_LabelLeyenda(
+										modifier = Modifier.fillMaxWidth(),
+										alineacion = TextAlign.Center,
+										valor = uiState.infoSQL,
+										color = color)
+								}
+							}
+
+						}
 
 
 					}

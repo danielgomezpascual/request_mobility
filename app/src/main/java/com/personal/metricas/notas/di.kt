@@ -6,6 +6,7 @@ import com.personal.metricas.core.room.AppDatabase
 import com.personal.metricas.notas.data.ds.local.NotasLocalDS
 import com.personal.metricas.notas.data.ds.local.dao.NotasDao
 import com.personal.metricas.notas.data.repositorios.NotasRepositorioImp
+import com.personal.metricas.notas.domain.interactors.EliminarTodasNotasCU
 import com.personal.metricas.notas.domain.interactors.GuardarNotaCU
 import com.personal.metricas.notas.domain.interactors.ObtenerNotasCU
 import com.personal.metricas.notas.domain.repositorios.NotasRepositorio
@@ -25,8 +26,9 @@ val moduloNotas = module {
 	}
 
 	// Casos de Uso
-	single<GuardarNotaCU> { GuardarNotaCU(get()) }
-	single<ObtenerNotasCU> { ObtenerNotasCU(get()) }
+	single<GuardarNotaCU> { GuardarNotaCU(get<NotasRepositorio>()) }
+	single<ObtenerNotasCU> { ObtenerNotasCU(get<NotasRepositorio>()) }
+	single<EliminarTodasNotasCU> { EliminarTodasNotasCU(get<NotasRepositorio>()) }
 
 
 

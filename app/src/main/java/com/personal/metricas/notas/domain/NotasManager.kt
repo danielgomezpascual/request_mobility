@@ -2,6 +2,7 @@ package com.personal.metricas.notas.domain
 
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.notas.domain.entidades.Notas
+import com.personal.metricas.notas.domain.interactors.EliminarTodasNotasCU
 import com.personal.metricas.notas.domain.interactors.GuardarNotaCU
 import com.personal.metricas.notas.domain.interactors.ObtenerNotasCU
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +30,14 @@ class NotasManager( val dialog: DialogManager = DialogManager()) {
 		val notas = KoinPlatform.getKoin().get<ObtenerNotasCU>()
 		val  lista = notas.getAll().first()
 		return lista
+	}
+
+
+
+	suspend fun eliminarNotas(){
+		val notas = KoinPlatform.getKoin().get<EliminarTodasNotasCU>()
+		val  lista = notas.borrar()
+
 	}
 
 

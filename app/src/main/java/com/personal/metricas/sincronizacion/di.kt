@@ -5,6 +5,7 @@ import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizaci
 import com.personal.metricas.endpoints.data.ds.remote.EndPointsRemotoDS
 import com.personal.metricas.endpoints.data.ds.remote.servicio.EndPointRemotos
 import com.personal.metricas.endpoints.domain.ObtenerDatosEndPoint
+import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.metricas.transacciones.domain.interactors.GuardarTransacciones
@@ -36,7 +37,8 @@ val moduloSincronizacion = module {
             obtenerOrganizacion = get<ObtenerOrganizacionesCU>(),
             repoTrx = get<TransaccionesRepoImp>(),
             guardar = get<GuardarTransacciones>(),
-            dialog = get<DialogManager>()
+            dialog = get<DialogManager>(),
+            notas = get<NotasManager>()
 
         )
     }
