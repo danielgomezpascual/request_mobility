@@ -76,43 +76,19 @@ fun SuccessCuadriculaDashboard(
 
 
 	MA_ScaffoldGenerico(
-
-		titulo = "C-Dashboards", // Título adaptado
 		tituloScreen = TituloScreen.DashboardLista,
-		contenidoBottomBar = {
-			BottomAppBar {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Start,
-					verticalAlignment = Alignment.Bottom
+		navegacion= navegacion,
+		accionesSuperiores = {
+			Row(
+				modifier = Modifier.fillMaxWidth(),
+				horizontalArrangement = Arrangement.End,
+				verticalAlignment = Alignment.Top
 
-				) {
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Menu().icono,
-						labelText = Features.Menu().texto,
-						onClick = { navegacion(EventosNavegacion.MenuApp) }
-					)
-					Spacer(
-						modifier = Modifier
-							.fillMaxWidth()
-							.weight(1f)
-					)
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Dashboard().icono,
-						labelText = Features.Dashboard().texto,
-						color = Features.Nuevo().color,
-						onClick = { navegacion(EventosNavegacion.NuevoDashboard) }
-					)
-
-
-				}
-
-
+			) {
+				MA_IconBottom(  icon = Features.Dashboard().icono, color = Features.Dashboard().color) { navegacion(EventosNavegacion.NuevoPanel)}
 			}
 		},
+
 		contenido = {
 			Column(
 				modifier = Modifier

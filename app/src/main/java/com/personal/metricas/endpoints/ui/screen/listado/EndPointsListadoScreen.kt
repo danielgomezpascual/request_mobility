@@ -29,8 +29,10 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun EndPointsListadoScreen(viewModel: EndPointsListadoVM = koinViewModel(),
-					  navegacion: (EventosNavegacion) -> Unit) {
+fun EndPointsListadoScreen(
+	viewModel: EndPointsListadoVM = koinViewModel(),
+	navegacion: (EventosNavegacion) -> Unit,
+) {
 
 	val uiState by viewModel.uiState.collectAsState()
 
@@ -55,44 +57,24 @@ fun EndPointsListadoScreen(viewModel: EndPointsListadoVM = koinViewModel(),
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SuccessListadoEndPoints(viewModel: EndPointsListadoVM,
-							uiState: EndPointsListadoVM.UIState.Success,
-							navegacion: (EventosNavegacion) -> Unit
+fun SuccessListadoEndPoints(
+	viewModel: EndPointsListadoVM,
+	uiState: EndPointsListadoVM.UIState.Success,
+	navegacion: (EventosNavegacion) -> Unit,
 ) {
 
 
 	MA_ScaffoldGenerico(
-		titulo = "End Points",
 		tituloScreen = TituloScreen.EndPoints,
-		navegacion = { navegacion(EventosNavegacion.MenuApp) },
-		volver = false,
-		contenidoBottomBar = {
-			BottomAppBar() {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Start,
-					verticalAlignment = Alignment.Bottom
+		navegacion = navegacion,
+		accionesSuperiores = {
+			Row(
+				modifier = Modifier.fillMaxWidth(),
+				horizontalArrangement = Arrangement.End,
+				verticalAlignment = Alignment.Top
 
-				) {
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Menu().icono,
-						labelText = Features.Menu().texto,
-						onClick = { navegacion(EventosNavegacion.MenuApp) }
-					)
-					Spacer(modifier = Modifier.fillMaxWidth().weight(1f))
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Nuevo().icono,
-						labelText = Features.Nuevo().texto,
-						color = Features.Nuevo().color,
-						onClick = { navegacion(EventosNavegacion. NuevoEndPonint) }
-					)
-
-				}
-
-
+			) {
+				MA_IconBottom(icon = Features.EndPoints().icono, color = Features.EndPoints().color) { navegacion(EventosNavegacion.NuevoEndPonint) }
 			}
 		},
 		contenido = {
@@ -101,8 +83,6 @@ fun SuccessListadoEndPoints(viewModel: EndPointsListadoVM,
 					.fillMaxWidth()
 
 			) {
-
-
 				MA_Card() {
 					Column() {
 
@@ -115,8 +95,8 @@ fun SuccessListadoEndPoints(viewModel: EndPointsListadoVM,
 						)
 
 						MA_Lista(data = uiState.lista) { item ->
-							EndPointListItem (endpointUI = item,
-											  onClickItem = { navegacion(EventosNavegacion.CargarEndPoint(item.id)) })
+							EndPointListItem(endpointUI = item,
+											 onClickItem = { navegacion(EventosNavegacion.CargarEndPoint(item.id)) })
 
 						}
 					}

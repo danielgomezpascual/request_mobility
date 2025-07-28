@@ -26,54 +26,19 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HerramientasScreen(
 	viewModel: HerramientasViewModel = koinViewModel(),
-	navegacion: (EventosNavegacion) -> Unit) {
+	navegacion: (EventosNavegacion) -> Unit,
+) {
 
 	MA_ScaffoldGenerico(
-		titulo = "",
+
 		tituloScreen = TituloScreen.Herramientas,
-		volver = false,
-		navegacion = { },
-		contenidoBottomBar = {
+		navegacion = navegacion,
+		accionesSuperiores = {
 
-			BottomAppBar() {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Center,
-					verticalAlignment = Alignment.Bottom
-
-				) {
-
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.Menu().icono,
-						labelText = Features.Menu().texto,
-						seleccionado = false,
-						destacado = false,
-						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) }
-					)
-
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.Menu().icono,
-						labelText = Features.Menu().texto,
-						seleccionado = false,
-						destacado = false,
-						onClick = { navegacion(EventosNavegacion.MenuApp) }
-					)
-
-
-				}
-
-
-			}
 		},
 		contenido = {
-
 			Column(verticalArrangement = Arrangement.SpaceEvenly,
 				   modifier = Modifier.fillMaxSize()) {
-
-
-
 				MA_Card(
 					modifier = Modifier
 						.weight(1f)
@@ -105,14 +70,14 @@ fun HerramientasScreen(
 				MA_Card(
 					modifier = Modifier
 						.weight(1f)
-                        .fillMaxSize()
-                        .clickable(
-                            enabled = true,
-                            onClick = { navegacion(EventosNavegacion.MenuDashboard) })
+						.fillMaxSize()
+						.clickable(
+							enabled = true,
+							onClick = { navegacion(EventosNavegacion.MenuDashboard) })
 				) {
 					Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(15.dp),
+						.fillMaxWidth()
+						.padding(15.dp),
 						horizontalArrangement = Arrangement.Start,
 						verticalAlignment = Alignment.CenterVertically) {
 						//MA_Avatar(Features.Dashboard().texto)
@@ -128,17 +93,17 @@ fun HerramientasScreen(
 				MA_Card(
 					modifier = Modifier
 						.weight(1f)
-                        .fillMaxWidth()
-                        .clickable(
-                            enabled = true,
-                            onClick = {
+						.fillMaxWidth()
+						.clickable(
+							enabled = true,
+							onClick = {
 
-                                navegacion(EventosNavegacion.MenuPaneles)
-                            })
+								navegacion(EventosNavegacion.MenuPaneles)
+							})
 				) {
 					Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(15.dp),
+						.fillMaxWidth()
+						.padding(15.dp),
 						horizontalArrangement = Arrangement.Start,
 						verticalAlignment = Alignment.CenterVertically) {
 
@@ -154,14 +119,14 @@ fun HerramientasScreen(
 				MA_Card(
 					modifier = Modifier
 						.weight(1f)
-                        .fillMaxWidth()
-                        .clickable(
-                            enabled = true,
-                            onClick = { navegacion(EventosNavegacion.MenuKpis) })
+						.fillMaxWidth()
+						.clickable(
+							enabled = true,
+							onClick = { navegacion(EventosNavegacion.MenuKpis) })
 				) {
 					Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(15.dp),
+						.fillMaxWidth()
+						.padding(15.dp),
 						horizontalArrangement = Arrangement.Start,
 						verticalAlignment = Alignment.CenterVertically) {
 
@@ -172,8 +137,6 @@ fun HerramientasScreen(
 						)
 					}
 				}
-
-
 
 
 			}

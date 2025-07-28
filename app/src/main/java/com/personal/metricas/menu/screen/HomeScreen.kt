@@ -60,91 +60,26 @@ fun SuccessMenu(
 	uiState: UIState.Success,
 	navegacion: (EventosNavegacion) -> Unit,
 ) {
-	/*  Column(
-		  verticalArrangement = Arrangement.Center,
-		  horizontalAlignment = Alignment.CenterHorizontally,
-		  modifier = Modifier.fillMaxSize()
-	  ) {*/
+
 
 	MA_ScaffoldGenerico(
-		titulo = "",
+
 		tituloScreen = TituloScreen.Home,
-		volver = false,
-		navegacion = { },
-		contenidoBottomBar = {
-
-			BottomAppBar() {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Center,
-					verticalAlignment = Alignment.Bottom
-
-				) {
-
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.Sincronizar().icono,
-						labelText = Features.Sincronizar().texto,
-						seleccionado = false,
-						destacado = false,
-						onClick = { navegacion(EventosNavegacion.Sincronizacion) }
-					)
-
-
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.EndPoints().icono,
-						labelText = Features.EndPoints().texto,
-						seleccionado = false,
-						destacado = false,
-						onClick = { navegacion(EventosNavegacion.MenuEndPoints) }
-					)
-
-
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.Cuadriculas().icono,
-						labelText = Features.Cuadriculas().texto,
-						seleccionado = true,
-						destacado = true,
-						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) }
-					)
-
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.Herramientas().icono,
-						labelText = Features.Herramientas().texto,
-						seleccionado = false,
-						destacado = false,
-						onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
-					)
-
-				}
-
-
-			}
-		},
+		navegacion = navegacion,
+		accionesSuperiores = {},
 		contenido = {
-
-
 			val scroll = rememberScrollState()
-
-
 			Column(modifier = Modifier
 				.fillMaxSize()
 				.verticalScroll(state = scroll),
 				   verticalArrangement = Arrangement.Center,
 				   horizontalAlignment = Alignment.CenterHorizontally) {
 				if (uiState.paneles.size > 0) {
-					//val notasManager = getKoin().get<NotasManager>()
-
 					val notasManager = NotasManager.instancia()
-
 					uiState.paneles.forEach { panelUI ->
 						MA_Card {
-							MA_Panel(panelData = PanelData.fromPanelUI(panelUI,notasManager, Parametros()))
+							MA_Panel(panelData = PanelData.fromPanelUI(panelUI, notasManager, Parametros()))
 						}
-
 					}
 				} else {
 					MA_NoData()

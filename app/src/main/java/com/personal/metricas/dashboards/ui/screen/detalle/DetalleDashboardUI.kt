@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.App
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
 import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
@@ -112,311 +113,288 @@ fun DetalleDashboardUIScreen(
 
 
 	val dashboardUI = uiState.dashboardUI
-	MA_ScaffoldGenerico(tituloScreen = TituloScreen.DashboardDetalle, volver = false, titulo = if (dashboardUI.id == 0) "Nuevo Dashboard" else "Datos Dashboard", // Título adaptado
-		// 'navegacion' en ScaffoldGenerico del ejemplo original es la acción del icono de navegación del TopAppBar
-						navegacion = { }, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'
-						contenidoBottomBar = {
-							BottomAppBar() {
-								Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.Bottom
+	MA_ScaffoldGenerico(tituloScreen = TituloScreen.DashboardDetalle,
+						navegacion = navegacion, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'
+						accionesSuperiores = {
+							Row(
+								modifier = Modifier.fillMaxWidth(),
+								horizontalArrangement = Arrangement.End,
+								verticalAlignment = Alignment.Top
 
-								) {
-
-									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Menu().icono, labelText = Features.Menu().texto, onClick = {
-										navegacion(EventosNavegacion.MenuDashboard)
-									})
-
-
-									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Previo().icono, labelText = Features.Previo().texto, color = Features.Previo().color, onClick = {
-//										navegacion(EventosNavegacion.VisualizadorDashboard(uiState.dashboardUI.id, ""))
-										scope.launch { sheetStateCondicionCelda.show() }
-
-									})
+							) {
+								MA_IconBottom(icon = Features.Previo().icono, color = Features.Previo().color) { scope.launch { sheetStateCondicionCelda.show() } }
+								MA_Spacer()
+								MA_IconBottom(icon = Features.Eliminar().icono, color = Features.Eliminar().color) { viewModel.onEvento(DetalleDashboardVM.Eventos.Eliminar(navegacion)) }
+								MA_IconBottom(icon = Features.Guardar().icono, color = Features.Guardar().color) { scope.launch { viewModel.onEvento(DetalleDashboardVM.Eventos.Guardar(navegacion)) } }
+							}
+						},
 
 
-									Spacer(modifier = Modifier
-										.fillMaxWidth()
-										.weight(1f))
+						contenido = {
+							Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+								.fillMaxSize()
+								.verticalScroll(rememberScrollState()) // Para que el contenido sea scrollable
+							) {
 
-									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Eliminar().icono, labelText = Features.Eliminar().texto, color = Features.Eliminar().color, onClick = {
-										viewModel.onEvento(DetalleDashboardVM.Eventos.Eliminar(navegacion))
-										//navegacion(EventosNavegacion.MenuDashboard)
-									})
 
-									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Guardar().icono, labelText = Features.Guardar().texto, color = Features.Guardar().color, onClick = {
-										viewModel.onEvento(DetalleDashboardVM.Eventos.Guardar(navegacion))
-										//navegacion(EventosNavegacion.MenuDashboard)
-									})
+								MA_Avatar(dashboardUI.nombre)
 
+
+								Column {
+									MA_Titulo2("Informacion")
+									MA_SwitchNormal(valor = dashboardUI.home, titulo = "Home", icono = Icons.Default.Star) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
 
 								}
 
-							}
+								MA_Card {
+									Column() {
+										MA_TextoNormal(valor = dashboardUI.nombre, titulo = "Nombre", // Equivalente a "Item"
+													   onValueChange = { valor ->
+														   viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeNombre(valor))
+													   })
 
-						}, contenido = {
-			Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-				.fillMaxSize()
-				.verticalScroll(rememberScrollState()) // Para que el contenido sea scrollable
-			) {
+										// No hay CheckBoxNormal para "Global" en Dashboard
 
+										MA_TextoNormal(
+											valor = dashboardUI.descripcion,
+											titulo = "Descripción", // Equivalente a "Proveedor"
+											onValueChange = { valor ->
+												viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeDescripcion(valor))
+											},
 
-				MA_Avatar(dashboardUI.nombre)
-
-
-				Column {
-					MA_Titulo2("Informacion")
-					MA_SwitchNormal(valor = dashboardUI.home, titulo = "Home", icono = Icons.Default.Star) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
-
-				}
-
-				MA_Card {
-					Column() {
-						MA_TextoNormal(valor = dashboardUI.nombre, titulo = "Nombre", // Equivalente a "Item"
-									   onValueChange = { valor ->
-										   viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeNombre(valor))
-									   })
-
-						// No hay CheckBoxNormal para "Global" en Dashboard
-
-						MA_TextoNormal(
-							valor = dashboardUI.descripcion,
-							titulo = "Descripción", // Equivalente a "Proveedor"
-							onValueChange = { valor ->
-								viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeDescripcion(valor))
-							},
-
-							)
+											)
 
 
-						// No hay más campos como "Codigo Organizacion" o "Codigo" para Dashboard
+										// No hay más campos como "Codigo Organizacion" o "Codigo" para Dashboard
 
-					}
-
-				}
-
-
-
-
-
-
-				MA_Titulo2("Etiqueta")
-
-				MA_Card {
-					Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
-						.fillMaxWidth()
-					)
-					{
-						MA_IconBottom(icon = Icons.Default.Add) {
-							viewModel.onEvento(DetalleDashboardVM.Eventos.OnNuevaEtiqueta)
-							scope.launch { sheetEtiqueta.show() }
-						}
-
-
-						MA_ComboLista<Etiquetas>(modifier = Modifier
-							.fillMaxWidth()
-							.weight(1f),
-												 titulo = "",
-												 descripcion = "Seleccione la etiqueta para el elemento",
-												 valorInicial = {
-													 MA_EtiquetaItem(uiState.etiquetaSeleccionada)
-												 },
-												 elementosSeleccionables = uiState.etiquetasDisponibles,
-												 item = { etiqueta ->
-													 MA_EtiquetaItem(etiqueta)
-
-												 },
-												 onClickSeleccion = { etiqueta ->
-													 viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeEtiqueta(etiqueta))
-												 })
-
-						MA_IconBottom(icon = Icons.Default.Edit) {
-							viewModel.onEvento(DetalleDashboardVM.Eventos.OnEditarEtiqueta(uiState.etiquetaSeleccionada))
-							scope.launch { sheetEtiqueta.show() }
-						}
-
-					}
-				}
-
-				MA_Titulo2("KPI")
-				MA_Card {
-					Column {
-						Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(125.dp)) {
-							MA_SwitchNormal(valor = (dashboardUI.tipo == TipoDashboard.Dinamico()), titulo = "Dinamico", icono = Icons.Default.Star) { valor ->
-								viewModel.onEvento(DetalleDashboardVM.Eventos.onChangeTipoDashboard(valor))
-							}
-
-
-							if (dashboardUI.tipo == TipoDashboard.Dinamico()) {
-
-
-								Row(modifier = Modifier.fillMaxWidth()) {
-
-
-									MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "", descripcion = "Seleccione el KPI a enlazar", valorInicial = {
-										KpiComboItem(kpiUI = dashboardUI.kpiOrigen ?: KpiUI())
-
-									}, elementosSeleccionables = uiState.kpisDisponibles, item = { kpiUI ->
-										KpiComboItem(kpiUI = kpiUI)
-									}, onClickSeleccion = { kpiUI ->
-										viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeKpiSeleccionado(kpiUI))
-									})
-
-									Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.clickable(enabled = true, onClick = { navegacion(EventosNavegacion.CargarKPI(dashboardUI.kpiOrigen.id)) })) {
-										MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
 									}
 
-
-									/*MA_Icono(modifier = Modifier/*.weight(1f)*/, icono = Icons.Default.PlayArrow, onClick = {
-
-									})*/
 								}
 
 
-							}
 
 
-						}
 
 
-					}
-					val sc = rememberScrollState()
-					Row(modifier = Modifier
-						.horizontalScroll(sc)
-						.background(color = Color(255, 248, 225, 255))) {
-						dashboardUI.kpiOrigen.dameColumnasSQL().forEach { columna ->
-							MA_LabelMini(columna.nombre)
-						}
-					}
+								MA_Titulo2("Etiqueta")
+
+								MA_Card {
+									Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+										.fillMaxWidth()
+									)
+									{
+										MA_IconBottom(icon = Icons.Default.Add) {
+											viewModel.onEvento(DetalleDashboardVM.Eventos.OnNuevaEtiqueta)
+											scope.launch { sheetEtiqueta.show() }
+										}
 
 
-				}
+										MA_ComboLista<Etiquetas>(modifier = Modifier
+											.fillMaxWidth()
+											.weight(1f),
+																 titulo = "",
+																 descripcion = "Seleccione la etiqueta para el elemento",
+																 valorInicial = {
+																	 MA_EtiquetaItem(uiState.etiquetaSeleccionada)
+																 },
+																 elementosSeleccionables = uiState.etiquetasDisponibles,
+																 item = { etiqueta ->
+																	 MA_EtiquetaItem(etiqueta)
 
-				MA_Titulo2("Paneles")
-				MA_Card {
+																 },
+																 onClickSeleccion = { etiqueta ->
+																	 viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeEtiqueta(etiqueta))
+																 })
 
-					Box(modifier = Modifier.height(400.dp)) {
+										MA_IconBottom(icon = Icons.Default.Edit) {
+											viewModel.onEvento(DetalleDashboardVM.Eventos.OnEditarEtiqueta(uiState.etiquetaSeleccionada))
+											scope.launch { sheetEtiqueta.show() }
+										}
 
-						val paneles: List<PanelUI> = dashboardUI.listaPaneles
-
-						Column() {
-							MA_TextBuscador(
-								searchText = uiState.textoBuscarPaneles,
-								onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
-									viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeBuscadorPaneles(texto))
+									}
 								}
-							)
 
-
-							MA_ListaReordenable_EstiloYouTube(data = dashboardUI.listaPaneles.filter { it.visible }.sortedBy { it.orden }, itemContent = { panel, isDragging ->
-								// Tu Composable para el ítem.
-								// Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
-								// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
-								Row(modifier = Modifier.fillMaxWidth()) {
-
-									Box(modifier = Modifier.weight(1f)) {
-										SeleccionPanelItemDashboard(panel, dashboardUI.kpiOrigen.dameColumnasSQL()) { panelSeleccionado ->
-											val panelesR: List<PanelUI> = paneles.map { panel ->
-												if (panel.id == panelSeleccionado.id) {
-													panel.copy(seleccionado = !panelSeleccionado.seleccionado)
-												} else {
-													panel
-												}
+								MA_Titulo2("KPI")
+								MA_Card {
+									Column {
+										Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(125.dp)) {
+											MA_SwitchNormal(valor = (dashboardUI.tipo == TipoDashboard.Dinamico()), titulo = "Dinamico", icono = Icons.Default.Star) { valor ->
+												viewModel.onEvento(DetalleDashboardVM.Eventos.onChangeTipoDashboard(valor))
 											}
 
-											val p = panelesR.first { it.id == panelSeleccionado.id }
-											viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
 
+											if (dashboardUI.tipo == TipoDashboard.Dinamico()) {
+
+
+												Row(modifier = Modifier.fillMaxWidth()) {
+
+
+													MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "", descripcion = "Seleccione el KPI a enlazar", valorInicial = {
+														KpiComboItem(kpiUI = dashboardUI.kpiOrigen ?: KpiUI())
+
+													}, elementosSeleccionables = uiState.kpisDisponibles, item = { kpiUI ->
+														KpiComboItem(kpiUI = kpiUI)
+													}, onClickSeleccion = { kpiUI ->
+														viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeKpiSeleccionado(kpiUI))
+													})
+
+													Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.clickable(enabled = true, onClick = { navegacion(EventosNavegacion.CargarKPI(dashboardUI.kpiOrigen.id)) })) {
+														MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+													}
+
+
+													/*MA_Icono(modifier = Modifier/*.weight(1f)*/, icono = Icons.Default.PlayArrow, onClick = {
+
+													})*/
+												}
+
+
+											}
+
+
+										}
+
+
+									}
+									val sc = rememberScrollState()
+									Row(modifier = Modifier
+										.horizontalScroll(sc)
+										.background(color = Color(255, 248, 225, 255))) {
+										dashboardUI.kpiOrigen.dameColumnasSQL().forEach { columna ->
+											MA_LabelMini(columna.nombre)
 										}
 									}
 
-									Box(contentAlignment = Alignment.Center, modifier = Modifier
-										.clickable(enabled = true, onClick = {
-											navegacion(EventosNavegacion.CargarPanel(panel.id))
-										})) {
-										MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+
+								}
+
+								MA_Titulo2("Paneles")
+								MA_Card {
+
+									Box(modifier = Modifier.height(400.dp)) {
+
+										val paneles: List<PanelUI> = dashboardUI.listaPaneles
+
+										Column() {
+											MA_TextBuscador(
+												searchText = uiState.textoBuscarPaneles,
+												onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
+													viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeBuscadorPaneles(texto))
+												}
+											)
+
+
+											MA_ListaReordenable_EstiloYouTube(data = dashboardUI.listaPaneles.filter { it.visible }.sortedBy { it.orden }, itemContent = { panel, isDragging ->
+												// Tu Composable para el ítem.
+												// Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
+												// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)
+												Row(modifier = Modifier.fillMaxWidth()) {
+
+													Box(modifier = Modifier.weight(1f)) {
+														SeleccionPanelItemDashboard(panel, dashboardUI.kpiOrigen.dameColumnasSQL()) { panelSeleccionado ->
+															val panelesR: List<PanelUI> = paneles.map { panel ->
+																if (panel.id == panelSeleccionado.id) {
+																	panel.copy(seleccionado = !panelSeleccionado.seleccionado)
+																} else {
+																	panel
+																}
+															}
+
+															val p = panelesR.first { it.id == panelSeleccionado.id }
+															viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(panelesR))
+
+														}
+													}
+
+													Box(contentAlignment = Alignment.Center, modifier = Modifier
+														.clickable(enabled = true, onClick = {
+															navegacion(EventosNavegacion.CargarPanel(panel.id))
+														})) {
+														MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+													}
+
+												}
+
+											}, onItemClick = { /* ... */ }, onListReordered = { listaReordenada ->
+
+												var listaR: List<PanelUI> = emptyList()
+												listaReordenada.forEachIndexed { indice, panel ->
+													listaR = listaR.plus(panel.copy(orden = indice))
+												}
+												viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(listaR))
+
+											}, itemHeight = 72.dp // ¡IMPORTANTE! Ajusta esto a la altura real de tus ítems
+											)
+										}
+
+
 									}
-
 								}
 
-							}, onItemClick = { /* ... */ }, onListReordered = { listaReordenada ->
 
-								var listaR: List<PanelUI> = emptyList()
-								listaReordenada.forEachIndexed { indice, panel ->
-									listaR = listaR.plus(panel.copy(orden = indice))
-								}
-								viewModel.onEvento(DetalleDashboardVM.Eventos.OnActualizarPaneles(listaR))
+								//------------------
 
-							}, itemHeight = 72.dp // ¡IMPORTANTE! Ajusta esto a la altura real de tus ítems
-							)
-						}
+								MA_BottomSheet(sheetStateCondicionCelda, onClose = {
+									{ scope.launch { sheetStateCondicionCelda.hide() } }
+								}, contenido = {
 
+									Box(Modifier) {
+										Column(modifier = Modifier.verticalScroll(state = scroll)) {
 
-					}
-				}
-
-
-				//------------------
-
-				MA_BottomSheet(sheetStateCondicionCelda, onClose = {
-					{ scope.launch { sheetStateCondicionCelda.hide() } }
-				}, contenido = {
-
-					Box(Modifier) {
-						Column(modifier = Modifier.verticalScroll(state = scroll)) {
-
-							MA_BotonSecundario(texto = "Cerrar") { scope.launch { sheetStateCondicionCelda.hide() } }
+											MA_BotonSecundario(texto = "Cerrar") { scope.launch { sheetStateCondicionCelda.hide() } }
 
 
 
-							dashboardUI.listaPaneles.filter { it.seleccionado }.forEach { panelUI ->
-								//val notasManager = getKoin().get<NotasManager>()
-								val notasManager = NotasManager.instancia()
-								MA_Panel(panelData = PanelData.fromPanelUI(panelUI, notasManager,  dashboardUI.parametros))
+											dashboardUI.listaPaneles.filter { it.seleccionado }.forEach { panelUI ->
+												//val notasManager = getKoin().get<NotasManager>()
+												val notasManager = NotasManager.instancia()
+												MA_Panel(panelData = PanelData.fromPanelUI(panelUI, notasManager, dashboardUI.parametros))
+
+											}
+
+										}
+									}
+								})
+
+
+								//------------------
+
+
+								MA_BottomSheet(sheetEtiqueta, onClose = {
+									{ scope.launch { sheetEtiqueta.hide() } }
+								}, contenido = {
+
+									Box(Modifier) {
+										Column(modifier = Modifier.verticalScroll(state = scroll)) {
+
+
+											MA_TextoEditable(valor = uiState.etiquetaSeleccionada.etiqueta, titulo = "Etiqueta") {
+												viewModel.onEvento(DetalleDashboardVM.Eventos.ModificarValorEtiqueta(it))
+											}
+
+
+											Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+												MA_BotonSecundario("Cancelar") {
+													scope.launch { sheetEtiqueta.hide() }
+												}
+
+
+
+
+												MA_BotonPrincipal("Guardar") {
+													viewModel.onEvento(DetalleDashboardVM.Eventos.OnGuardarEtiqueta)
+													scope.launch { sheetEtiqueta.hide() }
+												}
+
+											}
+
+										}
+									}
+								})
+
+								//------------------
+
 
 							}
-
-						}
-					}
-				})
-
-
-				//------------------
-
-
-				MA_BottomSheet(sheetEtiqueta, onClose = {
-					{ scope.launch { sheetEtiqueta.hide() } }
-				}, contenido = {
-
-					Box(Modifier) {
-						Column(modifier = Modifier.verticalScroll(state = scroll)) {
-
-
-							MA_TextoEditable(valor = uiState.etiquetaSeleccionada.etiqueta, titulo = "Etiqueta") {
-								viewModel.onEvento(DetalleDashboardVM.Eventos.ModificarValorEtiqueta(it))
-							}
-
-
-							Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-								MA_BotonSecundario("Cancelar") {
-									scope.launch { sheetEtiqueta.hide() }
-								}
-
-
-
-
-								MA_BotonPrincipal("Guardar") {
-									viewModel.onEvento(DetalleDashboardVM.Eventos.OnGuardarEtiqueta)
-									scope.launch { sheetEtiqueta.hide() }
-								}
-
-							}
-
-						}
-					}
-				})
-
-				//------------------
-
-
-			}
-		})
+						})
 }

@@ -1,7 +1,9 @@
 package com.personal.metricas.core.composables.componentes
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,24 +19,33 @@ import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.labels.MA_Titulo
 
 @Composable
-fun Cabecera(cabecera: TituloScreen) {
+fun Cabecera(cabecera: TituloScreen, acciones: @Composable () -> Unit = {}) {
 	MA_Card(elevacion = 0.dp, modifier = Modifier.padding(0.dp)) {
-		Column (modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
+		Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 			/*Row(modifier = Modifier
 				.padding(15.dp)
 				.fillMaxWidth(), horizontalArrangement = Arrangement.Start,
 				verticalAlignment = Alignment.CenterVertically) {*/
 
 
-				Image(modifier = Modifier.height(80.dp),                            //modifier = Modifier.width(s),
-					  painter = painterResource(id = cabecera.icono),
-					  contentDescription = "Descripción de tu imagen", contentScale = ContentScale.Crop
+			/*Image(modifier = Modifier.height(80.dp),                            //modifier = Modifier.width(s),
+				  painter = painterResource(id = cabecera.icono),
+				  contentDescription = "Descripción de tu imagen", contentScale = ContentScale.Crop
 
-				)
-				Column {
-					MA_Titulo(alineacion = TextAlign.Center, valor = cabecera.titulo)
-				//	MA_LabelEtiqueta(cabecera.descripcion, color = Color.Gray, modifier = Modifier.padding(horizontal = 7.dp))
+			)*/
+			Column (modifier = Modifier.padding(start = 5.dp, top = 45.dp)){
+				Box() {
+					MA_Titulo(
+						alineacion = TextAlign.Start,
+						valor = cabecera.titulo)
+					//	MA_LabelEtiqueta(cabecera.descripcion, color = Color.Gray, modifier = Modifier.padding(horizontal = 7.dp))
+					Box() {
+						acciones()
+					}
+
 				}
+
+			}
 
 			//}
 

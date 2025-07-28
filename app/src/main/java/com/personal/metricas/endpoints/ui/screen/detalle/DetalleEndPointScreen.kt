@@ -45,11 +45,10 @@ import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
+import com.personal.metricas.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.metricas.menu.Features
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-
-
 
 
 @Composable
@@ -96,46 +95,21 @@ fun DetalleEndPointScreen(
 
 	val endPointUI = uiState.endPointUI
 	MA_ScaffoldGenerico(tituloScreen = TituloScreen.EndPointsDetalle,
-						volver = false,
-						titulo = if (endPointUI.id == 0) "Nuevo End Point" else endPointUI.nombre, // Título adaptado
-		// 'navegacion' en ScaffoldGenerico del ejemplo original es la acción del icono de navegación del TopAppBar
-						navegacion = { }, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'
-						contenidoBottomBar = {
-							BottomAppBar() {
-								Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.Bottom
+						navegacion = navegacion, // Adaptado para claridad, asume que ScaffoldGenerico tiene 'navigateUp'
+						accionesSuperiores = {
+							Row(
+								modifier = Modifier.fillMaxWidth(),
+								horizontalArrangement = Arrangement.End,
+								verticalAlignment = Alignment.Top
 
-								) {
-
-									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Menu().icono, labelText = Features.Menu().texto, onClick = {
-										navegacion(EventosNavegacion.MenuEndPoints)
-									})
-
-									Spacer(modifier = Modifier
-										.fillMaxWidth()
-										.weight(1f))
-
-									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Eliminar().icono, labelText = Features.Eliminar().texto, color = Features.Eliminar().color, onClick = {
-										viewModel.onEvento(DetalleEndPointVM.Eventos.Eliminar(navegacion))
-
-									})
-
-									MA_IconBottom(modifier = Modifier.weight(1f), icon = Features.Guardar().icono, labelText = Features.Guardar().texto, color = Features.Guardar().color, onClick = {
-										viewModel.onEvento(DetalleEndPointVM.Eventos.Guardar(navegacion))
-									})
-
-									MA_IconBottom(modifier = Modifier.weight(1f),
-												  icon = Features.Probar().icono,
-												  labelText = Features.Probar().texto,
-												  color = Features.Probar().color, onClick = {
-										viewModel.onEvento(DetalleEndPointVM.Eventos.Procesar(navegacion))
-									})
-								}
-
+							) {
+								MA_IconBottom(icon = Features.Eliminar().icono, color = Features.Eliminar().color) { viewModel.onEvento(DetalleEndPointVM.Eventos.Eliminar(navegacion)) }
+								MA_IconBottom(icon = Features.Guardar().icono, color = Features.Guardar().color) { viewModel.onEvento(DetalleEndPointVM.Eventos.Guardar(navegacion)) }
+								MA_IconBottom(icon = Features.Probar().icono, color = Features.Probar().color) { viewModel.onEvento(DetalleEndPointVM.Eventos.Procesar(navegacion)) }
 							}
-
 						},
-						contenido = {
 
+						contenido = {
 
 							Column(verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
 								.fillMaxSize()
@@ -147,7 +121,6 @@ fun DetalleEndPointScreen(
 										MA_Morph()
 									}
 								}
-
 
 
 								MA_Avatar(endPointUI.nombre)
@@ -187,14 +160,13 @@ fun DetalleEndPointScreen(
 										)
 
 
-
 									}
 
 								}
 
 
 
-								
+
 
 
 								MA_Titulo2("URL")
@@ -213,9 +185,9 @@ fun DetalleEndPointScreen(
 								}
 
 
-								Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly){
+								Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly) {
 									MA_Titulo2("Parámetros", modifier = Modifier.weight(1f))
-									MA_IconBottom(modifier = Modifier,icon = Icons.Default.Add) {
+									MA_IconBottom(modifier = Modifier, icon = Icons.Default.Add) {
 										viewModel.onEvento(DetalleEndPointVM.Eventos.NuevoParametro)
 										scope.launch { sheetParametros.show() }
 									}
@@ -232,9 +204,13 @@ fun DetalleEndPointScreen(
 								MA_Card {
 									Column {
 										endPointUI.parametros.ps.forEach { parametro ->
-											Row(Modifier.fillMaxWidth().padding(8.dp)) {
+											Row(Modifier
+													.fillMaxWidth()
+													.padding(8.dp)) {
 
-												Box(Modifier.weight(1f).fillMaxWidth()) {
+												Box(Modifier
+														.weight(1f)
+														.fillMaxWidth()) {
 
 
 													MA_LabelTextoDestacado(valor = parametro.key, valorDestacado = parametro.valor)

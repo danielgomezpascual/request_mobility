@@ -53,6 +53,7 @@ import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.core.utils.if3
+import com.personal.metricas.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.metricas.kpi.ui.screen.detalle.DetalleKpiVM.UIState
 import com.personal.metricas.menu.Features
 import com.personal.metricas.transacciones.domain.entidades.ResultadoSQL
@@ -97,95 +98,18 @@ fun SuccessScreenDetalleKpi(
 ) {
 
 	val kpiUI = uiState.kpiUI
-
-
 	val sheetParametros = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 	val scope = rememberCoroutineScope() // Se mantiene dentro del componente
 
-
-
 	MA_ScaffoldGenerico(
-		titulo = "",
 		tituloScreen = TituloScreen.Kpi,
-		navegacion = { },
-		volver = false,
-		contenidoBottomBar = {
-
-
-			BottomAppBar() {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Start,
-					verticalAlignment = Alignment.Bottom
-
-				) {
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Menu().icono,
-						labelText = Features.Menu().texto,
-						onClick = {
-							navegacion(EventosNavegacion.MenuKpis)
-						}
-					)
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Paneles().icono,
-						labelText = "Crear Panel",
-
-						onClick = {
-							viewModel.onEvent(DetalleKpiVM.Eventos.CrearPanel(navegacion))
-							//navegacion(EventosNavegacion.MenuApp)
-						}
-					)
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Duplicar().icono,
-						labelText = Features.Duplicar().texto,
-						onClick = {
-							viewModel.onEvent(DetalleKpiVM.Eventos.DuplicarKpi(navegacion))
-							//navegacion(EventosNavegacion.MenuApp)
-						}
-					)
-
-
-					Spacer(
-						modifier = Modifier
-							.fillMaxWidth()
-							.weight(1f)
-					)
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Eliminar().icono,
-						labelText = Features.Eliminar().texto,
-						color = Features.Eliminar().color,
-						onClick = {
-							viewModel.onEvent(DetalleKpiVM.Eventos.Eliminar(navegacion))
-							// navegacion(EventosNavegacion.MenuKpis)
-						}
-					)
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Guardar().icono,
-						labelText = Features.Guardar().texto,
-						color = Features.Guardar().color,
-						onClick = {
-							viewModel.onEvent(DetalleKpiVM.Eventos.Guardar(navegacion))
-							//  navegacion(EventosNavegacion.MenuKpis)
-						}
-					)
-
-
-				}
-
-
-			}
-
-
+		navegacion = navegacion,
+		accionesSuperiores = {
+			MA_IconBottom(icon = Features.Paneles().icono, color = Features.Paneles().color) { viewModel.onEvent(DetalleKpiVM.Eventos.CrearPanel(navegacion)) }
+			MA_IconBottom(icon = Features.Duplicar().icono, color = Features.Duplicar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.DuplicarKpi(navegacion)) }
+			MA_Spacer()
+			MA_IconBottom(icon = Features.Eliminar().icono, color = Features.Eliminar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.Eliminar(navegacion)) }
+			MA_IconBottom(icon = Features.Guardar().icono, color = Features.Guardar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.Guardar(navegacion)) }
 		},
 		contenido = {
 			val scrollState = rememberScrollState() // 1. Recuerda el estado del scroll
@@ -218,7 +142,7 @@ fun SuccessScreenDetalleKpi(
 						})
 
 
-						Box(modifier = Modifier.fillMaxWidth()){
+						Box(modifier = Modifier.fillMaxWidth()) {
 							Column {
 								MA_TextoNormal(valor = kpiUI.sql, titulo = "SQL", onValueChange = { valor ->
 									viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(valor))
@@ -230,7 +154,7 @@ fun SuccessScreenDetalleKpi(
 								}
 
 
-								if (!uiState.infoSQL.isEmpty()){
+								if (!uiState.infoSQL.isEmpty()) {
 
 									val color = if (uiState.estadoErrorSQL) Color.Red else Color.Black
 									MA_LabelLeyenda(

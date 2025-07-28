@@ -34,109 +34,86 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DashboardListadoUI(
-    viewModel: DashboardListadoVM = koinViewModel(),
-    navegacion: (EventosNavegacion) -> Unit
+	viewModel: DashboardListadoVM = koinViewModel(),
+	navegacion: (EventosNavegacion) -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+	val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.onEvento(DashboardListadoVM.Eventos.Cargar)
-    }
+	LaunchedEffect(Unit) {
+		viewModel.onEvento(DashboardListadoVM.Eventos.Cargar)
+	}
 
-    when (val state = uiState) { // Renombrado uiState a state para claridad en el when
-        is DashboardListadoVM.UIState.Error -> ErrorScreen(state.mensaje) // Asume ErrorScreen(mensaje: String)
-        is DashboardListadoVM.UIState.Loading -> LoadingScreen(state.mensaje) // Asume LoadingScreen(mensaje: String)
-        is DashboardListadoVM.UIState.Success -> SuccessListadoDashboards( // Nombre corregido
-            viewModel = viewModel,
-            uiState = state,
-            navegacion = navegacion
-        )
-    }
+	when (val state = uiState) { // Renombrado uiState a state para claridad en el when
+		is DashboardListadoVM.UIState.Error   -> ErrorScreen(state.mensaje) // Asume ErrorScreen(mensaje: String)
+		is DashboardListadoVM.UIState.Loading -> LoadingScreen(state.mensaje) // Asume LoadingScreen(mensaje: String)
+		is DashboardListadoVM.UIState.Success -> SuccessListadoDashboards( // Nombre corregido
+			viewModel = viewModel,
+			uiState = state,
+			navegacion = navegacion
+		)
+	}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SuccessListadoDashboards( // Nombre corregido del Composable de éxito
-    viewModel: DashboardListadoVM,
-    uiState: DashboardListadoVM.UIState.Success,
-    navegacion: (EventosNavegacion) -> Unit
+fun SuccessListadoDashboards(
+	// Nombre corregido del Composable de éxito
+	viewModel: DashboardListadoVM,
+	uiState: DashboardListadoVM.UIState.Success,
+	navegacion: (EventosNavegacion) -> Unit,
 ) {
-    MA_ScaffoldGenerico(
-        titulo = "Dashboards", // Título adaptado
-        tituloScreen = TituloScreen.DashboardLista,
-        navegacion = { navegacion(EventosNavegacion.MenuApp) }, // Para el icono de navegación del TopAppBar
-        contenidoBottomBar = {
+	MA_ScaffoldGenerico(
+		tituloScreen = TituloScreen.DashboardLista,
+		navegacion = navegacion, // Para el icono de navegación del TopAppBar
+		accionesSuperiores = {
+			Row(
+				modifier = Modifier.fillMaxWidth(),
+				horizontalArrangement = Arrangement.End,
+				verticalAlignment = Alignment.Top
+			) {
+				MA_IconBottom(icon = Features.Nuevo().icono, color = Features.Nuevo().color) { navegacion(EventosNavegacion.NuevoDashboard) }
+			}
+		},
+		contenido = {
+			Column(
+				modifier = Modifier
+					.fillMaxWidth() // fillMaxWidth para la columna principal
 
-            BottomAppBar() {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.Bottom
+			) {
 
-                ) {
+				MA_Card() {
+					Column() {
+						MA_TextBuscador(
+							searchText = uiState.textoBuscar,
+							onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
+								viewModel.onEvento(DashboardListadoVM.Eventos.Buscar(texto))
+							}
+						)
+						Row(
+							modifier = Modifier.fillMaxWidth(),
+							verticalAlignment = Alignment.CenterVertically
+						) {
+							Text(
+								modifier = Modifier
+									.padding(start = 16.dp) // Como en el ejemplo
+									.weight(1f),
+								text = "${uiState.lista.size} elementos",
+								style = MaterialTheme.typography.bodySmall,
+								color = Color.Black, // Como en el ejemplo
+								textAlign = TextAlign.Start
+							)
+							// El TextButton de "Nuevo" del ejemplo está comentado y la funcionalidad está en el BottomAppBar
+						}
+						MA_Lista( // Asume que Lista es un Composable que maneja internamente LazyColumn
+							data = uiState.lista,
+							itemContent = { item -> // item es DashboardUI
+								MA_DashboardItem(item, navegacion = navegacion)
+							}
+						)
+					}
+				}
 
-                    MA_IconBottom(
-                        modifier = Modifier.weight(1f),
-                        icon = Features.Menu().icono,
-                        labelText = Features.Menu().texto,
-                        onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
-                    )
-                    Spacer(modifier = Modifier.fillMaxWidth().weight(1f))
-                    MA_IconBottom(
-                        modifier = Modifier.weight(1f),
-                        icon = Features.Nuevo().icono,
-                        labelText = Features.Nuevo().texto,
-                        color = Features.Nuevo().color,
-                        onClick = { navegacion(EventosNavegacion.NuevoDashboard) }
-                    )
-
-
-                }
-
-
-            }
-
-        },
-        contenido = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth() // fillMaxWidth para la columna principal
-
-            ) {
-
-                MA_Card() {
-                    Column() {
-                        MA_TextBuscador(
-                            searchText = uiState.textoBuscar,
-                            onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
-                                viewModel.onEvento(DashboardListadoVM.Eventos.Buscar(texto))
-                            }
-                        )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .padding(start = 16.dp) // Como en el ejemplo
-                                    .weight(1f),
-                                text = "${uiState.lista.size} elementos",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.Black, // Como en el ejemplo
-                                textAlign = TextAlign.Start
-                            )
-                            // El TextButton de "Nuevo" del ejemplo está comentado y la funcionalidad está en el BottomAppBar
-                        }
-                        MA_Lista( // Asume que Lista es un Composable que maneja internamente LazyColumn
-                            data = uiState.lista,
-                            itemContent = { item -> // item es DashboardUI
-                                MA_DashboardItem(item, navegacion = navegacion)
-                            }
-                        )
-                    }
-                }
-
-            }
-        }
-    )
+			}
+		}
+	)
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextBuscador
@@ -34,9 +35,11 @@ import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
+import com.personal.metricas.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.metricas.menu.Features
 import com.personal.metricas.sincronizacion.ui.composables.OrganizacionListItem
 import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM.UIState
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -74,68 +77,25 @@ fun Success(
 	var mostrarContenidoDialogoInformacion by remember { mutableStateOf(false) }
 
 	MA_ScaffoldGenerico(
-		titulo = "Sincroniacion",
+
 		tituloScreen = TituloScreen.Sincronizar,
-		navegacion = { navegacion(EventosNavegacion.MenuApp) },
-		volver = false,
-		contenidoBottomBar = {
-			BottomAppBar() {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Start,
-					verticalAlignment = Alignment.Bottom
+		navegacion = navegacion,
+		accionesSuperiores = {
+			Row(
+				modifier = Modifier.fillMaxWidth(),
+				horizontalArrangement = Arrangement.End,
+				verticalAlignment = Alignment.Top
 
-				) {
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Menu().icono,
-						labelText = Features.Menu().texto,
-						onClick = { navegacion(EventosNavegacion.MenuApp) }
-					)
-					Spacer(
-						modifier = Modifier
-							.fillMaxWidth()
-							.weight(1f)
-					)
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.EliminarDatosActuales().icono,
-						labelText = Features.EliminarDatosActuales().texto,
-						onClick = {
-
-							viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.EliminarDatosActuales)
-						}
-					)
-
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Sincronizar().icono,
-						labelText = Features.Sincronizar().texto,
-						onClick = {
-
-							viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.RealizarSincronizacion)
-						}
-					)
-
-
-				}
-
-
+			) {
+				MA_IconBottom(icon = Features.EliminarDatosActuales().icono, color = Features.EliminarDatosActuales().color) { viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.EliminarDatosActuales) }
+				MA_IconBottom(icon = Features.Sincronizar().icono, color = Features.Sincronizar().color) { viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.RealizarSincronizacion) }
 			}
 		},
 		contenido = {
-
-
 			Column(
 				modifier = Modifier
 					.fillMaxWidth()
 			) {
-
-
-
 				if (!uiState.infoSincro.isEmpty()) {
 					Box(modifier = Modifier
 						.fillMaxWidth()

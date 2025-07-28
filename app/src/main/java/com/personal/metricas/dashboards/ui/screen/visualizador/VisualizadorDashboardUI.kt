@@ -65,33 +65,15 @@ fun Success(
 
 
 	MA_ScaffoldGenerico(
-		titulo = "",
 		tituloScreen = TituloScreen.DashboardLista,
-		navegacion = {},
-		contenidoBottomBar = {
-
-			BottomAppBar() {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Start,
-					verticalAlignment = Alignment.Bottom
-
-				) {
-
-					MA_IconBottom(
-						modifier = Modifier.weight(1f),
-						icon = Features.Menu().icono,
-						labelText = Features.Menu().texto,
-						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) }
-					)
-					Spacer(modifier = Modifier
-						.fillMaxWidth()
-						.weight(1f))
-
-
-				}
-
-
+		navegacion = navegacion,
+		accionesSuperiores = {
+			Row(
+				modifier = Modifier.fillMaxWidth(),
+				horizontalArrangement = Arrangement.End,
+				verticalAlignment = Alignment.Top
+			) {
+				MA_IconBottom(icon = Features.Nuevo().icono, color = Features.Nuevo().color) { navegacion(EventosNavegacion.NuevoDashboard) }
 			}
 		},
 		contenido = {
