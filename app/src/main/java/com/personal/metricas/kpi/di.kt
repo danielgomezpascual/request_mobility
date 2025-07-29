@@ -12,6 +12,7 @@ import com.personal.metricas.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.metricas.kpi.domain.repositorios.KpisRepositorio
 import com.personal.metricas.kpi.ui.screen.detalle.DetalleKpiVM
 import com.personal.metricas.core.composables.dialogos.DialogManager
+import com.personal.metricas.kpi.ui.entidades.OcurrenciasSQL
 import com.personal.metricas.kpi.ui.screen.listado.KpisListadoVM
 import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -43,15 +44,19 @@ val moduloKpis = module {
 
     single<DialogManager> { DialogManager() }
 
+	single<OcurrenciasSQL> { OcurrenciasSQL() }
+
 
     //ViewMOdel
     viewModel { KpisListadoVM(get<ObtenerKpisCU>()) }
     viewModel { DetalleKpiVM(
-        get<ObtenerKpiCU>(),
-        get<GuardarKpiCU>(),
-        get<EliminarKpiCU>(),
-        get<GuardarPanelCU>(),
-        get <DialogManager>()
+		obtenerKpi = get<ObtenerKpiCU>(),
+		todosKpisCU = get<ObtenerKpisCU>(),
+		guardarKpi = get<GuardarKpiCU>(),
+		eliminarKpi = get<EliminarKpiCU>(),
+		guardarPanel = get<GuardarPanelCU>(),
+		dialog = get <DialogManager>(),
+		ocurrenciasSQL = get<OcurrenciasSQL>()
 
 
     )

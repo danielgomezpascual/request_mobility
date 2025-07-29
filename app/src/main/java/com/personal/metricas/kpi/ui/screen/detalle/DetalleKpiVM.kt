@@ -16,6 +16,8 @@ import com.personal.metricas.core.room.AppDatabase
 import com.personal.metricas.core.utils.Parametro
 import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils._t
+import com.personal.metricas.kpi.domain.interactors.ObtenerKpisCU
+import com.personal.metricas.kpi.ui.entidades.OcurrenciasSQL
 import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 import kotlinx.coroutines.Dispatchers
@@ -23,10 +25,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.compose.getKoin
 import org.koin.mp.KoinPlatform
 
 /*
@@ -36,10 +38,12 @@ abstract class UIStateBase(val mostrarDialogoSiNO: Boolean = false,
 
 class DetalleKpiVM(
 	private val obtenerKpi: ObtenerKpiCU,
+	private val todosKpisCU: ObtenerKpisCU,
 	private val guardarKpi: GuardarKpiCU,
 	private val eliminarKpi: EliminarKpiCU,
 	private val guardarPanel: GuardarPanelCU,
 	private val dialog: DialogManager,
+	private val  ocurrenciasSQL: OcurrenciasSQL
 
 	) : ViewModel() {
 
@@ -54,7 +58,14 @@ class DetalleKpiVM(
 
 	sealed class UIState {
 
-		data class Success(val kpiUI: KpiUI, val paramtrosSeleccionado: Parametro = Parametro(), val estadoErrorSQL: Boolean = false, val infoSQL: String = "") : UIState()
+		data class Success(
+			val kpiUI: KpiUI,
+			val paramtrosSeleccionado: Parametro = Parametro(),
+			val estadoErrorSQL: Boolean = false,
+			val infoSQL: String = "",
+			val ocurrenciasSQL: List<String> = emptyList<String>(),
+		) : UIState()
+
 		data class Error(val mensaje: String) : UIState()
 		object Loading : UIState()
 	}
@@ -64,6 +75,7 @@ class DetalleKpiVM(
 		data class OnChangeTitulo(val titulo: String) : Eventos()
 		data class OnChangeDescripcion(val descripcion: String) : Eventos()
 		data class OnChangeSQL(val sql: String) : Eventos()
+		data class OnChangeAutocompletarSQL(val texto: String) : Eventos()
 		data object RunSQL : Eventos()
 
 
@@ -114,6 +126,10 @@ class DetalleKpiVM(
 
 							is Eventos.OnChangeTitulo                                 -> estado.copy(kpiUI = estado.kpiUI.copy(titulo = evento.titulo))
 							is Eventos.OnChangeDescripcion                            -> estado.copy(kpiUI = estado.kpiUI.copy(descripcion = evento.descripcion))
+							is Eventos.OnChangeAutocompletarSQL                                  -> {
+								estado.copy(ocurrenciasSQL = ocurrenciasSQL.filtrar(evento.texto))
+							}
+
 							is Eventos.OnChangeSQL                                    -> {
 
 
@@ -152,7 +168,7 @@ class DetalleKpiVM(
 									val err = e.message ?: "Error desconocido"
 									if (!err.contains("code 0 SQLITE_OK")) {
 										estado.copy(estadoErrorSQL = true, infoSQL = "ERROR: ${err}")
-									}else{
+									} else {
 										estado.copy(estadoErrorSQL = false, infoSQL = "SQL ejecutada, no hay errorres")
 									}
 								}
@@ -262,11 +278,20 @@ class DetalleKpiVM(
 	private fun cargar(identificador: Int) {
 		viewModelScope.launch {
 			withContext(Dispatchers.IO) {
+
+				val listaKPIS = todosKpisCU.getAll().first()
+
+
+				listaKPIS.forEach { k -> ocurrenciasSQL.addWords(ocurrenciasSQL.divide(k.sql)) }
+				App.log.lista("Ocurrencias", ocurrenciasSQL.getOcurrencias())
+				App.log.lista("Filtro" , ocurrenciasSQL.filtrar("s"))
+
+
 				if (identificador == 0) {
-					_uiState.value = UIState.Success(kpiUI = KpiUI())
+					_uiState.value = UIState.Success(kpiUI = KpiUI(), ocurrenciasSQL =  emptyList())
 				} else {
 					val kpiUI: KpiUI = KpiUI().fromKPI(obtenerKpi.obtener(id = identificador))
-					_uiState.value = UIState.Success(kpiUI = kpiUI)
+					_uiState.value = UIState.Success(kpiUI = kpiUI, ocurrenciasSQL = emptyList())
 				}
 			}
 		}

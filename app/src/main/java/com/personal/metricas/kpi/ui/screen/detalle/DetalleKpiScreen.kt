@@ -2,7 +2,11 @@ package com.personal.metricas.kpi.ui.screen.detalle
 
 
 import MA_IconBottom
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,14 +22,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlusOne
 import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,13 +58,12 @@ import com.personal.metricas.core.composables.tabla.MA_Tabla
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
-import com.personal.metricas.core.utils.if3
-import com.personal.metricas.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.metricas.kpi.ui.screen.detalle.DetalleKpiVM.UIState
 import com.personal.metricas.menu.Features
 import com.personal.metricas.transacciones.domain.entidades.ResultadoSQL
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import kotlin.math.min
 
 
 @Composable
@@ -105,11 +110,17 @@ fun SuccessScreenDetalleKpi(
 		tituloScreen = TituloScreen.Kpi,
 		navegacion = navegacion,
 		accionesSuperiores = {
-			MA_IconBottom(icon = Features.Paneles().icono, color = Features.Paneles().color) { viewModel.onEvent(DetalleKpiVM.Eventos.CrearPanel(navegacion)) }
-			MA_IconBottom(icon = Features.Duplicar().icono, color = Features.Duplicar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.DuplicarKpi(navegacion)) }
-			MA_Spacer()
-			MA_IconBottom(icon = Features.Eliminar().icono, color = Features.Eliminar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.Eliminar(navegacion)) }
-			MA_IconBottom(icon = Features.Guardar().icono, color = Features.Guardar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.Guardar(navegacion)) }
+			Row(modifier = Modifier.fillMaxWidth(),
+				horizontalArrangement = Arrangement.End,
+				verticalAlignment = Alignment.Top) {
+
+
+				MA_IconBottom(icon = Features.Paneles().icono, color = Features.Paneles().color) { viewModel.onEvent(DetalleKpiVM.Eventos.CrearPanel(navegacion)) }
+				MA_IconBottom(icon = Features.Duplicar().icono, color = Features.Duplicar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.DuplicarKpi(navegacion)) }
+				MA_Spacer()
+				MA_IconBottom(icon = Features.Eliminar().icono, color = Features.Eliminar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.Eliminar(navegacion)) }
+				MA_IconBottom(icon = Features.Guardar().icono, color = Features.Guardar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.Guardar(navegacion)) }
+			}
 		},
 		contenido = {
 			val scrollState = rememberScrollState() // 1. Recuerda el estado del scroll
@@ -141,12 +152,65 @@ fun SuccessScreenDetalleKpi(
 							viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeDescripcion(valor))
 						})
 
+						var textValue by remember { mutableStateOf("") }
+						var currentWord by remember { mutableStateOf("") }
 
 						Box(modifier = Modifier.fillMaxWidth()) {
 							Column {
-								MA_TextoNormal(valor = kpiUI.sql, titulo = "SQL", onValueChange = { valor ->
-									viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(valor))
+
+								MA_TextoNormal(valor = kpiUI.sql, titulo = "SQL", onValueChange = { newText ->
+									viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(newText))
+									val oldText = textValue
+									// Actualizamos el estado para que la UI se redibuje
+									textValue = newText
+									// 1. Deducimos la posición del cambio
+									val changePosition = findChangeIndex(oldText, newText)
+									// 2. Usamos la misma lógica de antes con la posición deducida
+									currentWord = findWordAtIndex(newText, changePosition)
+									viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeAutocompletarSQL(currentWord))
+
+
 								})
+
+
+								Row(modifier = Modifier.fillMaxWidth()	.horizontalScroll(rememberScrollState())){
+
+									uiState.ocurrenciasSQL.forEach { palabraSugerida->
+										Box(modifier = Modifier.padding(5.dp).background(color = Color(222, 222, 222, 100)).clickable(enabled = true, onClick = {
+											// --- INICIO DE LA LÓGICA CLAVE ---
+
+											// 1. Obtenemos el texto completo actual.
+											val textoCompleto = kpiUI.sql
+
+											// 2. Creamos el nuevo texto reemplazando la palabra que estabas
+											//    escribiendo (`currentWord`) por la que has seleccionado (`palabraSugerida`).
+											//    Usamos replaceLastWord para evitar reemplazar ocurrencias anteriores.
+											val nuevoTexto = replaceLastWord(textoCompleto, currentWord, palabraSugerida)
+
+											// 3. Notificamos al ViewModel del cambio, como si el usuario
+											//    lo hubiera escrito todo.
+
+
+											// 4. (Importante) Limpiamos las sugerencias para que desaparezcan.
+											viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeAutocompletarSQL(""))
+
+
+
+											viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(nuevoTexto))
+
+
+
+
+
+
+											// --- FIN DE LA LÓGICA CLAVE ---
+										})){
+											MA_LabelNormal(valor = palabraSugerida)
+										}
+
+									}
+
+								}
 
 
 								MA_BotonSecundario(texto = "RUN  SQL") {
@@ -277,4 +341,70 @@ fun SuccessScreenDetalleKpi(
 	)
 
 
+}
+
+
+/**
+ * Encuentra el índice del primer carácter que difiere entre dos cadenas.
+ * Esto nos sirve como una aproximación de la posición del cursor.
+ */
+private fun findChangeIndex(oldText: String, newText: String): Int {
+	val commonLength = min(oldText.length, newText.length)
+	// Buscamos la primera diferencia en la parte común de ambos textos
+	for (i in 0 until commonLength) {
+		if (oldText[i] != newText[i]) {
+			return i
+		}
+	}
+	// Si la parte común es idéntica, el cambio está al final.
+	// Esto cubre tanto añadir como borrar caracteres al final.
+	return commonLength
+}
+
+
+/**
+ * ESTA FUNCIÓN ES LA MISMA DE LA RESPUESTA ANTERIOR.
+ * La incluimos aquí para que el ejemplo sea completo.
+ *
+ * Función de ayuda para encontrar la palabra en un índice específico de un texto.
+ * @param text El texto completo.
+ * @param cursorPosition El índice de la posición actual del cursor.
+ * @return La palabra que se encuentra en esa posición.
+ */
+private fun findWordAtIndex(text: String, cursorPosition: Int): String {
+	if (text.isEmpty() || cursorPosition < 0) {
+		return ""
+	}
+
+	val correctedCursorPos = cursorPosition.coerceIn(0, text.length)
+
+	if (correctedCursorPos > 0 && correctedCursorPos < text.length && text[correctedCursorPos].isWhitespace()) {
+		return ""
+	}
+	if (correctedCursorPos > 0 && text[correctedCursorPos - 1].isWhitespace()) {
+		return ""
+	}
+
+	val startIndex = text.lastIndexOf(char = ' ', startIndex = (correctedCursorPos - 1).coerceAtLeast(0)) + 1
+	var endIndex = text.indexOf(char = ' ', startIndex = correctedCursorPos)
+	if (endIndex == -1) {
+		endIndex = text.length
+	}
+	if (startIndex > endIndex) {
+		return ""
+	}
+
+	return text.substring(startIndex, endIndex)
+}
+
+
+fun replaceLastWord(texto: String, palabraBuscada: String, nuevaPalabra: String): String {
+	val lastIndex = texto.lastIndexOf(palabraBuscada)
+	if (lastIndex == -1) {
+		return texto // La palabra no se encontró, no hacer nada
+	}
+	val start = texto.substring(0, lastIndex)
+	val end = texto.substring(lastIndex + palabraBuscada.length)
+	// Añadimos un espacio después de la palabra para una mejor experiencia de usuario
+	return "$start$nuevaPalabra $end"
 }

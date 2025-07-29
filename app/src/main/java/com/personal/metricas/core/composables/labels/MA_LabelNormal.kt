@@ -18,12 +18,14 @@ fun MA_LabelNormal(
     color: Color = MaterialTheme.colorScheme.secondary,
     alineacion : TextAlign = TextAlign.Unspecified,
     icono: Icons? = null,
-    size : TextUnit = 12.sp
+    size : TextUnit = 12.sp,
+
 
 
     ) {
     Text(
         text = valor, modifier = modifier, color = color,
         textAlign =  alineacion,
-        fontSize =  size )
+        fontSize =  size,
+        )
 }
