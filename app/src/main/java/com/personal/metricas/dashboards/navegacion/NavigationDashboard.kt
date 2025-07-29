@@ -19,6 +19,7 @@ import com.personal.metricas.menu.navegacion.ScreenHerramientas
 import com.personal.metricas.menu.navegacion.ScreenMenu
 import com.personal.metricas.paneles.navegacion.ScreenDetallePanel
 import com.personal.metricas.paneles.navegacion.ScreenListadoPaneles
+import com.personal.metricas.sincronizacion.ui.navegacion.ScreenMenuSincronizacion
 import com.personal.metricas.sincronizacion.ui.navegacion.ScreenOrganizacionesSincronizacion
 
 fun NavGraphBuilder.NavegacionDashboard(navController: NavController) {
@@ -117,5 +118,7 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 		is EventosNavegacion.CargarEndPoint         -> navController.navigate(ScreenDetalleEndPoints(navegacion.identificador))
 		EventosNavegacion.MenuEndPoints             -> navController.navigate(ScreenListadoEndPoints)
 		EventosNavegacion.NuevoEndPonint            -> navController.navigate(ScreenDetalleEndPoints(0))
+
+		EventosNavegacion.SincronizacionMenu        -> navController.navigate(ScreenMenuSincronizacion)
 	}
 }

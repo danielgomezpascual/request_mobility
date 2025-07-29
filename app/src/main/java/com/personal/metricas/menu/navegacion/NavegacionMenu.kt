@@ -20,13 +20,5 @@ fun NavGraphBuilder.NavegavionMenu(navController: NavController) {
 			goto(navegacion, navController)
 		}
 	}
-	/*  HomeScreen() { modulo ->
-		  when (modulo) {
-			  Modulos.Transacciones -> navController.navigate(DockTransacciones)
-			  Modulos.Kpis -> navController.navigate(ScreenListadoKpis)
-			  Modulos.Dashboards -> navController.navigate(ListadoDashboards)
-			  Modulos.Cuadricula -> navController.navigate(CuadriculaDashboards)
-			  Modulos.Paneles ->  navController.navigate(ScreenListadoPaneles)
-		  }
-	  }*/
+
 }

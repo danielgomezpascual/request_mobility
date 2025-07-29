@@ -60,7 +60,7 @@ fun MA_ScaffoldGenerico(
 						labelText = Features.Sincronizar().texto,
 						seleccionado = false,
 						destacado = false,
-						onClick = { navegacion(EventosNavegacion.Sincronizacion) }
+						onClick = { navegacion(EventosNavegacion.SincronizacionMenu) }
 					)
 
 

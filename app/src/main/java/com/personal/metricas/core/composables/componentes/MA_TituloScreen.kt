@@ -15,7 +15,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.metricas.R
 import com.personal.metricas.core.composables.card.MA_Card
+import com.personal.metricas.core.composables.imagenes.MA_Icono
+import com.personal.metricas.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.metricas.core.composables.labels.MA_Titulo
 
 @Composable
@@ -35,10 +38,14 @@ fun Cabecera(cabecera: TituloScreen, acciones: @Composable () -> Unit = {}) {
 			)*/
 			Column (modifier = Modifier.padding(start = 5.dp, top = 45.dp)){
 				Box() {
-					MA_Titulo(
-						alineacion = TextAlign.Start,
-						valor = cabecera.titulo)
-					//	MA_LabelEtiqueta(cabecera.descripcion, color = Color.Gray, modifier = Modifier.padding(horizontal = 7.dp))
+					Row(verticalAlignment = Alignment.CenterVertically) {
+						MA_ImagenDrawable(imagen = R.drawable.logo, s = 24.dp)
+						MA_Titulo(
+							alineacion = TextAlign.Start,
+							valor = cabecera.titulo)
+						//	MA_LabelEtiqueta(cabecera.descripcion, color = Color.Gray, modifier = Modifier.padding(horizontal = 7.dp))
+					}
+
 					Box() {
 						acciones()
 					}

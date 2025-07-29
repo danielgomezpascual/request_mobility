@@ -5,3 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 object ScreenOrganizacionesSincronizacion
+
+
+
+@Serializable
+object ScreenMenuSincronizacion

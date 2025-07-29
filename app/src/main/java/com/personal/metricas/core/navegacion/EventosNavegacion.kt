@@ -36,6 +36,8 @@ sealed class EventosNavegacion {
 
 	object Sincronizacion : EventosNavegacion()
 
+	object SincronizacionMenu : EventosNavegacion()
+
 
 	object MenuHerramientas : EventosNavegacion()
 }

@@ -74,7 +74,7 @@ fun SuccessListadoEndPoints(
 				verticalAlignment = Alignment.Top
 
 			) {
-				MA_IconBottom(icon = Features.EndPoints().icono, color = Features.EndPoints().color) { navegacion(EventosNavegacion.NuevoEndPonint) }
+				MA_IconBottom(icon = Features.Nuevo().icono, color = Features.Nuevo().color) { navegacion(EventosNavegacion.NuevoEndPonint) }
 			}
 		},
 		contenido = {
