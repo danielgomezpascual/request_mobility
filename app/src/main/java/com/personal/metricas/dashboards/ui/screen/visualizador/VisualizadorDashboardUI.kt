@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.personal.metricas.core.composables.componentes.TituloScreen
+import com.personal.metricas.core.composables.labels.MA_LabelEtiqueta
+import com.personal.metricas.core.composables.labels.MA_LabelExtendido
 import com.personal.metricas.core.composables.labels.MA_LabelLeyenda
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
@@ -83,7 +85,7 @@ fun Success(
 				Column(modifier = Modifier.verticalScroll(state = scroll)) {
 
 					MA_Titulo(uiState.dashboardUI.nombre)
-					MA_LabelLeyenda(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Center, valor = uiState.dashboardUI.descripcion)
+					MA_LabelEtiqueta(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Center, valor = uiState.dashboardUI.descripcion)
 
 
 					uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->

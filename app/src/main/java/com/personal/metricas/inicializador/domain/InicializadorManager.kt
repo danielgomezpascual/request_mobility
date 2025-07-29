@@ -6,6 +6,7 @@ import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.room.AppDatabase
 import com.personal.metricas.core.utils.Parametro
 import com.personal.metricas.core.utils.Parametros
+import com.personal.metricas.dashboards.ui.entidades.Etiquetas
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
@@ -211,7 +212,10 @@ class InicializadorManager(
 		val panelTiposTreansaccionesLectora = operaciones.crearPanel(kpiTiposTransaccionesRealizadas, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Anillo(),   colores = 2, ajustarContenidoAncho = true))
 
 
-		operaciones.guardarDashboard(nombre = "#LECTORA_FISICA_ID",  listOf<PanelUI>(panelTransacciones, panelTransaccionesEstados, panelTransaccionesDiarias, panelTiposTreansaccionesLectora), kpiOrigen =  kpiLectoras)
+		operaciones.guardarDashboard(nombre = "#LECTORA_FISICA_ID",
+									 listOf<PanelUI>(panelTransacciones, panelTransaccionesEstados, panelTransaccionesDiarias, panelTiposTreansaccionesLectora),
+									 kpiOrigen =  kpiLectoras,
+									 etiqueta = Etiquetas.EtiquetaValor("Lectora"))
 	}
 
 
@@ -377,7 +381,7 @@ class InicializadorManager(
 		val panelErroresDiarios = operaciones.crearPanel(kpiErroresDiarios, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Lineas(), agruparResto = false, limiteElementos = 7))
 		val panelTransaccionesLectoras = operaciones.crearPanel(kpiTransaccionesLectoras, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales(), agruparResto = false, limiteElementos = 7))
 		val panelUltimaTransaccionRalizada = operaciones.crearPanel(kpiUltimaTransaccionRealizada, true, PanelConfiguracion().copy(mostrarGrafica = false, agruparResto = false, limiteElementos = 0, columnaY = 2))
-		operaciones.guardarDashboard(nombre = "General", listOf<PanelUI>(panelTransaccionesDiarias, panelTransaccionesUltimoDia, panelFragmentacion, panelHoras, panelErroresDiarios, panelTransaccionesLectoras, panelUltimaTransaccionRalizada))
+		operaciones.guardarDashboard(nombre = "General", listOf<PanelUI>(panelTransaccionesDiarias, panelTransaccionesUltimoDia, panelFragmentacion, panelHoras, panelErroresDiarios, panelTransaccionesLectoras, panelUltimaTransaccionRalizada), etiqueta = Etiquetas.EtiquetaValor("General"))
 
 	}
 }

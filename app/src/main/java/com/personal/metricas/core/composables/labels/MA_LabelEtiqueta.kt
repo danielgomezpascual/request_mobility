@@ -20,7 +20,11 @@ fun MA_LabelEtiqueta(
     icono: Icons? = null,
 
     ) {
-    Text(text = valor, modifier = modifier, color = color,
-         fontSize = sizeLetras
-        /*style = MaterialTheme.typography.bodyMedium,*/ )
+
+    Text(text = valor,
+         modifier = modifier,
+         color = color,
+         fontSize = sizeLetras.value.sp,
+         textAlign =  alineacion
+        )
 }

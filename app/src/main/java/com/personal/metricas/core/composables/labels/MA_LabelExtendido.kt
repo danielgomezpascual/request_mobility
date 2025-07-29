@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 
 
 @Composable
@@ -14,10 +15,12 @@ fun MA_LabelExtendido(
     modifier: Modifier = Modifier,
     color: Color = Color.Black,
     extension: @Composable () -> Unit = {},
+    alineacion : TextAlign = TextAlign.Start
+
 ) {
     Row (modifier = modifier){
         extension()
-        Text(valor, color = color, style = MaterialTheme.typography.bodyMedium, modifier = modifier)
+        Text(valor, color = color, style = MaterialTheme.typography.bodyMedium, modifier = modifier, textAlign =  alineacion)
     }
 
 }

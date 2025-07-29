@@ -5,6 +5,7 @@ import com.personal.metricas.core.utils.if3
 import com.personal.metricas.dashboards.domain.entidades.TipoDashboard
 import com.personal.metricas.dashboards.domain.interactors.GuardarDashboardCU
 import com.personal.metricas.dashboards.ui.entidades.DashboardUI
+import com.personal.metricas.dashboards.ui.entidades.Etiquetas
 import com.personal.metricas.dashboards.ui.entidades.toDashboard
 import com.personal.metricas.kpi.domain.interactors.GuardarKpiCU
 import com.personal.metricas.kpi.ui.entidades.KpiUI
@@ -37,9 +38,13 @@ class InicializadorOperaciones(
 	}
 
 	suspend fun guardarDashboard(nombre: String = "", panel: PanelUI, crearPaneles: Boolean = false, kpiOrigen: KpiUI = KpiUI(), crearKPI: Boolean = false): DashboardUI =
-		guardarDashboard(nombre, listOf<PanelUI>(panel),crearPaneles,  kpiOrigen, crearKPI)
+		guardarDashboard(nombre = nombre,
+						 paneles = listOf<PanelUI>(element = panel),
+						 crearPaneles = crearPaneles,
+						 kpiOrigen = kpiOrigen,
+						 crearKPI = crearKPI)
 
-	suspend fun guardarDashboard(nombre: String = "", paneles: List<PanelUI>, crearPaneles: Boolean = false, kpiOrigen: KpiUI = KpiUI(), crearKPI: Boolean= false): DashboardUI {
+	suspend fun guardarDashboard(nombre: String = "",   paneles: List<PanelUI>, crearPaneles: Boolean = false, kpiOrigen: KpiUI = KpiUI(), crearKPI: Boolean= false, etiqueta: Etiquetas = Etiquetas.EtiquetaVacia(),): DashboardUI {
 		var misPaneles: List<PanelUI> = paneles
 		if (crearPaneles) {
 			misPaneles = emptyList()
@@ -63,6 +68,7 @@ class InicializadorOperaciones(
 			nombre = if3(nombre.isEmpty(), panelInicial.titulo,  nombre),
 			logo = "",
 			home = false,
+			etiqueta = etiqueta ,
 			descripcion = panelInicial.descripcion,
 			kpiOrigen = kpi,
 			listaPaneles = listaPaneles,
