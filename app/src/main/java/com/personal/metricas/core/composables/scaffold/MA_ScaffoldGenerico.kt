@@ -63,7 +63,7 @@ fun MA_ScaffoldGenerico(
 						onClick = { navegacion(EventosNavegacion.SincronizacionMenu) }
 					)
 
-
+/*
 					MA_IconBottom(
 						//   modifier = Modifier.weight(1f),
 						icon = Features.EndPoints().icono,
@@ -72,14 +72,14 @@ fun MA_ScaffoldGenerico(
 						destacado = false,
 						onClick = { navegacion(EventosNavegacion.MenuEndPoints) }
 					)
-
+*/
 
 					MA_IconBottom(
 						//   modifier = Modifier.weight(1f),
 						icon = Features.Cuadriculas().icono,
 						labelText = Features.Cuadriculas().texto,
 						seleccionado = true,
-						destacado = true,
+						destacado = false,
 						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) }
 					)
 

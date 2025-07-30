@@ -206,8 +206,8 @@ class InicializadorManager(
 
 
 
-		val panelTransacciones = operaciones.crearPanel(kpiTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.IndicadorVertical(), mostrarGrafica = true, mostrarTabla = false, height = 200.dp) )
-		val panelTransaccionesEstados = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDiaPorLectora, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.IndicadorVertical(), mostrarGrafica = false, height = 200.dp) )
+		val panelTransacciones = operaciones.crearPanel(kpiTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.IndicadorVertical(), mostrarGrafica = true, mostrarTabla = false, height = "200") )
+		val panelTransaccionesEstados = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDiaPorLectora, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.IndicadorVertical(), mostrarGrafica = false, height = "200") )
 		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesRealizadas, true, PanelConfiguracion().copy(mostrarGrafica = false, indicadorColor = false, colores = 3, ajustarContenidoAncho = false))
 		val panelTiposTreansaccionesLectora = operaciones.crearPanel(kpiTiposTransaccionesRealizadas, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Anillo(),   colores = 2, ajustarContenidoAncho = true))
 

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.componentes.MA_Marco
 import com.personal.metricas.core.composables.labels.MA_LabelMini
@@ -29,8 +30,8 @@ fun MA_GraficaConTablaHorizontal(modifier: Modifier = Modifier.Companion,
     ) {
 
         val m = Modifier.Companion
-            .width(panelConfiguracion.width)
-            .height(panelConfiguracion.height)
+            .width(Dp(panelConfiguracion.width.toFloat()))
+            .height(Dp(panelConfiguracion.height.toFloat()))
 
         MA_Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
 
@@ -40,7 +41,7 @@ fun MA_GraficaConTablaHorizontal(modifier: Modifier = Modifier.Companion,
                 if (panelConfiguracion.mostrarGrafica) {
                     Box(
                         modifier = Modifier.Companion
-                            .fillMaxWidth(panelConfiguracion.espacioGrafica)
+                            .fillMaxWidth(panelConfiguracion.espacioGrafica.toFloat()/100.0f)
                     ) {
                         grafica()
                     }
@@ -57,8 +58,7 @@ fun MA_GraficaConTablaHorizontal(modifier: Modifier = Modifier.Companion,
 
                     Box(
                         modifier = modifier
-
-                            .fillMaxWidth(panelConfiguracion.espacioTabla)
+                            .fillMaxWidth(panelConfiguracion.espacioTabla.toFloat()/100.0f)
                     ) {
                         tabla()
                     }

@@ -20,6 +20,7 @@ import com.personal.metricas.paneles.domain.entidades.Condiciones
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
+import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
 import com.personal.metricas.paneles.domain.interactors.EliminarPanelCU
 import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
 import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.collections.listOf
 
 class DetallePanelVM(
 	private val obtenerPanelCU: ObtenerPanelCU,
@@ -44,32 +46,32 @@ class DetallePanelVM(
 	private val eliminarPanelCU: EliminarPanelCU,
 	private val obtenerKpis: ObtenerKpisCU,
 	private val dialog: DialogManager,
-	
+
 	) : ViewModel() {
-	
+
 	private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
 	val uiState: StateFlow<UIState> = _uiState.asStateFlow()
-	
+
 	sealed class UIState() {
 		data class Success(
 			val panelUI: PanelUI, val kpiDisponibles: List<KpiUI> = emptyList<KpiUI>(),
 			val valoresTabla: ValoresTabla = ValoresTabla(), val condicionFila: Condiciones? = null,
 			val condicionCelda: Condiciones? = null,
-			
-			
+
+
 			) : UIState()
-		
+
 		data class Error(val mensaje: String) : UIState()
 		object Loading : UIState()
 	}
-	
+
 	sealed class Eventos() {
 		data class Cargar(val identificador: Int) : Eventos()
 		data class OnChangeTitulo(val titulo: String) : Eventos()
 		data class OnChangeDescripcion(val descripcion: String) : Eventos()
 		data class OnChangeKpiSeleccionado(val identificador: Int) : Eventos()
 		data class onChangeOrientacion(val valor: String) : Eventos()
-		
+
 		data class onChangeTipoGrafica(val valor: PanelTipoGrafica) : Eventos()
 		data class onChangeLimiteElementos(val valor: String) : Eventos()
 		data class onChangeMostrarEtiquetas(val valor: Boolean) : Eventos()
@@ -79,49 +81,52 @@ class DetallePanelVM(
 		data class onChangeEspacioTabla(val valor: String) : Eventos()
 		data class onChangeOcuparTodoEspacio(val valor: Boolean) : Eventos()
 		data class onChangeAncho(val valor: String) : Eventos()
-		
+
 		data class onChangeAlto(val valor: String) : Eventos()
 		data class onChangeMostrarGrafica(val valor: Boolean) : Eventos()
-		
+
 		data class onChangeMosrtarTabla(val valor: Boolean) : Eventos()
 		data class onChangeMostrarTitulosTabla(val valor: Boolean) : Eventos()
 		data class onChangeAgruparValores(val valor: Boolean) : Eventos()
 		data class onChangeCampoAgrupacionTabla(val valor: String) : Eventos()
-		
+
 		data class onChangeCampoSumaTabla(val valor: String) : Eventos()
 		data class onChangeAjustarContenido(val valor: Boolean) : Eventos()
-		
+
 		data class onChangeIndicadorColor(val valor: Boolean) : Eventos()
 		data class onChangeFilasColor(val valor: Boolean) : Eventos()
 		data class onChangeEsquemaColores(val valor: Int) : Eventos()
-		
+
 		data class Preview(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
 		data class Guardar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
 		data class Eliminar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
 		data class Duplicar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()
-		
-		
+
+
 		object ObtenerKpisDisponibles : Eventos()
-		
-		
+
+
 		data class SeleccionarCondicionCelda(val condicion: Condiciones) : Eventos()
 		data class AgregarCondicionCelda(val condicion: Condiciones) : Eventos()
 		data class GuardarCondicionCelda(val condicion: Condiciones) : Eventos()
-		
+
 		//data class AgregarCondicionCelda(val condicion: CondicionesCelda) : Eventos()
 		data class ActualizarCondicionCelda(val condicion: Condiciones) : Eventos()
 		data class EliminarCondicionCelda(val condicion: Condiciones) : Eventos()
-		
+
 		data class SeleccionarCondicion(val condicion: Condiciones) : Eventos()
 		data class AgregarCondicion(val condicion: Condiciones) : Eventos()
 		data class GuardarCondicion(val condicion: Condiciones) : Eventos()
-		
+
 		data class ActualizarCondicion(val condicion: Condiciones) : Eventos()
 		data class EliminarCondicion(val condicion: Condiciones) : Eventos()
-		
+
+
+		//PLantaillas
+		data class OnSeleccionarPlantillaAplicar(val plantilla: PlantillasPanel) : Eventos()
 	}
-	
-	
+
+
 	fun onEvent(evento: Eventos) {
 		when (evento) {
 			is Eventos.ObtenerKpisDisponibles -> obtenerKpis()
@@ -129,183 +134,184 @@ class DetallePanelVM(
 			is Eventos.Guardar                -> guardar(evento.navegacion)
 			is Eventos.Eliminar               -> eliminar(evento.navegacion)
 			is Eventos.Duplicar               -> duplicar(evento.navegacion)
-			
+
 			is Eventos.Preview                -> preview(evento.navegacion)
 			else                              -> {
 				_uiState.update { estado ->
 					if (estado is UIState.Success) {
 						when (evento) {
-							is Eventos.OnChangeTitulo               -> {
+							is Eventos.OnSeleccionarPlantillaAplicar -> { estado.copy(panelUI = estado.panelUI.copy(configuracion = evento.plantilla.configuracion)) }
+
+							is Eventos.OnChangeTitulo                -> {
 								estado.copy(panelUI = estado.panelUI.copy(titulo = evento.titulo,
 																		  configuracion = estado.panelUI.configuracion.copy(titulo = evento.titulo)))
-								
-								
+
+
 							}
-							
-							is Eventos.OnChangeDescripcion          -> {
+
+							is Eventos.OnChangeDescripcion           -> {
 								estado.copy(panelUI = estado.panelUI.copy(descripcion = evento.descripcion,
 																		  configuracion = estado.panelUI.configuracion.copy(
-																				  descripcion = evento.descripcion)))
+																			  descripcion = evento.descripcion)))
 							}
-							
-							is Eventos.OnChangeKpiSeleccionado      -> {
+
+							is Eventos.OnChangeKpiSeleccionado       -> {
 								val kpi =
 									estado.kpiDisponibles.first { it.id == evento.identificador }
-								
+
 								val valoresTabla = ResultadoSQL.fromSqlToTabla(kpi.sql, kpi.parametros)
 
 								estado.copy(valoresTabla = valoresTabla,
 											panelUI = estado.panelUI.copy(kpi = kpi)
-										   
-										   )
+
+								)
 							}
-							
-							is Eventos.onChangeOrientacion          -> {
+
+							is Eventos.onChangeOrientacion           -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										orientacion = PanelOrientacion.from(evento.valor))))
+									orientacion = PanelOrientacion.from(evento.valor))))
 							}
-							
-							is Eventos.onChangeTipoGrafica          -> {
+
+							is Eventos.onChangeTipoGrafica           -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										tipo = evento.valor)))
+									tipo = evento.valor)))
 							}
-							
-							is Eventos.onChangeLimiteElementos      -> {
-								
+
+							is Eventos.onChangeLimiteElementos       -> {
+
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										limiteElementos = evento.valor.toInt())))
+									limiteElementos = evento.valor.toInt())))
 							}
-							
-							is Eventos.onChangeMostrarEtiquetas     -> {
+
+							is Eventos.onChangeMostrarEtiquetas      -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										mostrarEtiquetas = evento.valor)))
+									mostrarEtiquetas = evento.valor)))
 							}
-							
-							is Eventos.OnChangeAgruparResto         -> {
+
+							is Eventos.OnChangeAgruparResto          -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										agruparResto = evento.valor)))
+									agruparResto = evento.valor)))
 							}
-							
-							is Eventos.onChangeMostrarOrdenado      -> {
+
+							is Eventos.onChangeMostrarOrdenado       -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										ordenado = evento.valor)))
-								
+									ordenado = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeEspacioGrafica       -> {
+
+							is Eventos.onChangeEspacioGrafica        -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										espacioGrafica = ((evento.valor).toFloat() / 100.0f))))
-								
+									espacioGrafica = evento.valor)))
+
 							}
-							
-							
-							is Eventos.onChangeEspacioTabla         -> {
+
+
+							is Eventos.onChangeEspacioTabla          -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										espacioTabla = ((evento.valor).toFloat() / 100.0f))))
-								
+									espacioTabla = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeAgruparValores       -> {
+
+							is Eventos.onChangeAgruparValores        -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										agruparValores = evento.valor)))
-								
+									agruparValores = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeMosrtarTabla         -> {
+
+							is Eventos.onChangeMosrtarTabla          -> {
+
+								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(mostrarTabla = evento.valor)))
+
+							}
+
+							is Eventos.onChangeMostrarGrafica        -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										mostrarTabla = evento.valor,
-										espacioTabla = if3(evento.valor, 60f, 0f))))
-								
+									mostrarGrafica = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeMostrarGrafica       -> {
+
+							is Eventos.onChangeMostrarTitulosTabla   -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										mostrarGrafica = evento.valor)))
-								
+									mostrarTituloTabla = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeMostrarTitulosTabla  -> {
+
+
+							is Eventos.onChangeCampoAgrupacionTabla  -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										mostrarTituloTabla = evento.valor)))
-								
+									columnaX = evento.valor.toInt())))
+
 							}
-							
-							
-							is Eventos.onChangeCampoAgrupacionTabla -> {
+
+							is Eventos.onChangeCampoSumaTabla        -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										columnaX = evento.valor.toInt())))
-								
+									columnaY = evento.valor.toInt())))
+
 							}
-							
-							is Eventos.onChangeCampoSumaTabla       -> {
+
+							is Eventos.onChangeAjustarContenido      -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										columnaY = evento.valor.toInt())))
-								
+									ajustarContenidoAncho = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeAjustarContenido     -> {
+
+							is Eventos.onChangeIndicadorColor        -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										ajustarContenidoAncho = evento.valor)))
-								
+									indicadorColor = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeIndicadorColor       -> {
+
+							is Eventos.onChangeFilasColor            -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										indicadorColor = evento.valor)))
-								
+									filasColor = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeFilasColor           -> {
+
+							is Eventos.onChangeAlto                  -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										filasColor = evento.valor)))
-								
+									height = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeAlto                 -> {
+
+							is Eventos.onChangeAncho                 -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										height = (evento.valor.toInt()).dp)))
-								
+									width = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeAncho                -> {
+
+
+							is Eventos.onChangeOcuparTodoEspacio     -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										width = (evento.valor.toInt()).dp)))
-								
+									ocuparTodoEspacio = evento.valor)))
+
 							}
-							
-							
-							is Eventos.onChangeOcuparTodoEspacio    -> {
+
+							is Eventos.onChangeEsquemaColores        -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										ocuparTodoEspacio = evento.valor)))
-								
+									colores = evento.valor)))
+
 							}
-							
-							is Eventos.onChangeEsquemaColores       -> {
-								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										colores = evento.valor)))
-								
-							}
-							
-							is Eventos.AgregarCondicionCelda        -> {/*var condicionesCeldas: List<CondicionesCelda> = estado.panelUI.configuracion.condicionesCeldas
+
+							is Eventos.AgregarCondicionCelda         -> {/*var condicionesCeldas: List<CondicionesCelda> = estado.panelUI.configuracion.condicionesCeldas
 
                                 val elemento = estado.panelUI.configuracion.condicionesCeldas.maxByOrNull { it.id }
                                 val maxIndice = (elemento?.id ?: 0) + 1
                                 val condicionCelda: CondicionesCelda = CondicionesCelda(id = maxIndice, color = (maxIndice), predicado = "> $maxIndice", columna = Columnas(nombre = "", posicion = -1), condicionCelda = 0)
                             //    condicionesCeldas = condicionesCeldas.plus(condicionCelda)
                                 */
-								
-								
+
+
 								val condicionCelda: Condiciones = Condiciones(id = 0,
 																			  color = 0,
 																			  predicado = "",
 																			  columna = Columnas(nombre = "", posicion = -1),
 																			  condicionCelda = 0)
 								estado.copy(
-										condicionCelda = condicionCelda, //  panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = condicionesCeldas))
-										   )
+									condicionCelda = condicionCelda, //  panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(condicionesCeldas = condicionesCeldas))
+								)
 							}
-							
-							is Eventos.ActualizarCondicionCelda     -> {
+
+							is Eventos.ActualizarCondicionCelda      -> {
 								val conficionActualizar = evento.condicion
 								val nuevasCondiciones =
 									estado.panelUI.configuracion.condicionesCeldas.map { cond ->
@@ -315,24 +321,24 @@ class DetallePanelVM(
 											cond
 										}
 									}
-								
+
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										condicionesCeldas = nuevasCondiciones)))
+									condicionesCeldas = nuevasCondiciones)))
 							}
-							
-							is Eventos.EliminarCondicionCelda       -> {
-								
-								
+
+							is Eventos.EliminarCondicionCelda        -> {
+
+
 								val condicionEliminar = evento.condicion
 								val nuevasCondiciones =
 									estado.panelUI.configuracion.condicionesCeldas - condicionEliminar
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										condicionesCeldas = nuevasCondiciones)))
-								
-								
+									condicionesCeldas = nuevasCondiciones)))
+
+
 							}
-							
-							is Eventos.GuardarCondicionCelda        -> {
+
+							is Eventos.GuardarCondicionCelda         -> {
 								var condicionesCeldas: List<Condiciones> =
 									estado.panelUI.configuracion.condicionesCeldas
 								var nuevasCondiciones: List<Condiciones> = emptyList()
@@ -346,7 +352,7 @@ class DetallePanelVM(
 																				  predicado = evento.condicion.predicado,
 																				  columna = evento.condicion.columna,
 																				  condicionCelda = evento.condicion.condicionCelda)
-									
+
 									nuevasCondiciones = condicionesCeldas.plus(condicionCelda)
 								} else {
 									App.log.d("Modificadi")
@@ -360,27 +366,27 @@ class DetallePanelVM(
 											}
 										}
 								}
-								
-								
+
+
 								estado.copy(condicionCelda = null,
 											panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-													condicionesCeldas = nuevasCondiciones)))
-								
+												condicionesCeldas = nuevasCondiciones)))
+
 							}
-							
-							is Eventos.GuardarCondicion             -> {
-								
+
+							is Eventos.GuardarCondicion              -> {
+
 								lateinit var configuracion: PanelConfiguracion
 								if (evento.condicion.id == 0) {
 									val elemento =
 										estado.panelUI.configuracion.condiciones.maxByOrNull { it.id }
 									val maxIndice =
 										(elemento?.id ?: 0) + 1 //val  nuevasCondiciones =
-									
+
 									configuracion =
 										estado.panelUI.configuracion.copy(condiciones = estado.panelUI.configuracion.condiciones.plus(
-												evento.condicion.copy(id = maxIndice)))
-									
+											evento.condicion.copy(id = maxIndice)))
+
 								} else {
 									val nuevasCondiciones =
 										estado.panelUI.configuracion.condiciones.map { cond ->
@@ -392,37 +398,37 @@ class DetallePanelVM(
 												cond
 											}
 										}
-									
+
 									configuracion =
 										estado.panelUI.configuracion.copy(condiciones = nuevasCondiciones)
-									
-									
+
+
 								}
-								
+
 								estado.copy(condicionFila = null,
 											panelUI = estado.panelUI.copy(configuracion = configuracion))
 							}
-							
-							is Eventos.SeleccionarCondicion         -> {
+
+							is Eventos.SeleccionarCondicion          -> {
 								estado.copy(condicionFila = evento.condicion)
 							}
-							
-							is Eventos.SeleccionarCondicionCelda    -> {
+
+							is Eventos.SeleccionarCondicionCelda     -> {
 								estado.copy(condicionCelda = evento.condicion)
 							}
-							
-							
-							is Eventos.AgregarCondicionCelda        -> {
+
+
+							is Eventos.AgregarCondicionCelda         -> {
 								estado.copy(condicionCelda = Condiciones(id = 0,
 																		 color = 0,
 																		 predicado = "",
 																		 columna = Columnas("", 0),
 																		 condicionCelda = 0))
-								
+
 							}
-							
-							
-							is Eventos.AgregarCondicion             -> {
+
+
+							is Eventos.AgregarCondicion              -> {
 								estado.copy(condicionFila = Condiciones(id = 0,
 																		color = 0,
 																		columna = Columnas(nombre = "",
@@ -430,10 +436,10 @@ class DetallePanelVM(
 																						   valores = emptyList()),
 																		condicionCelda = 0,
 																		predicado = ""))
-								
+
 							}
-							
-							is Eventos.ActualizarCondicion          -> {
+
+							is Eventos.ActualizarCondicion           -> {
 								val conficionActualizar = evento.condicion
 								val nuevasCondiciones =
 									estado.panelUI.configuracion.condiciones.map { cond ->
@@ -443,35 +449,35 @@ class DetallePanelVM(
 											cond
 										}
 									}
-								
+
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										condiciones = nuevasCondiciones)))
+									condiciones = nuevasCondiciones)))
 							}
-							
-							is Eventos.EliminarCondicion            -> {
+
+							is Eventos.EliminarCondicion             -> {
 								val condicionEliminar = evento.condicion
 								val nuevasCondiciones =
 									estado.panelUI.configuracion.condiciones - condicionEliminar
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-										condiciones = nuevasCondiciones)))
+									condiciones = nuevasCondiciones)))
 							}
-							
-							
-							else                                    -> estado
+
+
+							else                                     -> estado
 						}
 					} else {
 						estado
-						
+
 					}
 				}
 			}
 		}
 	}
-	
-	
+
+
 	private fun preview(navegacion: (EventosNavegacion) -> Unit) {
 		if (_uiState is UIState.Success) {
-			
+
 			_uiState.update { estado ->
 				if (estado is UIState.Success) {
 					val kpi = estado.panelUI.kpi
@@ -479,19 +485,19 @@ class DetallePanelVM(
 					val descripcion =
 						(estado.panelUI.configuracion.descripcion).siVacio(kpi.descripcion)
 					estado.copy(estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
-							titulo = titulo,
-							descripcion = descripcion)))
-					
+						titulo = titulo,
+						descripcion = descripcion)))
+
 				} else {
 					estado
 				}
-				
+
 			}
 		}
-		
-		
+
+
 	}
-	
+
 	private fun cargar(identificador: Int) {
 		viewModelScope.launch {
 			withContext(Dispatchers.IO) {
@@ -507,9 +513,9 @@ class DetallePanelVM(
 			}
 		}
 	}
-	
+
 	fun obtenerKpis() {
-		
+
 		viewModelScope.launch {
 			obtenerKpis.getAll().map { listaKpi -> listaKpi.map { k -> KpiUI().fromKPI(k) } }
 				.flowOn(Dispatchers.IO)
@@ -525,13 +531,13 @@ class DetallePanelVM(
 						//
 					}
 				}
-			
-			
+
+
 		}
 	}
-	
+
 	private fun guardar(navegacion: (EventosNavegacion) -> Unit) {
-		
+
 		if (validarElementosPanel()) {
 			viewModelScope.launch {
 				val panelUI = (_uiState.value as UIState.Success).panelUI
@@ -539,28 +545,28 @@ class DetallePanelVM(
 				dialog.informacion(_t(R.string.elemento_guardado_correctamente)) {
 					navegacion(EventosNavegacion.MenuPaneles)
 				}
-				
+
 			}
 		}
 	}
-	
-	
+
+
 	private fun validarElementosPanel(): Boolean {
 		val panelUI = (_uiState.value as UIState.Success).panelUI
-		
+
 		if (panelUI.titulo.isEmpty()) {
 			dialog.informacion(_t(R.string.debe_proporcionar_un_nombre_al_panel)) { }
 			return false
 		}
-		
+
 		if (panelUI.kpi.equals(KpiUI())) {
 			dialog.informacion(_t(R.string.debe_seleccionar_un_kpi_para_representar_informacion)) { }
 			return false
 		}
-		
+
 		return true
 	}
-	
+
 	private fun duplicar(navegacion: (EventosNavegacion) -> Unit) {
 		dialog.sino(_t(R.string.seguro_que_desea_duplicar_el_panel_seleccionado)) { resp ->
 			if (resp == DialogosResultado.Si) {
@@ -569,7 +575,7 @@ class DetallePanelVM(
 						val panelUI = (_uiState.value as UIState.Success).panelUI
 						val nuevoPanel = panelUI.copy(id = 0, titulo = "${panelUI.titulo} - Copia")
 						guardarPanelCU.guardar(nuevoPanel)
-						
+
 					}.await()
 					dialog.informacion(_t(R.string.panel_duplicado)) {
 						navegacion(EventosNavegacion.MenuPaneles)
@@ -577,9 +583,9 @@ class DetallePanelVM(
 				}
 			}
 		}
-		
+
 	}
-	
+
 	private fun eliminar(navegacion: (EventosNavegacion) -> Unit) {
 		dialog.sino(_t(R.string.seguro_que_desea_elimnar_el_panel_seleccionado)) { resp ->
 			if (resp == DialogosResultado.Si) {
@@ -594,6 +600,6 @@ class DetallePanelVM(
 				}
 			}
 		}
-		
+
 	}
 }

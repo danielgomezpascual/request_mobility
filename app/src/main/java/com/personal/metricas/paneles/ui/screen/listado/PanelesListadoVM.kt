@@ -54,7 +54,7 @@ class PanelesListadoVM(
                 .onStart { _uiState.value = UIState.Loading("cargando") }
                 .catch { _uiState.value = UIState.Error("Se ha producido un error") }
                 .collect { lp ->
-                    listaPaneles = lp.map { PanelUI().fromPanel(it) }
+                    listaPaneles = lp.map { PanelUI().fromPanel(it) }.sortedBy { it.titulo }
                     _uiState.value = UIState.Success(textoBuscar = "", lista = listaPaneles)
                 }
         }

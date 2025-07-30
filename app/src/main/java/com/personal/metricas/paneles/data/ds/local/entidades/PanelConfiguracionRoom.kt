@@ -5,11 +5,12 @@ import com.personal.metricas.paneles.domain.entidades.Condiciones
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
+import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
 
 data class PanelConfiguracionRoom(
 	val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,
+	val plantilla: Int = 0,
 	val tipo: Int = 0,
-	
 	val titulo: String = "",
 	val descripcion: String = "",
 	val limiteElementos: Int = 10,
@@ -19,12 +20,12 @@ data class PanelConfiguracionRoom(
 	
 	val target: Float = 0f,
 	val ordenado: Boolean = false,
-	val espacioGrafica: Float = 0.4f,
-	val espacioTabla: Float = 0.6f,
+	val espacioGrafica: String = "40",
+	val espacioTabla: String = "60",
 	val ocuparTodoEspacio: Boolean = false,
 	
-	val width: Float = 500f,
-	val height: Float = 600f,
+	val width: String = "500",
+	val height: String = "600",
 	
 	
 	/*val paddingTablaVertical : PaddingValues =  PaddingValues(60.dp, 15.dp),
@@ -62,10 +63,10 @@ data class PanelConfiguracionRoom(
 				is PanelTipoGrafica.Lineas                 ->  panelConfiguracion.tipo.id
 			}
 			
-			
 			return PanelConfiguracionRoom(
 				orientacion = panelConfiguracion.orientacion,
 				tipo = id,
+				plantilla =  panelConfiguracion.plantilla ,
 				titulo = panelConfiguracion.titulo,
 				descripcion = panelConfiguracion.descripcion,
 				limiteElementos = panelConfiguracion.limiteElementos,
@@ -76,8 +77,8 @@ data class PanelConfiguracionRoom(
 				espacioGrafica = panelConfiguracion.espacioGrafica,
 				espacioTabla = panelConfiguracion.espacioTabla,
 				ocuparTodoEspacio = panelConfiguracion.ocuparTodoEspacio,
-				width = panelConfiguracion.width.value,
-				height = panelConfiguracion.height.value,
+				width = panelConfiguracion.width,
+				height = panelConfiguracion.height,
 				mostrarGrafica = panelConfiguracion.mostrarGrafica,
 				mostrarTabla = panelConfiguracion.mostrarTabla,
 				mostrarTituloTabla = panelConfiguracion.mostrarTituloTabla,
@@ -105,11 +106,13 @@ data class PanelConfiguracionRoom(
 			6 -> PanelTipoGrafica.Lineas()
 			else ->  PanelTipoGrafica.IndicadorVertical()
 		}
-		
+
+		//val plantillaPanel = PlantillasPanel.from(this.plantilla)
 		return PanelConfiguracion(
 				
 			  orientacion = this.orientacion,
 			  tipo = tipo,
+			  plantilla = this.plantilla,
 			  titulo = this.titulo,
 			  descripcion = this.descripcion,
 			  limiteElementos = this.limiteElementos,
@@ -120,8 +123,8 @@ data class PanelConfiguracionRoom(
 			  espacioGrafica = this.espacioGrafica,
 			  espacioTabla = this.espacioTabla,
 			  ocuparTodoEspacio = this.ocuparTodoEspacio,
-			  width = Dp(this.width),
-			  height =Dp( this.height),
+			  width = this.width,
+			  height = this.height,
 			  mostrarGrafica = this.mostrarGrafica,
 			  mostrarTabla = this.mostrarTabla,
 			  mostrarTituloTabla = this.mostrarTituloTabla,

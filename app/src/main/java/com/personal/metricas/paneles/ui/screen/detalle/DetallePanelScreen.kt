@@ -73,12 +73,14 @@ import com.personal.metricas.paneles.domain.entidades.Condiciones
 import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
+import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
 import com.personal.metricas.paneles.ui.componente.MA_ColumnaItemSeleccionable
 import com.personal.metricas.paneles.ui.componente.MA_CondicionCeldaPanel
 import com.personal.metricas.paneles.ui.componente.MA_CondicionCeldaPanelLista
 import com.personal.metricas.paneles.ui.componente.MA_CondicionPanel
 import com.personal.metricas.paneles.ui.componente.MA_CondicionPanelLista
 import com.personal.metricas.paneles.ui.componente.MA_Panel
+import com.personal.metricas.paneles.ui.componente.MA_SeleccionPlantillaPanel
 import com.personal.metricas.paneles.ui.componente.MA_SeleccionTipoGrafica
 import com.personal.metricas.paneles.ui.componente.MA_SelectorEsquemaColores
 import com.personal.metricas.paneles.ui.entidades.toPanel
@@ -213,6 +215,27 @@ fun SucessScreenDetallePanel(
 
 				}
 
+				MA_Titulo2(valor = "Plantilla")
+				MA_Card {
+					Box(modifier = Modifier.height(100.dp)) {
+						Row(verticalAlignment = Alignment.CenterVertically) {
+
+							MA_ComboLista<PlantillasPanel>(modifier = Modifier.weight(1f),
+														   titulo = "Tipo de Gráfica",
+														   descripcion = "Seleccione  el tipo de gráfica a utilizar",
+														   valorInicial = { MA_SeleccionPlantillaPanel(PlantillasPanel.from(uiState.panelUI.configuracion.plantilla)) },
+														   elementosSeleccionables = PlantillasPanel.dameTipos(),
+														   item = { plantilla -> MA_SeleccionPlantillaPanel(plantilla) },
+														   onClickSeleccion = { plantilla -> viewModel.onEvent(DetallePanelVM.Eventos.OnSeleccionarPlantillaAplicar(plantilla)) })
+
+
+						}
+
+
+					}
+				}
+
+
 				//Valores Generales
 				MA_Titulo2(valor = "Generales")
 				MA_Card {
@@ -223,7 +246,7 @@ fun SucessScreenDetallePanel(
 							MA_Combo(icono = Icons.Filled.HorizontalRule,                    //modifier = Modifier.weight(1f),
 									 titulo = "Ancho",
 									 descripcion = "Ancho a ocupar en (DP)",
-									 valorInicial = (panelUI.configuracion.width.value.toInt()).toString(),
+									 valorInicial = panelUI.configuracion.width,
 									 elementosSeleccionables = (200..1000 step 50).map { it.toString() },
 									 onClickSeleccion = { str, indice ->
 										 viewModel.onEvent(DetallePanelVM.Eventos.onChangeAncho(str))
@@ -234,7 +257,7 @@ fun SucessScreenDetallePanel(
 							MA_Combo(icono = Icons.Filled.Height,                    // modifier = Modifier.weight(1f),
 									 titulo = "Alto",
 									 descripcion = "Alto a ocupar en (DP)",
-									 valorInicial = (panelUI.configuracion.height.value.toInt()).toString(),
+									 valorInicial = panelUI.configuracion.height,
 									 elementosSeleccionables = (200..1000 step 50).map { it.toString() },
 									 onClickSeleccion = { str, indice ->
 										 viewModel.onEvent(DetallePanelVM.Eventos.onChangeAlto(str))
@@ -245,7 +268,6 @@ fun SucessScreenDetallePanel(
 							MA_ComboLista<EsquemaColores>(titulo = "Esquema de colores ",
 														  descripcion = "Esquema de colores que se van a mostrar en la gráfica",
 														  valorInicial = {
-															  panelUI.configuracion.colores
 															  MA_SelectorEsquemaColores(EsquemaColores().get(panelUI.configuracion.colores))
 														  },
 														  elementosSeleccionables = EsquemaColores().dameListasDisponibles(),
@@ -292,7 +314,7 @@ fun SucessScreenDetallePanel(
 								icono = Icons.Filled.TableView,
 								titulo = "Espacio Tabla",
 								descripcion = "Porcentaje del espaci que va  utilizar la gráfica en el panel",
-								valorInicial = (panelUI.configuracion.espacioTabla * 100).toString(),
+								valorInicial = panelUI.configuracion.espacioTabla,
 								elementosSeleccionables = (0..100 step 10).map { it.toString() },
 								onClickSeleccion = { str, indice ->
 									viewModel.onEvent(DetallePanelVM.Eventos.onChangeEspacioTabla(str))
@@ -468,7 +490,7 @@ fun SucessScreenDetallePanel(
 								icono = Icons.Filled.AutoGraph,
 								titulo = "Espacio Gráfica",
 								descripcion = "Porcentaje del espaci que va  utilizar la gráfica en el panel",
-								valorInicial = (panelUI.configuracion.espacioGrafica * 100).toString(),
+								valorInicial = panelUI.configuracion.espacioGrafica,
 								elementosSeleccionables = (0..100 step 10).map { it.toString() },
 								onClickSeleccion = { str, indice ->
 									viewModel.onEvent(DetallePanelVM.Eventos.onChangeEspacioGrafica(
@@ -570,9 +592,7 @@ fun SucessScreenDetallePanel(
 										  esquemaColores = EsquemaColores().dameEsquemaCondiciones(),
 										  condicion = uiState.condicionFila,
 										  onClickAceptar = { condicionUI ->
-											  App.log.d("Condicion - > ${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")
-											  viewModel.onEvent(DetallePanelVM.Eventos.GuardarCondicion(
-												  condicionUI))
+											  viewModel.onEvent(DetallePanelVM.Eventos.GuardarCondicion(condicionUI))
 											  scope.launch { sheetStateCondicionFila.hide() }
 										  },
 										  onClickCancelar = { condicionUI ->
@@ -613,7 +633,6 @@ fun SucessScreenDetallePanel(
 
 				})
 			}
-
 
 
 			MA_BottomSheet(sheetState, onClose = {

@@ -76,9 +76,9 @@ fun TestTablaDatos() {
 
 @Composable
 fun TablaDatos(
-    modifier: Modifier = Modifier,
-    titulo: String = "",
-    tabla: ValoresTabla,
+	modifier: Modifier = Modifier,
+	titulo: String = "",
+	tabla: ValoresTabla,
 ) {/*
         Marco(modifier = modifier, titulo = titulo) {
             Tabla(modifier, tabla)
@@ -88,17 +88,17 @@ fun TablaDatos(
 
 @Composable
 fun MA_Tabla(
-    modifier: Modifier = Modifier,
-    panelConfiguracion: PanelConfiguracion = PanelConfiguracion(ajustarContenidoAncho = false, indicadorColor = false, filasColor = false
+	modifier: Modifier = Modifier,
+	panelConfiguracion: PanelConfiguracion = PanelConfiguracion(ajustarContenidoAncho = false, indicadorColor = false, filasColor = false
 
-    ),
-    filas: List<Fila>,
+	),
+	filas: List<Fila>,
 	notas: List<Notas> = emptyList<Notas>(),
-    celdasFiltro: List<Celda> = emptyList<Celda>(),
-    mostrarTitulos: Boolean = true,
-    onClickSeleccionarFiltro: (Celda) -> Unit = {},
-    onClickInvertir: (Celda) -> Unit = {},
-    onClickSeleccionarFila: (Fila) -> Unit = {},
+	celdasFiltro: List<Celda> = emptyList<Celda>(),
+	mostrarTitulos: Boolean = true,
+	onClickSeleccionarFiltro: (Celda) -> Unit = {},
+	onClickInvertir: (Celda) -> Unit = {},
+	onClickSeleccionarFila: (Fila) -> Unit = {},
 ) {
 
 	val estadoScroll = rememberScrollState()
@@ -127,8 +127,8 @@ fun MA_Tabla(
 			}
 		}
 		Row(modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth()) {
+			.padding(4.dp)
+			.fillMaxWidth()) {
 
 
 			if (mostrarTitulos && !filas.isEmpty()) {
@@ -155,14 +155,11 @@ fun MA_Tabla(
 
 					if (celda.titulo.equals(K.HASH_CODE)) {
 						//No pintamos titulo para el hashcode
-					}else{
+					} else {
 						Box(modifier = modifierBox.background(Color.Gray)) {
 							celda.celdaTitulo(modifierBox)
 						}
 					}
-
-
-
 
 
 				}
@@ -175,7 +172,7 @@ fun MA_Tabla(
 
 
 		MA_Lista(filas) { fila ->
-			MA_FilaTablaDatos(fila,notas,  panelConfiguracion) { fila ->
+			MA_FilaTablaDatos(fila, notas, panelConfiguracion) { fila ->
 				onClickSeleccionarFila(fila)
 			}
 		}
