@@ -7,10 +7,18 @@ import com.personal.metricas.App
 import kotlin.reflect.full.memberProperties
 
 abstract class HeaderRetrofitBase {
+    //DEV
+   /* val Authorization: String = "Basic RkI2QTY0OTQ1NzNBNEE5MTg3Qzg1MzcxODYxNjdCQTBfTW9iaWxlQW5vbnltb3VzX0FQUElEOjFmM2M3YTFkLWRlZGMtNDFhZC1hYWY5LWFhMjhjMzJjMmEwNQ=="
+    val Oracle_Mobile_Backend_Id: String = "f017276c-e16e-40f9-be57-08602a6053d8"*/
 
-    val Authorization: String = "Basic RkI2QTY0OTQ1NzNBNEE5MTg3Qzg1MzcxODYxNjdCQTBfTW9iaWxlQW5vbnltb3VzX0FQUElEOjFmM2M3YTFkLWRlZGMtNDFhZC1hYWY5LWFhMjhjMzJjMmEwNQ=="
-    val Oracle_Mobile_Backend_Id: String = "f017276c-e16e-40f9-be57-08602a6053d8"
 
+    //PRO
+  //  val Authorization: String = "Basic NTA1NDlGOEMxRUNGNDNGRDg2OTgyMDg0NkE4QjRBMTVfTW9iaWxlQW5vbnltb3VzX0FQUElEOjdkNjVmNDRlLTdmY2MtNDE3NS1iOGFkLTBjNmI4MjAzMmY5Nw=="
+  //  val Oracle_Mobile_Backend_Id: String = "c2c7fb6e-cc74-4e34-8b29-1239bc47f036"
+
+
+    val Authorization: String = Entornos.get(App.ENTORNO).autorizacion
+    val Oracle_Mobile_Backend_Id: String  = Entornos.get(App.ENTORNO).backendOracle
 }
 
 

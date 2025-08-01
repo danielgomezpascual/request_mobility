@@ -10,6 +10,7 @@ import com.personal.metricas.dashboards.ui.entidades.Etiquetas
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
+import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 import org.koin.mp.KoinPlatform.getKoin
 
@@ -206,10 +207,10 @@ class InicializadorManager(
 
 
 
-		val panelTransacciones = operaciones.crearPanel(kpiTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.IndicadorVertical(), mostrarGrafica = true, mostrarTabla = false, height = "200") )
-		val panelTransaccionesEstados = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDiaPorLectora, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.IndicadorVertical(), mostrarGrafica = false, height = "200") )
-		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesRealizadas, true, PanelConfiguracion().copy(mostrarGrafica = false, indicadorColor = false, colores = 3, ajustarContenidoAncho = false))
-		val panelTiposTreansaccionesLectora = operaciones.crearPanel(kpiTiposTransaccionesRealizadas, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Anillo(),   colores = 2, ajustarContenidoAncho = true))
+		val panelTransacciones = operaciones.crearPanel(kpiTransacciones, true, PlantillasPanel.from(PlantillasPanel.TT.IndicadorVertical.valor).configuracion)
+		val panelTransaccionesEstados = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDiaPorLectora, true, PlantillasPanel.from(PlantillasPanel.TT.PanelesHorizontales.valor).configuracion)
+		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesRealizadas, true, PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion)
+		val panelTiposTreansaccionesLectora = operaciones.crearPanel(kpiTiposTransaccionesRealizadas, true, PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion)
 
 
 		operaciones.guardarDashboard(nombre = "#LECTORA_FISICA_ID",
@@ -374,13 +375,15 @@ class InicializadorManager(
 		)
 
 
-		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesDiarias, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales()))
-		val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDia, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Circular()))
-		val panelFragmentacion = operaciones.crearPanel(kpiVersionesUltimoDia, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Anillo()))
+		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesDiarias, true, PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion)
+		val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDia, true, PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion)
+		val panelFragmentacion = operaciones.crearPanel(kpiVersionesUltimoDia, true, PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion)
 		val panelHoras = operaciones.crearPanel(kpiHorasTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales()))
-		val panelErroresDiarios = operaciones.crearPanel(kpiErroresDiarios, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.Lineas(), agruparResto = false, limiteElementos = 7))
-		val panelTransaccionesLectoras = operaciones.crearPanel(kpiTransaccionesLectoras, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales(), agruparResto = false, limiteElementos = 7))
-		val panelUltimaTransaccionRalizada = operaciones.crearPanel(kpiUltimaTransaccionRealizada, true, PanelConfiguracion().copy(mostrarGrafica = false, agruparResto = false, limiteElementos = 0, columnaY = 2))
+		val panelErroresDiarios = operaciones.crearPanel(kpiErroresDiarios, true, PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion)
+		val panelTransaccionesLectoras = operaciones.crearPanel(kpiTransaccionesLectoras, true, PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion)
+		val panelUltimaTransaccionRalizada = operaciones.crearPanel(kpiUltimaTransaccionRealizada, true, PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion)
+
+
 		operaciones.guardarDashboard(nombre = "General", listOf<PanelUI>(panelTransaccionesDiarias, panelTransaccionesUltimoDia, panelFragmentacion, panelHoras, panelErroresDiarios, panelTransaccionesLectoras, panelUltimaTransaccionRalizada), etiqueta = Etiquetas.EtiquetaValor("General"))
 
 	}

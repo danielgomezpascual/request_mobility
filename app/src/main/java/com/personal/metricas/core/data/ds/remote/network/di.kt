@@ -1,6 +1,8 @@
 package com.personal.metricas.core.data.ds.remote.network
 
 
+import com.personal.metricas.App
+import com.personal.metricas.core.data.ds.remote.network.retrofit.request.Entornos
 import okhttp3.ConnectionPool
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
@@ -49,7 +51,12 @@ fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClien
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    val BASE_URL = "https://FB6A6494573A4A9187C8537186167BA0.mobile.ocp.oraclecloud.com:443/mobile/custom/ApiMaxamWS_DEV/"
+    //val BASE_URL = "https://FB6A6494573A4A9187C8537186167BA0.mobile.ocp.oraclecloud.com:443/mobile/custom/ApiMaxamWS_DEV/"
+
+    val BASE_URL = Entornos.get(App.ENTORNO).url
+
+
+    //50549f8c1ecf43fd869820846a8b4a15.mobile.ocp.oraclecloud.com/mobile/custom/ApiMaxamWS/Users
 
     return Retrofit.Builder()
         .baseUrl(BASE_URL) // Reemplaza con tu URL base

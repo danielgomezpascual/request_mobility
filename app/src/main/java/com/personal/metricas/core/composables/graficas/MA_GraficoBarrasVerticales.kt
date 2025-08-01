@@ -68,7 +68,7 @@ fun MA_GraficoBarrasVerticales(
     val data =  listaValores.map { fila ->
         BarData(
             xValue = fila.celdas[posicionX].valor,
-            yValue = fila.celdas[posivionY].valor.toFloat(),
+            yValue = fila.celdas[posivionY].valor.toFloatOrNull()?:0f,
             barColor = (fila.color).asSolidChartColor()
         )
     }

@@ -29,7 +29,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 																	   columnaX = 0,
 																	   columnaY = 1,
 																	   colores = EsquemaColores.Paletas.NORMAL.valor,
-																	   ajustarContenidoAncho = true,
+																	   ajustarContenidoAncho = false,
 																	   indicadorColor = false,
 																	   filasColor = false,
 																	   condiciones = emptyList(),
@@ -60,7 +60,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 																		 columnaX = 0,
 																		 columnaY = 1,
 																		 colores = EsquemaColores.Paletas.FOSFORITOS.valor,
-																		 ajustarContenidoAncho = true,
+																		 ajustarContenidoAncho = false,
 																		 indicadorColor = false,
 																		 filasColor = false,
 																		 condiciones = emptyList(),
@@ -69,7 +69,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 
 	data object SoloTabla : PlantillasPanel(3, "SOLO TABLA", R.drawable.tabla,
 											PanelConfiguracion(orientacion = PanelOrientacion.VERTICAL,
-															   tipo = PanelTipoGrafica.IndicadorHorizontal(),
+															   //tipo = PanelTipoGrafica.IndicadorHorizontal(),
 															   plantilla = 3,
 															   limiteElementos = 0,
 															   mostrarEtiquetas = true,
@@ -88,7 +88,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 															   columnaX = 0,
 															   columnaY = 1,
 															   colores = EsquemaColores.Paletas.PERS.valor,
-															   ajustarContenidoAncho = true,
+															   ajustarContenidoAncho = false,
 															   indicadorColor = true,
 															   filasColor = true,
 															   condiciones = emptyList(),
@@ -117,7 +117,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 																		   columnaX = 0,
 																		   columnaY = 1,
 																		   colores = EsquemaColores.Paletas.NORMAL.valor,
-																		   ajustarContenidoAncho = true,
+																		   ajustarContenidoAncho = false,
 																		   indicadorColor = true,
 																		   filasColor = true,
 																		   condiciones = emptyList(),
@@ -146,7 +146,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 																			columnaX = 0,
 																			columnaY = 1,
 																			colores = EsquemaColores.Paletas.NORMAL.valor,
-																			ajustarContenidoAncho = true,
+																			ajustarContenidoAncho = false,
 																			indicadorColor = true,
 																			filasColor = true,
 																			condiciones = emptyList(),
@@ -175,7 +175,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 															  columnaX = 0,
 															  columnaY = 1,
 															  colores = EsquemaColores.Paletas.NORMAL.valor,
-															  ajustarContenidoAncho = true,
+															  ajustarContenidoAncho = false,
 															  indicadorColor = true,
 															  filasColor = true,
 															  condiciones = emptyList(),
@@ -204,7 +204,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 															columnaX = 0,
 															columnaY = 1,
 															colores = EsquemaColores.Paletas.NORMAL.valor,
-															ajustarContenidoAncho = true,
+															ajustarContenidoAncho = false,
 															indicadorColor = true,
 															filasColor = true,
 															condiciones = emptyList(),
@@ -260,7 +260,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 															columnaX = 0,
 															columnaY = 1,
 															colores = EsquemaColores.Paletas.FOSFORITOS.valor,
-															ajustarContenidoAncho = true,
+															ajustarContenidoAncho = false,
 															indicadorColor = true,
 															filasColor = true,
 															condiciones = emptyList(),
@@ -288,7 +288,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 																	   columnaX = 0,
 																	   columnaY = 1,
 																	   colores = EsquemaColores.Paletas.FOSFORITOS.valor,
-																	   ajustarContenidoAncho = true,
+																	   ajustarContenidoAncho = false,
 																	   indicadorColor = true,
 																	   filasColor = true,
 																	   condiciones = emptyList(),
@@ -298,6 +298,9 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 
 
 	companion object {
+		
+
+
 		fun dameTipos(): List<PlantillasPanel> = listOf<PlantillasPanel>(
 			SinSeleccionar,
 			IndicadorVertical,
@@ -333,6 +336,21 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 		}
 
 	}
+
+	enum class TT(var valor:Int){
+		SinSeleccionar(0),
+		IndicadorVertical(1),
+		IndicadorHorizontal(2),
+		SoloTabla(3),
+		BarrasFinasVertivales(4),
+		BarrasAnchasVertivales(5),
+		Circular(6),
+		Anillo(7),
+		Lineas(8),
+		PanelesHorizontales(9),
+		PanelesVerticales(10),
+	}
+
 }
 
 

@@ -27,6 +27,8 @@ class App : Application() {
 
 
 	companion object {
+		var ENTORNO: String = "PRO"
+
 		lateinit var context: Context
 		lateinit var log: MyLog
 		lateinit var dialog: DialogManager

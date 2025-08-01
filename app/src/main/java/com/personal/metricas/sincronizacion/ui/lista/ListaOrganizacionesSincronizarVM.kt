@@ -41,6 +41,7 @@ class ListaOrganizacionesSincronizarVM(
 	var textoBuscar: String = ""
 
 	var listaOrganizacionesSincronizarUI: List<OrganizacionesSincronizarUI> = emptyList()
+	var organizacionesOriginal: List<OrganizacionesSincronizarUI> = emptyList()
 
 
 	sealed class UIState {
@@ -92,7 +93,7 @@ class ListaOrganizacionesSincronizarVM(
 
 			val s = seleccion
 
-			listaOrganizacionesSincronizarUI = listaOrganizacionesSincronizarUI.map { org ->
+			listaOrganizacionesSincronizarUI = organizacionesOriginal.map { org ->
 				org.copy(seleccionado = s)
 
 			}
@@ -105,7 +106,7 @@ class ListaOrganizacionesSincronizarVM(
 		viewModelScope.launch {
 
 			listaOrganizacionesSincronizarUI = obtenerOrganizacion.getAll().mapIndexed { indice, organzacion -> OrganizacionesSincronizarUI().fromOrganizacion(organzacion) }
-
+			organizacionesOriginal = listaOrganizacionesSincronizarUI
 
 			val organizacionesStr: String = App.sharedPrerfences.get<String>(K.ORGANIZACIONES, "")
 			val organizacionesSeleccionadasPrevias: List<String> = organizacionesStr.split(";")
@@ -120,7 +121,7 @@ class ListaOrganizacionesSincronizarVM(
 	private fun onChangeSeleccion(organizacionUI: OrganizacionesSincronizarUI) {
 		if (_uiState.value is UIState.Success) {
 
-			listaOrganizacionesSincronizarUI = ((_uiState.value) as UIState.Success).organizaciones
+
 
 			listaOrganizacionesSincronizarUI = listaOrganizacionesSincronizarUI.map { org ->
 				if (organizacionUI.organizationCode.equals(org.organizationCode)) {

@@ -24,16 +24,16 @@ data class ValoresTabla(
 	var columnas: List<Columnas> = emptyList<Columnas>(),
 ) {
 
-	fun addColumnaHash(){
-		var valoresColumna : List<String> = emptyList()
-		filas.forEach {  fila ->
+	fun addColumnaHash() {
+		var valoresColumna: List<String> = emptyList()
+		filas.forEach { fila ->
 
 			val h = fila.hashCode()
-			fila.celdas = fila.celdas.plus(Celda(valor = h.toString(), titulo = K.HASH_CODE ))
-			valoresColumna =valoresColumna.plus(h.toString())
+			fila.celdas = fila.celdas.plus(Celda(valor = h.toString(), titulo = K.HASH_CODE))
+			valoresColumna = valoresColumna.plus(h.toString())
 
 		}
-		val columnaHash = Columnas(nombre = K.HASH_CODE, columnas.size, valores = valoresColumna )
+		val columnaHash = Columnas(nombre = K.HASH_CODE, columnas.size, valores = valoresColumna)
 		columnas = columnas.plus(columnaHash)
 
 	}
@@ -86,7 +86,9 @@ data class ValoresTabla(
 			if (campoOrdenacionTabla >= filas.first().celdas.size) 0 else campoOrdenacionTabla
 
 		val fs = filas.filter { it.obtenidaDesdeKPI }
-					 .sortedByDescending { it.celdas[orden].valor.toFloat() } + filas.filter { !it.obtenidaDesdeKPI }
+					 .sortedByDescending {						 						 it.celdas[orden].valor.toFloatOrNull() ?: 0f
+
+					 } + filas.filter { !it.obtenidaDesdeKPI }
 		return fs
 	}
 
@@ -160,9 +162,9 @@ data class ValoresTabla(
 data class Fila(
 	var celdas: List<Celda> = emptyList<Celda>(), val size: Dp = 200.dp,
 	val color: Color = Color.White, val seleccionada: Boolean = false,
-	val visible: Boolean = true, val obtenidaDesdeKPI: Boolean = true
+	val visible: Boolean = true, val obtenidaDesdeKPI: Boolean = true,
 
-) {
+	) {
 	fun toParametros() = Parametros(ps = this.celdas.map { celda -> Parametro(celda.titulo, celda.valor) })
 
 }

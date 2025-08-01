@@ -26,7 +26,7 @@ data class PanelConfiguracion(
 	val columnaX: Int = 0,
 	val columnaY: Int = 1,
 	val colores: Int = EsquemaColores.Paletas.NORMAL.valor,
-	var ajustarContenidoAncho: Boolean = true,
+	var ajustarContenidoAncho: Boolean = false,
 	var indicadorColor: Boolean = true,
 	var filasColor: Boolean = true,
 	val condiciones: List<Condiciones> = listOf<Condiciones>(),
