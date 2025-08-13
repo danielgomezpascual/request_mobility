@@ -2,6 +2,11 @@ package com.personal.metricas
 
 import android.app.Application
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.google.firebase.FirebaseApp
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.data.ds.remote.network.moduloNetwork
 import com.personal.metricas.core.log.di.moduloLog
@@ -10,6 +15,9 @@ import com.personal.metricas.core.room.moduloDatabase
 import com.personal.metricas.core.utils.SharedPreferencesManager
 import com.personal.metricas.dashboards.moduloDashboards
 import com.personal.metricas.endpoints.moduloEndPoints
+import com.personal.metricas.firebase.crashlytics.Crash
+import com.personal.metricas.firebase.FirebaseManager
+import com.personal.metricas.firebase.modulesFirebase
 import com.personal.metricas.inicializador.modulosInicializador
 import com.personal.metricas.kpi.moduloKpis
 import com.personal.metricas.menu.modulosMenu
@@ -34,18 +42,34 @@ class App : Application() {
 		lateinit var dialog: DialogManager
 		lateinit var sharedPrerfences: SharedPreferencesManager
 
+		lateinit var crash: Crash
+
 
 	}
 
 
 	override fun onCreate() {
 		super.onCreate()
+
+		//FirebaseApp.initializeApp(this)
+		FirebaseManager().incializar(this)
+
 		initKoin()
 		log = getKoin().get()
+		crash = getKoin().get()
+
 
 		context = applicationContext
 		dialog = DialogManager()
 		sharedPrerfences = SharedPreferencesManager(applicationContext)
+
+		/*val auth = FirebaseManager().getAuth()
+
+		App.log.d(auth.currentUser?.displayName)
+		var isAuthenticated by remember { mutableStateOf(auth.currentUser != null) }
+*/
+
+
 
 
 		/*  val sincronizacionUrl: SincronizacionUrl = SincronizacionUrl()
@@ -63,6 +87,7 @@ class App : Application() {
 			// Reference Android context
 			androidContext(this@App)
 			modules(
+				modulesFirebase,
 				moduloLog,
 				moduloNetwork,
 				moduloDatabase,

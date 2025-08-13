@@ -7,6 +7,9 @@ plugins {
     id("androidx.room") version "2.6.1" apply false
 
 
+    id("com.google.gms.google-services") version "4.4.1" apply false
+    id("com.google.firebase.crashlytics") version "2.9.9" apply false
+
 
     //kotlin("kapt") version "2.0.0"
 }

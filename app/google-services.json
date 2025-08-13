@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "709591204644",
+    "project_id": "metricas-e9181",
+    "storage_bucket": "metricas-e9181.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709591204644:android:3094c78820a3b846c7a9b1",
+        "android_client_info": {
+          "package_name": "com.personal.metricas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "709591204644-q07sh4hlsi5k0klj2bajb7g3o0u7eg2l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.personal.metricas",
+            "certificate_hash": "70350f2a5365d6093e12411656927c119bae906a"
+          }
+        },
+        {
+          "client_id": "709591204644-a72hb7rev5l2akgf7g28lsjpjjf74uso.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFsFE3xtiQIXJ6z87zKm4BMWNnJfBuzMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "709591204644-a72hb7rev5l2akgf7g28lsjpjjf74uso.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,7 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import com.personal.metricas.core.composables.componentes.Cabecera
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.navegacion.EventosNavegacion
@@ -38,7 +41,7 @@ fun MA_ScaffoldGenerico(
 
 			Box(modifier = Modifier.padding(vertical = 6.dp)) {
 				Column {
-					Cabecera(tituloScreen, accionesSuperiores)
+					Cabecera(tituloScreen, navegacion, accionesSuperiores)
 
 				}
 			}
@@ -91,6 +94,8 @@ fun MA_ScaffoldGenerico(
 						destacado = false,
 						onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
 					)
+
+
 
 				}
 

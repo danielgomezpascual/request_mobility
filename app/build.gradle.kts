@@ -7,6 +7,10 @@ plugins {
     /*id("kotlin-kapt")*/
     id("com.google.devtools.ksp")
     id("androidx.room")
+
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+
 }
 
 android {
@@ -176,5 +180,19 @@ dependencies {
     // ========== EVALAR EXPLRESIONES DINAMICAMENTE  ============
     implementation("org.apache.commons:commons-jexl3:3.3")
 
+
+    //===========================================================
+    // ========== FIREBASE  ============
+    implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
+    //------- Crashlytics -----
+    implementation("com.google.firebase:firebase-crashlytics-ndk")
+    implementation("com.google.firebase:firebase-analytics")
+
+    //-- Auth
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.firebaseui:firebase-ui-auth:9.0.0")
+
+    //-- Firestore
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
 }

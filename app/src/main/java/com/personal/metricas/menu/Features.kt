@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.DataThresholding
 import androidx.compose.material.icons.filled.DeveloperBoard
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.GolfCourse
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Preview
@@ -34,6 +35,7 @@ sealed class Features {
     data class Herramientas(val texto: String = "Herramientas", val icono: ImageVector = Icons.Filled.Settings, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class InicializadorMetricas(val texto: String = "Cargar Metricas", val icono: ImageVector = Icons.Filled.Storm, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class EndPoints(val texto: String = "End Points", val icono: ImageVector = Icons.Filled.Api, val color: Color = Color(22, 54, 170, 255)) : Features()
+    data class CerrarSesion(val texto: String = "Salir", val icono: ImageVector = Icons.Filled.ExitToApp, val color: Color = Color(22, 54, 170, 255)) : Features()
 
 
     data class Nuevo(val texto: String = "Nuevo", val icono: ImageVector = Icons.Filled.Add, val color : Color = Color(210, 141, 1, 255)) : Features()

@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.personal.metricas" />
+                  <option name="mobileSdkAppId" value="1:709591204644:android:3094c78820a3b846c7a9b1" />
+                  <option name="projectId" value="metricas-e9181" />
+                  <option name="projectNumber" value="709591204644" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
