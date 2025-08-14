@@ -26,7 +26,7 @@ import com.personal.metricas.core.composables.imagenes.MA_ImagenCirculoURL
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.navegacion.EventosNavegacion
-import com.personal.metricas.firebase.FirebaseManager
+import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.menu.Features
 
 @Composable
@@ -43,7 +43,7 @@ fun Cabecera(cabecera: TituloScreen, navegacion: (EventosNavegacion) -> Unit, ac
 			.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-			Row(modifier = m,
+			Row(modifier = m.padding(5.dp),
 				verticalAlignment = Alignment.CenterVertically) {
 				//MA_ImagenDrawable(imagen = R.drawable.logo, s = 24.dp)
 				val auth = FirebaseManager().getAuth()

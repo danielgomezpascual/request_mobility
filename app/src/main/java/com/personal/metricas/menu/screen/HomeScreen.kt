@@ -32,7 +32,7 @@ import com.personal.metricas.core.navegacion.NavegacionGuia
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.core.utils.Parametros
-import com.personal.metricas.firebase.FirebaseManager
+import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.firebase.autenticacion.ui.AuthScreen
 import com.personal.metricas.menu.Features
 import com.personal.metricas.menu.screen.HomeVM.UIState

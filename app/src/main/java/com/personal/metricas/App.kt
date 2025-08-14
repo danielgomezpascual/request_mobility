@@ -6,7 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.firestore
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.data.ds.remote.network.moduloNetwork
 import com.personal.metricas.core.log.di.moduloLog
@@ -16,9 +18,11 @@ import com.personal.metricas.core.utils.SharedPreferencesManager
 import com.personal.metricas.dashboards.moduloDashboards
 import com.personal.metricas.endpoints.moduloEndPoints
 import com.personal.metricas.firebase.crashlytics.Crash
-import com.personal.metricas.firebase.FirebaseManager
+import com.personal.metricas.firebase.domain.FirebaseManager
+import com.personal.metricas.firebase.domain.interactors.SubirContenidoLocalFirebase
 import com.personal.metricas.firebase.modulesFirebase
 import com.personal.metricas.inicializador.modulosInicializador
+import com.personal.metricas.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.metricas.kpi.moduloKpis
 import com.personal.metricas.menu.modulosMenu
 import com.personal.metricas.notas.moduloNotas
@@ -26,6 +30,8 @@ import com.personal.metricas.organizaciones.moduloOrganizaciones
 import com.personal.metricas.paneles.moduloPaneles
 import com.personal.metricas.sincronizacion.moduloSincronizacion
 import com.personal.metricas.transacciones.moduloTransacciones
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -63,13 +69,12 @@ class App : Application() {
 		dialog = DialogManager()
 		sharedPrerfences = SharedPreferencesManager(applicationContext)
 
+
 		/*val auth = FirebaseManager().getAuth()
 
 		App.log.d(auth.currentUser?.displayName)
 		var isAuthenticated by remember { mutableStateOf(auth.currentUser != null) }
 */
-
-
 
 
 		/*  val sincronizacionUrl: SincronizacionUrl = SincronizacionUrl()

@@ -12,7 +12,7 @@ class KpisRoomDS(private val dao: KpisDao) : IDataSourceKpis {
     override val tipo: TIPO_DS
         get() = TIPO_DS.ROOM
 
-    override suspend fun getAll(): List<Kpi> = dao.todasLectoras().map { kpiRoom -> kpiRoom.toKpi() }
+    override suspend fun getAll(): List<Kpi> = dao.getAll().map { kpiRoom -> kpiRoom.toKpi() }
 
     override suspend fun eliminar(kpi: Kpi) = dao.delete(KpisRoom().fromKPI(kpi = kpi))
 

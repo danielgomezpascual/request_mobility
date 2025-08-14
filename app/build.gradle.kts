@@ -193,6 +193,6 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-auth:9.0.0")
 
     //-- Firestore
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-firestore")
 
 }

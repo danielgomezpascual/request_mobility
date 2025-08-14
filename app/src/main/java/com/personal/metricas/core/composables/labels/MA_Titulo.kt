@@ -25,7 +25,7 @@ fun MA_Titulo(
         Text(
             text = valor, modifier = modifier.padding(6.dp),
             color = color,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = alineacion
         )
 

@@ -12,7 +12,7 @@ abstract class KpisDao : BaseDaoExtended<KpisRoom>(), KoinComponent {
         get() = "Kpis"
 
     @Query("SELECT * FROM  Kpis")
-    abstract suspend fun todasLectoras(): List<KpisRoom>
+    abstract suspend fun getAll(): List<KpisRoom>
 
 
     @Query("SELECT * FROM  Kpis WHERE id = :id")

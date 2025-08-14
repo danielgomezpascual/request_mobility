@@ -18,9 +18,13 @@ import com.personal.metricas.core.navegacion.NavegacionGuia
 import com.personal.metricas.core.composables.dialogos.AppGlobalDialogs
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
-import com.personal.metricas.firebase.FirebaseManager
+import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.firebase.autenticacion.ui.AuthScreen
+import com.personal.metricas.firebase.domain.interactors.DescargarContenidoFirestore
+import com.personal.metricas.firebase.domain.interactors.SubirContenidoLocalFirebase
 import com.personal.metricas.ui.theme.RequestMobilityTheme
+import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.getKoin
 
 class MainActivity : ComponentActivity() {
 	@OptIn(ExperimentalMaterial3Api::class)
@@ -31,6 +35,15 @@ class MainActivity : ComponentActivity() {
 
 		setContent {
 			RequestMobilityTheme {
+
+				runBlocking {
+					val f: SubirContenidoLocalFirebase = getKoin().get()
+					f.uploadFirestore()
+
+					//val f: DescargarContenidoFirestore = getKoin().get()
+					//f.descargar()
+				}
+
 
 				/*Column() {
 					MA_BotonSecundario(texto = "Refitros", onClick = {
@@ -78,23 +91,21 @@ class MainActivity : ComponentActivity() {
 					// Si no, muestra la pantalla de autenticación
 					AuthScreen(
 						onSignInSuccess = { isAuthenticated = true },
-						onSignInError = { error ->  App.log.d("Eerrror") }
+						onSignInError = { error -> App.log.d("Eerrror") }
 					)
 				}
 
 
+				/*	AuthScreen(onSignInSuccess = {
+						App.log.d("OK")
 
-			/*	AuthScreen(onSignInSuccess = {
-					App.log.d("OK")
-
-				},
-						   onSignInError = {
-							   App.log.d("Eerrror")
-						   })*/
+					},
+							   onSignInError = {
+								   App.log.d("Eerrror")
+							   })*/
 
 				val dialogManager: DialogManager = org.koin.compose.getKoin().get()
-			/*	AppGlobalDialogs(dialogManager)*/
-
+				/*	AppGlobalDialogs(dialogManager)*/
 
 
 				/*NavegacionGuia()
