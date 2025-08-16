@@ -80,7 +80,7 @@ fun String.reemplazaValorFila(parametros: Parametros, addComillas : Boolean = tr
 		
 		if (!valor.esNumerico() && addComillas) valor = "'$valor'"
 		
-		cadena = cadena.replace("\$${key}", valor)
+		cadena = cadena.replace("\$${key}", valor, ignoreCase = true)
 	}
 	return cadena
 }
@@ -88,3 +88,6 @@ fun String.reemplazaValorFila(parametros: Parametros, addComillas : Boolean = tr
 fun _t(str: Int): String = App.context.getString(str)
 
 
+fun getAppName(context: Context): String {
+	return context.applicationInfo.loadLabel(context.packageManager).toString()
+}

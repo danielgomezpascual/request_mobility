@@ -115,7 +115,6 @@ fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>, configuracion: PanelConfig
 
 									}.await()
 									dialog.informacion("Nota almacenada") {
-
 										anotacion = mensaje.toString()
 									}
 								}

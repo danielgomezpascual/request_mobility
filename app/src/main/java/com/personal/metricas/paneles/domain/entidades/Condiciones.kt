@@ -9,6 +9,8 @@ data class Condiciones(
 	val condicionCelda: Int,
 	val predicado: String,
 	val descripion: String = "",
+	val alarma : Alarmas = Alarmas()
+
 					  )
 
 //data class CondicionesCelda(val id: Int, val columna : Columnas,  val color: Int, val condicionCelda: Int,  val predicado: String)

@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.personal.metricas.R
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.imagenes.MA_ImagenDrawable
 
 @Preview
@@ -35,11 +36,14 @@ fun MA_Titulo2(
 ) {
 
 
-	Row(modifier = modifier.fillMaxWidth().padding(top = 20.dp, bottom = 8.dp,
-												   start = 5.dp, end = 5.dp
-	), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start){
+	Row(modifier = modifier
+		.fillMaxWidth()
+		.padding(top = 20.dp, bottom = 8.dp,
+				 start = 5.dp, end = 5.dp
+		), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
 		if (valor.isNotEmpty()) {
-			MA_ImagenDrawable(imagen = R.drawable.caja4)
+			MA_ImagenDrawable(imagen = R.drawable.logo, s = 20.dp)
+			MA_Spacer()
 		}
 
 		Text(text = valor,

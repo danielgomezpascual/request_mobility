@@ -1,11 +1,16 @@
 package com.personal.metricas.paneles.ui.componente
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.card.MA_Card
@@ -25,6 +31,7 @@ import com.personal.metricas.core.composables.graficas.MA_GraficoCircular
 import com.personal.metricas.core.composables.graficas.MA_GraficoLineas
 import com.personal.metricas.core.composables.graficas.MA_IndicadorHorizontal
 import com.personal.metricas.core.composables.graficas.MA_IndicadorVertical
+import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
@@ -32,6 +39,7 @@ import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.core.composables.tabla.MA_Tabla
 import com.personal.metricas.notas.domain.entidades.Notas
+import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
@@ -78,7 +86,7 @@ fun MA_Panel(
 			filas = panelData.ordenarElementos()
 		}
 
-		filas = panelData.establecerColorFilas()
+		filas = panelData.aplicarCondicionesFilas()
 
 //--------------------------------------------------
 		filasPintar = filas.filter { it.visible == true } //solo pintamos las filas que estas visibles, el resto no.
@@ -188,15 +196,18 @@ fun MA_Panel(
 	)
 
 	MA_Card(modifier = Modifier.padding(6.dp)) {
+
 		when (configuracion.orientacion) {
 			PanelOrientacion.VERTICAL   -> {
+
 
 
 				MA_GraficaConTablaVertical(
 					modifier = modifier,
 					panelConfiguracion = configuracion,
 					grafica = { graficaComposable() },
-					tabla = { tablaComposable() }
+					tabla = { tablaComposable() },
+					alarmas = panelData.listaAlarmas
 				)
 			}
 
@@ -205,7 +216,8 @@ fun MA_Panel(
 					modifier = modifier,
 					panelConfiguracion = configuracion,
 					grafica = { graficaComposable() },
-					tabla = { tablaComposable() }
+					tabla = { tablaComposable() },
+					alarmas = panelData.listaAlarmas
 				)
 			}
 		}

@@ -67,7 +67,7 @@ fun Cabecera(cabecera: TituloScreen, navegacion: (EventosNavegacion) -> Unit, ac
 
 						acciones()
 					}
-					Box(modifier = m.weight(1f), contentAlignment = Alignment.CenterEnd) {
+					/*Box(modifier = m.weight(1f), contentAlignment = Alignment.CenterEnd) {
 						MA_IconBottom(
 							//   modifier = Modifier.weight(1f),
 							icon = Features.CerrarSesion().icono,
@@ -85,7 +85,7 @@ fun Cabecera(cabecera: TituloScreen, navegacion: (EventosNavegacion) -> Unit, ac
 
 							}
 						)
-					}
+					}*/
 				}
 			}
 

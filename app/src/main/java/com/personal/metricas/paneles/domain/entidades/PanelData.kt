@@ -3,14 +3,18 @@ package com.personal.metricas.paneles.domain.entidades
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Columnas
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.composables.tabla.ValoresTabla
+import com.personal.metricas.core.notificaciones.NotificacionesManager
 import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils.esNumerico
+import com.personal.metricas.core.utils.getAppName
+import com.personal.metricas.core.utils.if3
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 import com.personal.metricas.paneles.ui.entidades.toPanel
 import com.personal.metricas.transacciones.domain.entidades.ResultadoSQL
@@ -24,6 +28,8 @@ data class PanelData(
 	val panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
 	var valoresTabla: ValoresTabla = ValoresTabla(),
 	var notasManager: NotasManager = NotasManager(),
+	var notificacionesManager : NotificacionesManager =  NotificacionesManager(),
+	var listaAlarmas : MutableList<Alarmas> = mutableListOf<Alarmas>()
 ) {
 
 	companion object {
@@ -47,7 +53,7 @@ data class PanelData(
 
 	fun limiteElementos(): List<Fila> = valoresTabla.dameElementosTruncados(panelConfiguracion)
 
-	fun establecerColorFilas(): List<Fila> {
+	fun aplicarCondicionesFilas(): List<Fila> {
 
 
 		//establecemos los colores que va a tener cada elmento (teninedo en cuenta que deben al menos tener todos los coles declarados.
@@ -80,8 +86,17 @@ data class PanelData(
 						}
 						val resultado: Any = expresion.evaluate(contexto)
 						if ((condicion.condicionCelda > 0 && condicion.predicado.isEmpty()) || (resultado is Boolean && resultado)) {
-							color =
-								EsquemaColores().dameEsquemaCondiciones().colores.get(condicion.color)
+							color = EsquemaColores().dameEsquemaCondiciones().colores.get(condicion.color)
+							gestionAlarma(condicion, fila)
+							/*if (condicion.alarma.activa){
+								val id =if3(condicion.alarma.unica,"00${panel.id}00${panel.kpi.id}00${condicion.id}",System.currentTimeMillis().toString())
+								val alm = condicion.alarma.copy(id = id, color = condicion.color, titulo =  "${getAppName(App.context)} | ${condicion.alarma.titulo}", texto =notificacionesManager.dameTexto(condicion.alarma.texto, fila) )
+								if (listaAlarmas.filter { it.id.equals(id) }.size == 0) {
+									listaAlarmas.add(alm)
+									notificacionesManager.showNotificacion(context = App.context,
+																		   alarma = alm)
+								}
+							}*/
 						}
 					}
 				}
@@ -118,15 +133,27 @@ data class PanelData(
 						val resultadoCondicion: Any = expresion.evaluate(contexto)
 						if ((condicionCelda.condicionCelda > 0 && condicionCelda.predicado.isEmpty()) || (resultadoCondicion is Boolean && resultadoCondicion)) {
 							val colorCondicion = EsquemaColores().dameEsquemaCondiciones().colores.get(condicionCelda.color)
+gestionAlarma(condicionCelda, fila)
+						/*	if (condicionCelda.alarma.activa){
+
+								val alm = condicionCelda.alarma.copy(color = condicionCelda.color, titulo =  "${getAppName(App.context)} | ${condicionCelda.alarma.titulo}", texto =notificacionesManager.dameTexto(condicionCelda.alarma.texto, fila) )
+								listaAlarmas.add(alm)
+								notificacionesManager.showNotificacion(context = App.context,
+																	   alarma = alm
+																	 )
+							}*/
+
 							nuevasCeldas = nuevasCeldas.mapIndexed { indice, celda ->
 								if (indice == posicionEvaluar) {
 									val celdaConCondicion: FuncionesCondicionCelda = funcionesCondicionesCelda.aplicarCondicion(valor, condicionCelda, valoresTabla.columnas.get(indice))
 									if (condicionCelda.condicionCelda > 0) {
+
 										celda.copy(colorCelda = colorCondicion, contenido = {
 											Box(modifier = Modifier.background(color = colorCondicion)) {
 												celdaConCondicion.composable()
 											}
 										})
+
 									} else {
 										celda.copy(colorCelda = colorCondicion)
 									}
@@ -157,4 +184,17 @@ data class PanelData(
 
 		return valoresTabla.filas
 	}
+	private fun gestionAlarma(condicion: Condiciones, fila: Fila){
+		if (condicion.alarma.activa){
+			val id =if3(condicion.alarma.unica,"00${panel.id}00${panel.kpi.id}00${condicion.id}",System.currentTimeMillis().toString())
+			val alm = condicion.alarma.copy(id = id, color = condicion.color, titulo =  "${getAppName(App.context)} | ${condicion.alarma.titulo}", texto =notificacionesManager.dameTexto(condicion.alarma.texto, fila) )
+			if (listaAlarmas.filter { it.id.equals(id) }.size == 0) {
+				listaAlarmas.add(alm)
+				notificacionesManager.showNotificacion(context = App.context,
+													   alarma = alm)
+			}
+		}
+	}
 }
+
+

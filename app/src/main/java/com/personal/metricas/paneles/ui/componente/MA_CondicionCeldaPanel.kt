@@ -39,6 +39,7 @@ fun MA_CondicionCeldaPanel(
 	//	var str by remember { mutableStateOf<String>(condicion.predicado) }	//var strDesripcion by remember { mutableStateOf<String>(condicion.descripion) }
 
 
+
 	App.log.d(condicion.toString())
 
 	Column(modifier = Modifier

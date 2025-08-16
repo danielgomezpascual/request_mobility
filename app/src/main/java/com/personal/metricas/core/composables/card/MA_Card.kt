@@ -1,5 +1,6 @@
 package com.personal.metricas.core.composables.card
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,19 +36,20 @@ fun Test_MA_Card() {
 @Composable
 fun MA_Card(
 	modifier: Modifier = Modifier,
-	elevacion: Dp = 2.dp,
+	elevacion: Dp = 0.dp,
 	contenido: @Composable () -> Unit,
 ) {
 
 
 	ElevatedCard(
 
-		elevation = CardDefaults.cardElevation(defaultElevation = elevacion), shape = RoundedCornerShape(2.dp), modifier = modifier
+		elevation = CardDefaults.cardElevation(defaultElevation = elevacion)
+		, shape = RoundedCornerShape(10.dp), modifier = modifier
 			.fillMaxWidth()
-			.padding(5.dp), colors = CardDefaults.cardColors().copy(containerColor = Color.White)) {
-		//	Box(Modifier.padding(2.dp)) {
-		contenido()
-		//	}
+			.padding(6.dp), colors = CardDefaults.cardColors().copy(containerColor = Color.White)) {
+		Box(Modifier.padding(5.dp)) {
+			contenido()
+		}
 	}
 
 	Spacer(modifier = Modifier.padding(vertical = 2.dp))

@@ -13,6 +13,7 @@ import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.data.ds.remote.network.moduloNetwork
 import com.personal.metricas.core.log.di.moduloLog
 import com.personal.metricas.core.log.domain.MyLog
+import com.personal.metricas.core.notificaciones.NotificacionesManager
 import com.personal.metricas.core.room.moduloDatabase
 import com.personal.metricas.core.utils.SharedPreferencesManager
 import com.personal.metricas.dashboards.moduloDashboards
@@ -69,6 +70,7 @@ class App : Application() {
 		dialog = DialogManager()
 		sharedPrerfences = SharedPreferencesManager(applicationContext)
 
+		NotificacionesManager().createNotificationChannel()
 
 		/*val auth = FirebaseManager().getAuth()
 

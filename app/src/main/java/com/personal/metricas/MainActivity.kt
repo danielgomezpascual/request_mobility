@@ -1,30 +1,38 @@
 package com.personal.metricas
 
+
+
+
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.room.util.TableInfo
-import com.google.firebase.auth.FirebaseAuth
-import com.personal.metricas.core.composables.botones.MA_BotonSecundario
-import com.personal.metricas.core.navegacion.NavegacionGuia
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.personal.metricas.core.composables.dialogos.AppGlobalDialogs
 import com.personal.metricas.core.composables.dialogos.DialogManager
-import com.personal.metricas.core.composables.labels.MA_LabelNormal
-import com.personal.metricas.firebase.domain.FirebaseManager
+import com.personal.metricas.core.navegacion.NavegacionGuia
+import com.personal.metricas.core.notificaciones.NotificacionesManager
 import com.personal.metricas.firebase.autenticacion.ui.AuthScreen
-import com.personal.metricas.firebase.domain.interactors.DescargarContenidoFirestore
-import com.personal.metricas.firebase.domain.interactors.SubirContenidoLocalFirebase
+import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.ui.theme.RequestMobilityTheme
 import kotlinx.coroutines.runBlocking
-import org.koin.android.ext.android.getKoin
+import okhttp3.internal.notify
+import org.koin.compose.getKoin
 
 class MainActivity : ComponentActivity() {
 	@OptIn(ExperimentalMaterial3Api::class)
@@ -36,9 +44,10 @@ class MainActivity : ComponentActivity() {
 		setContent {
 			RequestMobilityTheme {
 
+
 				runBlocking {
-					val f: SubirContenidoLocalFirebase = getKoin().get()
-					f.uploadFirestore()
+					//val f: SubirContenidoLocalFirebase = getKoin().get()
+					//f.uploadFirestore()
 
 					//val f: DescargarContenidoFirestore = getKoin().get()
 					//f.descargar()
@@ -85,7 +94,7 @@ class MainActivity : ComponentActivity() {
 				if (isAuthenticated) {
 					// Si está autenticado, muestra la pantalla principal
 					NavegacionGuia()
-					val dialogManager: DialogManager = org.koin.compose.getKoin().get()
+					val dialogManager: DialogManager = getKoin().get()
 					AppGlobalDialogs(dialogManager)
 				} else {
 					// Si no, muestra la pantalla de autenticación
@@ -104,12 +113,13 @@ class MainActivity : ComponentActivity() {
 								   App.log.d("Eerrror")
 							   })*/
 
-				val dialogManager: DialogManager = org.koin.compose.getKoin().get()
+				val dialogManager: DialogManager = getKoin().get()
 				/*	AppGlobalDialogs(dialogManager)*/
 
 
 				/*NavegacionGuia()
 			*/
+
 			}
 
 		}
@@ -117,6 +127,4 @@ class MainActivity : ComponentActivity() {
 
 	}
 
-
 }
-
