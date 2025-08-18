@@ -49,9 +49,9 @@ fun Cabecera(cabecera: TituloScreen, navegacion: (EventosNavegacion) -> Unit, ac
 				val auth = FirebaseManager().getAuth()
 
 
-				if (auth.currentUser == null ||auth.currentUser?.photoUrl == null){
-					MA_ImagenDrawable(imagen = R.drawable.logo, s= 24.dp)
-				}else{
+				if (auth.currentUser == null || auth.currentUser?.photoUrl == null) {
+					MA_ImagenDrawable(imagen = R.drawable.logo, s = 24.dp)
+				} else {
 					MA_ImagenCirculoURL(url = auth.currentUser?.photoUrl.toString())
 				}
 
@@ -64,21 +64,20 @@ fun Cabecera(cabecera: TituloScreen, navegacion: (EventosNavegacion) -> Unit, ac
 
 				Row(
 					modifier = m
-						.weight(1f)
-					,
+						.weight(1f),
 					horizontalArrangement = Arrangement.End,
 					verticalAlignment = Alignment.Top
 
 				) {
+
 					Box(modifier = m.weight(1f), contentAlignment = Alignment.CenterEnd) {
 
 						acciones()
 					}
-					Box(modifier = m.weight(1f), contentAlignment = Alignment.CenterEnd) {
-						MA_IconBottom(
+					/*Box(modifier = m.weight(1f), contentAlignment = Alignment.CenterEnd) { MA_IconBottom(
 							//   modifier = Modifier.weight(1f),
 							icon = Features.CerrarSesion().icono,
-labelText = "Se debe quitar, a la pantalal de settinhs",
+							labelText = "Setting",
 							seleccionado = false,
 							destacado = false,
 							onClick = {
@@ -92,7 +91,7 @@ labelText = "Se debe quitar, a la pantalal de settinhs",
 
 							}
 						)
-					}
+					}*/
 				}
 			}
 

@@ -29,7 +29,7 @@ class EndPointsRemotoDS(private val apiRemoto: EndPointRemotos) {
 			val response = apiRemoto.get(headers, url)
 			val data = response.string()
 
-
+App.log.d(data)
 
 
 		return data

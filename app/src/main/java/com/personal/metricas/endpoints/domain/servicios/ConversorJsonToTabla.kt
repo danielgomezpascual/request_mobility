@@ -84,7 +84,7 @@ class ConversorJsonToTabla {
 		}
 
 		runBlocking {
-			db.execSQL("DROP TABLE IF EXISTS $nombreTabla")
+			//db.execSQL("DROP TABLE IF EXISTS $nombreTabla")
 			db.execSQL(sqlCreate)
 			sqlInserts.forEach { sql -> db.execSQL(sql) }
 

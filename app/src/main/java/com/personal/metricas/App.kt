@@ -42,7 +42,7 @@ class App : Application() {
 
 
 	companion object {
-		var ENTORNO: String = "PRO"
+		var ENTORNO: String = "DEV"
 
 		lateinit var context: Context
 		lateinit var log: MyLog

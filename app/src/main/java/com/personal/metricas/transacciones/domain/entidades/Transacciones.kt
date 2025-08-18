@@ -30,7 +30,8 @@ class Transacciones(
   var organizationCode: String = "",
   var organizationName: String = "",
   var organizationId: String = "",
-  var masterOrganizationId: String = ""
-
+  var masterOrganizationId: String = "",
+  var sceReferencia: String = "",
+  var oracleDoc: String = ""
 
 )
