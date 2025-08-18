@@ -25,6 +25,7 @@ fun AuthScreen(
 
 	val providers = arrayListOf(
 		AuthUI.IdpConfig.EmailBuilder().setAllowNewAccounts(true).build(),
+		AuthUI.IdpConfig.AnonymousBuilder().build(),
 		AuthUI.IdpConfig.GoogleBuilder().build())
 
 	// Creamos el Intent para el flujo de inicio de sesión
