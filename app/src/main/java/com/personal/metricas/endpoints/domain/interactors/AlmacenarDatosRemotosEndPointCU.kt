@@ -1,8 +1,12 @@
 package com.personal.metricas.endpoints.domain.interactors
 
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.personal.metricas.App
 import com.personal.metricas.core.room.AppDatabase
+import com.personal.metricas.core.utils.Parametro
+import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.endpoints.data.ds.remote.EndPointsRemotoDS
+import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.endpoints.domain.entidades.ResultadoEndPoint
 import com.personal.metricas.endpoints.domain.servicios.ConversorJsonToTabla
 import org.koin.mp.KoinPlatform
@@ -29,7 +33,40 @@ class AlmacenarDatosRemotosEndPointCU(
 		}catch (e: Exception){
 			return ResultadoEndPoint(procesado = true, errores = true, descripcion = e.message?:"Error al procesar")
 		}
+	}
+
+	suspend fun obtenerRemoto(endPoint: EndPoint): ResultadoEndPoint {
+
+		try{
+			//val endPoint = obtenerEndPointCU.obtener(identificador)
+			val url: String = endPoint.url
+			val str = accesoRemoto.getRemote(url, endPoint.parametros.ps)
+			conversonrJson.jsonToTabla(str, endPoint.nodoIdentificadorFila, endPoint.tabla)
+			return ResultadoEndPoint(procesado = true, errores = false, descripcion = "Datos almacenados ${endPoint.tabla}")
+		}catch (e: Exception){
+			return ResultadoEndPoint(procesado = true, errores = true, descripcion = e.message?:"Error al procesar")
+		}
+	}
+
+	suspend fun obtenerRemotoParametors(identificador: Int, parametros : Parametros): ResultadoEndPoint {
+
+		try{
+			val endPoint = obtenerEndPointCU.obtener(identificador)
+			val url: String = endPoint.url
+			var listaParametrosReemplazados: MutableList<Parametro> = mutableListOf<Parametro>()
+			endPoint.parametros.ps.forEach { parametro ->
+
+				val s : String =  Parametros.reemplazar(parametro.valor, endPoint.parametros, parametros)
+				val np: Parametro = parametro.copy(valor = s)
+			 	listaParametrosReemplazados.add(np)
+			}
 
 
+			val str = accesoRemoto.getRemote(url, listaParametrosReemplazados)
+			conversonrJson.jsonToTabla(str, endPoint.nodoIdentificadorFila, endPoint.tabla)
+			return ResultadoEndPoint(procesado = true, errores = false, descripcion = "Datos almacenados ${endPoint.tabla}")
+		}catch (e: Exception){
+			return ResultadoEndPoint(procesado = true, errores = true, descripcion = e.message?:"Error al procesar")
+		}
 	}
 }

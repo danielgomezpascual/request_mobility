@@ -1,6 +1,8 @@
 package com.personal.metricas.paneles.ui.componente
 
+import MA_Morph
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,17 +13,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.personal.metricas.App
+import com.personal.metricas.App.Companion.dialog
+import com.personal.metricas.R
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.MA_Marco
 import com.personal.metricas.core.composables.graficas.MA_GraficoAnillo
@@ -38,12 +46,22 @@ import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.core.composables.tabla.MA_Tabla
+import com.personal.metricas.core.utils._t
+import com.personal.metricas.endpoints.domain.entidades.ResultadoEndPoint
+import com.personal.metricas.endpoints.domain.interactors.AlmacenarDatosRemotosEndPointCU
 import com.personal.metricas.notas.domain.entidades.Notas
 import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
+import com.personal.metricas.paneles.domain.entidades.TiposPanel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.koin.compose.getKoin
+import org.koin.java.KoinJavaComponent
+import java.nio.file.WatchEvent
 
 import kotlin.collections.filter
 import kotlin.collections.map
@@ -69,12 +87,12 @@ fun MA_Panel(
 	var tablaComposable: @Composable () -> Unit = {}
 	var graficaComposable: @Composable () -> Unit = {}
 
-	val configuracion = panelData.panelConfiguracion.copy(titulo = panelData.panel.titulo, descripcion = panelData.panel.descripcion)
+	val configuracion = panelData.panelConfiguracion.copy(titulo = panelData.panel.titulo,
+														  descripcion = panelData.panel.descripcion)
 	lateinit var fs: List<Fila>
 	lateinit var filasPintar: List<Fila>
 
 	try {
-
 
 
 		if (configuracion.limiteElementos > 0) {
@@ -129,97 +147,152 @@ fun MA_Panel(
 		})
 		return
 	}
-	graficaComposable = dameTipoGrafica(
-		panelConfiguracion = configuracion,
-		modifier = modifier,
-		filas = fs,
-		posicionX = panelData.panelConfiguracion.columnaX,
-		posivionY = panelData.panelConfiguracion.columnaY
-
-	)
+	val scope = rememberCoroutineScope() // Se mantiene dentro del componente
+	var isLoading by remember { mutableStateOf(false) }
 
 
+	if (isLoading){
+		MA_Morph()
+	}
 
-	tablaComposable = dameTipoTabla(
-		panelConfiguracion = configuracion,
-		modifier = modifier,
-		filas = filasPintar,
-		notas =  panelData.notasManager.notas,
-		celdasFiltro = celdasFiltro,
-		onClickSeleccionarFila = { fila ->
-			filas = filas.map { f ->
-				if (fila.seleccionada) {
-					f.copy(seleccionada = false)
-				} else {
+	when (panelData.panel.tipoPanel) {
+		TiposPanel.PANEL_END_POINT -> {
+			MA_Card(modifier = Modifier
+				.clickable(enabled = true, onClick = {
 
-					if (f.equals(fila)) {
-						f.copy(seleccionada = true)
-					} else {
-						f.copy(seleccionada = false)
+
+					scope.launch {
+						isLoading = true // ¡Mostramos el loading!
+						try {
+
+							//debemos obtener los parametors que lanza el dashboard y sustituirlo  en cada parametro--
+
+							App.log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
+
+							async() {
+
+								val procesarEndPoint: AlmacenarDatosRemotosEndPointCU = KoinJavaComponent.getKoin().get()
+								//val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemotoParametors(panelData.panel.endPoint.id, panelData.parametrosOrigenDatos)
+								App.log.lista("Parametros EP: ", panelData.panel.endPoint.parametros.ps)
+								val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemoto(panelData.panel.endPoint)
+							}.await()
+							App.log.d("Proceso fiinalizado..")
+							dialog.informacion(_t(R.string.information_actualizada)) { }
+
+						}
+						finally {
+							isLoading = false
+						}
+
+
 					}
-				}
 
-			}
-			celdasFiltro = fila.celdas
-			panelData.valoresTabla.filas = filas
-		},
-		onClickInvertir = { cfi ->
-			celdasFiltro = celdasFiltro.map { c ->
-				if (c.titulo.equals(cfi.titulo)) {
-					if (!cfi.filtroInvertido) {
-						c.copy(filtroInvertido = true, seleccionada = true)
-					} else {
-						c.copy(filtroInvertido = false)
-					}
-				} else {
-					c
+
+				})
+			) {
+				Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+					MA_LabelNormal("${panelData.panel.titulo}")
+					MA_Spacer()
+					MA_Icono(icono = Icons.Default.Refresh)
 				}
 			}
-			filas = cumplenFiltro(filas, celdasFiltro)
-			panelData.valoresTabla.filas = filas
-		},
-		onClickSeleccionarFiltro = { cf ->
-			celdasFiltro = celdasFiltro.map { c ->
-				if (c.titulo.equals(cf.titulo)) {
-					cf.copy(seleccionada = !cf.seleccionada)
-				} else {
-					c
-				}
-			}
-
-			filas = cumplenFiltro(filas, celdasFiltro)
-			panelData.valoresTabla.filas = filas
-
 
 		}
 
-	)
+		TiposPanel.PANEL_KPI       -> {
+			graficaComposable = dameTipoGrafica(
+				panelConfiguracion = configuracion,
+				modifier = modifier,
+				filas = fs,
+				posicionX = panelData.panelConfiguracion.columnaX,
+				posivionY = panelData.panelConfiguracion.columnaY
 
-	MA_Card(modifier = Modifier.padding(6.dp)) {
-
-		when (configuracion.orientacion) {
-			PanelOrientacion.VERTICAL   -> {
+			)
 
 
 
-				MA_GraficaConTablaVertical(
-					modifier = modifier,
-					panelConfiguracion = configuracion,
-					grafica = { graficaComposable() },
-					tabla = { tablaComposable() },
-					alarmas = panelData.listaAlarmas
-				)
+			tablaComposable = dameTipoTabla(
+				panelConfiguracion = configuracion,
+				modifier = modifier,
+				filas = filasPintar,
+				notas = panelData.notasManager.notas,
+				celdasFiltro = celdasFiltro,
+				onClickSeleccionarFila = { fila ->
+					filas = filas.map { f ->
+						if (fila.seleccionada) {
+							f.copy(seleccionada = false)
+						} else {
+
+							if (f.equals(fila)) {
+								f.copy(seleccionada = true)
+							} else {
+								f.copy(seleccionada = false)
+							}
+						}
+
+					}
+					celdasFiltro = fila.celdas
+					panelData.valoresTabla.filas = filas
+				},
+				onClickInvertir = { cfi ->
+					celdasFiltro = celdasFiltro.map { c ->
+						if (c.titulo.equals(cfi.titulo)) {
+							if (!cfi.filtroInvertido) {
+								c.copy(filtroInvertido = true, seleccionada = true)
+							} else {
+								c.copy(filtroInvertido = false)
+							}
+						} else {
+							c
+						}
+					}
+					filas = cumplenFiltro(filas, celdasFiltro)
+					panelData.valoresTabla.filas = filas
+				},
+				onClickSeleccionarFiltro = { cf ->
+					celdasFiltro = celdasFiltro.map { c ->
+						if (c.titulo.equals(cf.titulo)) {
+							cf.copy(seleccionada = !cf.seleccionada)
+						} else {
+							c
+						}
+					}
+
+					filas = cumplenFiltro(filas, celdasFiltro)
+					panelData.valoresTabla.filas = filas
+
+
+				}
+
+			)
+
+			MA_Card(modifier = Modifier.padding(6.dp)) {
+
+				when (configuracion.orientacion) {
+					PanelOrientacion.VERTICAL   -> {
+
+
+						MA_GraficaConTablaVertical(
+							modifier = modifier,
+							panelConfiguracion = configuracion,
+							grafica = { graficaComposable() },
+							tabla = { tablaComposable() },
+							alarmas = panelData.listaAlarmas
+						)
+					}
+
+					PanelOrientacion.HORIZONTAL -> {
+						MA_GraficaConTablaHorizontal(
+							modifier = modifier,
+							panelConfiguracion = configuracion,
+							grafica = { graficaComposable() },
+							tabla = { tablaComposable() },
+							alarmas = panelData.listaAlarmas
+						)
+					}
+				}
 			}
 
-			PanelOrientacion.HORIZONTAL -> {
-				MA_GraficaConTablaHorizontal(
-					modifier = modifier,
-					panelConfiguracion = configuracion,
-					grafica = { graficaComposable() },
-					tabla = { tablaComposable() },
-					alarmas = panelData.listaAlarmas
-				)
-			}
 		}
 	}
 
@@ -354,8 +427,7 @@ fun dameTipoTabla(
 	onClickInvertir: (Celda) -> Unit,
 	onClickSeleccionarFila: (Fila) -> Unit,
 
-): @Composable () -> Unit {
-
+	): @Composable () -> Unit {
 
 
 	if (panelConfiguracion.mostrarTabla) {

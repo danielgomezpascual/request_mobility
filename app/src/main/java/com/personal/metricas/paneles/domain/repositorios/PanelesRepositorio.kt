@@ -9,5 +9,6 @@ interface PanelesRepositorio {
     suspend fun eliminarTodos()
     suspend fun guardar(panel: Panel): Long
     suspend fun obtener(id: Int): Panel
+    suspend fun obtenerPorEndPoint(id: Int): Panel
 
 }

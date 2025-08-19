@@ -651,7 +651,9 @@ fun SucessScreenDetallePanel(
 
 
 
-					panelUI.kpi.parametros.ps.forEach { p -> App.log.d(p.toString()) }
+					panelUI.kpi.parametros.ps.forEach {
+						p ->
+						App.log.d(p.toString()) }
 
 
 					MA_Panel(

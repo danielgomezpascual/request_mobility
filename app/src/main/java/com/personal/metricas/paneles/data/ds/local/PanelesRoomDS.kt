@@ -21,5 +21,6 @@ class PanelesRoomDS(private val dao: PanelesDao) : IDataSourcePaneles {
     override suspend fun guardar(panel: Panel): Long = dao.insert(PanelesRoom().fromPanel(panel = panel))
 
     override suspend fun obtener(id: Int): Panel = (dao.getPorID(id) ?: PanelesRoom()).toPanel()
+    override suspend fun obtenerPorEndPoint(id: Int): Panel = (dao.getPorEndPoint(id) ?: PanelesRoom()).toPanel()
 
 }

@@ -10,6 +10,7 @@ import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.utils.Parametro
 import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils._t
+import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.endpoints.domain.entidades.ResultadoEndPoint
 import com.personal.metricas.endpoints.domain.interactors.AlmacenarDatosRemotosEndPointCU
 import com.personal.metricas.endpoints.domain.interactors.EliminarEndPointCU
@@ -17,6 +18,12 @@ import com.personal.metricas.endpoints.domain.interactors.GuardarEndPointCU
 import com.personal.metricas.endpoints.domain.interactors.ObtenerEndPointCU
 import com.personal.metricas.endpoints.ui.entidades.EndPointUI
 import com.personal.metricas.endpoints.ui.entidades.toDomain
+import com.personal.metricas.paneles.domain.entidades.Panel
+import com.personal.metricas.paneles.domain.entidades.TiposPanel
+import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
+import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
+import com.personal.metricas.paneles.ui.entidades.PanelUI
+import com.personal.metricas.paneles.ui.entidades.fromPanel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +38,8 @@ class DetalleEndPointVM(
 	private val guardarEndPoint: GuardarEndPointCU,
 	private val eliminarEndPoint: EliminarEndPointCU,
 	private val  procesarEndPoint: AlmacenarDatosRemotosEndPointCU,
+	private val obtenerPanelCU: ObtenerPanelCU,
+	private val guardarPanel: GuardarPanelCU,
 	private val dialog: DialogManager
 
 ) : ViewModel() {
@@ -238,7 +247,32 @@ class DetalleEndPointVM(
 				try { // El ejemplo no tiene try-catch aquí, pero es buena práctica
 					withContext(Dispatchers.IO) {
 						val endPointUI = (_uiState.value as UIState.Success).endPointUI
-						guardarEndPoint.guardar(endPointUI.toDomain())
+						val id = guardarEndPoint.guardar(endPointUI.toDomain())
+						val e: EndPointUI = endPointUI.copy(id = id.toInt())
+
+						//SE DEBE GUARDAR UN PANEL CON EL QUE HACER REFERENCIA A ESTO
+
+						var panel : Panel = Panel()
+						if (endPointUI.id > 0){
+							panel = obtenerPanelCU.obtenerPorEndPoint(endPointUI.id)
+						}
+
+
+						val panelUI =
+
+							PanelUI().fromPanel(panel.copy(
+														   tipoPanel = TiposPanel.PANEL_END_POINT,
+														   titulo = endPointUI.nombre,
+														   descripcion = endPointUI.descripcion,
+														   endPoint = e.toDomain()
+							))
+
+
+
+
+						guardarPanel.guardar(panelUI)
+
+
 						dialog.informacion(_t(R.string.elemento_almacenado)) {
 							navegacion(EventosNavegacion.MenuDashboard)
 

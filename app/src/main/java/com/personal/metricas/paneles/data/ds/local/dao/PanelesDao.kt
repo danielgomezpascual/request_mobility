@@ -17,4 +17,8 @@ abstract class PanelesDao : BaseDaoExtended<PanelesRoom>(), KoinComponent {
 
     @Query("SELECT * FROM  Paneles WHERE id = :id")
     abstract suspend fun getPorID(id: Int): PanelesRoom?
+
+
+    @Query("SELECT * FROM  Paneles WHERE idEndPoint = :id")
+    abstract suspend fun getPorEndPoint(id: Int): PanelesRoom?
 }

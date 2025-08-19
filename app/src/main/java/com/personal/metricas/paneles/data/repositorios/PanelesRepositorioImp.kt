@@ -23,5 +23,7 @@ class PanelesRepositorioImp(fuentesDatos: List<IDataSourcePaneles>) :
     override suspend fun guardar(panel: Panel): Long = dameDS(origenFuente).guardar(panel)
 
     override suspend fun obtener(id: Int): Panel = dameDS(origenFuente).obtener(id)
+    override suspend fun obtenerPorEndPoint(id: Int): Panel = dameDS(origenFuente).obtenerPorEndPoint(id)
+
 
 }

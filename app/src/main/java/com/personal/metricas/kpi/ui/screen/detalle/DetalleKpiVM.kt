@@ -304,6 +304,7 @@ class DetalleKpiVM(
 			viewModelScope.launch {
 				val id: Long = async(Dispatchers.IO) {
 					val kpiUI = (_uiState.value as UIState.Success).kpiUI
+
 					guardarKpi.guardar(kpiUI)
 				}.await()
 

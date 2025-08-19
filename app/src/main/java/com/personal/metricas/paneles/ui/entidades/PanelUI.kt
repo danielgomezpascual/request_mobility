@@ -1,10 +1,12 @@
 package com.personal.metricas.paneles.ui.entidades
 
+import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.kpi.ui.entidades.fromKPI
 import com.personal.metricas.kpi.ui.entidades.toKpi
 import com.personal.metricas.paneles.domain.entidades.Panel
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
+import com.personal.metricas.paneles.domain.entidades.TiposPanel
 import kotlin.Int
 
 data class PanelUI(
@@ -16,7 +18,9 @@ data class PanelUI(
     val seleccionado: Boolean = false,
     val orden : Int = 0,
     val visible : Boolean = true,
-    val autogenerado: Boolean = false
+    val autogenerado: Boolean = false,
+    val tipoPanel : TiposPanel = TiposPanel.PANEL_KPI,
+    val endPoint: EndPoint = EndPoint()
 ){
     fun esDinamico () = kpi.dinamico
 
@@ -40,8 +44,9 @@ fun PanelUI.toPanel() = Panel(
     kpi = this.kpi.toKpi(),
     orden = this.orden,
     seleccionado = this.seleccionado,
-    autogenerado = this.autogenerado
-
+    autogenerado = this.autogenerado,
+    tipoPanel = this.tipoPanel,
+    endPoint = this.endPoint,
 )
 
 
@@ -55,6 +60,8 @@ fun PanelUI.fromPanel(panel: Panel): PanelUI {
         kpi = KpiUI().fromKPI(panel.kpi),
         orden = panel.orden,
         seleccionado = panel.seleccionado,
-        autogenerado = panel.autogenerado
+        autogenerado = panel.autogenerado,
+        tipoPanel =  panel.tipoPanel,
+        endPoint = panel.endPoint
     )
 }

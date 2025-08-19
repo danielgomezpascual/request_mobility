@@ -3,8 +3,8 @@ package com.personal.metricas.kpi.domain.entidades
 import com.personal.metricas.core.utils.Parametros
 
 data class Kpi(
-    val id: Int,
-    val titulo: String,
+    val id: Int = 0,
+    val titulo: String = "",
     val descripcion: String = "",
     val origen : String = "",
     val sql: String = "",

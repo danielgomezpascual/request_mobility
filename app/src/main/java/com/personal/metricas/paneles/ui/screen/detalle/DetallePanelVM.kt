@@ -21,6 +21,7 @@ import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
+import com.personal.metricas.paneles.domain.entidades.TiposPanel
 import com.personal.metricas.paneles.domain.interactors.EliminarPanelCU
 import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
 import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
@@ -559,7 +560,7 @@ class DetallePanelVM(
 			return false
 		}
 
-		if (panelUI.kpi.equals(KpiUI())) {
+		if (panelUI.tipoPanel == TiposPanel.PANEL_KPI && panelUI.kpi.equals(KpiUI())) {
 			dialog.informacion(_t(R.string.debe_seleccionar_un_kpi_para_representar_informacion)) { }
 			return false
 		}

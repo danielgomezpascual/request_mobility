@@ -11,10 +11,12 @@ import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.composables.tabla.ValoresTabla
 import com.personal.metricas.core.notificaciones.NotificacionesManager
+import com.personal.metricas.core.utils.Parametro
 import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.core.utils.getAppName
 import com.personal.metricas.core.utils.if3
+import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 import com.personal.metricas.paneles.ui.entidades.toPanel
 import com.personal.metricas.transacciones.domain.entidades.ResultadoSQL
@@ -26,23 +28,62 @@ data class PanelData(
 
 	val panel: Panel,
 	val panelConfiguracion: PanelConfiguracion = PanelConfiguracion(),
+	val parametrosOrigenDatos: Parametros = Parametros(),
 	var valoresTabla: ValoresTabla = ValoresTabla(),
+	var endPoint: EndPoint = EndPoint(),
 	var notasManager: NotasManager = NotasManager(),
-	var notificacionesManager : NotificacionesManager =  NotificacionesManager(),
-	var listaAlarmas : MutableList<Alarmas> = mutableListOf<Alarmas>()
-) {
+	var notificacionesManager: NotificacionesManager = NotificacionesManager(),
+	var listaAlarmas: MutableList<Alarmas> = mutableListOf<Alarmas>(),
+
+	) {
 
 	companion object {
 
 		fun fromPanelUI(panelUI: PanelUI, notasManager: NotasManager, parametrosOrigenDatos: Parametros): PanelData {
 			val panelConfiguracion = panelUI.configuracion
-			val tabla: ValoresTabla = ResultadoSQL.fromSqlToTabla(sql = panelUI.kpi.sql, parametrosKpi = panelUI.kpi.parametros, parametrosOrigenDatos = parametrosOrigenDatos)
+
+			//se reeemplazxan los parametors del dashboards en la sql
+			var tabla: ValoresTabla = ValoresTabla()
+			var endPoint = panelUI.endPoint
+			var nEndPoint: EndPoint = EndPoint()
+
+
+			var pui: PanelUI = panelUI
+			when (panelUI.tipoPanel) {
+				TiposPanel.PANEL_END_POINT -> {
+
+					var listaParametrosReemplazados: MutableList<Parametro> = mutableListOf<Parametro>()
+					endPoint.parametros.ps.forEach { parametro ->
+						val s: String = Parametros.reemplazar(parametro.valor, endPoint.parametros, parametrosOrigenDatos)
+						val np: Parametro = parametro.copy(valor = s)
+						listaParametrosReemplazados.add(np)
+					}
+
+					val p: Parametros = Parametros(listaParametrosReemplazados)
+					nEndPoint = endPoint.copy(parametros = p)
+					pui = pui.copy(endPoint = endPoint.copy(parametros = p))
+				}
+
+				TiposPanel.PANEL_KPI       -> {
+
+					tabla = ResultadoSQL.fromSqlToTabla(sql = pui.kpi.sql,
+														parametrosKpi = pui.kpi.parametros,
+														parametrosOrigenDatos = parametrosOrigenDatos)
+				}
+
+			}
+
+
+			val titulo: String = Parametros.reemplazar(pui.titulo, endPoint.parametros, parametrosOrigenDatos)
+			val descripcion: String = Parametros.reemplazar(pui.descripcion, endPoint.parametros, parametrosOrigenDatos)
 
 
 			return PanelData(
-				panel = panelUI.toPanel(),
+				panel = pui.copy(titulo = titulo , descripcion =  descripcion).toPanel(),
+				parametrosOrigenDatos = parametrosOrigenDatos,
 				panelConfiguracion = panelConfiguracion,
 				valoresTabla = tabla,
+				endPoint = nEndPoint,
 				notasManager = notasManager
 
 			)
@@ -133,15 +174,15 @@ data class PanelData(
 						val resultadoCondicion: Any = expresion.evaluate(contexto)
 						if ((condicionCelda.condicionCelda > 0 && condicionCelda.predicado.isEmpty()) || (resultadoCondicion is Boolean && resultadoCondicion)) {
 							val colorCondicion = EsquemaColores().dameEsquemaCondiciones().colores.get(condicionCelda.color)
-gestionAlarma(condicionCelda, fila)
-						/*	if (condicionCelda.alarma.activa){
+							gestionAlarma(condicionCelda, fila)
+							/*	if (condicionCelda.alarma.activa){
 
-								val alm = condicionCelda.alarma.copy(color = condicionCelda.color, titulo =  "${getAppName(App.context)} | ${condicionCelda.alarma.titulo}", texto =notificacionesManager.dameTexto(condicionCelda.alarma.texto, fila) )
-								listaAlarmas.add(alm)
-								notificacionesManager.showNotificacion(context = App.context,
-																	   alarma = alm
-																	 )
-							}*/
+									val alm = condicionCelda.alarma.copy(color = condicionCelda.color, titulo =  "${getAppName(App.context)} | ${condicionCelda.alarma.titulo}", texto =notificacionesManager.dameTexto(condicionCelda.alarma.texto, fila) )
+									listaAlarmas.add(alm)
+									notificacionesManager.showNotificacion(context = App.context,
+																		   alarma = alm
+																		 )
+								}*/
 
 							nuevasCeldas = nuevasCeldas.mapIndexed { indice, celda ->
 								if (indice == posicionEvaluar) {
@@ -184,10 +225,11 @@ gestionAlarma(condicionCelda, fila)
 
 		return valoresTabla.filas
 	}
-	private fun gestionAlarma(condicion: Condiciones, fila: Fila){
-		if (condicion.alarma.activa){
-			val id =if3(condicion.alarma.unica,"00${panel.id}00${panel.kpi.id}00${condicion.id}",System.currentTimeMillis().toString())
-			val alm = condicion.alarma.copy(id = id, color = condicion.color, titulo =  "${getAppName(App.context)} | ${condicion.alarma.titulo}", texto =notificacionesManager.dameTexto(condicion.alarma.texto, fila) )
+
+	private fun gestionAlarma(condicion: Condiciones, fila: Fila) {
+		if (condicion.alarma.activa) {
+			val id = if3(condicion.alarma.unica, "00${panel.id}00${panel.kpi.id}00${condicion.id}", System.currentTimeMillis().toString())
+			val alm = condicion.alarma.copy(id = id, color = condicion.color, titulo = "${getAppName(App.context)} | ${condicion.alarma.titulo}", texto = notificacionesManager.dameTexto(condicion.alarma.texto, fila))
 			if (listaAlarmas.filter { it.id.equals(id) }.size == 0) {
 				listaAlarmas.add(alm)
 				notificacionesManager.showNotificacion(context = App.context,

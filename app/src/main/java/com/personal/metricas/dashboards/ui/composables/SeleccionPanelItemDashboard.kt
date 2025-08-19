@@ -74,7 +74,7 @@ fun SeleccionPanelItemDashboard(panelUI: PanelUI,
                     val encontrado = if3( parametro.fijo || (columnasOrigenDatos.find { it.nombre.lowercase().equals(parametro.key.lowercase()) } != null), true, false)
 
 
-                    MA_LabelMini("$${parametro.key}", color = if3(encontrado, Color.DarkGray, Color.Red))
+                    MA_LabelMini("#${parametro.key}", color = if3(encontrado, Color.DarkGray, Color.Red))
                 }
             }
         }

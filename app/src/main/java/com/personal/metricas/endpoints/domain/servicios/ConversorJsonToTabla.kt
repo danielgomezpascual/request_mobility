@@ -80,7 +80,7 @@ class ConversorJsonToTabla {
 				sqlValores += "'${value.toString().replace("'", "''")}',"
 			}
 			sqlValores = sqlValores.substring(0, sqlValores.length - 1)
-			sqlInserts.add(" INSERT INTO $nombreTabla ($sqlColumnas) VALUES ($sqlValores);")
+			sqlInserts.add(" INSERT OR REPLACE INTO $nombreTabla ($sqlColumnas) VALUES ($sqlValores);")
 		}
 
 		runBlocking {

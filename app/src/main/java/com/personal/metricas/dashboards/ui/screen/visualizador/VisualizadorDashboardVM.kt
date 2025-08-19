@@ -66,7 +66,9 @@ class VisualizadorDashboardVM(
 				dsUI = dsUI.copy(parametros = _toObjectFromJson<Parametros>(parametrosJSON) ?: Parametros())
 			}
 
-			val d: DashboardUI = dsUI.copy(nombre = Parametros.reemplazar(dsUI.nombre, parametrosKpi = dsUI.parametros, parametrosDashboard = dsUI.parametros))
+			val d: DashboardUI = dsUI.copy(nombre = Parametros.reemplazar(dsUI.nombre,
+																		  parametrosKpi = dsUI.parametros,
+																		  parametrosDashboard = dsUI.parametros))
 
 			_uiState.value = UIState.Success(dashboardUI = d, paneles = d.listaPaneles)
 			

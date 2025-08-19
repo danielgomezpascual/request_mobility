@@ -15,6 +15,8 @@ import com.personal.metricas.endpoints.domain.repositorios.EndPointRepositorio
 import com.personal.metricas.endpoints.domain.servicios.ConversorJsonToTabla
 import com.personal.metricas.endpoints.ui.screen.detalle.DetalleEndPointVM
 import com.personal.metricas.endpoints.ui.screen.listado.EndPointsListadoVM
+import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
+import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -57,7 +59,9 @@ val moduloEndPoints = module {
 			obtenerEndPointUI = get<ObtenerEndPointCU>(),
 			guardarEndPoint = get<GuardarEndPointCU>(),
 			eliminarEndPoint = get<EliminarEndPointCU>(),
-			procesarEndPoint =  get<AlmacenarDatosRemotosEndPointCU>(),
+			procesarEndPoint = get<AlmacenarDatosRemotosEndPointCU>(),
+			obtenerPanelCU = get<ObtenerPanelCU>(),
+			guardarPanel = get<GuardarPanelCU>(),
 			dialog = get<DialogManager>()
 		)
 	}

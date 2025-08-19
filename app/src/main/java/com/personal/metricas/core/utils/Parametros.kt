@@ -3,12 +3,10 @@ package com.personal.metricas.core.utils
 import android.util.Base64
 import com.personal.metricas.App
 
-data class Parametros(val ps:List<Parametro> = emptyList<Parametro>()){
+data class Parametros(val ps: List<Parametro> = emptyList<Parametro>()) {
 
 
 	companion object {
-
-
 
 
 		fun dameParametrosPorDefectoMobility() = listOf<Parametro>(
@@ -20,37 +18,40 @@ data class Parametros(val ps:List<Parametro> = emptyList<Parametro>()){
 		fun reemplazar(str: String, parametrosKpi: Parametros = Parametros(), parametrosDashboard: Parametros = Parametros()): String {
 
 			var strReemplazos = str
-		/*	App.log.d("Str: $str")
-			App.log.d("parametrosKpi: ${parametrosKpi.ps.toString()}")
-			App.log.d("parametrosDashboard: ${parametrosDashboard.ps.toString()}")
-			App.log.linea()*/
 			parametrosKpi.ps.forEach { parametro ->
-
 				val key = parametro.key
-				App.log.d(key)
-				App.log.d(parametrosDashboard.toString())
-				val parametroOrigenDatos: Parametro? = parametrosDashboard.ps.firstOrNull { it.key.equals(key) }
-
+				var keyEnValor: Boolean = false
+				var keyValor = ""
+				if (parametro.valor.contains("#")) {
+					keyValor = parametro.valor.replace("#", "")
+					keyEnValor = true
+				}
+				val k = if3(keyEnValor, keyValor, key)
+				var parametroOrigenDatos: Parametro? = parametrosDashboard.ps.firstOrNull { it.key.equals(k) }
 				var valor = ""
-				//var valor = if3(parametro.valor.isEmpty(), parametro.defecto, parametro.valor)
-				if ( parametroOrigenDatos != null) {
+				if (parametroOrigenDatos != null) {
 					valor = parametroOrigenDatos.valor
+					App.log.d("A $valor")
 				}
 
-				if (parametro.fijo){valor = parametro.defecto}
-
-				if (valor.isEmpty()) {valor = parametro.defecto}
-
-				strReemplazos = strReemplazos.replace("#$key", "$valor", ignoreCase = true)
+				if (parametro.fijo) {
+					valor = parametro.defecto
+					App.log.d("B $valor")
+				}
+				if (valor.isEmpty()) {
+					valor = parametro.valor
+					App.log.d("C $valor")
+				}
+				strReemplazos = strReemplazos.replace("#$k", "$valor", ignoreCase = true)
+				App.log.d("Reemplazamos #$k, con $valor")
 			}
-
-
-			return  strReemplazos
+			return strReemplazos
 		}
 	}
 
 }
-data class Parametro(val key: String ="", val valor: String = "",  val defecto: String ="", val fijo: Boolean = false){
+
+data class Parametro(val key: String = "", val valor: String = "", val defecto: String = "", val fijo: Boolean = false) {
 	fun convertirABase64(): String {
 		val listaParametrosSinBase64: List<String> = listOf<String>(
 			"Authorization", "ORACLE_MOBILE_BACKEND_ID",
