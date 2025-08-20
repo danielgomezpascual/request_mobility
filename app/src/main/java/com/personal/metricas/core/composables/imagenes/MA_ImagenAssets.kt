@@ -30,10 +30,12 @@ fun MA_ImagenAssets(nombreArchivo: String, modifier: Modifier = Modifier) {
 	
 	val context = LocalContext.current
 	val existe = context.assetExists(nombreArchivo)
-	val fileAssets = if (!existe) {
-		"banderas/es.png"
+	var fileAssets =""
+	if (!existe) {
+		fileAssets= "banderas/es.png"
+		return
 	} else {
-		nombreArchivo
+		fileAssets = nombreArchivo
 	}
 	val inputStream = context.assets.open(fileAssets)
 	val bitmap = BitmapFactory.decodeStream(inputStream)

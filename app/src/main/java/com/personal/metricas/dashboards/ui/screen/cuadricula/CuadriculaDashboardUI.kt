@@ -42,6 +42,7 @@ import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.core.utils._toJson
 import com.personal.metricas.dashboards.ui.composables.MA_EtiquetaItem
 import com.personal.metricas.menu.Features
+import com.personal.metricas.paneles.domain.entidades.FuncionesCondicionesCeldaManager
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -132,16 +133,22 @@ fun SuccessCuadriculaDashboard(
 
 							MA_Avatar(item.nombre)
 
+							FuncionesCondicionesCeldaManager().banderas(item.nombre).composable()
 
 							Row(verticalAlignment = Alignment.CenterVertically) {
+
 								if (item.home) MA_Icono(Icons.Default.Stars, Modifier.size(16.dp))
 								if (item.autogenerado) MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
 
-								MA_LabelNegrita(
+
+
+
+								/*MA_LabelNegrita(
 									modifier = Modifier.padding(2.dp),
 									valor = item.nombre
-								)
+								)*/
 							}
+
 
 							MA_LabelMini(
 								modifier = Modifier.padding(2.dp),
