@@ -51,7 +51,11 @@ suspend fun PanelesRoom.toPanel(): Panel {
 	when (tipo) {
 		0 -> kpi = obtenerKpi.obtener(this.idKpi) //KPI
 		1 -> endPoint = obtenerEndPoint.obtener(this.idEndPoint)//END - PONT
+		2 -> endPoint = obtenerEndPoint.obtener(this.idEndPoint)
 	}
+
+
+
 
 
 	val panel = Panel(
@@ -59,7 +63,7 @@ suspend fun PanelesRoom.toPanel(): Panel {
 		titulo = this.titulo,
 		descripcion = this.descripcion,
 		configuracion = configuracionRoom.toConfiguracion(),
-		tipoPanel = if3(tipo== 0, TiposPanel.PANEL_KPI, TiposPanel.PANEL_END_POINT),
+		tipoPanel = TiposPanel.dameTipoPanel(this.tipoPanel),
 		kpi =kpi,
 		endPoint = endPoint,
 		autogenerado = esTrue(this.autogenerado, "Y", false)
@@ -80,6 +84,6 @@ fun PanelesRoom.fromPanel(panel: Panel) = PanelesRoom(
 	idKpi = panel.kpi.id,
 	autogenerado = Utils.toSiNo(panel.autogenerado),
 	idEndPoint = panel.endPoint.id,
-	tipoPanel = if3(panel.tipoPanel == TiposPanel.PANEL_KPI, 0, 1)
+	tipoPanel = TiposPanel.dameIndicePanel(panel.tipoPanel)
 )
 

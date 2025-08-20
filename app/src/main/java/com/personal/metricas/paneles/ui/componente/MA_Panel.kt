@@ -158,6 +158,14 @@ fun MA_Panel(
 	}
 
 	when (panelData.panel.tipoPanel) {
+		TiposPanel.PANEL_TEXTO ->{
+			MA_Card {
+				Column(modifier = Modifier.padding(5.dp)) {
+					MA_LabelNormal(panelData.panel.titulo)
+					MA_LabelMini(panelData.panel.descripcion)
+				}
+			}
+		}
 		TiposPanel.PANEL_END_POINT -> {
 			MA_Card(modifier = Modifier
 				.clickable(enabled = true, onClick = {

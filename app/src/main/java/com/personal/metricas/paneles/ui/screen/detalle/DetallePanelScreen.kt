@@ -194,8 +194,8 @@ fun SucessScreenDetallePanel(
 													  MA_LabelNormal(panelUI.tipoPanel.literal())
 
 												  },
-												  elementosSeleccionables = listOf<TiposPanel>(TiposPanel.PANEL_KPI,
-																							   TiposPanel.PANEL_END_POINT),
+												  elementosSeleccionables = TiposPanel.getTipos(),
+
 												  item = { tipo ->
 													  //KpiComboItem(kpiUI = kpiUI)
 													  MA_LabelNormal(tipo.literal())

@@ -50,6 +50,9 @@ data class PanelData(
 
 			var pui: PanelUI = panelUI
 			when (panelUI.tipoPanel) {
+				TiposPanel.PANEL_TEXTO->{
+
+				}
 				TiposPanel.PANEL_END_POINT -> {
 
 					var listaParametrosReemplazados: MutableList<Parametro> = mutableListOf<Parametro>()

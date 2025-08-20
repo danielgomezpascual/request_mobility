@@ -39,7 +39,7 @@ sealed class Features {
     data class Herramientas(val texto: String = "Herramientas", val icono: ImageVector = Icons.Filled.Settings, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class InicializadorMetricas(val texto: String = "Cargar Metricas Predefinidas", val icono: ImageVector = Icons.Filled.Storm, val color: Color = Color(170, 22, 163, 255)) : Features()
     data class EndPoints(val texto: String = "End Points", val icono: ImageVector = Icons.Filled.Api, val color: Color = Color(22, 54, 170, 255)) : Features()
-    data class CerrarSesion(val texto: String = "Salir", val icono: ImageVector = Icons.Filled.ExitToApp, val color: Color = Color(22, 54, 170, 255)) : Features()
+    data class CerrarSesion(val texto: String = "Cerrar sesión", val icono: ImageVector = Icons.Filled.ExitToApp, val color: Color = Color(22, 54, 170, 255)) : Features()
 
 
     data class Nuevo(val texto: String = "Nuevo", val icono: ImageVector = Icons.Filled.Add, val color : Color = Color(210, 141, 1, 255)) : Features()

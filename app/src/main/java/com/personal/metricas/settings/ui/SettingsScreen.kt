@@ -19,7 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.firebase.ui.auth.AuthUI
 import com.personal.metricas.App
+import com.personal.metricas.App.Companion.context
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_SwitchNormal
@@ -30,6 +32,7 @@ import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.core.utils.Preferencias
+import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.menu.Features
 import com.personal.metricas.settings.ui.SettingsViewModel.*
 import kotlinx.coroutines.launch
@@ -44,17 +47,17 @@ fun SettingsScreen(
 
 	val uiState by viewModel.uiState.collectAsState()
 
-		LaunchedEffect(Unit) {
-			viewModel.onEvent(Eventos.Cargar)
-		}
+	LaunchedEffect(Unit) {
+		viewModel.onEvent(Eventos.Cargar)
+	}
 
 
 	when (uiState) {
 		is UIState.Error   -> ErrorScreen((uiState as UIState.Error).mensaje)
 		UIState.Loading    -> LoadingScreen()
 		is UIState.Success -> SucessSettingsScreen(viewModel,
-																	 uiState as UIState.Success,
-																	 navegacion)
+												   uiState as UIState.Success,
+												   navegacion)
 
 	}
 
@@ -68,35 +71,40 @@ fun SucessSettingsScreen(
 	navegacion: (EventosNavegacion) -> Unit,
 ) {
 
-		MA_ScaffoldGenerico(
-			tituloScreen = TituloScreen.Settings,
-			navegacion = navegacion,
-			accionesSuperiores = {
-			},
-			contenido = {
-				//val f: SubirContenidoLocalFirebase = getKoin().get()
-				//f.uploadFirestore()
+	MA_ScaffoldGenerico(
+		tituloScreen = TituloScreen.Settings,
+		navegacion = navegacion,
+		accionesSuperiores = {
+		},
+		contenido = {
+			//val f: SubirContenidoLocalFirebase = getKoin().get()
+			//f.uploadFirestore()
 
-				//val f: DescargarContenidoFirestore = getKoin().get()
-				//f.descargar()
-
-
-				val scope = rememberCoroutineScope() // Se mantiene dentro del componente
-				var estaTrabajando by remember { mutableStateOf(false) }
+			//val f: DescargarContenidoFirestore = getKoin().get()
+			//f.descargar()
 
 
-				if ((uiState is UIState.Success)) {
+			val scope = rememberCoroutineScope() // Se mantiene dentro del componente
+			var estaTrabajando by remember { mutableStateOf(false) }
 
 
-					if ((uiState as UIState.Success).trabajando) {
-						MA_Morph()
-					}
+			if ((uiState is UIState.Success)) {
 
 
-					Column(modifier = Modifier
-						.fillMaxSize()
-						.verticalScroll(rememberScrollState())) {
-						MA_Titulo2(valor = "Firebase")
+				if ((uiState as UIState.Success).trabajando) {
+					MA_Morph()
+				}
+
+
+				Column(modifier = Modifier
+					.fillMaxSize()
+					.verticalScroll(rememberScrollState())) {
+
+
+					App.log.c("Usuario: ${FirebaseManager().getAuth().currentUser?.isAnonymous}")
+
+					MA_Titulo2(valor = "Identificador Usuario")
+					if (FirebaseManager().getAuth().currentUser?.isAnonymous == false) {
 						Row() {
 
 
@@ -105,40 +113,25 @@ fun SucessSettingsScreen(
 									.weight(1f)
 									.clickable(
 										enabled = true,
-										onClick = {
-											scope.launch {
-												viewModel.onEvent(Eventos.SubirFirebase)
-
-											}
-											//	viewModel.onEvent(HerramientasViewModel.Eventos.InicializadorMetricas)
-										})
+										onClick = { viewModel.onEvent(Eventos.SubirFirebase) })
 							) {
 								Row {
-									MA_IconBottom(icon = Features.ImportarFirebase().icono,
+									MA_IconBottom(modifier = Modifier.fillMaxSize(), icon = Features.ImportarFirebase().icono,
 												  labelText = Features.ImportarFirebase().texto,
 												  color = Features.ImportarFirebase().color) {
-
-
 									}
-
-
 								}
-
 							}
 							MA_Card(
 								modifier = Modifier
+									.fillMaxSize()
 									.weight(1f)
 									.clickable(
 										enabled = true,
-										onClick = {
-
-											viewModel.onEvent(Eventos.DescargarFirebase)
-
-
-										})
+										onClick = { viewModel.onEvent(Eventos.DescargarFirebase) })
 							) {
 								Row {
-									MA_IconBottom(icon = Features.ExportarFirebase().icono,
+									MA_IconBottom(modifier = Modifier.fillMaxSize(), icon = Features.ExportarFirebase().icono,
 												  labelText = Features.ExportarFirebase().texto,
 												  color = Features.ExportarFirebase().color) { }
 
@@ -147,63 +140,87 @@ fun SucessSettingsScreen(
 
 							}
 						}
-
-						MA_Titulo2(valor = "Datos almacenados")
-						MA_Card {
-							Row() {
-								MA_IconBottom(icon = Features.BorrarDatos().icono,
-											  labelText = Features.BorrarDatos().texto,
-											  color = Features.BorrarDatos().color) { viewModel.onEvent(Eventos.EliminarDatos) }
-							}
-						}
-
-						MA_Titulo2(valor = "Accesos")
-						MA_Card {
-							Column {
-
-
-								Row(modifier = Modifier.fillMaxWidth()) {
-									MA_Card(modifier = Modifier.weight(1f)) {
-										MA_SwitchNormal(titulo = Features.AccesosHerramientas().texto,
-														valor = uiState.herramientas,
-														icono = Features.AccesosHerramientas().icono)
-										{ viewModel.onEvent(Eventos.AccesoHerramientas(it)) }
-									}
-									MA_Spacer()
-
-									MA_Card(modifier = Modifier.weight(1f)) {
-										MA_SwitchNormal(titulo = Features.AccesoSettings().texto,
-														valor = App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_AJUSTES, true),
-														icono = Features.AccesoSettings().icono) {
-											viewModel.onEvent(Eventos.AccesoAjustes(it))
-										}
-									}
-
-								}
-								Row {
-									MA_Card(modifier = Modifier.weight(1f)) {
-										MA_SwitchNormal(titulo = Features.AccesoSicnronizacion().texto,
-														valor = App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_SINCRONIZACION, true),
-														icono = Features.AccesoSicnronizacion().icono) {
-											viewModel.onEvent(Eventos.AccesosSincronizacion(it))
-										}
-									}
-									MA_Spacer()
-									MA_Card(modifier = Modifier.weight(1f)) {
-										MA_SwitchNormal(titulo = Features.Entorno().texto,
-														valor = App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false),
-														icono = Features.Entorno().icono) {
-											viewModel.onEvent(Eventos.EntornoProduccion(it))
-										}
-									}
-								}
-							}
-						}
-
-
 					}
+					MA_Card(
+						modifier = Modifier
+							.fillMaxSize()
+							.clickable(
+								enabled = true,
+								onClick = { })
+					) {
+						MA_IconBottom(
+							modifier = Modifier.fillMaxSize(),
+							icon = Features.CerrarSesion().icono,
+							labelText = Features.CerrarSesion().texto,
+							color = Features.CerrarSesion().color) {
+							AuthUI.getInstance()
+								.signOut(context)
+								.addOnCompleteListener {
+									navegacion(EventosNavegacion.MenuApp)
+								}
+						}
+					}
+
+
+
+
+
+					MA_Titulo2(valor = "Datos almacenados")
+					MA_Card {
+						Row() {
+							MA_IconBottom(modifier = Modifier.fillMaxSize(), icon = Features.BorrarDatos().icono,
+										  labelText = Features.BorrarDatos().texto,
+										  color = Features.BorrarDatos().color) { viewModel.onEvent(Eventos.EliminarDatos) }
+						}
+					}
+
+					MA_Titulo2(valor = "Accesos")
+					MA_Card {
+						Column {
+
+
+							Row(modifier = Modifier.fillMaxWidth()) {
+								MA_Card(modifier = Modifier.weight(1f)) {
+									MA_SwitchNormal(titulo = Features.AccesosHerramientas().texto,
+													valor = uiState.herramientas,
+													icono = Features.AccesosHerramientas().icono)
+									{ viewModel.onEvent(Eventos.AccesoHerramientas(it)) }
+								}
+								MA_Spacer()
+
+								MA_Card(modifier = Modifier.weight(1f)) {
+									MA_SwitchNormal(titulo = Features.AccesoSettings().texto,
+													valor = App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_AJUSTES, true),
+													icono = Features.AccesoSettings().icono) {
+										viewModel.onEvent(Eventos.AccesoAjustes(it))
+									}
+								}
+
+							}
+							Row {
+								MA_Card(modifier = Modifier.weight(1f)) {
+									MA_SwitchNormal(titulo = Features.AccesoSicnronizacion().texto,
+													valor = App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_SINCRONIZACION, true),
+													icono = Features.AccesoSicnronizacion().icono) {
+										viewModel.onEvent(Eventos.AccesosSincronizacion(it))
+									}
+								}
+								MA_Spacer()
+								MA_Card(modifier = Modifier.weight(1f)) {
+									MA_SwitchNormal(titulo = Features.Entorno().texto,
+													valor = App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false),
+													icono = Features.Entorno().icono) {
+										viewModel.onEvent(Eventos.EntornoProduccion(it))
+									}
+								}
+							}
+						}
+					}
+
+
 				}
 			}
-		)
+		}
+	)
 
 }
