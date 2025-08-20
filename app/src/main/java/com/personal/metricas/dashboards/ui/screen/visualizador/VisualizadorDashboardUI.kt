@@ -23,6 +23,7 @@ import com.personal.metricas.core.composables.labels.MA_LabelEtiqueta
 import com.personal.metricas.core.composables.labels.MA_LabelExtendido
 import com.personal.metricas.core.composables.labels.MA_LabelLeyenda
 import com.personal.metricas.core.composables.labels.MA_Titulo
+import com.personal.metricas.core.composables.labels.MA_Titulo2
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.navegacion.EventosNavegacion
@@ -84,7 +85,7 @@ fun Success(
 			Box(Modifier) {
 				Column(modifier = Modifier.verticalScroll(state = scroll)) {
 
-					MA_Titulo(uiState.dashboardUI.nombre)
+					MA_Titulo2(uiState.dashboardUI.nombre)
 					MA_LabelEtiqueta(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Center, valor = uiState.dashboardUI.descripcion)
 
 
