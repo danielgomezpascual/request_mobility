@@ -71,6 +71,7 @@ class DetallePanelVM(
 		data class OnChangeTitulo(val titulo: String) : Eventos()
 		data class OnChangeDescripcion(val descripcion: String) : Eventos()
 		data class OnChangeKpiSeleccionado(val identificador: Int) : Eventos()
+		data class OnChangeTipoPanel(val identificador: TiposPanel) : Eventos()
 		data class onChangeOrientacion(val valor: String) : Eventos()
 
 		data class onChangeTipoGrafica(val valor: PanelTipoGrafica) : Eventos()
@@ -171,6 +172,10 @@ class DetallePanelVM(
 							is Eventos.onChangeOrientacion           -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
 									orientacion = PanelOrientacion.from(evento.valor))))
+							}
+
+							is  Eventos.OnChangeTipoPanel->{
+								estado.copy(panelUI = estado.panelUI.copy(tipoPanel = evento.identificador))
 							}
 
 							is Eventos.onChangeTipoGrafica           -> {

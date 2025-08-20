@@ -40,7 +40,9 @@ fun Cabecera(cabecera: TituloScreen, navegacion: (EventosNavegacion) -> Unit, ac
 	val context = LocalContext.current
 	val currentUser = FirebaseAuth.getInstance().currentUser
 
-	MA_Card(elevacion = 0.dp, modifier = Modifier.padding(0.dp)) {
+	MA_Card(elevacion = 0.dp, modifier = Modifier.padding(0.dp),
+			redondeo = 0.dp, paddingCard = 0.dp
+	) {
 
 		val m = Modifier.fillMaxWidth()
 		Column(modifier = m

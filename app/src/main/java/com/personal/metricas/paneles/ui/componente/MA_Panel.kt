@@ -1,5 +1,6 @@
 package com.personal.metricas.paneles.ui.componente
 
+import MA_IconBottom
 import MA_Morph
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,6 +50,7 @@ import com.personal.metricas.core.composables.tabla.MA_Tabla
 import com.personal.metricas.core.utils._t
 import com.personal.metricas.endpoints.domain.entidades.ResultadoEndPoint
 import com.personal.metricas.endpoints.domain.interactors.AlmacenarDatosRemotosEndPointCU
+import com.personal.metricas.menu.Features
 import com.personal.metricas.notas.domain.entidades.Notas
 import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
@@ -151,7 +153,7 @@ fun MA_Panel(
 	var isLoading by remember { mutableStateOf(false) }
 
 
-	if (isLoading){
+	if (isLoading) {
 		MA_Morph()
 	}
 
@@ -159,26 +161,15 @@ fun MA_Panel(
 		TiposPanel.PANEL_END_POINT -> {
 			MA_Card(modifier = Modifier
 				.clickable(enabled = true, onClick = {
-
-
 					scope.launch {
 						isLoading = true // ¡Mostramos el loading!
 						try {
-
-							//debemos obtener los parametors que lanza el dashboard y sustituirlo  en cada parametro--
-
 							App.log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
-
 							async() {
-
 								val procesarEndPoint: AlmacenarDatosRemotosEndPointCU = KoinJavaComponent.getKoin().get()
-								//val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemotoParametors(panelData.panel.endPoint.id, panelData.parametrosOrigenDatos)
-								App.log.lista("Parametros EP: ", panelData.panel.endPoint.parametros.ps)
 								val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemoto(panelData.panel.endPoint)
 							}.await()
-							App.log.d("Proceso fiinalizado..")
 							dialog.informacion(_t(R.string.information_actualizada)) { }
-
 						}
 						finally {
 							isLoading = false
@@ -190,11 +181,12 @@ fun MA_Panel(
 
 				})
 			) {
-				Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-					MA_LabelNormal("${panelData.panel.titulo}")
-					MA_Spacer()
-					MA_Icono(icono = Icons.Default.Refresh)
+
+				MA_IconBottom(icon = Features.EndPoints().icono,
+							  labelText = "${panelData.panel.titulo}",
+							  color = Features.EndPoints().color) {
 				}
+
 			}
 
 		}

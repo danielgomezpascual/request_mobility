@@ -28,6 +28,8 @@ import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.composables.listas.MA_Divider
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
+import com.personal.metricas.paneles.domain.entidades.TiposPanel
+import com.personal.metricas.paneles.domain.entidades.literal
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 
 @Composable
@@ -44,24 +46,26 @@ fun PanelListItem(
 			.clickable {
 				onClickItem(panelUI)/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/
 			}
-			.padding(5.dp), verticalAlignment = Alignment.Companion.CenterVertically) {
+			.padding(5.dp), verticalAlignment = Alignment.Companion.Top) {
 
 
 			Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
 				MA_Avatar(panelUI.titulo)
-				MA_InfoPanel(panelUI)
+				if (panelUI.tipoPanel == TiposPanel.PANEL_KPI) MA_InfoPanel(panelUI)
 			}
 			Spacer(modifier = Modifier.Companion.width(5.dp))
 
 			// Nombre y detalles
 			Column {
-				Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
-
-					if (panelUI.autogenerado) MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
-					MA_Spacer(Modifier.padding(3.dp))
+				Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Start) {
+					if (panelUI.autogenerado){
+						MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
+						MA_Spacer(Modifier.padding(3.dp))
+					}
 					MA_LabelNegrita(valor = "${panelUI.titulo}")
-
 				}
+
+				MA_LabelMini(panelUI.tipoPanel.literal())
 
 				MA_LabelMini(valor = "${panelUI.descripcion}")
 

@@ -3,6 +3,9 @@ package com.personal.metricas.firebase.domain.interactors
 import com.personal.metricas.App
 import com.personal.metricas.dashboards.data.ds.local.dao.DashboardDao
 import com.personal.metricas.dashboards.data.ds.local.entidades.DashboardRoom
+import com.personal.metricas.endpoints.data.ds.local.dao.EndPointDao
+import com.personal.metricas.endpoints.data.ds.local.entidades.EndPointRoom
+import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.kpi.data.ds.local.dao.KpisDao
 import com.personal.metricas.kpi.data.ds.local.entidades.KpisRoom
@@ -17,6 +20,7 @@ class DescargarContenidoFirestore(
 	private val daoPanel: PanelesDao,
 	private val daoDashboard: DashboardDao,
 	private val daoNotas: NotasDao,
+	private val daoEndPoint: EndPointDao,
 ) {
 
 	suspend fun descargar() {
@@ -33,7 +37,8 @@ class DescargarContenidoFirestore(
 		daoDashboard.insert(dashboardRoom)
 
 		//ENDOINTS
-		//todo: Sincronizar (descarga) los endpoints
+		val endPointRoom: List<EndPointRoom> = firebase.obtenerDatos<EndPointRoom>(Colecciones.END_POINTS, identificadorUsuario)
+		daoEndPoint.insert(endPointRoom)
 
 		//NOTAS
 		val notasRoom: List<NotasRoom> = firebase.obtenerDatos<NotasRoom>(Colecciones.NOTAS, identificadorUsuario)

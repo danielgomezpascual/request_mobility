@@ -37,6 +37,8 @@ fun Test_MA_Card() {
 fun MA_Card(
 	modifier: Modifier = Modifier,
 	elevacion: Dp = 0.dp,
+	redondeo: Dp = 10.dp,
+	paddingCard : Dp = 6.dp,
 	contenido: @Composable () -> Unit,
 ) {
 
@@ -44,9 +46,10 @@ fun MA_Card(
 	ElevatedCard(
 
 		elevation = CardDefaults.cardElevation(defaultElevation = elevacion)
-		, shape = RoundedCornerShape(10.dp), modifier = modifier
+		, shape = RoundedCornerShape(redondeo), modifier = modifier
 			.fillMaxWidth()
-			.padding(6.dp), colors = CardDefaults.cardColors().copy(containerColor = Color.White)) {
+			.padding(paddingCard),
+			colors = CardDefaults.cardColors().copy(containerColor = Color.White)) {
 		Box(Modifier.padding(5.dp)) {
 			contenido()
 		}

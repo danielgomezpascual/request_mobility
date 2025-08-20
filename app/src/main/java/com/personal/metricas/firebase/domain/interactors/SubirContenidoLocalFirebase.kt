@@ -1,7 +1,10 @@
 package com.personal.metricas.firebase.domain.interactors
 
 import com.personal.metricas.dashboards.data.ds.local.dao.DashboardDao
+import com.personal.metricas.endpoints.data.ds.local.dao.EndPointDao
+import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.firebase.data.entidades.DashboardFirestore
+import com.personal.metricas.firebase.data.entidades.EndPointFirestore
 import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.firebase.data.entidades.KpiFirestore
 import com.personal.metricas.firebase.data.entidades.NotasFirestore
@@ -17,6 +20,8 @@ class SubirContenidoLocalFirebase(
 	private val daoPanel: PanelesDao,
 	private val daoDashboard: DashboardDao,
 	private val daoNotas: NotasDao,
+	private val daoEndPoint: EndPointDao,
+
 ) {
 
 	suspend fun uploadFirestore() {
@@ -29,11 +34,7 @@ class SubirContenidoLocalFirebase(
 		uploadKpi(identificadorUsuario)
 		uploadPaneles(identificadorUsuario)
 		uploadDashboard(identificadorUsuario)
-
-		//ENDOINTS
-		//todo: Sincronizar (subir) los endpoints
-
-		//NOTAS
+		uploadEndPoints(identificadorUsuario)
 		uploadNotas(identificadorUsuario)
 
 
@@ -45,6 +46,9 @@ class SubirContenidoLocalFirebase(
 		firebase.eliminarPorUsuario(Colecciones.KPI, identificadorUsuario)
 		firebase.eliminarPorUsuario(Colecciones.PANELES, identificadorUsuario)
 		firebase.eliminarPorUsuario(Colecciones.DASHBOARD, identificadorUsuario)
+		firebase.eliminarPorUsuario(Colecciones.NOTAS, identificadorUsuario)
+		firebase.eliminarPorUsuario(Colecciones.END_POINTS, identificadorUsuario)
+
 	}
 
 	private suspend fun uploadKpi(identificadorUsuario: String) {
@@ -75,4 +79,13 @@ class SubirContenidoLocalFirebase(
 			firebase.guardarFirestore(Colecciones.NOTAS, notasFirestore)
 		}
 	}
+
+	private suspend fun uploadEndPoints(identificadorUsuario: String) {
+		daoEndPoint.todosEndPoints().forEach { endpointRoom  ->
+			val notasFirestore = EndPointFirestore.fromRoom(endpointRoom, identificadorUsuario)
+			firebase.guardarFirestore(Colecciones.END_POINTS, notasFirestore)
+		}
+	}
+
+
 }

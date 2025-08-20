@@ -64,7 +64,7 @@ class SettingsViewModel(
 		if (evento == Eventos.Cargar) {
 
 
-			_uiState.value = 	UIState.Success(
+			_uiState.value = UIState.Success(
 				trabajando = false,
 				herramientas = App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_HERRAMIENTAS, false),
 				ajustes = App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_AJUSTES, false),
@@ -77,7 +77,7 @@ class SettingsViewModel(
 
 
 
-		_uiState.update		{ estado ->
+		_uiState.update { estado ->
 
 			if (estado is UIState.Success) {
 				when (evento) {
@@ -100,7 +100,7 @@ class SettingsViewModel(
 
 					is Eventos.EntornoProduccion     -> {
 						App.sharedPrerfences.put<Boolean>(Preferencias.ENTORNO_PRO, evento.valor)
-						ENTORNO = if3 (App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false) , "PRO", "DEV")
+						ENTORNO = if3(App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false), "PRO", "DEV")
 						estado.copy(entornoProduccion = evento.valor)
 					}
 

@@ -5,4 +5,5 @@ object Colecciones{
 	val PANELES = "PANELES"
 	val DASHBOARD = "DASHBOARD"
 	val NOTAS = "NOTAS"
+	val END_POINTS = "ENDPOINTS"
 }

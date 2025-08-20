@@ -29,6 +29,7 @@ class FirebaseManager {
 
 	suspend fun finalizar() {
 		batch?.commit()?.await()
+		batch = null
 	}
 
 	fun guardarFirestore(coleccion: String, obj: Any) {

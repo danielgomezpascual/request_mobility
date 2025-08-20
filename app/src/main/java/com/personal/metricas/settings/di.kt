@@ -3,6 +3,7 @@ package com.personal.metricas.settings
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.room.AppDatabase
 import com.personal.metricas.dashboards.data.ds.local.dao.DashboardDao
+import com.personal.metricas.endpoints.data.ds.local.dao.EndPointDao
 import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.firebase.domain.interactors.DescargarContenidoFirestore
 import com.personal.metricas.firebase.domain.interactors.SubirContenidoLocalFirebase
@@ -26,7 +27,9 @@ val moduleSettings = module {
 									daoKpi = get<KpisDao>(),
 									daoPanel = get<PanelesDao>(),
 									daoDashboard = get<DashboardDao>(),
-									daoNotas = get<NotasDao>())
+									daoNotas = get<NotasDao>(),
+									daoEndPoint = get<EndPointDao>()
+		)
 	}
 
 
@@ -35,7 +38,9 @@ val moduleSettings = module {
 									daoKpi = get<KpisDao>(),
 									daoPanel = get<PanelesDao>(),
 									daoDashboard = get<DashboardDao>(),
-									daoNotas = get<NotasDao>())
+									daoNotas = get<NotasDao>(),
+									daoEndPoint = get<EndPointDao>()
+		)
 	}
 	//ViewModel
 	viewModel {
