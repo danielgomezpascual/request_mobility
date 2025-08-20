@@ -1,6 +1,7 @@
 package com.personal.metricas.core.composables.scaffold
 
 import MA_IconBottom
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,9 +19,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.personal.metricas.App
 import com.personal.metricas.core.composables.componentes.Cabecera
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.navegacion.EventosNavegacion
+import com.personal.metricas.core.utils.Preferencias
 import com.personal.metricas.menu.Features
 
 
@@ -29,17 +32,21 @@ import com.personal.metricas.menu.Features
 fun MA_ScaffoldGenerico(
 	tituloScreen: TituloScreen,
 	navegacion: (EventosNavegacion) -> Unit,
-	accionesSuperiores: @Composable () -> Unit ,
+	accionesSuperiores: @Composable () -> Unit,
 	contenido: @Composable () -> Unit,
 
-) {
+	) {
 
 
 	Scaffold(
 		containerColor = Color(red = 227, green = 225, blue = 225, alpha = 100),
 		topBar = {
 
-			Box(modifier = Modifier.padding(vertical = 6.dp)) {
+			Box(modifier = Modifier
+				.padding(vertical = 6.dp)
+				.clickable(enabled = true, onClick = {
+					navegacion(EventosNavegacion.Settings)
+				})) {
 				Column {
 					Cabecera(tituloScreen, navegacion, accionesSuperiores)
 
@@ -56,26 +63,27 @@ fun MA_ScaffoldGenerico(
 					verticalAlignment = Alignment.Bottom
 
 				) {
+					if (App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_SINCRONIZACION, true)) {
+						MA_IconBottom(
+							//   modifier = Modifier.weight(1f),
+							icon = Features.Sincronizar().icono,
+							labelText = Features.Sincronizar().texto,
+							seleccionado = false,
+							destacado = false,
+							onClick = { navegacion(EventosNavegacion.SincronizacionMenu) }
+						)
+					}
 
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.Sincronizar().icono,
-						labelText = Features.Sincronizar().texto,
-						seleccionado = false,
-						destacado = false,
-						onClick = { navegacion(EventosNavegacion.SincronizacionMenu) }
-					)
-
-/*
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.EndPoints().icono,
-						labelText = Features.EndPoints().texto,
-						seleccionado = false,
-						destacado = false,
-						onClick = { navegacion(EventosNavegacion.MenuEndPoints) }
-					)
-*/
+					/*
+										MA_IconBottom(
+											//   modifier = Modifier.weight(1f),
+											icon = Features.EndPoints().icono,
+											labelText = Features.EndPoints().texto,
+											seleccionado = false,
+											destacado = false,
+											onClick = { navegacion(EventosNavegacion.MenuEndPoints) }
+										)
+					*/
 
 					MA_IconBottom(
 						//   modifier = Modifier.weight(1f),
@@ -86,15 +94,16 @@ fun MA_ScaffoldGenerico(
 						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) }
 					)
 
-					MA_IconBottom(
-						//   modifier = Modifier.weight(1f),
-						icon = Features.Herramientas().icono,
-						labelText = Features.Herramientas().texto,
-						seleccionado = false,
-						destacado = false,
-						onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
-					)
-
+					if (App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_HERRAMIENTAS, false)) {
+						MA_IconBottom(
+							//   modifier = Modifier.weight(1f),
+							icon = Features.Herramientas().icono,
+							labelText = Features.Herramientas().texto,
+							seleccionado = false,
+							destacado = false,
+							onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
+						)
+					}
 
 
 				}

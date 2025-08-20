@@ -5,12 +5,16 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.DataThresholding
 import androidx.compose.material.icons.filled.DeveloperBoard
+import androidx.compose.material.icons.filled.DeviceHub
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.GolfCourse
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Preview
 import androidx.compose.material.icons.filled.SelectAll
@@ -26,14 +30,14 @@ sealed class Features {
     data class Menu(val texto: String = "Menu", val icono: ImageVector = Icons.Filled.Menu) : Features()
     data class Previo(val texto: String = "Previo", val icono: ImageVector = Icons.Filled.Preview,  val color : Color = Color(216, 67, 21, 255)) : Features()
     data class Transacciones(val texto: String = "Transacciones", val icono: ImageVector = Icons.Filled.TableView, val color: Color = Color(22, 54, 170, 255)) : Features()
-    data class Kpi(val texto: String = "Kpi", val icono: ImageVector = Icons.Filled.DataThresholding, val color: Color = Color(22, 54, 170, 255)) : Features()
+    data class Kpi(val texto: String = "Kpi", val icono: ImageVector = Icons.Filled.DataThresholding, val color: Color = Color(108, 170, 22, 255)) : Features()
     data class Cuadriculas(val texto: String = "Cuadriculas", val icono: ImageVector = Icons.Filled.DeveloperBoard, val color: Color = Color(22, 54, 170, 255)) : Features()
-    data class Dashboard(val texto: String = "Dashboard", val icono: ImageVector = Icons.Filled.Dashboard, val color: Color = Color(22, 54, 170, 255) ) : Features()
+    data class Dashboard(val texto: String = "Dashboard", val icono: ImageVector = Icons.Filled.Dashboard, val color: Color = Color(170, 111, 22, 255)) : Features()
     data class Duplicar(val texto: String = "Duplicar", val icono: ImageVector = Icons.Filled.ContentCopy, val color: Color = Color(22, 54, 170, 255)) : Features()
-    data class Paneles(val texto: String = "Paneles", val icono: ImageVector = Icons.Filled.SelectAll, val color: Color = Color(22, 54, 170, 255)) : Features()
+    data class Paneles(val texto: String = "Paneles", val icono: ImageVector = Icons.Filled.SelectAll, val color: Color = Color(170, 22, 39, 255)) : Features()
     data class Sincronizar(val texto: String = "Sincronizar", val icono: ImageVector = Icons.Filled.Sync, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class Herramientas(val texto: String = "Herramientas", val icono: ImageVector = Icons.Filled.Settings, val color: Color = Color(22, 54, 170, 255)) : Features()
-    data class InicializadorMetricas(val texto: String = "Cargar Metricas", val icono: ImageVector = Icons.Filled.Storm, val color: Color = Color(22, 54, 170, 255)) : Features()
+    data class InicializadorMetricas(val texto: String = "Cargar Metricas Predefinidas", val icono: ImageVector = Icons.Filled.Storm, val color: Color = Color(170, 22, 163, 255)) : Features()
     data class EndPoints(val texto: String = "End Points", val icono: ImageVector = Icons.Filled.Api, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class CerrarSesion(val texto: String = "Salir", val icono: ImageVector = Icons.Filled.ExitToApp, val color: Color = Color(22, 54, 170, 255)) : Features()
 
@@ -43,5 +47,16 @@ sealed class Features {
     data class Eliminar(val texto: String = "Eliminar", val icono: ImageVector = Icons.Filled.Cancel, val color : Color = Color(170, 22, 68, 255)) : Features()
     data class EliminarDatosActuales(val texto: String = "Eliminar", val icono: ImageVector = Icons.Filled.Cancel, val color : Color = Color(170, 22, 68, 255)) : Features()
     data class Probar(val texto: String = "Probar", val icono: ImageVector = Icons.Filled.GolfCourse, val color : Color = Color(22, 54, 170, 255)) : Features()
+
+
+    data class ImportarFirebase(val texto: String = "Guardar Firebase", val icono: ImageVector = Icons.Filled.LocalFireDepartment, val color : Color = Color(255, 99, 38, 255)) : Features()
+    data class ExportarFirebase(val texto: String = "Obtener Firebase", val icono: ImageVector = Icons.Filled.LocalFireDepartment, val color : Color = Color(22, 170, 42, 255)) : Features()
+    data class BorrarDatos(val texto: String = "Borrar Datos App", val icono: ImageVector = Icons.Filled.Clear, val color : Color = Color(219, 7, 7, 255)) : Features()
+    data class AccesosHerramientas(val texto: String = "Herramientas", val icono: ImageVector = Icons.Filled.Settings, val color : Color = Color(22, 47, 170, 255)) : Features()
+    data class AccesoSettings(val texto: String = "Settings", val icono: ImageVector = Icons.Filled.Construction, val color : Color = Color(138, 22, 170, 255)) : Features()
+    data class AccesoSicnronizacion(val texto: String = "Importacion", val icono: ImageVector = Icons.Filled.Sync, val color : Color = Color(170, 145, 22, 255)) : Features()
+    data class Entorno(val texto: String = "Entorno PRO", val icono: ImageVector = Icons.Filled.DeviceHub, val color : Color = Color(1, 8, 29, 255)) : Features()
+
+
 
 }

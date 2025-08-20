@@ -9,6 +9,7 @@ import com.personal.metricas.kpi.navegacion.NavegacionKpis
 import com.personal.metricas.menu.navegacion.NavegavionMenu
 import com.personal.metricas.menu.navegacion.ScreenMenu
 import com.personal.metricas.paneles.navegacion.NavegacionPaneles
+import com.personal.metricas.settings.navegacion.NavegacionSettings
 import com.personal.metricas.sincronizacion.ui.navegacion.NavegacionSincronizacion
 import com.personal.metricas.transacciones.navegacion.NavegacionTransacciones
 
@@ -24,5 +25,6 @@ fun NavegacionGuia() {
         NavegacionSincronizacion(navController)
         NavegacionDashboard(navController)
         NavegacionEndPoints(navController)
+        NavegacionSettings(navController)
     }
 }

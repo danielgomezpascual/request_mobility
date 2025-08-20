@@ -19,6 +19,8 @@ import com.personal.metricas.menu.navegacion.ScreenHerramientas
 import com.personal.metricas.menu.navegacion.ScreenMenu
 import com.personal.metricas.paneles.navegacion.ScreenDetallePanel
 import com.personal.metricas.paneles.navegacion.ScreenListadoPaneles
+import com.personal.metricas.settings.navegacion.ScreenSettings
+import com.personal.metricas.settings.ui.SettingsScreen
 import com.personal.metricas.sincronizacion.ui.navegacion.ScreenMenuSincronizacion
 import com.personal.metricas.sincronizacion.ui.navegacion.ScreenOrganizacionesSincronizacion
 
@@ -120,5 +122,6 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 		EventosNavegacion.NuevoEndPonint            -> navController.navigate(ScreenDetalleEndPoints(0))
 
 		EventosNavegacion.SincronizacionMenu        -> navController.navigate(ScreenMenuSincronizacion)
+		EventosNavegacion.Settings                  -> navController.navigate(ScreenSettings)
 	}
 }

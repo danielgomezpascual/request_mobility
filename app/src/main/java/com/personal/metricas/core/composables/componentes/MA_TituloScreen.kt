@@ -19,13 +19,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.personal.metricas.App
+import com.personal.metricas.App.Companion.ENTORNO
 import com.personal.metricas.R
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.metricas.core.composables.imagenes.MA_ImagenCirculoURL
 import com.personal.metricas.core.composables.labels.MA_LabelMini
+import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.navegacion.EventosNavegacion
+import com.personal.metricas.core.utils.Preferencias
+import com.personal.metricas.core.utils.if3
 import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.menu.Features
 
@@ -55,12 +60,22 @@ fun Cabecera(cabecera: TituloScreen, navegacion: (EventosNavegacion) -> Unit, ac
 					MA_ImagenCirculoURL(url = auth.currentUser?.photoUrl.toString())
 				}
 
-				MA_Titulo(
+				Column  (/*verticalAlignment = Alignment.CenterVertically,*/
 					modifier = m
 						.fillMaxWidth()
 						.weight(1f),
-					alineacion = TextAlign.Start,
-					valor = cabecera.titulo)
+				) {
+					MA_Titulo(
+						modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+						alineacion = TextAlign.Start,
+						valor = cabecera.titulo)
+					val color  = if3 (App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false), Color(156, 27, 27, 255), Color(32, 77, 210, 255))
+					MA_LabelMini(modifier = Modifier
+						.padding(horizontal = 6.dp)
+					//	.background(color =color)
+								   ,valor = App.ENTORNO, color = color)
+				}
+
 
 				Row(
 					modifier = m

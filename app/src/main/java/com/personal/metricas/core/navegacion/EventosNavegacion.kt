@@ -40,4 +40,7 @@ sealed class EventosNavegacion {
 
 
 	object MenuHerramientas : EventosNavegacion()
+
+
+	object Settings : EventosNavegacion()
 }

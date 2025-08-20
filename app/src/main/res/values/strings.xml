@@ -23,4 +23,6 @@
     <string name="seguro_que_desea_duplicar_el_panel_seleccionado">¿Seguro que desea duplicar el panel seleccionado?</string>
     <string name="datos_no_encotrados">Datos no encotrados</string>
     <string name="sin_informacion">Sin Informacion</string>
+    <string name="subida_a_firestore_finalizada">Subida a Firestore finalizada</string>
+    <string name="descarga_de_firestore_fializada">Descarga de Firestore Fializada</string>
 </resources>

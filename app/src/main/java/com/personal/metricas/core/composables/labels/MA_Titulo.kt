@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MA_Titulo(
     valor: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.padding(6.dp),
     color: Color = Color.Black,
     fondo: Color = Color.White,
     alineacion: TextAlign = TextAlign.Center,
@@ -23,7 +23,7 @@ fun MA_Titulo(
 ) {
 
         Text(
-            text = valor, modifier = modifier.padding(6.dp),
+            text = valor, modifier = modifier,
             color = color,
             style = MaterialTheme.typography.titleMedium,
             textAlign = alineacion

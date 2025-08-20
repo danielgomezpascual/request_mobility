@@ -15,7 +15,9 @@ import com.personal.metricas.core.log.di.moduloLog
 import com.personal.metricas.core.log.domain.MyLog
 import com.personal.metricas.core.notificaciones.NotificacionesManager
 import com.personal.metricas.core.room.moduloDatabase
+import com.personal.metricas.core.utils.Preferencias
 import com.personal.metricas.core.utils.SharedPreferencesManager
+import com.personal.metricas.core.utils.if3
 import com.personal.metricas.dashboards.moduloDashboards
 import com.personal.metricas.endpoints.moduloEndPoints
 import com.personal.metricas.firebase.crashlytics.Crash
@@ -29,6 +31,7 @@ import com.personal.metricas.menu.modulosMenu
 import com.personal.metricas.notas.moduloNotas
 import com.personal.metricas.organizaciones.moduloOrganizaciones
 import com.personal.metricas.paneles.moduloPaneles
+import com.personal.metricas.settings.moduleSettings
 import com.personal.metricas.sincronizacion.moduloSincronizacion
 import com.personal.metricas.transacciones.moduloTransacciones
 import kotlinx.coroutines.flow.first
@@ -70,6 +73,11 @@ class App : Application() {
 		dialog = DialogManager()
 		sharedPrerfences = SharedPreferencesManager(applicationContext)
 
+
+
+		ENTORNO = if3 (App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false) , "PRO", "DEV")
+
+
 		NotificacionesManager().createNotificationChannel()
 
 		/*val auth = FirebaseManager().getAuth()
@@ -107,7 +115,8 @@ class App : Application() {
 				moduloSincronizacion,
 				modulosInicializador,
 				modulosMenu,
-				moduloNotas
+				moduloNotas,
+				moduleSettings
 			)
 
 		}

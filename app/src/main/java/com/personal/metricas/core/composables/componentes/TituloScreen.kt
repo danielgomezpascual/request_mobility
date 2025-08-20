@@ -13,4 +13,5 @@ sealed class TituloScreen(val titulo: String, val descripcion: String, val icono
 	object Kpi: TituloScreen(titulo = "Kpis", descripcion = "Define kpis para su explortacion", icono = R.drawable.kpi)
 	object EndPoints: TituloScreen(titulo = "End-Points", descripcion = "Define End -Point para su explortacion", icono = R.drawable.kpi)
 	object EndPointsDetalle: TituloScreen(titulo = "End-Points", descripcion = "Define End -Point para su explortacion", icono = R.drawable.kpi)
+	object Settings: TituloScreen(titulo = "Ajustes", descripcion = "Define los ajustes de la aplicacion", icono = R.drawable.panel_top2)
 }
