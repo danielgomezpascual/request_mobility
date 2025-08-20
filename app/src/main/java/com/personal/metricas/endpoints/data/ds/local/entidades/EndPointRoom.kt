@@ -5,8 +5,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.personal.metricas.core.room.IRoom
 import com.personal.metricas.core.utils.Parametros
+import com.personal.metricas.core.utils.Utils
 import com.personal.metricas.core.utils._toJson
 import com.personal.metricas.core.utils._toObjectFromJson
+import com.personal.metricas.core.utils.if3
 import com.personal.metricas.endpoints.domain.entidades.EndPoint
 
 @Entity(tableName = "EndPoints")
@@ -18,7 +20,9 @@ data class EndPointRoom(
 	val url: String = "",
 	val parametros: String = "",
 	val tabla: String = "",
-	val nodoIdentificadorFila : String = ""
+	val nodoIdentificadorFila : String = "",
+	val eliminarDatos : String = ""
+
 ) : IRoom
 
 fun EndPointRoom.toEndPoint(): EndPoint = EndPoint(
@@ -28,7 +32,9 @@ fun EndPointRoom.toEndPoint(): EndPoint = EndPoint(
 	url = this.url,
 	parametros  = _toObjectFromJson<Parametros>(this.parametros) ?: Parametros(),
 	tabla = this.tabla,
-	nodoIdentificadorFila =  this.nodoIdentificadorFila
+	nodoIdentificadorFila =  this.nodoIdentificadorFila,
+	eliminarDatos =  Utils.esTrue(this.eliminarDatos)
+
 )
 
 fun EndPointRoom.fromEndPoint(endPoint: EndPoint): EndPointRoom = EndPointRoom(
@@ -38,5 +44,6 @@ fun EndPointRoom.fromEndPoint(endPoint: EndPoint): EndPointRoom = EndPointRoom(
 	url = endPoint.url,
 	parametros = _toJson(endPoint.parametros),
 	tabla = endPoint.tabla,
-	nodoIdentificadorFila = endPoint.nodoIdentificadorFila
+	nodoIdentificadorFila = endPoint.nodoIdentificadorFila,
+	eliminarDatos =Utils.toSiNo(endPoint.eliminarDatos)
 )

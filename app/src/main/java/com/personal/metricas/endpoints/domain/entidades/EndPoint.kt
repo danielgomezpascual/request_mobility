@@ -9,6 +9,7 @@ data class EndPoint(
 	val url: String = "",
 	val parametros: Parametros = Parametros(),
 	val tabla: String = "",
-	val nodoIdentificadorFila : String = ""
+	val nodoIdentificadorFila : String = "",
+	val eliminarDatos : Boolean = false
 
 )

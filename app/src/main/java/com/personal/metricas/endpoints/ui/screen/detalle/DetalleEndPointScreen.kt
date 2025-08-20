@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
 import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
+import com.personal.metricas.core.composables.checks.MA_SwitchNormal
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextoEditable
 import com.personal.metricas.core.composables.edittext.MA_TextoNormal
@@ -158,6 +159,11 @@ fun DetalleEndPointScreen(
 											onValueChange = { valor -> viewModel.onEvento(DetalleEndPointVM.Eventos.OnChangeNodoIdentificadorFila(valor)) }
 
 										)
+
+
+										MA_SwitchNormal(valor = endPointUI.eliminarDatos, titulo = "Eliminar datos", icono = Icons.Default.Delete, onValueChange = {
+											valor -> viewModel.onEvento(DetalleEndPointVM.Eventos.OnChangeEliminarDatos(valor))
+										})
 
 
 									}

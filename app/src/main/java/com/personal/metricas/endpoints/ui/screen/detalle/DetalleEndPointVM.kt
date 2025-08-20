@@ -37,12 +37,12 @@ class DetalleEndPointVM(
 	private val obtenerEndPointUI: ObtenerEndPointCU,
 	private val guardarEndPoint: GuardarEndPointCU,
 	private val eliminarEndPoint: EliminarEndPointCU,
-	private val  procesarEndPoint: AlmacenarDatosRemotosEndPointCU,
+	private val procesarEndPoint: AlmacenarDatosRemotosEndPointCU,
 	private val obtenerPanelCU: ObtenerPanelCU,
 	private val guardarPanel: GuardarPanelCU,
-	private val dialog: DialogManager
+	private val dialog: DialogManager,
 
-) : ViewModel() {
+	) : ViewModel() {
 
 	private val _uiState = MutableStateFlow<UIState>(UIState.Loading("Cargando..."))
 	val uiState: StateFlow<UIState> = _uiState.asStateFlow()
@@ -51,7 +51,7 @@ class DetalleEndPointVM(
 		data class Success(
 			val endPointUI: EndPointUI,
 			val paramtrosSeleccionado: Parametro = Parametro(),
-			val trabajando : Boolean = false
+			val trabajando: Boolean = false,
 		) : UIState()
 
 		data class Error(val mensaje: String) : UIState()
@@ -73,6 +73,7 @@ class DetalleEndPointVM(
 		data class OnChangeURL(val valor: String) : Eventos()  // Renombrado para claridad
 		data class OnChangeTabla(val valor: String) : Eventos()  // Renombrado para claridad
 		data class OnChangeNodoIdentificadorFila(val valor: String) : Eventos()  // Renombrado para claridad
+		data class OnChangeEliminarDatos(val valor: Boolean) : Eventos()  // Renombrado para claridad
 
 		data class ModificarClaveParametrosSeleccionado(val valor: String) : Eventos()
 		data class ModificarValorParametrosSeleccionado(val valor: String) : Eventos()
@@ -103,6 +104,7 @@ class DetalleEndPointVM(
 							is Eventos.OnChangeURL                          -> estado.copy(endPointUI = estado.endPointUI.copy(url = evento.valor))
 							is Eventos.OnChangeTabla                        -> estado.copy(endPointUI = estado.endPointUI.copy(tabla = evento.valor))
 							is Eventos.OnChangeNodoIdentificadorFila        -> estado.copy(endPointUI = estado.endPointUI.copy(nodoIdentificadorFila = evento.valor))
+							is Eventos.OnChangeEliminarDatos                -> estado.copy(endPointUI = estado.endPointUI.copy(eliminarDatos = evento.valor))
 
 							is Eventos.ModificarClaveParametrosSeleccionado -> estado.copy(paramtrosSeleccionado = estado.paramtrosSeleccionado.copy(key = evento.valor))
 							is Eventos.ModificarValorParametrosSeleccionado -> estado.copy(paramtrosSeleccionado = estado.paramtrosSeleccionado.copy(valor = evento.valor))
@@ -156,7 +158,7 @@ class DetalleEndPointVM(
 		}
 	}
 
-	private fun procesar(navegacion: (EventosNavegacion) -> Unit){
+	private fun procesar(navegacion: (EventosNavegacion) -> Unit) {
 
 		if (_uiState.value is DetalleEndPointVM.UIState.Success) {
 
@@ -170,12 +172,13 @@ class DetalleEndPointVM(
 				val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemoto(endPointUI.id)
 				_uiState.value = (_uiState.value as UIState.Success).copy(trabajando = false)
 				dialog.informacion("Procesamiento  ${endPointUI.nombre}  \n" +
-								   "${resultado.descripcion } -  Errores: ${resultado.errores}" ){}
+								   "${resultado.descripcion} -  Errores: ${resultado.errores}") {}
 
 			}
 		}
 
 	}
+
 	private fun guardarParametro(endPointUI: EndPointUI, parametro: Parametro): Parametros {
 
 		var encontrado: Boolean = false
@@ -252,8 +255,8 @@ class DetalleEndPointVM(
 
 						//SE DEBE GUARDAR UN PANEL CON EL QUE HACER REFERENCIA A ESTO
 
-						var panel : Panel = Panel()
-						if (endPointUI.id > 0){
+						var panel: Panel = Panel()
+						if (endPointUI.id > 0) {
 							panel = obtenerPanelCU.obtenerPorEndPoint(endPointUI.id)
 						}
 
@@ -261,10 +264,10 @@ class DetalleEndPointVM(
 						val panelUI =
 
 							PanelUI().fromPanel(panel.copy(
-														   tipoPanel = TiposPanel.PANEL_END_POINT,
-														   titulo = endPointUI.nombre,
-														   descripcion = endPointUI.descripcion,
-														   endPoint = e.toDomain()
+								tipoPanel = TiposPanel.PANEL_END_POINT,
+								titulo = endPointUI.nombre,
+								descripcion = endPointUI.descripcion,
+								endPoint = e.toDomain()
 							))
 
 

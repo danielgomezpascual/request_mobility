@@ -22,28 +22,11 @@ class ConversorJsonToTabla {
 	val db: SupportSQLiteDatabase = appDatabase.openHelper.writableDatabase // Usamos readableDatabase para operaciones de lectura
 
 
-	fun testJson() {
-		var str = "[{\"agruparResto\":true,\"agruparValores\":true,\"ajustarContenidoAncho\":true,\"colores\":0,\"columnaX\":0,\"columnaY\":1,\"condiciones\":[],\"condicionesCeldas\":[],\"descripcion\":\"\",\"espacioGrafica\":0.4,\"espacioTabla\":0.6,\"filasColor\":true,\"height\":600.0,\"indicadorColor\":true,\"limiteElementos\":10,\"mostrarEtiquetas\":true,\"mostrarGrafica\":true,\"mostrarTabla\":true,\"mostrarTituloTabla\":true,\"ocuparTodoEspacio\":false,\"ordenado\":false,\"orientacion\":\"VERTICAL\",\"target\":0.0,\"tipo\":2,\"titulo\":\"\",\"width\":500.0},\n" +
-				  "{\"agruparResto\":true,\"agruparValores\":true,\"ajustarContenidoAncho\":true,\"colores\":0,\"columnaX\":0,\"columnaY\":1,\"condiciones\":[],\"condicionesCeldas\":[],\"descripcion\":\"\",\"espacioGrafica\":0.4,\"espacioTabla\":0.6,\"filasColor\":true,\"height\":600.0,\"indicadorColor\":true,\"limiteElementos\":10,\"mostrarEtiquetas\":true,\"mostrarGrafica\":true,\"mostrarTabla\":true,\"mostrarTituloTabla\":true,\"ocuparTodoEspacio\":false,\"ordenado\":false,\"orientacion\":\"VERTICAL\",\"target\":0.0,\"tipo\":2,\"titulo\":\"\",\"width\":500.0}]"
-
-		str = "{\"UserInfo\":[{\"USUARIO\":\"TESTUSER\",\"TIPO\":\"L\",\"PASSWORD\":\"050415\",\"NOMBRE_VISIBLE\":\"TESTUSER\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"LPT\",\"TIPO\":\"B\",\"PASSWORD\":\"\",\"NOMBRE_VISIBLE\":\"Puente Tobar, Luis Manuel\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"Lerida\",\"TIPO\":\"B\",\"PASSWORD\":\"6548\",\"NOMBRE_VISIBLE\":\"Sotillos Pey, Aarón\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"SMV\",\"TIPO\":\"B\",\"PASSWORD\":\"4321\",\"NOMBRE_VISIBLE\":\"Martí Vidal, Severino\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"amartinez\",\"TIPO\":\"L\",\"PASSWORD\":\"1234\",\"NOMBRE_VISIBLE\":\"amartinez\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"csita\",\"TIPO\":\"B\",\"PASSWORD\":\"1234\",\"NOMBRE_VISIBLE\":\"Sita, Catalin\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"cpertoldi\",\"TIPO\":\"B\",\"PASSWORD\":\"\",\"NOMBRE_VISIBLE\":\"Pertoldi, Carlo\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"mpolo\",\"TIPO\":\"B\",\"PASSWORD\":\"\",\"NOMBRE_VISIBLE\":\"Polo, Mauro\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"albex\",\"TIPO\":\"B\",\"PASSWORD\":\"pixu1806%\",\"NOMBRE_VISIBLE\":\"Navarro Sanchez, Elisabeth\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"ndesabbata\",\"TIPO\":\"B\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"De Sabbata, Nadia\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"lbutum\",\"TIPO\":\"B\",\"PASSWORD\":\"\",\"NOMBRE_VISIBLE\":\"Butum, Lucian\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"Butu-PDA\",\"TIPO\":\"L\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"Butum\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"atesolat\",\"TIPO\":\"B\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"Tesolat, Ángela\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"jllor\",\"TIPO\":\"L\",\"PASSWORD\":\"2305\",\"NOMBRE_VISIBLE\":\"José Llor\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"LUCIAN-PDA\",\"TIPO\":\"L\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"LUCIAN-PDA\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"jdiaz\",\"TIPO\":\"L\",\"PASSWORD\":\"1968\",\"NOMBRE_VISIBLE\":\"Javier Díaz Recuero\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"},{\"USUARIO\":\"jgonzalezh\",\"TIPO\":\"B\",\"PASSWORD\":\"123\",\"NOMBRE_VISIBLE\":\"González Hermida, Juan Carlos\",\"FND_USER_NAME\":\"\",\"FND_USER_ID\":\"\",\"EMPLOYEE_ID\":\"\",\"DEPENDENCY\":\"\",\"SECTION\":\"\",\"EMPLOYEE_NAME\":\"\",\"IS_REQUESTER\":\"\",\"IS_BUYER\":\"\"}]}"
-
-		val resultado = jsonToMap(str, "UserInfo")
 
 
-		resultado.forEachIndexed { index, row ->
-			App.Companion.log.d("Fila ${index + 1}:")
-			row.forEach { (key, value) ->
-				App.Companion.log.d("  $key: $value")
-			}
-		}
-		App.Companion.log.linea()
-		mapToTable("PRUEBAS", resultado)
-	}
-
-	fun jsonToTabla(str: String, nodoIdentificadorFila: String, tablaAlmacenar: String): Boolean {
+	fun jsonToTabla(str: String, nodoIdentificadorFila: String, tablaAlmacenar: String, vaciarTabla: Boolean): Boolean {
 		try {
-			mapToTable(tablaAlmacenar, jsonToMap(str, nodoIdentificadorFila))
+			mapToTable(tablaAlmacenar, jsonToMap(str, nodoIdentificadorFila), vaciarTabla)
 			return true;
 		}
 		catch (e: Exception) {
@@ -54,7 +37,7 @@ class ConversorJsonToTabla {
 	}
 
 
-	private fun mapToTable(nombreTabla: String, tabla: List<Map<String, Any?>>) {
+	private fun mapToTable(nombreTabla: String, tabla: List<Map<String, Any?>>, vaciarTabla: Boolean) {
 		if (tabla.isEmpty()) {
 			App.Companion.log.i("Tabla con datos vacia, no se rellena $nombreTabla")
 			return
@@ -84,7 +67,7 @@ class ConversorJsonToTabla {
 		}
 
 		runBlocking {
-			//db.execSQL("DROP TABLE IF EXISTS $nombreTabla")
+			if (vaciarTabla) db.execSQL("DROP TABLE IF EXISTS $nombreTabla")
 			db.execSQL(sqlCreate)
 			sqlInserts.forEach { sql -> db.execSQL(sql) }
 

@@ -28,7 +28,7 @@ class AlmacenarDatosRemotosEndPointCU(
 			val endPoint = obtenerEndPointCU.obtener(identificador)
 			val url: String = endPoint.url
 			val str = accesoRemoto.getRemote(url, endPoint.parametros.ps)
-			conversonrJson.jsonToTabla(str, endPoint.nodoIdentificadorFila, endPoint.tabla)
+			conversonrJson.jsonToTabla(str, endPoint.nodoIdentificadorFila, endPoint.tabla, endPoint.eliminarDatos)
 			return ResultadoEndPoint(procesado = true, errores = false, descripcion = "Datos almacenados ${endPoint.tabla}")
 		}catch (e: Exception){
 			return ResultadoEndPoint(procesado = true, errores = true, descripcion = e.message?:"Error al procesar")
@@ -41,7 +41,7 @@ class AlmacenarDatosRemotosEndPointCU(
 			//val endPoint = obtenerEndPointCU.obtener(identificador)
 			val url: String = endPoint.url
 			val str = accesoRemoto.getRemote(url, endPoint.parametros.ps)
-			conversonrJson.jsonToTabla(str, endPoint.nodoIdentificadorFila, endPoint.tabla)
+			conversonrJson.jsonToTabla(str, endPoint.nodoIdentificadorFila, endPoint.tabla, endPoint.eliminarDatos)
 			return ResultadoEndPoint(procesado = true, errores = false, descripcion = "Datos almacenados ${endPoint.tabla}")
 		}catch (e: Exception){
 			return ResultadoEndPoint(procesado = true, errores = true, descripcion = e.message?:"Error al procesar")
@@ -63,7 +63,7 @@ class AlmacenarDatosRemotosEndPointCU(
 
 
 			val str = accesoRemoto.getRemote(url, listaParametrosReemplazados)
-			conversonrJson.jsonToTabla(str, endPoint.nodoIdentificadorFila, endPoint.tabla)
+			conversonrJson.jsonToTabla(str, endPoint.nodoIdentificadorFila, endPoint.tabla, endPoint.eliminarDatos)
 			return ResultadoEndPoint(procesado = true, errores = false, descripcion = "Datos almacenados ${endPoint.tabla}")
 		}catch (e: Exception){
 			return ResultadoEndPoint(procesado = true, errores = true, descripcion = e.message?:"Error al procesar")

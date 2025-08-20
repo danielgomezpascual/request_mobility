@@ -7,28 +7,31 @@ import com.personal.metricas.endpoints.domain.entidades.EndPoint
 data class EndPointUI(
 	val id: Int = 0,
 	val nombre: String = "",
-	val descripcion: String ="",
+	val descripcion: String = "",
 	val url: String = "",
 	val parametros: Parametros,
 	val tabla: String = "",
-	val nodoIdentificadorFila : String = ""
-){
-	companion object{
+	val nodoIdentificadorFila: String = "",
+	val eliminarDatos: Boolean = false,
+) {
+	companion object {
 
-		fun fromDomain(endPoint: EndPoint): EndPointUI{
+		fun fromDomain(endPoint: EndPoint): EndPointUI {
 			return EndPointUI(
 				id = endPoint.id,
-				nombre =  endPoint.nombre,
+				nombre = endPoint.nombre,
 				descripcion = endPoint.descripcion,
 				url = endPoint.url,
 				parametros = endPoint.parametros,
 				tabla = endPoint.tabla,
-				nodoIdentificadorFila = endPoint.nodoIdentificadorFila
+				nodoIdentificadorFila = endPoint.nodoIdentificadorFila,
+				eliminarDatos = endPoint.eliminarDatos
+
+
 			)
 		}
 	}
 }
-
 
 
 fun EndPointUI.toDomain(): EndPoint {
@@ -39,6 +42,7 @@ fun EndPointUI.toDomain(): EndPoint {
 		url = this.url,
 		parametros = this.parametros,
 		tabla = this.tabla,
-		nodoIdentificadorFila = this.nodoIdentificadorFila
+		nodoIdentificadorFila = this.nodoIdentificadorFila,
+		eliminarDatos = this.eliminarDatos
 	)
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "27140ffc2f97246abca7fef37099dc7c",
+    "identityHash": "09b2519f0e4d617fc87f0bbe5fe95bb9",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -398,7 +398,7 @@
       },
       {
         "tableName": "EndPoints",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `url` TEXT NOT NULL, `parametros` TEXT NOT NULL, `tabla` TEXT NOT NULL, `nodoIdentificadorFila` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `url` TEXT NOT NULL, `parametros` TEXT NOT NULL, `tabla` TEXT NOT NULL, `nodoIdentificadorFila` TEXT NOT NULL, `eliminarDatos` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -439,6 +439,12 @@
           {
             "fieldPath": "nodoIdentificadorFila",
             "columnName": "nodoIdentificadorFila",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "eliminarDatos",
+            "columnName": "eliminarDatos",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -482,7 +488,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '27140ffc2f97246abca7fef37099dc7c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '09b2519f0e4d617fc87f0bbe5fe95bb9')"
     ]
   }
 }
