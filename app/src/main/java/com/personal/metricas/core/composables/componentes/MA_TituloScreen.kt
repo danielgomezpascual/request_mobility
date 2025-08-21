@@ -2,6 +2,7 @@ package com.personal.metricas.core.composables.componentes
 
 import MA_IconBottom
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,13 +57,16 @@ fun Cabecera(cabecera: TituloScreen, navegacion: (EventosNavegacion) -> Unit, ac
 				//MA_ImagenDrawable(imagen = R.drawable.logo, s = 24.dp)
 				val auth = FirebaseManager().getAuth()
 
-
-				if (auth.currentUser == null || auth.currentUser?.photoUrl == null) {
-					MA_ImagenDrawable(imagen = R.drawable.logo, s = 24.dp)
-				} else {
-					MA_ImagenCirculoURL(url = auth.currentUser?.photoUrl.toString())
+				Box(modifier = Modifier.clickable(enabled = true, onClick =  {
+					navegacion(EventosNavegacion.Settings)
+				})) {
+					if (auth.currentUser == null || auth.currentUser?.photoUrl == null) {
+						MA_ImagenDrawable(imagen = R.drawable.logo, s = 24.dp)
+					} else {
+						MA_ImagenCirculoURL(url = auth.currentUser?.photoUrl.toString())
+					}
 				}
-
+				
 				Column  (/*verticalAlignment = Alignment.CenterVertically,*/
 					modifier = m
 						.fillMaxWidth()

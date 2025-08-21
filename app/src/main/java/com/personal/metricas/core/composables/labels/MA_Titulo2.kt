@@ -56,3 +56,34 @@ fun MA_Titulo2(
 
 
 }
+
+@Composable
+fun MA_Titulo3(
+	valor: String,
+	modifier: Modifier = Modifier,
+	color: Color = Color.Black,
+	fondo: Color = Color.White,
+	alineacion: TextAlign = TextAlign.Start,
+	icono: Icons? = null,
+) {
+
+
+	Row(modifier = modifier
+		.fillMaxWidth()
+		.padding(top = 10.dp, bottom = 5.dp,
+				 start = 5.dp, end = 5.dp
+		), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+		if (valor.isNotEmpty()) {
+			MA_ImagenDrawable(imagen = R.drawable.caja4, s = 20.dp)
+			MA_Spacer()
+		}
+
+		Text(text = valor,
+			 fontSize = 14.sp,
+			 modifier = modifier,
+			 color = color, style = MaterialTheme.typography.titleMedium, textAlign = alineacion)
+		// HorizontalDivider()
+	}
+
+
+}

@@ -31,5 +31,6 @@ data class PanelConfiguracion(
 	var filasColor: Boolean = true,
 	val condiciones: List<Condiciones> = listOf<Condiciones>(),
 	val condicionesCeldas: List<Condiciones> = listOf<Condiciones>(),
-	val permiteNotas: Boolean = true
+	val permiteNotas: Boolean = true,
+	val valorMaximo: String = "10"
 							 )

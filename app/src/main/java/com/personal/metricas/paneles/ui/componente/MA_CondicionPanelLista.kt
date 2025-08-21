@@ -11,13 +11,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.card.MA_Card
+import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelLeyenda
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_LabelTextoDestacado
@@ -48,15 +52,15 @@ fun MA_CondicionPanelLista(
 
 
 
-	MA_Card(modifier = Modifier.clickable(enabled = true, onClick = {
+	MA_Card(elevacion = 1.dp,modifier = Modifier.clickable(enabled = true, onClick = {
 		onClickAceptar(condicion)
 	})) {
 
 
 		Column(modifier = Modifier
 			.clickable(enabled = true, onClick = {  	onClickAceptar(condicion)})
-			.width(250.dp)
-			.height(250.dp)
+			//.width(250.dp)
+			//.height(250.dp)
 			.padding(5.dp),
 			   verticalArrangement = Arrangement.Center,
 		) {
@@ -69,11 +73,21 @@ fun MA_CondicionPanelLista(
 
 
 			//MA_LabelNormal(valor = condicion.id.toString())
-			MA_LabelTextoDestacado(valor = "Sobre", valorDestacado = condicion.columna.nombre)
-			MA_LabelTextoDestacado(valor = "Condicion", valorDestacado = condicion.predicado.toString())
-			MA_LabelLeyenda(valor = condicion.descripion)
-			Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+			/*MA_LabelTextoDestacado(valor = "Sobre", valorDestacado = condicion.columna.nombre)
+			MA_LabelTextoDestacado(valor = "Condicion", valorDestacado = condicion.predicado.toString())*/
+			MA_ColumnaItemSeleccionable(condicion.columna)
+
+
+
+			//MA_LabelLeyenda(valor = condicion.descripion)
+			Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+
+				if (condicion.alarma?.activa == true){
+					MA_Icono(icono = Icons.Default.Notifications)
+				}
 				Box(Modifier.size(16.dp).background(color = color))
+				MA_Spacer()
+				MA_LabelNormal("${condicion.predicado}")
 			}
 
 			MA_Spacer()

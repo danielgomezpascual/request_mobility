@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.ColorLens
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material.icons.filled.Details
 import androidx.compose.material.icons.filled.Directions
 import androidx.compose.material.icons.filled.DoubleArrow
+import androidx.compose.material.icons.filled.ExposurePlus1
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.FormatColorText
 import androidx.compose.material.icons.filled.FrontHand
@@ -57,6 +59,7 @@ import com.personal.metricas.core.composables.checks.MA_SwitchNormal
 import com.personal.metricas.core.composables.combo.MA_Combo
 import com.personal.metricas.core.composables.combo.MA_ComboLista
 import com.personal.metricas.core.composables.componentes.TituloScreen
+import com.personal.metricas.core.composables.edittext.MA_TextoEditable
 import com.personal.metricas.core.composables.edittext.MA_TextoNormal
 import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.imagenes.MA_Icono
@@ -209,8 +212,8 @@ fun SucessScreenDetallePanel(
 				}
 
 
-				if (panelUI.tipoPanel == TiposPanel.PANEL_KPI){
-													//KPI
+				if (panelUI.tipoPanel == TiposPanel.PANEL_KPI) {
+					//KPI
 					MA_Titulo2("KPI")
 					MA_Card {
 						Box(modifier = Modifier.height(100.dp)) {
@@ -285,7 +288,7 @@ fun SucessScreenDetallePanel(
 										MA_ColumnaItemSeleccionable(valoresTabla.dameColumnaPosicion(
 											panelUI.configuracion.columnaY))
 									},
-									elementosSeleccionables = valoresTabla.dameColumnasNumericas(),
+									elementosSeleccionables = valoresTabla.dameColumnas(),
 									item = { columna -> MA_ColumnaItemSeleccionable(columna) },
 									onClickSeleccion = { columna ->
 										viewModel.onEvent(DetallePanelVM.Eventos.onChangeCampoSumaTabla(
@@ -478,8 +481,6 @@ fun SucessScreenDetallePanel(
 						//Grafica
 						MA_Titulo2("Grafica")
 						MA_Card {
-
-
 							MA_2ColumnasHorizontales(titulo = "", elementos = listOf(
 								{
 									MA_SwitchNormal(valor = panelUI.configuracion.mostrarGrafica,
@@ -536,78 +537,91 @@ fun SucessScreenDetallePanel(
 													onValueChange = { valor ->
 														viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarEtiquetas(valor))
 													})
+								},
+
+								{
+									MA_Combo(icono = Icons.Filled.HorizontalRule,                    //modifier = Modifier.weight(1f),
+											 titulo = "Limite máximo elementos",
+											 descripcion = "Tope Elementos)",
+											 valorInicial = panelUI.configuracion.valorMaximo,
+											 elementosSeleccionables = (0..55 step 5).map { it.toString() }+ (100..500 step 10).map { it.toString() }+ (5000..1500 step 100).map { it.toString() },
+											 onClickSeleccion = { str, indice ->
+												 viewModel.onEvent(DetallePanelVM.Eventos.OnChangeValorMaximo(str))
+											 })
+
+
 								}
-
-
 							))
 						}
 
 						//----------------------------------------------------------------------------------
-						MA_Titulo2("Codiciones sobre la celda ${panelUI.configuracion.condicionesCeldas.size}")
-						LazyRow(modifier = Modifier.height(300.dp),
-								horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-							items(items = panelUI.configuracion.condicionesCeldas,
-								  key = { item -> item.id }) { condicion ->
-								MA_CondicionCeldaPanelLista(                            //columnas = valoresTabla.dameColumnas(),
-									condicion = condicion, onClickAceptar = { condicionUI ->
-										viewModel.onEvent(DetallePanelVM.Eventos.SeleccionarCondicionCelda(
-											condicionUI))
-										scope.launch { sheetStateCondicionCelda.show() }
-									}, onClickCancelar = { condicionUI ->
-										viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicionCelda(condicionUI))
-									})
-							}
-						}
+						MA_Titulo2("Condiciones sobre la celda (${panelUI.configuracion.condicionesCeldas.size})")
+						MA_Card {
+							Column() {
+								MA_IconBottom(icon = Icons.Default.Add) {
+									viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicionCelda(Condiciones(id = 0,
+																											   columna = Columnas(nombre = "", posicion = -1),
+																											   color = 1,
+																											   condicionCelda = 0,
+																											   predicado = "")))
+									scope.launch { sheetStateCondicionCelda.show() }
+								}
 
-						MA_BotonSecundario(texto = "Nueva Condición Celda",
-										   modifier = Modifier
-											   .fillMaxWidth()
-											   .padding(5.dp)) {
-							viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicionCelda(Condiciones(id = 0,
-																									   columna = Columnas(nombre = "", posicion = -1),
-																									   color = 1,
-																									   condicionCelda = 0,
-																									   predicado = "")))
-							scope.launch { sheetStateCondicionCelda.show() }
+								LazyRow(modifier = Modifier/*.height(300.dp)*/,
+										horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+									items(items = panelUI.configuracion.condicionesCeldas,
+										  key = { item -> item.id }) { condicion ->
+										MA_CondicionCeldaPanelLista(
+											condicion = condicion, onClickAceptar = { condicionUI ->
+												App.log.d("Abriendo...")
+												viewModel.onEvent(DetallePanelVM.Eventos.SeleccionarCondicionCelda(condicionUI))
+												scope.launch { sheetStateCondicionCelda.show() }
+											}, onClickCancelar = { condicionUI ->
+												viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicionCelda(condicionUI))
+											})
+									}
+								}
+
+
+							}
 						}
 
 
 						//----------------------------------------------------------------------------------
 
-						MA_Titulo2("Codiciones sobre las filas ${panelUI.configuracion.condiciones.size}")
+						MA_Titulo2("Codiciones sobre las filas (${panelUI.configuracion.condiciones.size})")
 
-						//LazyColumn(
-						LazyRow(modifier = Modifier.height(200.dp),                    // verticalArrangement = Arrangement.spacedBy(4.dp)
-								horizontalArrangement = Arrangement.Center) {
-							items(items = panelUI.configuracion.condiciones,
-								  key = { item -> item.id }) { condicion ->
 
-								MA_CondicionPanelLista(esquemaColores = EsquemaColores().dameEsquemaCondiciones(),
-													   condicion = condicion,
-													   onClickAceptar = { condicionUI ->
-														   viewModel.onEvent(DetallePanelVM.Eventos.SeleccionarCondicion(
-															   condicionUI))
-														   scope.launch { sheetStateCondicionFila.show() }
-													   },
-													   onClickCancelar = { condicionUI ->
-														   viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(
-															   condicionUI))
-													   })
+						MA_Card {
+							Column() {
+								MA_IconBottom(icon = Icons.Default.Add) {
+									viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(Condiciones(0,
+																										  columna = Columnas(nombre = "", posicion = 1, valores = emptyList()),
+																										  color = 1,
+																										  condicionCelda = 0,
+																										  predicado = "")))
+									scope.launch { sheetStateCondicionFila.show() }
+								}
+								//LazyColumn(
+								LazyRow(modifier = Modifier/*.height(200.dp)*/,                    // verticalArrangement = Arrangement.spacedBy(4.dp)
+										horizontalArrangement = Arrangement.Center) {
+									items(items = panelUI.configuracion.condiciones,
+										  key = { item -> item.id }) { condicion ->
+
+										MA_CondicionPanelLista(esquemaColores = EsquemaColores().dameEsquemaCondiciones(),
+															   condicion = condicion,
+															   onClickAceptar = { condicionUI ->
+																   viewModel.onEvent(DetallePanelVM.Eventos.SeleccionarCondicion(condicionUI))
+																   scope.launch { sheetStateCondicionFila.show() }
+															   },
+															   onClickCancelar = { condicionUI ->
+																   viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(
+																	   condicionUI))
+															   })
+									}
+								}
 							}
 						}
-
-
-						MA_BotonSecundario(texto = "Nueva Condición",
-										   modifier = Modifier
-											   .fillMaxWidth()
-											   .padding(5.dp)) {
-							viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(Condiciones(0,
-																								  columna = Columnas(nombre = "", posicion = 1, valores = emptyList()),
-																								  color = 1,
-																								  condicionCelda = 0,
-																								  predicado = "")))
-							scope.launch { sheetStateCondicionFila.show() }
-						}                //----------------------------------------------------------------------------------
 
 					}
 				}

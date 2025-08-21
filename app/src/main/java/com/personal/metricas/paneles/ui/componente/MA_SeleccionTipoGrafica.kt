@@ -72,6 +72,16 @@ fun MA_SeleccionTipoGrafica(panel: PanelTipoGrafica) {
 				nombre = panel.nombre
 				icono = panel.icono
 			}
+
+			is PanelTipoGrafica.SignalVertical                 -> {
+				id = panel.id
+				nombre = panel.nombre
+				icono = panel.icono
+			}	is PanelTipoGrafica.SignalHorizontal                 -> {
+				id = panel.id
+				nombre = panel.nombre
+				icono = panel.icono
+			}
 		}
 		Column (horizontalAlignment = Alignment.CenterHorizontally/*modifier = Modifier.fillMaxWidth()*/) {
 			MA_ImagenDrawable(icono)

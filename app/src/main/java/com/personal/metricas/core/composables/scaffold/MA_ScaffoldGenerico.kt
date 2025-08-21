@@ -44,9 +44,7 @@ fun MA_ScaffoldGenerico(
 
 			Box(modifier = Modifier
 				.padding(vertical = 6.dp)
-				.clickable(enabled = true, onClick = {
-					navegacion(EventosNavegacion.Settings)
-				})) {
+			) {
 				Column {
 					Cabecera(tituloScreen, navegacion, accionesSuperiores)
 

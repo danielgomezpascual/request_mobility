@@ -48,21 +48,8 @@ fun MA_IndicadorVertical(
             e.printStackTrace()
         }
 
-
-        /* BarData(
-             xValue = x,
-             yValue = y,
-             barColor = (fila.color).asSolidChartColor()
-         )*/
     }
-    /* val data = listaValores.map {
-         BarData(
-             xValue = it.x,
-             yValue = it.y,
-             barColor = (it.color).asSolidChartColor()
 
-         )
-     }*/
 
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center){

@@ -1,8 +1,13 @@
 package com.personal.metricas.paneles.ui.componente
 
+import MA_IconBottom
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.LooksOne
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
@@ -11,19 +16,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.personal.metricas.App
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
 import com.personal.metricas.core.composables.botones.MA_BotonSecundario
+import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_SwitchNormal
 import com.personal.metricas.core.composables.combo.MA_ComboColores
 import com.personal.metricas.core.composables.combo.MA_ComboLista
 import com.personal.metricas.core.composables.edittext.MA_TextoNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.labels.MA_Titulo2
+import com.personal.metricas.core.composables.labels.MA_Titulo3
 import com.personal.metricas.core.composables.tabla.Columnas
 import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.ui.entidades.ColoresSeleccion
 import com.personal.metricas.paneles.domain.entidades.Condiciones
+import java.nio.file.WatchEvent
 
 @Composable
 fun MA_CondicionPanel(
@@ -43,111 +53,118 @@ fun MA_CondicionPanel(
 
 
 	Column {
+		Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+			MA_IconBottom(icon = Icons.Default.Clear,
+						  color = Color(239, 19, 19, 255)) {
+				onClickCancelar(condicion)
 
+			}
+			MA_Spacer()
+			MA_IconBottom(icon = Icons.Default.Check,
+						  color = Color(21, 114, 2, 255)) {
+				onClickAceptar(condicion)
+
+			}
+		}
 		MA_Titulo2("Condiciones a aplicar sobre la fila")
-		MA_ComboLista<Columnas>(
-			modifier = Modifier,
-			titulo = "Columna ",
-			descripcion = "Columna",
-			valorInicial = { if (condicion.columna != null) MA_ColumnaItemSeleccionable(condicion.columna) },
-			elementosSeleccionables = columnas,
-			item = { columna -> MA_ColumnaItemSeleccionable(columna) },
-			onClickSeleccion = { c ->
-				condicion = condicion.copy(columna = c)
-				//onClickAceptar(condicion)
-				App.log.d(condicion.toString())
-			})
-
-		MA_TextoNormal(/*modifier = Modifier.weight(1f), */
-					   valor = condicion.descripion,
-					   titulo = "Descripcion",
-					   onValueChange = { it ->
-						   condicion = condicion.copy(descripion = it)
-					   })
-
-
-		//MA_LabelNormal(valor = condicion.id.toString())
-		Row() {
-			/*MA_ComboLista(
-					/*modifier = Modifier.weight(1f),*/
-					titulo = "",
-					descripcion = "Color para la condicion",
-					valorInicial = {
-						val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
-						val color = esquemaColores.colores.get(indicadorColorCondicion)
-						MA_SeleccionColor(color)
-					},
-					elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-					item = { colorSeleccion ->
-						MA_SeleccionColor(colorSeleccion.color)
-					},
-					onClickSeleccion = { colorSeleccion ->
-						condicion = condicion.copy(color = colorSeleccion.indice)
-						//onClickAceptar(condicion)
-					}
-						 
-						 )*/
-
-			MA_ComboColores(modifier = Modifier.weight(1f),
-							titulo = "",
-							descripcion = "Color para la condicion",
-							valorInicial = {
-								val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
-								val color = esquemaColores.colores.get(indicadorColorCondicion)
-								MA_SeleccionColor(color)
-							},
-							elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-							item = { colorSeleccion ->
-								MA_SeleccionColor(colorSeleccion.color)
-							},
-							onClickSeleccion = { colorSeleccion ->
-								condicion = condicion.copy(color = colorSeleccion.indice) //   onClickAceptar(condicion)
-							})
-
-			MA_TextoNormal(/*modifier = Modifier.weight(1f),*/
-						   valor = condicion.predicado, titulo = "Condición",
+		MA_Card {
+			MA_TextoNormal(/*modifier = Modifier.weight(1f), */
+						   valor = condicion.descripion,
+						   titulo = "Descripcion",
 						   onValueChange = { it ->
-							   condicion = condicion.copy(predicado = it)
-							   //str = it
-							   /// onClickAceptar(condicion)
+							   condicion = condicion.copy(descripion = it)
 						   })
-
-
-		}
-		MA_Titulo2("Notificacion")
-		Row {
-			MA_SwitchNormal(valor = condicion.alarma.activa,
-							icono = Icons.Default.Notifications,
-							titulo = "Alarma", onValueChange = { it ->
-					condicion = condicion.copy(alarma = condicion.alarma.copy(activa = it))
-
-				})
-			MA_TextoNormal(
-				valor = condicion.alarma.titulo, titulo = "Titulo ",
-				onValueChange = { it ->
-					condicion = condicion.copy(alarma = condicion.alarma.copy(titulo = it))
-				})
-
-		}
-
-		Row(){
-			MA_SwitchNormal(valor = condicion.alarma.unica,
-								  icono = Icons.Default.LooksOne,
-								  titulo = "Unica", onValueChange = { it ->
-				condicion = condicion.copy(alarma = condicion.alarma.copy(unica = it))
-
-			})
-			MA_TextoNormal(
-				valor = condicion.alarma.texto, titulo = "Texto ",
-				onValueChange = { it ->
-					condicion = condicion.copy(alarma = condicion.alarma.copy(texto = it))
-				})
-
-
 		}
 
 
-		Row() {
+		MA_Titulo3("Coindición")
+		MA_Card {
+			Column {
+
+				Row() {
+					MA_ComboLista<Columnas>(
+						modifier = Modifier,
+						titulo = "Columna ",
+						descripcion = "Columna",
+						valorInicial = { if (condicion.columna != null) MA_ColumnaItemSeleccionable(condicion.columna) },
+						elementosSeleccionables = columnas,
+						item = { columna -> MA_ColumnaItemSeleccionable(columna) },
+						onClickSeleccion = { c ->
+							condicion = condicion.copy(columna = c)
+							//onClickAceptar(condicion)
+							App.log.d(condicion.toString())
+						})
+
+					MA_ComboColores(modifier = Modifier.weight(1f),
+									titulo = "",
+									descripcion = "Color para la condicion",
+									valorInicial = {
+										val indicadorColorCondicion = (condicion.color % esquemaColores.colores.size)
+										val color = esquemaColores.colores.get(indicadorColorCondicion)
+										MA_SeleccionColor(color)
+									},
+									elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+									item = { colorSeleccion ->
+										MA_SeleccionColor(colorSeleccion.color)
+									},
+									onClickSeleccion = { colorSeleccion ->
+										condicion = condicion.copy(color = colorSeleccion.indice) //   onClickAceptar(condicion)
+									})
+
+
+					MA_TextoNormal(/*modifier = Modifier.weight(1f),*/
+								   valor = condicion.predicado, titulo = "Condición",
+								   onValueChange = { it ->
+									   condicion = condicion.copy(predicado = it)
+									   //str = it
+									   /// onClickAceptar(condicion)
+								   })
+				}
+			}
+		}
+
+
+		MA_Titulo3("Notificacion")
+		MA_Card {
+			Column() {
+				Row {
+					MA_SwitchNormal(valor = condicion.alarma.activa,
+									icono = Icons.Default.Notifications,
+									titulo = "Alarma", onValueChange = { it ->
+							condicion = condicion.copy(alarma = condicion.alarma.copy(activa = it))
+
+						})
+
+					MA_SwitchNormal(valor = condicion.alarma.unica,
+									icono = Icons.Default.LooksOne,
+									titulo = "Unica", onValueChange = { it ->
+							condicion = condicion.copy(alarma = condicion.alarma.copy(unica = it))
+
+						})
+
+					MA_TextoNormal(
+						valor = condicion.alarma.titulo, titulo = "Titulo ",
+						onValueChange = { it ->
+							condicion = condicion.copy(alarma = condicion.alarma.copy(titulo = it))
+						})
+
+				}
+				Column() {
+
+					MA_TextoNormal(
+						valor = condicion.alarma.texto, titulo = "Texto ",
+						onValueChange = { it ->
+							condicion = condicion.copy(alarma = condicion.alarma.copy(texto = it))
+						})
+
+
+				}
+
+			}
+		}
+
+
+		/*Row() {
 			MA_BotonSecundario(texto = "Cancelar") {
 				onClickCancelar(condicion)
 
@@ -156,7 +173,7 @@ fun MA_CondicionPanel(
 				onClickAceptar(condicion)
 
 			}
-		}
+		}*/
 
 
 	}

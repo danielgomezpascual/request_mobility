@@ -83,6 +83,7 @@ class DetallePanelVM(
 		data class onChangeEspacioTabla(val valor: String) : Eventos()
 		data class onChangeOcuparTodoEspacio(val valor: Boolean) : Eventos()
 		data class onChangeAncho(val valor: String) : Eventos()
+		data class OnChangeValorMaximo(val valor: String) : Eventos()
 
 		data class onChangeAlto(val valor: String) : Eventos()
 		data class onChangeMostrarGrafica(val valor: Boolean) : Eventos()
@@ -282,6 +283,12 @@ class DetallePanelVM(
 							is Eventos.onChangeAncho                 -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
 									width = evento.valor)))
+
+							}
+
+							is Eventos.OnChangeValorMaximo                 -> {
+								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
+									valorMaximo = evento.valor)))
 
 							}
 

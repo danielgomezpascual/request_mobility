@@ -11,6 +11,8 @@ sealed class PanelTipoGrafica{
     data class Circular(val id: Int = 4, val nombre : String = "CIRCULARL" , val icono : Int = R.drawable.circular): PanelTipoGrafica()
     data class Anillo(val id: Int = 5, val nombre : String = "ANILLO" , val icono : Int = R.drawable.anillo): PanelTipoGrafica()
     data class Lineas(val id: Int = 6, val nombre : String = "LINEAS" , val icono : Int = R.drawable.lineas): PanelTipoGrafica()
+    data class SignalVertical(val id: Int = 7, val nombre : String = "Signal Vertical" , val icono : Int = R.drawable.signalv): PanelTipoGrafica()
+    data class SignalHorizontal(val id: Int = 8, val nombre : String = "Signal Horizontal" , val icono : Int = R.drawable.signalh): PanelTipoGrafica()
 
 companion object{
     fun dameTipos() : List<PanelTipoGrafica> = listOf<PanelTipoGrafica>(
@@ -20,6 +22,9 @@ companion object{
             BarrasFinasVerticales(),
             Circular(),
             Anillo(),
-            Lineas()                                                   )
+            Lineas(),
+            SignalVertical(),
+            SignalHorizontal()
+    )
 	}
 }

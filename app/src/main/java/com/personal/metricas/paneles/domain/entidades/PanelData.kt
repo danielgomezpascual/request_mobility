@@ -126,7 +126,12 @@ data class PanelData(
 
 					if (valor.isNotEmpty() && valor.esNumerico()) {
 						val contexto = MapContext().apply {
-							set("valor", valor.toFloat())
+							if (valor.esNumerico()){
+								set("valor", valor.toFloat())
+							}else{
+								set("valor",0)
+							}
+
 						}
 						val resultado: Any = expresion.evaluate(contexto)
 						if ((condicion.condicionCelda > 0 && condicion.predicado.isEmpty()) || (resultado is Boolean && resultado)) {

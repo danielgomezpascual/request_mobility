@@ -102,6 +102,8 @@ fun MA_InfoPanel(panel: PanelUI, mostrarNombre: Boolean = false) {
 				is PanelTipoGrafica.IndicadorHorizontal    -> panel.configuracion.tipo.icono
 				is PanelTipoGrafica.IndicadorVertical      -> panel.configuracion.tipo.icono
 				is PanelTipoGrafica.Lineas                 -> panel.configuracion.tipo.icono
+				is PanelTipoGrafica.SignalVertical                 -> panel.configuracion.tipo.icono
+				is PanelTipoGrafica.SignalHorizontal                 -> panel.configuracion.tipo.icono
 			}
 			MA_ImagenDrawable(idGrafico, s = 16.dp)
 		}
@@ -143,6 +145,8 @@ fun MA_InfoPanelVertical(modifier  : Modifier = Modifier, panel: PanelUI, mostra
 					is PanelTipoGrafica.IndicadorHorizontal    -> panel.configuracion.tipo.icono
 					is PanelTipoGrafica.IndicadorVertical      -> panel.configuracion.tipo.icono
 					is PanelTipoGrafica.Lineas                 -> panel.configuracion.tipo.icono
+					is PanelTipoGrafica.SignalVertical                 -> panel.configuracion.tipo.icono
+					is PanelTipoGrafica.SignalHorizontal                 -> panel.configuracion.tipo.icono
 				}
 				MA_ImagenDrawable(idGrafico, s = 16.dp)
 			}

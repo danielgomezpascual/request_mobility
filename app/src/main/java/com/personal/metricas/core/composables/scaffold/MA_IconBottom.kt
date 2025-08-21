@@ -56,7 +56,7 @@ fun MA_IconBottom(
 
 
         Icon(
-            tint =colorIcono,
+            tint =color,
             imageVector = icon,
             contentDescription = labelText, // La descripción de contenido se maneja en el Column clickeable
             // o podrías poner una descripción específica del icono si es diferente a la acción general.

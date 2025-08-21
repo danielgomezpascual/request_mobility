@@ -297,8 +297,131 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 
 
 
+	data object SingalVertical : PlantillasPanel(11, "Signal Vertical", R.drawable.signalv,
+													  PanelConfiguracion(orientacion = PanelOrientacion.VERTICAL,
+																		 tipo = PanelTipoGrafica.SignalVertical(),
+																		 plantilla = 11,
+																		 limiteElementos = 6,
+																		 mostrarEtiquetas = true,
+																		 agruparResto = false,
+																		 target = 0f,
+																		 ordenado = true,
+																		 espacioGrafica = "60",
+																		 espacioTabla = "40",
+																		 ocuparTodoEspacio = true,
+																		 width = "500",
+																		 height = "500",
+																		 mostrarGrafica = true,
+																		 mostrarTabla = false,
+																		 mostrarTituloTabla = true,
+																		 agruparValores = false,
+																		 columnaX = 0,
+																		 columnaY = 1,
+																		 colores = EsquemaColores.Paletas.NORMAL.valor,
+																		 ajustarContenidoAncho = false,
+																		 indicadorColor = true,
+																		 filasColor = true,
+																		 condiciones = emptyList(),
+																		 condicionesCeldas = emptyList(),
+																		 permiteNotas = false,
+																		 valorMaximo =  "10"
+																		 ))
+
+	data object SingalHorizontal : PlantillasPanel(12, "Signal Horizonatal", R.drawable.signalh,
+													  PanelConfiguracion(orientacion = PanelOrientacion.VERTICAL,
+																		 tipo = PanelTipoGrafica.SignalHorizontal(),
+																		 plantilla = 11,
+																		 limiteElementos = 6,
+																		 mostrarEtiquetas = true,
+																		 agruparResto = false,
+																		 target = 0f,
+																		 ordenado = true,
+																		 espacioGrafica = "60",
+																		 espacioTabla = "40",
+																		 ocuparTodoEspacio = true,
+																		 width = "500",
+																		 height = "500",
+																		 mostrarGrafica = true,
+																		 mostrarTabla = false,
+																		 mostrarTituloTabla = true,
+																		 agruparValores = false,
+																		 columnaX = 0,
+																		 columnaY = 1,
+																		 colores = EsquemaColores.Paletas.NORMAL.valor,
+																		 ajustarContenidoAncho = false,
+																		 indicadorColor = true,
+																		 filasColor = true,
+																		 condiciones = emptyList(),
+																		 condicionesCeldas = emptyList(),
+																		 permiteNotas = false,
+																		 valorMaximo =  "10"))
+
+
+
+
+
+	data object SingalVerticalTabla : PlantillasPanel(13, "Signal Vertical + Tabla", R.drawable.signalv,
+												 PanelConfiguracion(orientacion = PanelOrientacion.VERTICAL,
+																	tipo = PanelTipoGrafica.SignalVertical(),
+																	plantilla = 11,
+																	limiteElementos = 6,
+																	mostrarEtiquetas = true,
+																	agruparResto = false,
+																	target = 0f,
+																	ordenado = true,
+																	espacioGrafica = "60",
+																	espacioTabla = "40",
+																	ocuparTodoEspacio = true,
+																	width = "500",
+																	height = "500",
+																	mostrarGrafica = true,
+																	mostrarTabla = true,
+																	mostrarTituloTabla = true,
+																	agruparValores = false,
+																	columnaX = 0,
+																	columnaY = 1,
+																	colores = EsquemaColores.Paletas.NORMAL.valor,
+																	ajustarContenidoAncho = false,
+																	indicadorColor = true,
+																	filasColor = true,
+																	condiciones = emptyList(),
+																	condicionesCeldas = emptyList(),
+																	permiteNotas = false,
+																	valorMaximo =  "10"
+												 ))
+
+	data object SingalHorizontalTabla : PlantillasPanel(14, "Signal Horizonatal + Tabla", R.drawable.signalh,
+												   PanelConfiguracion(orientacion = PanelOrientacion.VERTICAL,
+																	  tipo = PanelTipoGrafica.SignalHorizontal(),
+																	  plantilla = 11,
+																	  limiteElementos = 6,
+																	  mostrarEtiquetas = true,
+																	  agruparResto = false,
+																	  target = 0f,
+																	  ordenado = true,
+																	  espacioGrafica = "60",
+																	  espacioTabla = "40",
+																	  ocuparTodoEspacio = true,
+																	  width = "500",
+																	  height = "500",
+																	  mostrarGrafica = true,
+																	  mostrarTabla = true,
+																	  mostrarTituloTabla = true,
+																	  agruparValores = false,
+																	  columnaX = 0,
+																	  columnaY = 1,
+																	  colores = EsquemaColores.Paletas.NORMAL.valor,
+																	  ajustarContenidoAncho = false,
+																	  indicadorColor = true,
+																	  filasColor = true,
+																	  condiciones = emptyList(),
+																	  condicionesCeldas = emptyList(),
+																	  permiteNotas = false,
+																	  valorMaximo =  "10"
+
+												   ))
 	companion object {
-		
+
 
 
 		fun dameTipos(): List<PlantillasPanel> = listOf<PlantillasPanel>(
@@ -312,6 +435,11 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 			Lineas,
 			PanelesHorizontales,
 			PanelesVerticales,
+			SingalVertical,
+			SingalHorizontal,
+			SingalVerticalTabla,
+			SingalHorizontalTabla,
+
 			/*IndicadorHorizontal(),
 			BarrasAnchasVerticales(),
 			BarrasFinasVerticales(),
@@ -332,6 +460,10 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 			8    -> Lineas
 			9    -> PanelesHorizontales
 			10    -> PanelesVerticales
+			11    -> SingalVertical
+			12    -> SingalHorizontal
+			13    -> SingalVerticalTabla
+			14    -> SingalHorizontalTabla
 			else -> SinSeleccionar
 		}
 
@@ -349,6 +481,10 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 		Lineas(8),
 		PanelesHorizontales(9),
 		PanelesVerticales(10),
+		SignalVertical(11),
+		SignalHorizontal(12),
+		SignalVerticalTabla(13),
+		SignalHorizontalTabla(14),
 	}
 
 }

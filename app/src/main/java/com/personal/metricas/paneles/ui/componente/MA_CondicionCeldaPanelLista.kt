@@ -1,6 +1,7 @@
 package com.personal.metricas.paneles.ui.componente
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.card.MA_Card
+import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.imagenes.MA_ImagenDrawable
 import com.personal.metricas.core.composables.labels.MA_LabelLeyenda
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
@@ -34,14 +36,15 @@ fun MA_CondicionCeldaPanelLista(
 	onClickCancelar: (Condiciones) -> Unit,
 ) {
 
-	MA_Card(modifier = Modifier.clickable(enabled = true, onClick = {
-		onClickAceptar(condicion)
+	MA_Card(elevacion = 1.dp, modifier = Modifier .clickable(enabled = true, onClick = {
+
 	})) {
 		Column(modifier = Modifier
-			.clickable(enabled = true, onClick = {  })
-			.width(250.dp)
-			.height(250.dp)
-			.padding(5.dp),
+			.clickable(enabled = true, onClick = { 	onClickAceptar(condicion) })
+			//.width(250.dp)
+			//.height(150.dp)
+			.padding(5.dp)
+			.fillMaxWidth(),
 			   verticalArrangement = Arrangement.Center,
 			  ) {
 
@@ -51,20 +54,18 @@ fun MA_CondicionCeldaPanelLista(
 			val color = esquemaColores.colores.get(indicadorColorCondicion)
 
 
-			//MA_LabelNormal(valor = condicion.id.toString())
-			MA_LabelTextoDestacado(valor = "Sobre", valorDestacado = condicion.columna.nombre)
-			MA_LabelTextoDestacado(valor = "Función", valorDestacado = condicionCelda.nombre)
-			MA_LabelTextoDestacado(valor = "Condicion", valorDestacado = condicion.predicado.toString())
-			MA_LabelLeyenda(valor = condicion.descripion)
-
-			Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+			MA_ColumnaItemSeleccionable(condicion.columna)
+			MA_LabelNormal("${condicionCelda.nombre}  ${condicion.predicado}")
+			Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+				horizontalArrangement = Arrangement.Start) {
 				Box(Modifier.size(16.dp).background(color = color))
+				MA_Spacer()
 				condicionCelda.representaciones.forEach {
 					MA_ImagenDrawable(it, s = 16.dp)
 				}
 			}
 			MA_Spacer()
-			MA_LabelNormal(alineacion = TextAlign.Center, valor = "Eliminar", color = Color.Red, modifier = Modifier.fillMaxWidth().clickable(enabled = true, onClick = { onClickCancelar(condicion) }))
+			MA_LabelNormal(alineacion = TextAlign.Start, valor = "Eliminar", color = Color.Red, modifier = Modifier.fillMaxWidth().clickable(enabled = true, onClick = { onClickCancelar(condicion) }))
 
 
 		}

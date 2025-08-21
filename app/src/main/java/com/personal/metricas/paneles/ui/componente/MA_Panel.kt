@@ -40,6 +40,8 @@ import com.personal.metricas.core.composables.graficas.MA_GraficoCircular
 import com.personal.metricas.core.composables.graficas.MA_GraficoLineas
 import com.personal.metricas.core.composables.graficas.MA_IndicadorHorizontal
 import com.personal.metricas.core.composables.graficas.MA_IndicadorVertical
+import com.personal.metricas.core.composables.graficas.MA_SignalHorizontal
+import com.personal.metricas.core.composables.graficas.MA_SignalVertical
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
@@ -407,6 +409,25 @@ fun dameTipoGrafica(
 					listaValores = datosPintar,
 					posicionX = posicionX,
 					posivionY = posivionY,
+					panelConfiguracion = panelConfiguracion
+				)
+			}
+
+			is PanelTipoGrafica.SignalVertical                 -> {
+				MA_SignalVertical(
+					modifier = modifier,
+					listaValores = datosPintar,
+					posicionX = posicionX,
+					posicionY = posivionY,
+					panelConfiguracion = panelConfiguracion
+				)
+			}
+			is PanelTipoGrafica.SignalHorizontal                 -> {
+				MA_SignalHorizontal(
+					modifier = modifier,
+					listaValores = datosPintar,
+					posicionX = posicionX,
+					posicionY = posivionY,
 					panelConfiguracion = panelConfiguracion
 				)
 			}

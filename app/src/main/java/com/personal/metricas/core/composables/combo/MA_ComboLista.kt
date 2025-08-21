@@ -92,7 +92,10 @@ fun <T> MA_ComboLista(modifier: Modifier = Modifier,
                             //valorInicial = valorInicial(el)
                             scope.launch { sheetState.hide() }
                         })) {
-                            item(el)
+                            Box(modifier = Modifier.fillMaxWidth().padding(5.dp)){
+                                item(el)
+                            }
+
                         }
                     }
 
