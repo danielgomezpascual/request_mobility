@@ -46,7 +46,7 @@ fun OrganizacionListItem(organizacionUI: OrganizacionesSincronizarUI,
             // Nombre y detalles
             Column {
                 Text(
-                    text = "${organizacionUI.organizationCode}",
+                    text = "${organizacionUI.organizationId} - ${organizacionUI.organizationCode}",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Companion.Bold
                 )

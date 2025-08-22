@@ -2,6 +2,7 @@ package com.personal.metricas.core.utils
 
 import android.util.Base64
 import com.personal.metricas.App
+import com.personal.metricas.core.data.ds.remote.network.retrofit.request.Entornos
 
 data class Parametros(val ps: List<Parametro> = emptyList<Parametro>()) {
 
@@ -10,10 +11,11 @@ data class Parametros(val ps: List<Parametro> = emptyList<Parametro>()) {
 
 
 		fun dameParametrosPorDefectoMobility() = listOf<Parametro>(
-			Parametro(key = "Authorization", valor = "Basic RkI2QTY0OTQ1NzNBNEE5MTg3Qzg1MzcxODYxNjdCQTBfTW9iaWxlQW5vbnltb3VzX0FQUElEOjFmM2M3YTFkLWRlZGMtNDFhZC1hYWY5LWFhMjhjMzJjMmEwNQ=="),
-			Parametro(key = "Oracle-Mobile-Backend-Id", valor = "f017276c-e16e-40f9-be57-08602a6053d8"),
+			Parametro(key = "Authorization", valor = Entornos.get(App.ENTORNO).autorizacion),
+			Parametro(key = "Oracle-Mobile-Backend-Id", valor = Entornos.get(App.ENTORNO).backendOracle),
 			Parametro(key = "P_MAX_ROWS", valor = " 50000"),
 			Parametro(key = "P_LANGUAGE_CODE", valor = "es"))
+
 
 		fun reemplazar(str: String, parametrosKpi: Parametros = Parametros(), parametrosDashboard: Parametros = Parametros()): String {
 

@@ -119,7 +119,8 @@ fun MA_Tabla(
 				Column {
 					MA_Titulo("Filtro")
 					MA_Lista(celdasFiltro) { celdaFiltro ->
-						MA_CeldaFiltro(celda = celdaFiltro, onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) }, onClickInvertir = { cf -> onClickInvertir(cf) })
+						MA_CeldaFiltro(celda = celdaFiltro,
+									   onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) }, onClickInvertir = { cf -> onClickInvertir(cf) })
 					}
 				}
 

@@ -7,17 +7,51 @@ import com.personal.metricas.dashboards.domain.interactors.GuardarDashboardCU
 import com.personal.metricas.dashboards.ui.entidades.DashboardUI
 import com.personal.metricas.dashboards.ui.entidades.Etiquetas
 import com.personal.metricas.dashboards.ui.entidades.toDashboard
+import com.personal.metricas.endpoints.domain.interactors.GuardarEndPointCU
+import com.personal.metricas.endpoints.ui.entidades.EndPointUI
+import com.personal.metricas.endpoints.ui.entidades.toDomain
 import com.personal.metricas.kpi.domain.interactors.GuardarKpiCU
 import com.personal.metricas.kpi.ui.entidades.KpiUI
+import com.personal.metricas.paneles.domain.entidades.Panel
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
+import com.personal.metricas.paneles.domain.entidades.TiposPanel
 import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
+import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
 import com.personal.metricas.paneles.ui.entidades.PanelUI
+import com.personal.metricas.paneles.ui.entidades.fromPanel
 
 class InicializadorOperaciones(
 	private val guardarKpis: GuardarKpiCU,
 	private val guardarPaneles: GuardarPanelCU,
 	private val guardarDashboard: GuardarDashboardCU,
+	private val guardarEndPoint:  GuardarEndPointCU,
+	private val obtenerPanelCU: ObtenerPanelCU,
 ) {
+
+
+	suspend fun guardarEndPoint(endPointUI: EndPointUI): PanelUI {
+		//val k = endPointCU.copy(autogenerado = true)
+		val id = guardarEndPoint.guardar(endPointUI.toDomain())
+		val e: EndPointUI = endPointUI.copy(id = id.toInt())
+
+		var panel: Panel = Panel()
+		if (endPointUI.id > 0) {
+			panel = obtenerPanelCU.obtenerPorEndPoint(endPointUI.id)
+		}
+
+		val panelUI =
+			PanelUI().fromPanel(panel.copy(
+				tipoPanel = TiposPanel.PANEL_END_POINT,
+				titulo = endPointUI.nombre,
+				descripcion = endPointUI.descripcion,
+				endPoint = e.toDomain()
+			))
+
+
+		val idPanel: Long = guardarPaneles.guardar(panelUI)
+		val nuevoPanel = panelUI.copy(id = idPanel.toInt())
+		return nuevoPanel
+	}
 
 	suspend fun guardarKpi(kpiUI: KpiUI): KpiUI {
 		val k = kpiUI.copy(autogenerado = true)
@@ -44,7 +78,7 @@ class InicializadorOperaciones(
 						 kpiOrigen = kpiOrigen,
 						 crearKPI = crearKPI)
 
-	suspend fun guardarDashboard(nombre: String = "",   paneles: List<PanelUI>, crearPaneles: Boolean = false, kpiOrigen: KpiUI = KpiUI(), crearKPI: Boolean= false, etiqueta: Etiquetas = Etiquetas.EtiquetaVacia(),): DashboardUI {
+	suspend fun guardarDashboard(nombre: String = "",   paneles: List<PanelUI>, crearPaneles: Boolean = false, kpiOrigen: KpiUI = KpiUI(), crearKPI: Boolean= false, etiqueta: Etiquetas = Etiquetas.EtiquetaVacia(),home: Boolean = false): DashboardUI {
 		var misPaneles: List<PanelUI> = paneles
 		if (crearPaneles) {
 			misPaneles = emptyList()
@@ -64,10 +98,10 @@ class InicializadorOperaciones(
 
 		val panelInicial = listaPaneles.first()
 		val dashboardUI: DashboardUI = DashboardUI(
-			tipo = if3 (kpiOrigen.equals(KpiUI()), TipoDashboard.Estatico(),  TipoDashboard.Dinamico ()),
+			tipo = if3 (kpiOrigen.equals(KpiUI()), TipoDashboard.Estatico(),  TipoDashboard.Dinamico()),
 			nombre = if3(nombre.isEmpty(), panelInicial.titulo,  nombre),
 			logo = "",
-			home = false,
+			home = home,
 			etiqueta = etiqueta ,
 			descripcion = panelInicial.descripcion,
 			kpiOrigen = kpi,

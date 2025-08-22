@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
@@ -30,6 +31,7 @@ import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
+import android.graphics.Color as AndroidColor
 
 @Composable
 fun MA_SignalVertical(
@@ -41,7 +43,7 @@ fun MA_SignalVertical(
 ) {
 
 
-	/*var maximo = -1f
+	var maximo = -1f
 	listaValores.forEach { f ->
 		val v = f.celdas.get(posicionY).valor
 		App.log.d("Valor $v")
@@ -50,8 +52,8 @@ fun MA_SignalVertical(
 				maximo = v.toFloat()
 			}
 		}
-	}*/
-	var maximo = -1f
+	}
+	/*var maximo = -1f
 	if (panelConfiguracion.valorMaximo.equals("0")) {
 		listaValores.forEach { f ->
 			val v = f.celdas.get(posicionY).valor
@@ -64,7 +66,7 @@ fun MA_SignalVertical(
 		}
 	}else{
 		maximo = panelConfiguracion.valorMaximo.toFloat()
-	}
+	}*/
 
 
 
@@ -143,8 +145,8 @@ fun MA_SignalVertical(
 								totalBlocks = 10,
 								progressColor = ChartColor.Gradient(
 									listOf(
-										//			Color(0xFFE8C900), Color(0xFFBA1515)
-										color, Color.Black
+													//Color(0xFFE8C900), Color(0xFFBA1515)
+										 color, color.darken(0.3f)
 									)
 								),
 								trackColor = Color.Gray.asSolidChartColor(),
@@ -170,4 +172,17 @@ fun MA_SignalVertical(
 
 		}
 	}
+}
+
+
+fun Color.darken(factor: Float): Color {
+// Aseguramos que el factor esté en el rango [0.0f, 1.0f]
+	val clampedFactor = 1f - factor.coerceIn(0f, 1f)
+
+	// Aplicamos el factor a cada componente de color (rojo, verde, azul)
+	return this.copy(
+		red = this.red * clampedFactor,
+		green = this.green * clampedFactor,
+		blue = this.blue * clampedFactor
+	)
 }

@@ -86,7 +86,8 @@ data class ValoresTabla(
 			if (campoOrdenacionTabla >= filas.first().celdas.size) 0 else campoOrdenacionTabla
 
 		val fs = filas.filter { it.obtenidaDesdeKPI }
-					 .sortedByDescending {						 						 it.celdas[orden].valor.toFloatOrNull() ?: 0f
+					 .sortedByDescending {
+						 it.celdas[orden].valor.toFloatOrNull() ?: 0f
 
 					 } + filas.filter { !it.obtenidaDesdeKPI }
 		return fs
@@ -160,7 +161,7 @@ data class ValoresTabla(
 
 
 data class Fila(
-	var celdas: List<Celda> = emptyList<Celda>(), val size: Dp = 200.dp,
+	var celdas: List<Celda> = emptyList<Celda>(), val size: Dp = 150.dp,
 	val color: Color = Color.White, val seleccionada: Boolean = false,
 	val visible: Boolean = true, val obtenidaDesdeKPI: Boolean = true,
 
@@ -171,7 +172,7 @@ data class Fila(
 
 data class Celda(
 	val valor: String = "",
-	val size: Dp = 200.dp,
+	val size: Dp = 150.dp,
 	val colorCelda: Color = Color.Blue,
 	val fondoCelda: Color = Color.White,
 	val contenido: @Composable (Modifier) -> Unit = { modifier ->

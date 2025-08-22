@@ -149,7 +149,8 @@ class ListaOrganizacionesSincronizarVM(
 
 
 						estado.copy(textoBuscar = textoBuscar,
-									organizaciones = listaOrganizacionesSincronizarUI.map { it.copy(visible = (it.organizationName.contains(textoBuscar, ignoreCase = true))) })
+									organizaciones = listaOrganizacionesSincronizarUI.map {
+										it.copy(visible = (it.organizationCode.contains(textoBuscar, ignoreCase = true) ||(it.organizationId.contains(textoBuscar, ignoreCase = true) || it.organizationName.contains(textoBuscar, ignoreCase = true)))) })
 					}
 
 				} else {

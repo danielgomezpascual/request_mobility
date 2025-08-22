@@ -34,6 +34,7 @@ import com.personal.metricas.core.composables.graficas.MA_Indicador
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
+import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.layouts.MA_Columnas
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion
@@ -133,7 +134,8 @@ fun SuccessCuadriculaDashboard(
 
 							MA_Avatar(item.nombre)
 
-							FuncionesCondicionesCeldaManager().banderas(item.nombre).composable()
+
+
 
 							Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -143,17 +145,23 @@ fun SuccessCuadriculaDashboard(
 
 
 
-								/*MA_LabelNegrita(
+
+
+							}
+							if (item.nombre.length == 6) {
+								FuncionesCondicionesCeldaManager().banderas(item.nombre).composable()
+							}else {
+								MA_LabelNegrita(
+									alineacion = TextAlign.Center,
 									modifier = Modifier.padding(2.dp),
 									valor = item.nombre
-								)*/
+								)
 							}
 
-
-							MA_LabelMini(
+							/*MA_LabelMini(
 								modifier = Modifier.padding(2.dp),
 								valor = item.descripcion
-							)
+							)*/
 
 							MA_LabelMini(
 								modifier = Modifier.fillMaxWidth(),

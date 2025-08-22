@@ -17,6 +17,7 @@ import com.himanshoe.charty.line.config.LineChartGridConfig
 import com.himanshoe.charty.line.config.LineConfig
 import com.himanshoe.charty.line.model.LineData
 import com.personal.metricas.core.composables.tabla.Fila
+import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 
 /*
@@ -51,7 +52,7 @@ fun MA_GraficoLineas(
 
 		target = null,
 		colorConfig = LineChartColorConfig.default().copy(
-			lineColor = ChartColor.Solid(Color(0xFF084CF8)),
+			lineColor = ChartColor.Solid(Color(0xFFB6104F)),
 			/*lineFillColor = ChartColor.Gradient(
 				listOf(
 					Color(0x4DFC0013), Color(0xFFFFFFFF)
