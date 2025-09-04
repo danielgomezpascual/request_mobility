@@ -35,7 +35,7 @@ fun KpiComboItem(kpiUI: KpiUI) {
 
 
                 Text(
-                    text = "${kpiUI.titulo}",
+                    text = "${kpiUI.id} ${kpiUI.titulo}",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Companion.Bold

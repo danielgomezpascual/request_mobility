@@ -62,7 +62,7 @@ class PanelesListadoVM(
 
     private fun buscar(s: String) {
         val l = if (!s.isEmpty()) {
-            listaPaneles.filter { it.titulo.contains(other = s, ignoreCase = true) }
+            listaPaneles.filter { it.titulo.contains(other = s, ignoreCase = true)||  it.id.toString().contains(other = s, ignoreCase = true)}
         } else {
             listaPaneles
         }

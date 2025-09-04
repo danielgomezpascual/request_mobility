@@ -62,7 +62,7 @@ fun PanelListItem(
 						MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
 						MA_Spacer(Modifier.padding(3.dp))
 					}
-					MA_LabelNegrita(valor = "${panelUI.titulo}")
+					MA_LabelNegrita(valor = "${panelUI.id} - ${panelUI.titulo}")
 				}
 
 				MA_LabelMini(panelUI.tipoPanel.literal())
@@ -125,7 +125,7 @@ fun MA_InfoPanelVertical(modifier  : Modifier = Modifier, panel: PanelUI, mostra
 	Column (modifier = modifier.height(height = 75.dp), horizontalAlignment = Alignment.CenterHorizontally){
 
 		if (mostrarNombre) {
-			MA_LabelMini(panel.titulo, alineacion = TextAlign.Center)
+			MA_LabelMini("${panel.id} ${panel.titulo}", alineacion = TextAlign.Center)
 		}
 
 		Row(modifier = Modifier.padding(3.dp),

@@ -62,7 +62,7 @@ class KpisListadoVM(
 
     private fun buscar(s: String) {
         val l = if (!s.isEmpty()) {
-            listaKpisUI.filter { it.titulo.contains(other = s, ignoreCase = true) }
+            listaKpisUI.filter { it.titulo.contains(other = s, ignoreCase = true)  || it.id.toString().contains(other = s, ignoreCase = true) }
         } else {
             listaKpisUI
         }

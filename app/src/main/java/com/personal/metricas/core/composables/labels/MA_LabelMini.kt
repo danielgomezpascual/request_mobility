@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -20,12 +22,13 @@ fun MA_LabelMini(
     alineacion : TextAlign = TextAlign.Unspecified,
     fontStyle: FontStyle = FontStyle.Normal,
     icono: Icons? = null,
+    size : TextUnit  = 10.sp
 
 ) {
     Text(text = valor,
          modifier = modifier.padding(1.dp), color = color,
-         fontSize = 10.sp,
-        
+         fontSize = size,
+        fontStyle = fontStyle,
         /*style = MaterialTheme.typography.bodySmall,*/ textAlign = alineacion,
         )
 }

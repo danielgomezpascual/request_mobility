@@ -26,7 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.personal.metricas.App
 import com.personal.metricas.App.Companion.dialog
 import com.personal.metricas.R
@@ -159,144 +162,159 @@ fun MA_Panel(
 		MA_Morph()
 	}
 
-	when (panelData.panel.tipoPanel) {
-		TiposPanel.PANEL_TEXTO ->{
-			MA_Card {
-				Column(modifier = Modifier.padding(5.dp)) {
-					MA_LabelNormal(panelData.panel.titulo)
-					MA_LabelMini(panelData.panel.descripcion)
+	val identificador = panelData.dameIdentificador()
+
+
+		when (panelData.panel.tipoPanel) {
+			TiposPanel.PANEL_TEXTO ->{
+				MA_Card {
+					Column(modifier = Modifier.padding(5.dp)) {
+						MA_LabelNormal(panelData.panel.titulo)
+						MA_LabelMini(panelData.panel.descripcion)
+						MA_LabelMini(modifier= Modifier.fillMaxWidth().padding(horizontal = 2.dp), valor =  identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic )
+					}
 				}
 			}
-		}
-		TiposPanel.PANEL_END_POINT -> {
-			MA_Card(modifier = Modifier
-				.clickable(enabled = true, onClick = {
-					scope.launch {
-						isLoading = true // ¡Mostramos el loading!
-						try {
-							App.log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
-							async() {
-								val procesarEndPoint: AlmacenarDatosRemotosEndPointCU = KoinJavaComponent.getKoin().get()
-								val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemoto(panelData.panel.endPoint)
-							}.await()
-							dialog.informacion(_t(R.string.information_actualizada)) { }
-						}
-						finally {
-							isLoading = false
+			TiposPanel.PANEL_END_POINT -> {
+				MA_Card(modifier = Modifier
+					.clickable(enabled = true, onClick = {
+						scope.launch {
+							isLoading = true // ¡Mostramos el loading!
+							try {
+								App.log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
+								async() {
+									val procesarEndPoint: AlmacenarDatosRemotosEndPointCU = KoinJavaComponent.getKoin().get()
+									val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemoto(panelData.panel.endPoint)
+								}.await()
+								dialog.informacion(_t(R.string.information_actualizada)) { }
+							}
+							finally {
+								isLoading = false
+							}
+
+
 						}
 
+
+					})
+				) {
+					Column {
+						MA_IconBottom(icon = Features.EndPoints().icono,
+									  labelText = "${panelData.panel.titulo}",
+									  color = Features.EndPoints().color) {
+						}
+						MA_LabelMini(modifier= Modifier.fillMaxWidth().padding(horizontal = 2.dp), valor =  identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic )
 
 					}
 
 
-				})
-			) {
-
-				MA_IconBottom(icon = Features.EndPoints().icono,
-							  labelText = "${panelData.panel.titulo}",
-							  color = Features.EndPoints().color) {
 				}
 
 			}
 
-		}
+			TiposPanel.PANEL_KPI       -> {
+				graficaComposable = dameTipoGrafica(
+					panelConfiguracion = configuracion,
+					modifier = modifier,
+					filas = fs,
+					posicionX = panelData.panelConfiguracion.columnaX,
+					posivionY = panelData.panelConfiguracion.columnaY
 
-		TiposPanel.PANEL_KPI       -> {
-			graficaComposable = dameTipoGrafica(
-				panelConfiguracion = configuracion,
-				modifier = modifier,
-				filas = fs,
-				posicionX = panelData.panelConfiguracion.columnaX,
-				posivionY = panelData.panelConfiguracion.columnaY
-
-			)
+				)
 
 
 
-			tablaComposable = dameTipoTabla(
-				panelConfiguracion = configuracion,
-				modifier = modifier,
-				filas = filasPintar,
-				notas = panelData.notasManager.notas,
-				celdasFiltro = celdasFiltro,
-				onClickSeleccionarFila = { fila ->
-					filas = filas.map { f ->
-						if (fila.seleccionada) {
-							f.copy(seleccionada = false)
-						} else {
-
-							if (f.equals(fila)) {
-								f.copy(seleccionada = true)
-							} else {
+				tablaComposable = dameTipoTabla(
+					panelConfiguracion = configuracion,
+					modifier = modifier,
+					filas = filasPintar,
+					notas = panelData.notasManager.notas,
+					celdasFiltro = celdasFiltro,
+					onClickSeleccionarFila = { fila ->
+						filas = filas.map { f ->
+							if (fila.seleccionada) {
 								f.copy(seleccionada = false)
-							}
-						}
-
-					}
-					celdasFiltro = fila.celdas
-					panelData.valoresTabla.filas = filas
-				},
-				onClickInvertir = { cfi ->
-					celdasFiltro = celdasFiltro.map { c ->
-						if (c.titulo.equals(cfi.titulo)) {
-							if (!cfi.filtroInvertido) {
-								c.copy(filtroInvertido = true, seleccionada = true)
 							} else {
-								c.copy(filtroInvertido = false)
+
+								if (f.equals(fila)) {
+									f.copy(seleccionada = true)
+								} else {
+									f.copy(seleccionada = false)
+								}
 							}
-						} else {
-							c
+
 						}
-					}
-					filas = cumplenFiltro(filas, celdasFiltro)
-					panelData.valoresTabla.filas = filas
-				},
-				onClickSeleccionarFiltro = { cf ->
-					celdasFiltro = celdasFiltro.map { c ->
-						if (c.titulo.equals(cf.titulo)) {
-							cf.copy(seleccionada = !cf.seleccionada)
-						} else {
-							c
+						celdasFiltro = fila.celdas
+						panelData.valoresTabla.filas = filas
+					},
+					onClickInvertir = { cfi ->
+						celdasFiltro = celdasFiltro.map { c ->
+							if (c.titulo.equals(cfi.titulo)) {
+								if (!cfi.filtroInvertido) {
+									c.copy(filtroInvertido = true, seleccionada = true)
+								} else {
+									c.copy(filtroInvertido = false)
+								}
+							} else {
+								c
+							}
 						}
+						filas = cumplenFiltro(filas, celdasFiltro)
+						panelData.valoresTabla.filas = filas
+					},
+					onClickSeleccionarFiltro = { cf ->
+						celdasFiltro = celdasFiltro.map { c ->
+							if (c.titulo.equals(cf.titulo)) {
+								cf.copy(seleccionada = !cf.seleccionada)
+							} else {
+								c
+							}
+						}
+
+						filas = cumplenFiltro(filas, celdasFiltro)
+						panelData.valoresTabla.filas = filas
+
+
 					}
 
-					filas = cumplenFiltro(filas, celdasFiltro)
-					panelData.valoresTabla.filas = filas
+				)
 
+				MA_Card(modifier = Modifier.padding(6.dp)) {
+
+					Column(){
+						when (configuracion.orientacion) {
+							PanelOrientacion.VERTICAL   -> {
+
+
+								MA_GraficaConTablaVertical(
+									modifier = modifier,
+									panelConfiguracion = configuracion,
+									grafica = { graficaComposable() },
+									tabla = { tablaComposable() },
+									alarmas = panelData.listaAlarmas
+								)
+							}
+
+							PanelOrientacion.HORIZONTAL -> {
+								MA_GraficaConTablaHorizontal(
+									modifier = modifier,
+									panelConfiguracion = configuracion,
+									grafica = { graficaComposable() },
+									tabla = { tablaComposable() },
+									alarmas = panelData.listaAlarmas
+								)
+							}
+						}
+						MA_LabelMini(modifier= Modifier.fillMaxWidth().padding(horizontal = 2.dp), valor =  identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic )
+
+					}
 
 				}
 
-			)
-
-			MA_Card(modifier = Modifier.padding(6.dp)) {
-
-				when (configuracion.orientacion) {
-					PanelOrientacion.VERTICAL   -> {
-
-
-						MA_GraficaConTablaVertical(
-							modifier = modifier,
-							panelConfiguracion = configuracion,
-							grafica = { graficaComposable() },
-							tabla = { tablaComposable() },
-							alarmas = panelData.listaAlarmas
-						)
-					}
-
-					PanelOrientacion.HORIZONTAL -> {
-						MA_GraficaConTablaHorizontal(
-							modifier = modifier,
-							panelConfiguracion = configuracion,
-							grafica = { graficaComposable() },
-							tabla = { tablaComposable() },
-							alarmas = panelData.listaAlarmas
-						)
-					}
-				}
 			}
-
 		}
-	}
+
+
 
 
 }

@@ -44,7 +44,7 @@ fun KpiListItem(
 				Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
 					if (kpiUI.autogenerado) MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
 					MA_Spacer(Modifier.padding(3.dp))
-					MA_LabelNegrita("${kpiUI.titulo}")
+					MA_LabelNegrita("${kpiUI.id} - ${kpiUI.titulo}")
 				}
 				Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
 					MA_Avatar("", color = kpiUI.dameColorDinamico(), size = 10.dp)

@@ -3,7 +3,6 @@ package com.personal.metricas.paneles.domain.entidades
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Columnas
@@ -50,9 +49,10 @@ data class PanelData(
 
 			var pui: PanelUI = panelUI
 			when (panelUI.tipoPanel) {
-				TiposPanel.PANEL_TEXTO->{
+				TiposPanel.PANEL_TEXTO     -> {
 
 				}
+
 				TiposPanel.PANEL_END_POINT -> {
 
 					var listaParametrosReemplazados: MutableList<Parametro> = mutableListOf<Parametro>()
@@ -82,7 +82,7 @@ data class PanelData(
 
 
 			return PanelData(
-				panel = pui.copy(titulo = titulo , descripcion =  descripcion).toPanel(),
+				panel = pui.copy(titulo = titulo, descripcion = descripcion).toPanel(),
 				parametrosOrigenDatos = parametrosOrigenDatos,
 				panelConfiguracion = panelConfiguracion,
 				valoresTabla = tabla,
@@ -91,6 +91,17 @@ data class PanelData(
 
 			)
 		}
+	}
+
+	fun dameIdentificador(): String {
+		val idPanel = "P${panel.id.toString()}"
+		val id = when (panel.tipoPanel) {
+			TiposPanel.PANEL_END_POINT -> "E${panel.endPoint.id}"
+			TiposPanel.PANEL_KPI       -> "K${panel.kpi.id}"
+			TiposPanel.PANEL_TEXTO     -> "T${panel.kpi.id}"
+		}
+
+		return "$idPanel.$id"
 	}
 
 	fun ordenarElementos() = valoresTabla.dameElementosOrdenados(campoOrdenacionTabla = panelConfiguracion.columnaY)
@@ -126,10 +137,10 @@ data class PanelData(
 
 					if (valor.isNotEmpty() && valor.esNumerico()) {
 						val contexto = MapContext().apply {
-							if (valor.esNumerico()){
+							if (valor.esNumerico()) {
 								set("valor", valor.toFloat())
-							}else{
-								set("valor",0)
+							} else {
+								set("valor", 0)
 							}
 
 						}
