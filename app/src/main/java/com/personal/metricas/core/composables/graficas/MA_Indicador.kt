@@ -1,10 +1,10 @@
 package com.personal.metricas.core.composables.graficas
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 
 @Composable
-fun MA_Indicador(modifier: Modifier = Modifier, texto: String, valor: String, color: Color) {
+fun MA_Indicador(modifier: Modifier = Modifier, texto: String, valor: String, colorIndicador: Color, colorFondo: Color) {
 
 	Box(modifier = Modifier
 		//.defaultMinSize(250.dp, 250.dp)
+		.border(width = 1.dp,color = Color.LightGray)
 		.size(150.dp)
-
 		.padding(5.dp)
-		.background(color = Color.Black)) {
+		.background(color = colorFondo)) {
 		Column(
 			verticalArrangement = Arrangement.Center,
 			horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,14 +39,14 @@ fun MA_Indicador(modifier: Modifier = Modifier, texto: String, valor: String, co
 				text = valor, modifier = Modifier
 
 					.padding(6.dp),
-				color = color,
+				color = colorIndicador,
 				// style = MaterialTheme.typography.titleLarge,
 				fontWeight = FontWeight(800),
 				fontSize = TextUnit(40.0f, TextUnitType.Sp),
 				textAlign = TextAlign.Center
 			)
 
-			MA_LabelNormal(valor = texto, color = Color.White, modifier = Modifier)
+			MA_LabelNormal(valor = texto, color = colorIndicador, modifier = Modifier)
 			//   MA_Titulo(valor = y.toString(), color = Color.Green)
 			//MA_Titulo(valor =texto, color = Color.White)
 

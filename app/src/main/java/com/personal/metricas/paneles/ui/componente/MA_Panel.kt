@@ -167,7 +167,7 @@ fun MA_Panel(
 
 		when (panelData.panel.tipoPanel) {
 			TiposPanel.PANEL_TEXTO ->{
-				MA_Card {
+				MA_Card(color = Color(panelData.panelConfiguracion.colorPanel)) {
 					Column(modifier = Modifier.padding(5.dp)) {
 						MA_LabelNormal(panelData.panel.titulo)
 						MA_LabelMini(panelData.panel.descripcion)
@@ -176,7 +176,7 @@ fun MA_Panel(
 				}
 			}
 			TiposPanel.PANEL_END_POINT -> {
-				MA_Card(modifier = Modifier
+				MA_Card(color = Color(panelData.panelConfiguracion.colorPanel),modifier = Modifier
 					.clickable(enabled = true, onClick = {
 						scope.launch {
 							isLoading = true // ¡Mostramos el loading!
@@ -279,7 +279,8 @@ fun MA_Panel(
 
 				)
 
-				MA_Card(modifier = Modifier.padding(6.dp)) {
+				MA_Card(color = Color(panelData.panelConfiguracion.colorPanel).copy(alpha = 0.2f),
+						modifier = Modifier.padding(6.dp)) {
 
 					Column(){
 						when (configuracion.orientacion) {

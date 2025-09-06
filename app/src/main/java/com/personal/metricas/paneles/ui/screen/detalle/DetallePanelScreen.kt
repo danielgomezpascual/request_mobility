@@ -48,6 +48,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.room.util.TableInfo
 import com.personal.metricas.App
@@ -57,6 +59,7 @@ import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_SwitchNormal
 import com.personal.metricas.core.composables.combo.MA_Combo
+import com.personal.metricas.core.composables.combo.MA_ComboColores
 import com.personal.metricas.core.composables.combo.MA_ComboLista
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextoEditable
@@ -91,9 +94,11 @@ import com.personal.metricas.paneles.ui.componente.MA_CondicionCeldaPanelLista
 import com.personal.metricas.paneles.ui.componente.MA_CondicionPanel
 import com.personal.metricas.paneles.ui.componente.MA_CondicionPanelLista
 import com.personal.metricas.paneles.ui.componente.MA_Panel
+import com.personal.metricas.paneles.ui.componente.MA_SeleccionColor
 import com.personal.metricas.paneles.ui.componente.MA_SeleccionPlantillaPanel
 import com.personal.metricas.paneles.ui.componente.MA_SeleccionTipoGrafica
 import com.personal.metricas.paneles.ui.componente.MA_SelectorEsquemaColores
+import com.personal.metricas.paneles.ui.entidades.ColoresSeleccion
 import com.personal.metricas.paneles.ui.entidades.toPanel
 import com.personal.metricas.paneles.ui.screen.detalle.DetallePanelVM.UIState
 import kotlinx.coroutines.launch
@@ -248,7 +253,7 @@ fun SucessScreenDetallePanel(
 
 
 					}
-
+					val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
 					MA_Titulo2(valor = "Plantilla")
 					MA_Card {
 						Column(modifier = Modifier.height(200.dp)) {
@@ -296,6 +301,29 @@ fun SucessScreenDetallePanel(
 									},
 								)
 
+							}
+
+
+							Row(verticalAlignment = Alignment.CenterVertically) {
+
+
+
+								MA_ComboColores(modifier = Modifier.weight(1f),
+												titulo = "Color Fondo",
+												descripcion = "Color Fondo Panle",
+												valorInicial = {
+
+													val color: Color = Color(panelUI.configuracion.colorPanel)
+													MA_SeleccionColor(color)
+												},
+												elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+												item = { colorSeleccion ->
+													MA_SeleccionColor(colorSeleccion.color)
+												},
+												onClickSeleccion = { colorSeleccion ->
+
+													viewModel.onEvent(DetallePanelVM.Eventos.onChangeColorFondoPanel(colorSeleccion.color.toArgb()))
+												})
 							}
 
 						}
@@ -550,6 +578,24 @@ fun SucessScreenDetallePanel(
 											 })
 
 
+								},
+								{
+									MA_ComboColores(modifier = Modifier.weight(1f),
+													titulo = "Color",
+													descripcion = "Color",
+													valorInicial = {
+
+														val color: Color = Color(panelUI.configuracion.colorFondoIndicador)
+														MA_SeleccionColor(color)
+													},
+													elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+													item = { colorSeleccion ->
+														MA_SeleccionColor(colorSeleccion.color)
+													},
+													onClickSeleccion = { colorSeleccion ->
+
+														viewModel.onEvent(DetallePanelVM.Eventos.onChangeColorFondoIndicador(colorSeleccion.color.toArgb()))
+													})
 								}
 							))
 						}

@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 
@@ -81,33 +82,10 @@ fun MA_IndicadorHorizontal(
                 }
 
 
-                MA_Indicador(modifier = modifier, texto = x.toString(), valor = y.toString(), color = fila.color)
+                MA_Indicador(modifier = modifier, texto = x.toString(), valor = y.toString(),
+                             colorIndicador = fila.color,
+                             colorFondo =  Color(panelConfiguracion.colorFondoIndicador))
 
-                /*Column(
-					horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
-					modifier = Modifier
-						.defaultMinSize(100.dp, 100.dp)
-
-						.padding(5.dp)
-						.background(color = Color.Black)
-				) {
-
-					Text(
-						text = y.toString(), modifier = modifier
-							.fillMaxWidth()
-							.padding(6.dp),
-						color = fila.color,
-						// style = MaterialTheme.typography.titleLarge,
-						fontWeight = FontWeight(800),
-						fontSize = TextUnit(40.0f, TextUnitType.Sp),
-						textAlign = TextAlign.Center
-					)
-
-
-					//   MA_Titulo(valor = y.toString(), color = Color.Green)
-					MA_Titulo(valor = x.toString(), color = Color.White)
-
-				}*/
             }
 
         }

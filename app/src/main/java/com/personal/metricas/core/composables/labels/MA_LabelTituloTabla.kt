@@ -15,7 +15,7 @@ fun MA_LabelTituloTabla(
     valor: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Black,
-    fondo : Color = Color.White,
+    fondo : Color = Color.Transparent,
     alineacion : TextAlign = TextAlign.Unspecified,
     icono: Icons? = null,
 ) {

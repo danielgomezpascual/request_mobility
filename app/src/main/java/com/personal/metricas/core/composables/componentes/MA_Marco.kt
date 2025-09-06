@@ -20,7 +20,7 @@ fun MA_Marco(modifier: Modifier = Modifier, titulo: String = "", componente: @Co
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color.White)
+            //.background(Color.White)
             .padding(3.dp)
             //.border(0.dp, Color.LightGray),
         ,horizontalAlignment = Alignment.CenterHorizontally,

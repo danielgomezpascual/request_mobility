@@ -92,6 +92,8 @@ class DetallePanelVM(
 		data class onChangeMostrarTitulosTabla(val valor: Boolean) : Eventos()
 		data class onChangeAgruparValores(val valor: Boolean) : Eventos()
 		data class onChangeCampoAgrupacionTabla(val valor: String) : Eventos()
+		data class onChangeColorFondoIndicador(val valor: Int) : Eventos()
+		data class onChangeColorFondoPanel(val valor: Int) : Eventos()
 
 		data class onChangeCampoSumaTabla(val valor: String) : Eventos()
 		data class onChangeAjustarContenido(val valor: Boolean) : Eventos()
@@ -143,7 +145,9 @@ class DetallePanelVM(
 				_uiState.update { estado ->
 					if (estado is UIState.Success) {
 						when (evento) {
-							is Eventos.OnSeleccionarPlantillaAplicar -> { estado.copy(panelUI = estado.panelUI.copy(configuracion = evento.plantilla.configuracion)) }
+							is Eventos.OnSeleccionarPlantillaAplicar -> {
+								estado.copy(panelUI = estado.panelUI.copy(configuracion = evento.plantilla.configuracion))
+							}
 
 							is Eventos.OnChangeTitulo                -> {
 								estado.copy(panelUI = estado.panelUI.copy(titulo = evento.titulo,
@@ -175,7 +179,7 @@ class DetallePanelVM(
 									orientacion = PanelOrientacion.from(evento.valor))))
 							}
 
-							is  Eventos.OnChangeTipoPanel->{
+							is Eventos.OnChangeTipoPanel             -> {
 								estado.copy(panelUI = estado.panelUI.copy(tipoPanel = evento.identificador))
 							}
 
@@ -250,6 +254,18 @@ class DetallePanelVM(
 
 							}
 
+							is Eventos.onChangeColorFondoIndicador   -> {
+								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
+									colorFondoIndicador = evento.valor)))
+
+							}
+
+							is Eventos.onChangeColorFondoPanel       -> {
+								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
+									colorPanel = evento.valor)))
+
+							}
+
 							is Eventos.onChangeCampoSumaTabla        -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
 									columnaY = evento.valor.toInt())))
@@ -286,7 +302,7 @@ class DetallePanelVM(
 
 							}
 
-							is Eventos.OnChangeValorMaximo                 -> {
+							is Eventos.OnChangeValorMaximo           -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
 									valorMaximo = evento.valor)))
 

@@ -1,5 +1,7 @@
 package com.personal.metricas.paneles.data.ds.local.entidades
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import com.personal.metricas.paneles.domain.entidades.Condiciones
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
@@ -48,6 +50,11 @@ data class PanelConfiguracionRoom(
 
 	val condiciones: List<Condiciones> = listOf<Condiciones>(),
 	val condicionesCeldas: List<Condiciones> = listOf<Condiciones>(),
+
+	val permiteNotas: Boolean = true,
+	val valorMaximo: String = "10",
+	val colorFondoIndicador: Int = Color.White.toArgb(),
+	val colorPanel: Int = Color.White.toArgb(),
 ) {
 
 
@@ -93,6 +100,10 @@ data class PanelConfiguracionRoom(
 				filasColor = panelConfiguracion.filasColor,
 				condiciones = panelConfiguracion.condiciones,
 				condicionesCeldas = panelConfiguracion.condicionesCeldas,
+				permiteNotas  = panelConfiguracion.permiteNotas,
+				valorMaximo  = panelConfiguracion.valorMaximo,
+				colorFondoIndicador  = panelConfiguracion.colorFondoIndicador,
+				colorPanel  = panelConfiguracion.colorPanel,
 			)
 		}
 	}
@@ -143,7 +154,10 @@ data class PanelConfiguracionRoom(
 			condiciones = this.condiciones,
 			condicionesCeldas = this.condicionesCeldas,
 
-
+			permiteNotas = this.permiteNotas,
+			valorMaximo = this.valorMaximo,
+			colorFondoIndicador = this.colorFondoIndicador,
+			colorPanel = this.colorPanel,
 			)
 	}
 }

@@ -1,5 +1,7 @@
 package com.personal.metricas.paneles.domain.entidades
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -32,5 +34,9 @@ data class PanelConfiguracion(
 	val condiciones: List<Condiciones> = listOf<Condiciones>(),
 	val condicionesCeldas: List<Condiciones> = listOf<Condiciones>(),
 	val permiteNotas: Boolean = true,
-	val valorMaximo: String = "10"
-							 )
+	val valorMaximo: String = "10",
+	val colorFondoIndicador: Int = Color.White.toArgb(),
+	val colorPanel: Int = Color.White.toArgb(),
+
+
+)
