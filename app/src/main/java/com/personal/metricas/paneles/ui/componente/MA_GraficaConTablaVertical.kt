@@ -1,5 +1,6 @@
 package com.personal.metricas.paneles.ui.componente
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.componentes.MA_Marco
@@ -35,7 +37,7 @@ fun MA_GraficaConTablaVertical(
 	alarmas: List<Alarmas> = emptyList<Alarmas>()
 ) {
 	Column(
-		modifier,
+		modifier.fillMaxWidth(),
 		verticalArrangement = Arrangement.Center,
 		horizontalAlignment = Alignment.Companion.CenterHorizontally
 	) {
@@ -44,12 +46,17 @@ fun MA_GraficaConTablaVertical(
 
 
 		val m = Modifier.Companion
-			.width(Dp(panelConfiguracion.width.toFloat()))
+			//.width(Dp(panelConfiguracion.width.toFloat()))
+			.fillMaxWidth()
 			.height(Dp(panelConfiguracion.height.toFloat()))
 
 		MA_Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
 
-			Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+			Column(
+				modifier = Modifier.fillMaxWidth(),
+				horizontalAlignment = Alignment.CenterHorizontally,
+				   verticalArrangement = Arrangement.Center) {
+
 				MA_LabelMini(panelConfiguracion.descripcion)
 
 
