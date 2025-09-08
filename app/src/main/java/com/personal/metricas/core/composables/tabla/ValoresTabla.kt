@@ -28,7 +28,7 @@ data class Columnas(val nombre: String, val posicion: Int, var maximaLongitudCar
 	val CONVERSOR : Int = 14
 	fun addValor(valor: String= ""): List<String>{
 
-		App.log.d("valor $valor")
+		//App.log.d("valor $valor")
 		valores = valores.plus(valor)
 
 		if (maximaLongitudCaracteres < 0){
