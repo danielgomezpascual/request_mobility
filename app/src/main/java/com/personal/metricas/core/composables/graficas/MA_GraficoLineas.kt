@@ -17,7 +17,6 @@ import com.himanshoe.charty.line.config.LineChartGridConfig
 import com.himanshoe.charty.line.config.LineConfig
 import com.himanshoe.charty.line.model.LineData
 import com.personal.metricas.core.composables.tabla.Fila
-import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 
 /*

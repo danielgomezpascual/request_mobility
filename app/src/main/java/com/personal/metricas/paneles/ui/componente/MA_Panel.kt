@@ -2,19 +2,14 @@ package com.personal.metricas.paneles.ui.componente
 
 import MA_IconBottom
 import MA_Morph
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -33,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import com.personal.metricas.App
 import com.personal.metricas.App.Companion.dialog
 import com.personal.metricas.R
-import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.MA_Marco
 import com.personal.metricas.core.composables.graficas.MA_GraficoAnillo
@@ -45,7 +38,6 @@ import com.personal.metricas.core.composables.graficas.MA_IndicadorHorizontal
 import com.personal.metricas.core.composables.graficas.MA_IndicadorVertical
 import com.personal.metricas.core.composables.graficas.MA_SignalHorizontal
 import com.personal.metricas.core.composables.graficas.MA_SignalVertical
-import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
@@ -57,7 +49,6 @@ import com.personal.metricas.endpoints.domain.entidades.ResultadoEndPoint
 import com.personal.metricas.endpoints.domain.interactors.AlmacenarDatosRemotosEndPointCU
 import com.personal.metricas.menu.Features
 import com.personal.metricas.notas.domain.entidades.Notas
-import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
@@ -65,10 +56,7 @@ import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.metricas.paneles.domain.entidades.TiposPanel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.koin.compose.getKoin
 import org.koin.java.KoinJavaComponent
-import java.nio.file.WatchEvent
 
 import kotlin.collections.filter
 import kotlin.collections.map

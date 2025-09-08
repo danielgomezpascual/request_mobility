@@ -2,16 +2,13 @@ package com.personal.metricas.core.composables.graficas
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +26,6 @@ import com.himanshoe.charty.common.ChartColor
 import com.himanshoe.charty.common.asSolidChartColor
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.MA_Spacer
-import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion

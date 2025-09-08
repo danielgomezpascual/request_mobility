@@ -1,22 +1,56 @@
 package com.personal.metricas.core.composables.tabla
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import android.graphics.Typeface
+import android.util.TypedValue
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.personal.metricas.App
+import com.personal.metricas.App.Companion.context
 import com.personal.metricas.core.composables.componentes.MA_Colores
 import com.personal.metricas.core.utils.K
-import com.personal.metricas.core.utils.Parametro
-import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils.esNumerico
-import com.personal.metricas.core.utils.if3
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import kotlin.collections.plus
 
-data class Columnas(val nombre: String, val posicion: Int, var valores: List<String> = emptyList())
+data class Columnas(val nombre: String, val posicion: Int, var maximaLongitudCaracteres : Int = -1 ,
+					var maximaLongitudDp: Dp = 0.dp,
+					var valorMaximo: String = "",
+					var valores: List<String> = emptyList()){
+
+	val CONVERSOR : Int = 14
+	fun addValor(valor: String= ""): List<String>{
+
+		App.log.d("valor $valor")
+		valores = valores.plus(valor)
+
+		if (maximaLongitudCaracteres < 0){
+			maximaLongitudCaracteres = nombre.length
+			maximaLongitudDp = (maximaLongitudCaracteres * CONVERSOR ).dp
+			valorMaximo = nombre
+		}
+
+		if (valor.length> maximaLongitudCaracteres){
+			maximaLongitudCaracteres = valor.length
+			maximaLongitudDp = (maximaLongitudCaracteres * CONVERSOR).dp
+			valorMaximo = valor
+		}
+
+
+		if (maximaLongitudDp > 180.dp){
+			maximaLongitudDp = 180.dp
+		}
+
+		return valores
+	}
+}
 
 data class ValoresTabla(
 	//var titulos: List<Header> = emptyList<Header>(),
@@ -159,36 +193,4 @@ data class ValoresTabla(
 
 }
 
-
-data class Fila(
-	var celdas: List<Celda> = emptyList<Celda>(), val size: Dp = 150.dp,
-	val color: Color = Color.White, val seleccionada: Boolean = false,
-	val visible: Boolean = true, val obtenidaDesdeKPI: Boolean = true,
-
-	) {
-	fun toParametros() = Parametros(ps = this.celdas.map { celda -> Parametro(celda.titulo, celda.valor) })
-
-}
-
-data class Celda(
-	val valor: String = "",
-	val size: Dp = 150.dp,
-	val colorCelda: Color = Color.Blue,
-	val fondoCelda: Color = Color.White,
-	val contenido: @Composable (Modifier) -> Unit = { modifier ->
-		MA_LabelCelda(modifier = modifier, valor = valor,/* color = colorCelda,*/
-					  alineacion = if3(valor.esNumerico(), TextAlign.End, TextAlign.Start))
-	},
-	val titulo: String = "", val colorTitulo: Color = Color.White,
-	val fondoTitulo: Color = Color.DarkGray,
-	val celdaTitulo: @Composable (Modifier) -> Unit = { modifierTitulo ->
-		//MA_LabelCeldaTitulo(valor = titulo, color = colorTitulo, fondo = fondoTitulo)
-
-		MA_LabelCelda(modifier = modifierTitulo, valor = titulo,/* color = colorCelda,*/
-					  color = colorTitulo, fondo = fondoTitulo,
-					  alineacion = if3(valor.esNumerico(), TextAlign.End, TextAlign.Start))
-	},
-	val seleccionada: Boolean = false,
-	val filtroInvertido: Boolean = false,
-)
 

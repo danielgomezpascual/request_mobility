@@ -1,5 +1,6 @@
 package com.personal.metricas.transacciones.domain.entidades
 
+import androidx.compose.ui.unit.dp
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Columnas
@@ -26,21 +27,6 @@ data class ResultadoSQL(
 		}
 
 		fun fromSqlToTabla(sql: String, parametrosKpi: Parametros = Parametros(), parametrosOrigenDatos: Parametros = Parametros()): ValoresTabla {
-
-
-			//var sqlConReemplazos = sql
-			/*parametrosKpi.ps.forEach { parametro ->
-
-				val key = parametro.key
-				val parametroOrigenDatos: Parametro? = parametrosOrigenDatos.ps.firstOrNull{it.key.equals(key)}
-
-				var valor = if3 (parametro.valor.isEmpty(), parametro.defecto, parametro.valor)
-				if (!parametro.fijo &&  parametroOrigenDatos != null){
-					valor  = parametroOrigenDatos.valor
-				}
-
-				sqlConReemplazos = sqlConReemplazos.replace("\$$key", "$valor", ignoreCase = true)
-			}*/
 
 			val sqlConReemplazos = Parametros.reemplazar(str = sql, parametrosKpi = parametrosKpi, parametrosDashboard = parametrosOrigenDatos)
 			val trxDao = getKoin().get<AppDatabase>().transaccionesDao()
@@ -71,15 +57,27 @@ data class ResultadoSQL(
 						Columnas(nombre = titulos[indice], posicion = indice, valores = emptyList())
 					columnasTabla = columnasTabla.plus(columna)
 				}
+
+
+				columna.valores = columna.addValor(valor)
+				//columna.valores = columna.valores.plus(valor)
 				
-				
-				columna.valores = columna.valores.plus(valor)
-				
-				filaVT = filaVT.plus(Celda(valor = valor, titulo = titulos[indice]))
+				filaVT = filaVT.plus(Celda(valor = valor,
+										   titulo = titulos[indice],
+										   /*size = columna.maximaLongitudDp*/))
 			}
 			filasValoresTabla = filasValoresTabla.plus(Fila(celdas = filaVT))
-		}
 
+
+		}
+		var filasValoresTablaSizes: List<Fila> = emptyList<Fila>()
+		filasValoresTabla.forEach { fila ->
+			fila.celdas.forEachIndexed{ indice, celda ->
+				var columna: Columnas = columnasTabla.elementAt(indice)
+				celda.size =  columna.maximaLongitudDp
+			}
+		}
+		App.log.lista("Coluimnas", columnasTabla)
 
 		return ValoresTabla(filas = filasValoresTabla, columnas = columnasTabla)
 		

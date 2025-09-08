@@ -17,18 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.listas.MA_Lista
 import com.personal.metricas.core.utils.K
 import com.personal.metricas.notas.domain.entidades.Notas
-import com.personal.metricas.notas.domain.interactors.GuardarNotaCU
-import com.personal.metricas.notas.domain.interactors.ObtenerNotasCU
 import com.personal.metricas.transacciones.ui.screens.composables.ModalInferiorFiltros
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import org.koin.mp.KoinPlatform.getKoin
 
 
 @Preview
@@ -130,6 +124,7 @@ fun MA_Tabla(
 
 			}
 		}
+
 		Row(modifier = Modifier
 			.padding(4.dp)
 			.fillMaxWidth()) {
@@ -148,13 +143,8 @@ fun MA_Tabla(
 					} else {
 						modifierBox = modifierBox.width(celda.size)
 					}
-					/*modifierBox = if (ajustarContenidoAncho) {
-						modifierBox
-                            .fillMaxWidth()
-                            .weight(1f)
-					} else {
-						modifierBox.width(celda.size)
-					}*/
+
+
 
 
 					if (celda.titulo.equals(K.HASH_CODE)) {

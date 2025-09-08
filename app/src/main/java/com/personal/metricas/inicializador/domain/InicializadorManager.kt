@@ -138,7 +138,7 @@ class InicializadorManager(
 
 
 		val condiciones: Condiciones = Condiciones(id = 1,
-												   columna = Columnas("LECTORA_FISICA_ID", 0, emptyList()),
+												   columna = Columnas(nombre = "LECTORA_FISICA_ID", posicion =  0, valores =  emptyList()),
 												   color = 0,
 												   condicionCelda = 1,
 												   predicado = "",
@@ -419,7 +419,7 @@ class InicializadorManager(
 
 
 		val condiciones: Condiciones = Condiciones(id = 1,
-												   columna = Columnas("LECTORA_FISICA_ID", 0, emptyList()),
+												   columna = Columnas("LECTORA_FISICA_ID", 0, valores = emptyList()),
 												   color = 0,
 												   condicionCelda = 1,
 												   predicado = "",

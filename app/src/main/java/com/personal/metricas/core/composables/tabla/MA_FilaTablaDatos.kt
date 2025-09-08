@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.Note
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,34 +18,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.personal.metricas.App
-import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.composables.dialogos.DialogosResultado
 import com.personal.metricas.core.composables.imagenes.MA_Icono
-import com.personal.metricas.core.room.AppDatabase
 import com.personal.metricas.core.utils.K
-import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.core.utils.if3
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.notas.domain.entidades.Notas
-import com.personal.metricas.notas.domain.interactors.GuardarNotaCU
-import com.personal.metricas.notas.domain.interactors.ObtenerNotasCU
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
-import org.koin.androidx.compose.get
-import org.koin.core.context.GlobalContext.get
-import org.koin.mp.KoinPlatform.getKoin
 
 @Composable
-fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>, configuracion: PanelConfiguracion, onClick: (Fila) -> Unit) {
+fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>,
+					  configuracion: PanelConfiguracion,
+					  onClick: (Fila) -> Unit) {
+
 	val modifier = Modifier.Companion
 	val filasColor = configuracion.filasColor
 	val ajustarContenidoAncho = configuracion.ajustarContenidoAncho
@@ -83,16 +68,17 @@ fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>, configuracion: PanelConfig
 
 		var anotacion by remember { mutableStateOf(an) }
 
+
 		fila.celdas.forEachIndexed { indice, celda ->
 
-			var modifierFila: Modifier = Modifier.Companion
+			var modifierCelda: Modifier = Modifier.Companion
 
 			if (ajustarContenidoAncho) {
-				modifierFila = modifierFila
+				modifierCelda = modifierCelda
 					.fillMaxWidth()
 					.weight(1f)
 			} else {
-				modifierFila = modifierFila.width(fila.size)
+				modifierCelda = modifierCelda.width(celda.size)
 			}
 
 
@@ -103,8 +89,7 @@ fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>, configuracion: PanelConfig
 					Row(Modifier.clickable(enabled = true, onClick = {
 
 
-						dialog.nota(texto = "${celda.valor}".toString(),
-									 textoInicial = anotacion) { dialogosResultado, mensaje ->
+						dialog.nota(texto = "${celda.valor}".toString(), textoInicial = anotacion) { dialogosResultado, mensaje ->
 
 							if (dialogosResultado == DialogosResultado.Si) {
 								scope.launch {
@@ -132,11 +117,11 @@ fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>, configuracion: PanelConfig
 				}
 			} else {
 				if (indicadorColor && indice == 0) {
-					MA_Indicador(modifierFila, fila.color) {
-						celda.contenido(modifierFila)
+					MA_Indicador(modifierCelda, fila.color) {
+						celda.contenido(modifierCelda)
 					}
 				} else {
-					celda.contenido(modifierFila)
+					celda.contenido(modifierCelda)
 				}
 			}
 
