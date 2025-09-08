@@ -3,6 +3,8 @@ package com.personal.metricas.sincronizacion.ui.lista
 import MA_IconBottom
 import MA_Morph
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -119,8 +122,15 @@ fun Success(
 					},
 				)
 
-				Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-
+				Row(modifier = Modifier.horizontalScroll(rememberScrollState()).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+					uiState.organizaciones.filter { it.seleccionado }.forEach { organizacion ->
+						Box() {
+							MA_LabelNormal(modifier = Modifier
+								.padding(4.dp)
+								.background(color = Color(255, 171, 145, 255)),
+									valor = organizacion . organizationCode)
+						}
+					}
 				}
 
 

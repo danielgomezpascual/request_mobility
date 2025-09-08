@@ -15,8 +15,11 @@ import com.personal.metricas.endpoints.domain.repositorios.EndPointRepositorio
 import com.personal.metricas.endpoints.domain.servicios.ConversorJsonToTabla
 import com.personal.metricas.endpoints.ui.screen.detalle.DetalleEndPointVM
 import com.personal.metricas.endpoints.ui.screen.listado.EndPointsListadoVM
+import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
 import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
+import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
+import com.personal.metricas.transacciones.domain.interactors.GuardarTransacciones
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -43,9 +46,13 @@ val moduloEndPoints = module {
 	single<ConversorJsonToTabla> { ConversorJsonToTabla() }
 
 	single<AlmacenarDatosRemotosEndPointCU> {
-		AlmacenarDatosRemotosEndPointCU(obtenerEndPointCU = get<ObtenerEndPointCU>(),
-										accesoRemoto = get<EndPointsRemotoDS>(),
-										conversonrJson = get<ConversorJsonToTabla>()
+		AlmacenarDatosRemotosEndPointCU(
+			obtenerEndPointCU = get<ObtenerEndPointCU>(),
+			accesoRemoto = get<EndPointsRemotoDS>(),
+			conversonrJson = get<ConversorJsonToTabla>(),
+			obtenerOrganizacionesCU = get<ObtenerOrganizacionesCU>(),
+			repoTrx = get<TransaccionesRepoImp>(),
+			guardarTrx = get<GuardarTransacciones>(),
 		)
 	}
 

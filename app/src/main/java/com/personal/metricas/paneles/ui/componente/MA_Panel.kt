@@ -191,7 +191,9 @@ fun MA_Panel(
 									  labelText = "${panelData.panel.titulo}",
 									  color = Features.EndPoints().color) {
 						}
-						MA_LabelMini(modifier= Modifier.fillMaxWidth().padding(horizontal = 2.dp), valor =  identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic )
+						MA_LabelMini(modifier= Modifier.fillMaxWidth().padding(horizontal = 2.dp),
+									 valor =  identificador, alineacion = TextAlign.End, size = 9.sp,
+									 fontStyle = FontStyle.Italic )
 
 					}
 
