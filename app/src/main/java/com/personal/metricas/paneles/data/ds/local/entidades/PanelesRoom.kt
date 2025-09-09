@@ -31,6 +31,7 @@ data class PanelesRoom(
 	val tipoPanel: Int = 0,
 	val idKpi: Int = 0,
 	val idEndPoint: Int = 0,
+	val color: Int = 0
 ) : IRoom
 
 
@@ -66,7 +67,8 @@ suspend fun PanelesRoom.toPanel(): Panel {
 		tipoPanel = TiposPanel.dameTipoPanel(this.tipoPanel),
 		kpi =kpi,
 		endPoint = endPoint,
-		autogenerado = esTrue(this.autogenerado, "Y", false)
+		autogenerado = esTrue(this.autogenerado, "Y", false), 
+		color =  this.color
 	)
 
 
@@ -84,6 +86,7 @@ fun PanelesRoom.fromPanel(panel: Panel) = PanelesRoom(
 	idKpi = panel.kpi.id,
 	autogenerado = Utils.toSiNo(panel.autogenerado),
 	idEndPoint = panel.endPoint.id,
-	tipoPanel = TiposPanel.dameIndicePanel(panel.tipoPanel)
+	tipoPanel = TiposPanel.dameIndicePanel(panel.tipoPanel),
+	color = panel.color
 )
 

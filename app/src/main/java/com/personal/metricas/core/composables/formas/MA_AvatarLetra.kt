@@ -46,8 +46,9 @@ fun MA_Avatar(
 	Column(
 			modifier = Modifier.Companion
 				.size(size)
-				.clip(CircleShape)
-				.background(color),
+				//.clip(CircleShape)
+
+				.background(color, shape = MA_ShapeIrregular(corners = 50, irregularity = 0.1f, seed = 1L)),
 			verticalArrangement = Arrangement.Center,
 			horizontalAlignment = Alignment.CenterHorizontally
 		  

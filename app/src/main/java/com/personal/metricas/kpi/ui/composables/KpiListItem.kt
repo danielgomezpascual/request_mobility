@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.HdrAuto
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.formas.MA_Avatar
@@ -37,7 +38,7 @@ fun KpiListItem(
 			.padding(10.dp), verticalAlignment = Alignment.Companion.CenterVertically) {
 
 			//  MA_ImagenDrawable(imagen = R.drawable.database, s = 26.dp)
-			MA_Avatar(kpiUI.titulo)
+			MA_Avatar(kpiUI.titulo, color = Color(kpiUI.color))
 			Spacer(modifier = Modifier.padding(4.dp))
 
 			Column {

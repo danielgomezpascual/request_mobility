@@ -22,6 +22,7 @@ data class KpisRoom(
 	val parametros: String = "",
 	//  val configuracion: String = ""
 	val autogenerado: String = "N",
+	val color: Int = 0,
 ) : IRoom
 
 
@@ -38,8 +39,8 @@ fun KpisRoom.toKpi(): Kpi {
 		descripcion = this.descripcion,
 		sql = this.sql,
 		parametros = _toObjectFromJson<Parametros>(parametros) ?: Parametros(),
-		autogenerado = esTrue(this.autogenerado, "Y", false)
-
+		autogenerado = esTrue(this.autogenerado, "Y", false),
+		color = this.color
 		/*configuracion = configuracion*/)
 }
 
@@ -51,6 +52,7 @@ fun KpisRoom.fromKPI(kpi: Kpi) = KpisRoom(
 	sql = kpi.sql,
 	parametros = _toJson(kpi.parametros),
 	/*configuracion = _toJson(kpi.configuracion)*/
-	autogenerado = Utils.toSiNo(kpi.autogenerado)
+	autogenerado = Utils.toSiNo(kpi.autogenerado),
+	color = kpi.color
 )
 

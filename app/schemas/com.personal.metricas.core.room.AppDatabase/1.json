@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "09b2519f0e4d617fc87f0bbe5fe95bb9",
+    "identityHash": "93b341819e29a5a04bac666441985300",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -206,7 +206,7 @@
       },
       {
         "tableName": "Kpis",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `origen` TEXT NOT NULL, `sql` TEXT NOT NULL, `parametros` TEXT NOT NULL, `autogenerado` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `origen` TEXT NOT NULL, `sql` TEXT NOT NULL, `parametros` TEXT NOT NULL, `autogenerado` TEXT NOT NULL, `color` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -249,6 +249,12 @@
             "columnName": "autogenerado",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -262,7 +268,7 @@
       },
       {
         "tableName": "Dashboard",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tipo` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `home` TEXT NOT NULL, `logo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `idKpi` INTEGER NOT NULL, `paneles` TEXT NOT NULL, `autogenerado` TEXT NOT NULL, `etiqueta` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tipo` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `home` TEXT NOT NULL, `logo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `idKpi` INTEGER NOT NULL, `paneles` TEXT NOT NULL, `autogenerado` TEXT NOT NULL, `etiqueta` TEXT NOT NULL, `color` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -323,6 +329,12 @@
             "columnName": "etiqueta",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -336,7 +348,7 @@
       },
       {
         "tableName": "Paneles",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `configuracion` TEXT NOT NULL, `autogenerado` TEXT NOT NULL, `tipoPanel` INTEGER NOT NULL, `idKpi` INTEGER NOT NULL, `idEndPoint` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `descripcion` TEXT NOT NULL, `configuracion` TEXT NOT NULL, `autogenerado` TEXT NOT NULL, `tipoPanel` INTEGER NOT NULL, `idKpi` INTEGER NOT NULL, `idEndPoint` INTEGER NOT NULL, `color` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -383,6 +395,12 @@
           {
             "fieldPath": "idEndPoint",
             "columnName": "idEndPoint",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -488,7 +506,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '09b2519f0e4d617fc87f0bbe5fe95bb9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '93b341819e29a5a04bac666441985300')"
     ]
   }
 }

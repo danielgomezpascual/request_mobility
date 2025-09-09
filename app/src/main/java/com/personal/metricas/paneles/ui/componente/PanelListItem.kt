@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.HdrAuto
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,7 +51,7 @@ fun PanelListItem(
 
 
 			Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-				MA_Avatar(panelUI.titulo)
+				MA_Avatar(panelUI.titulo, color = Color(panelUI.color))
 				if (panelUI.tipoPanel == TiposPanel.PANEL_KPI) MA_InfoPanel(panelUI)
 			}
 			Spacer(modifier = Modifier.Companion.width(5.dp))

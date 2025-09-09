@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.MA_Spacer
@@ -42,6 +43,7 @@ import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
 import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
+import com.personal.metricas.core.composables.combo.MA_ComboColores
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextoEditable
 import com.personal.metricas.core.composables.edittext.MA_TextoNormal
@@ -60,6 +62,10 @@ import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.kpi.ui.screen.detalle.DetalleKpiVM.UIState
 import com.personal.metricas.menu.Features
+import com.personal.metricas.paneles.domain.entidades.EsquemaColores
+import com.personal.metricas.paneles.ui.componente.MA_SeleccionColor
+import com.personal.metricas.paneles.ui.entidades.ColoresSeleccion
+import com.personal.metricas.paneles.ui.screen.detalle.DetallePanelVM
 import com.personal.metricas.transacciones.domain.entidades.ResultadoSQL
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -128,7 +134,7 @@ fun SuccessScreenDetalleKpi(
 
 
 				Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-					MA_Avatar(kpiUI.titulo)
+					MA_Avatar(kpiUI.titulo, color = Color(kpiUI.color))
 					MA_Titulo(kpiUI.titulo)
 				}
 
@@ -143,10 +149,32 @@ fun SuccessScreenDetalleKpi(
 
 					Column() {
 
+						Row() {
+							val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
+							MA_ComboColores(modifier = Modifier.weight(1f),
+											titulo = "",
+											descripcion = "Color",
+											valorInicial = {
 
-						MA_TextoNormal(valor = kpiUI.titulo, titulo = "Nombre", onValueChange = { valor ->
-							viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeTitulo(valor))
-						})
+												val color: Color = Color(kpiUI.color)
+												MA_SeleccionColor(color)
+											},
+											elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+											item = { colorSeleccion ->
+												MA_SeleccionColor(colorSeleccion.color)
+											},
+											onClickSeleccion = { colorSeleccion ->
+												viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeColor(colorSeleccion.color.toArgb()))
+											})
+
+							MA_TextoNormal(valor = kpiUI.titulo, titulo = "Nombre", onValueChange = { valor ->
+								viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeTitulo(valor))
+							})
+
+						}
+
+
+
 
 						MA_TextoNormal(valor = kpiUI.descripcion, titulo = "Descripcion", onValueChange = { valor ->
 							viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeDescripcion(valor))
@@ -173,38 +201,39 @@ fun SuccessScreenDetalleKpi(
 								})
 
 
-								Row(modifier = Modifier.fillMaxWidth()	.horizontalScroll(rememberScrollState())){
+								Row(modifier = Modifier
+									.fillMaxWidth()
+									.horizontalScroll(rememberScrollState())) {
 
-									uiState.ocurrenciasSQL.forEach { palabraSugerida->
-										Box(modifier = Modifier.padding(5.dp).background(color = Color(222, 222, 222, 100)).clickable(enabled = true, onClick = {
-											// --- INICIO DE LA LÓGICA CLAVE ---
+									uiState.ocurrenciasSQL.forEach { palabraSugerida ->
+										Box(modifier = Modifier
+											.padding(5.dp)
+											.background(color = Color(222, 222, 222, 100))
+											.clickable(enabled = true, onClick = {
+												// --- INICIO DE LA LÓGICA CLAVE ---
 
-											// 1. Obtenemos el texto completo actual.
-											val textoCompleto = kpiUI.sql
+												// 1. Obtenemos el texto completo actual.
+												val textoCompleto = kpiUI.sql
 
-											// 2. Creamos el nuevo texto reemplazando la palabra que estabas
-											//    escribiendo (`currentWord`) por la que has seleccionado (`palabraSugerida`).
-											//    Usamos replaceLastWord para evitar reemplazar ocurrencias anteriores.
-											val nuevoTexto = replaceLastWord(textoCompleto, currentWord, palabraSugerida)
+												// 2. Creamos el nuevo texto reemplazando la palabra que estabas
+												//    escribiendo (`currentWord`) por la que has seleccionado (`palabraSugerida`).
+												//    Usamos replaceLastWord para evitar reemplazar ocurrencias anteriores.
+												val nuevoTexto = replaceLastWord(textoCompleto, currentWord, palabraSugerida)
 
-											// 3. Notificamos al ViewModel del cambio, como si el usuario
-											//    lo hubiera escrito todo.
-
-
-											// 4. (Importante) Limpiamos las sugerencias para que desaparezcan.
-											viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeAutocompletarSQL(""))
-
-
-
-											viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(nuevoTexto))
+												// 3. Notificamos al ViewModel del cambio, como si el usuario
+												//    lo hubiera escrito todo.
 
 
-
+												// 4. (Importante) Limpiamos las sugerencias para que desaparezcan.
+												viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeAutocompletarSQL(""))
 
 
 
-											// --- FIN DE LA LÓGICA CLAVE ---
-										})){
+												viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(nuevoTexto))
+
+
+												// --- FIN DE LA LÓGICA CLAVE ---
+											})) {
 											MA_LabelNormal(valor = palabraSugerida)
 										}
 

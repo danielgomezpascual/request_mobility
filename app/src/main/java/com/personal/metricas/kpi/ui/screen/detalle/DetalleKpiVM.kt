@@ -76,6 +76,7 @@ class DetalleKpiVM(
 		data class OnChangeDescripcion(val descripcion: String) : Eventos()
 		data class OnChangeSQL(val sql: String) : Eventos()
 		data class OnChangeAutocompletarSQL(val texto: String) : Eventos()
+		data class OnChangeColor(val color: Int) : Eventos()
 		data object RunSQL : Eventos()
 
 
@@ -126,6 +127,9 @@ class DetalleKpiVM(
 
 							is Eventos.OnChangeTitulo                                 -> estado.copy(kpiUI = estado.kpiUI.copy(titulo = evento.titulo))
 							is Eventos.OnChangeDescripcion                            -> estado.copy(kpiUI = estado.kpiUI.copy(descripcion = evento.descripcion))
+							is Eventos.OnChangeColor                            -> estado.copy(kpiUI = estado.kpiUI.copy(color = evento.color))
+
+
 							is Eventos.OnChangeAutocompletarSQL                                  -> {
 								estado.copy(ocurrenciasSQL = ocurrenciasSQL.filtrar(evento.texto))
 							}
@@ -139,7 +143,8 @@ class DetalleKpiVM(
 										id = estado.kpiUI.id,
 										titulo = estado.kpiUI.titulo,
 										descripcion = estado.kpiUI.descripcion,
-										sql = evento.sql
+										sql = evento.sql,
+										color = estado.kpiUI.color
 									)
 
 									estado.copy(

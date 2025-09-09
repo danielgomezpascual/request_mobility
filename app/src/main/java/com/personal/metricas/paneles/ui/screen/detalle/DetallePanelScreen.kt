@@ -174,7 +174,7 @@ fun SucessScreenDetallePanel(
 
 				Column(modifier = Modifier.fillMaxWidth(),
 					   horizontalAlignment = Alignment.CenterHorizontally) {
-					MA_Avatar(panelUI.titulo)
+					MA_Avatar(panelUI.titulo, color = Color(panelUI.color))
 					MA_Titulo(panelUI.titulo)
 				}
 
@@ -183,11 +183,34 @@ fun SucessScreenDetallePanel(
 				MA_Titulo2("Información")
 				MA_Card(modifier = Modifier.fillMaxWidth()) {
 					Column {
-						MA_TextoNormal(valor = panelUI.titulo,
-									   titulo = "Nombre",
-									   onValueChange = { valor ->
-										   viewModel.onEvent(DetallePanelVM.Eventos.OnChangeTitulo(valor))
-									   })
+						Row() {
+							val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
+							MA_ComboColores(modifier = Modifier.weight(1f),
+											titulo = "",
+											descripcion = "Color",
+											valorInicial = {
+
+												val color: Color = Color(panelUI.color)
+												MA_SeleccionColor(color)
+											},
+											elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+											item = { colorSeleccion ->
+												MA_SeleccionColor(colorSeleccion.color)
+											},
+											onClickSeleccion = { colorSeleccion ->
+
+												viewModel.onEvent(DetallePanelVM.Eventos.OnChangeColor(colorSeleccion.color.toArgb()))
+											})
+
+
+							MA_TextoNormal(valor = panelUI.titulo,
+										   titulo = "Nombre",
+										   onValueChange = { valor ->
+											   viewModel.onEvent(DetallePanelVM.Eventos.OnChangeTitulo(valor))
+										   })
+						}
+
+
 						MA_TextoNormal(valor = panelUI.descripcion,
 									   titulo = "Descripcion",
 									   onValueChange = { valor ->
@@ -305,7 +328,6 @@ fun SucessScreenDetallePanel(
 
 
 							Row(verticalAlignment = Alignment.CenterVertically) {
-
 
 
 								MA_ComboColores(modifier = Modifier.weight(1f),
@@ -572,7 +594,7 @@ fun SucessScreenDetallePanel(
 											 titulo = "Limite máximo elementos",
 											 descripcion = "Tope Elementos)",
 											 valorInicial = panelUI.configuracion.valorMaximo,
-											 elementosSeleccionables = (0..55 step 5).map { it.toString() }+ (100..500 step 10).map { it.toString() }+ (5000..1500 step 100).map { it.toString() },
+											 elementosSeleccionables = (0..55 step 5).map { it.toString() } + (100..500 step 10).map { it.toString() } + (5000..1500 step 100).map { it.toString() },
 											 onClickSeleccion = { str, indice ->
 												 viewModel.onEvent(DetallePanelVM.Eventos.OnChangeValorMaximo(str))
 											 })

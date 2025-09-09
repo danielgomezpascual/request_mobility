@@ -76,6 +76,7 @@ class DetalleDashboardVM(
 
 		data class Guardar(val navegacion: (EventosNavegacion) -> Unit) : Eventos()  // Renombrado para claridad
 		data class OnChangeNombre(val valor: String) : Eventos()     // Adaptado desde OnChangeItem
+		data class OnChangeColor(val color: Int) : Eventos()     // Adaptado desde OnChangeItem
 		data class OnChangeDescripcion(val valor: String) : Eventos() // Adaptado desde OnChangeProveedor
 		data class OnChangeInicial(val valor: Boolean) : Eventos() //
 		data class OnSeleccionarPanel(val panelUI: PanelUI) : Eventos() // Adaptado desde OnChangeProveedor
@@ -104,6 +105,7 @@ class DetalleDashboardVM(
 					if (estado is UIState.Success) {
 						when (eventos) {
 							is Eventos.OnChangeNombre          -> estado.copy(dashboardUI = estado.dashboardUI.copy(nombre = eventos.valor))
+							is Eventos.OnChangeColor          -> estado.copy(dashboardUI = estado.dashboardUI.copy(color = eventos.color	))
 							is Eventos.OnChangeDescripcion     -> estado.copy(dashboardUI = estado.dashboardUI.copy(descripcion = eventos.valor))
 							is Eventos.OnActualizarPaneles     -> {
 

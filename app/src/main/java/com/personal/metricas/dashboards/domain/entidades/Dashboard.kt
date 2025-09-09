@@ -17,7 +17,8 @@ data class Dashboard(
 	val parametros : Parametros = Parametros(),
 	val autogenerado :Boolean = false,
 	val etiqueta: Etiquetas,
-	){
+	val color: Int = 0
+){
 	
 }
 

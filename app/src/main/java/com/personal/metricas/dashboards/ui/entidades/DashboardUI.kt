@@ -23,6 +23,7 @@ data class DashboardUI(
 	val parametros: Parametros = Parametros(),
 	val autogenerado: Boolean = false,
 	val etiqueta: Etiquetas = Etiquetas.EtiquetaVacia()  ,
+	val color: Int = 0
 ){
 
 }
@@ -44,7 +45,8 @@ fun DashboardUI.fromDashboard(dashboard: Dashboard): DashboardUI {
 		listaPaneles = dashboard.paneles.map { PanelUI().fromPanel(it) },
 		parametros = dashboard.parametros,
 		autogenerado = dashboard.autogenerado,
-		etiqueta = dashboard.etiqueta
+		etiqueta = dashboard.etiqueta,
+		color = dashboard.color
 	)
 
 }
@@ -70,7 +72,8 @@ fun DashboardUI.toDashboard(): Dashboard {
 		},
 		parametros = this.parametros,
 		autogenerado = this.autogenerado,
-		etiqueta =  this.etiqueta
+		etiqueta =  this.etiqueta,
+		color = this.color
 
 	)
 }

@@ -43,7 +43,7 @@ fun MA_DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -
 			// Icon(Icons.Filled.Dashboard, contentDescription = "Icono Dashboard", modifier = Modifier.size(40.dp))
 			//
 
-			MA_Avatar(dashboardUI.nombre)
+			MA_Avatar(dashboardUI.nombre, color = Color(dashboardUI.color))
 
 
 			Spacer(modifier = Modifier.width(8.dp))

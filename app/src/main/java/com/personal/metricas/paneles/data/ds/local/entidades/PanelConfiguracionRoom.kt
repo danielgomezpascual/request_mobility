@@ -55,6 +55,7 @@ data class PanelConfiguracionRoom(
 	val valorMaximo: String = "10",
 	val colorFondoIndicador: Int = Color.White.toArgb(),
 	val colorPanel: Int = Color.White.toArgb(),
+
 ) {
 
 

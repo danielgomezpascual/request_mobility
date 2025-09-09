@@ -33,6 +33,7 @@ class DashboardRoom(
 	val paneles: String = "",
 	val autogenerado: String = "N",
 	val etiqueta: String = "",
+	val color: Int = 0
 ) : IRoom
 
 suspend fun DashboardRoom.toDashboard(): Dashboard {
@@ -76,7 +77,8 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 		kpiOrigenDatos = obtenerKpi.obtener(this.idKpi), // Asumo que esta también es una función suspend
 		paneles = listaPanelesActualizado,
 		autogenerado = esTrue(this.autogenerado, "Y", false),
-		etiqueta = _toObjectFromJson<Etiquetas>(this.etiqueta) ?: Etiquetas.EtiquetaVacia()
+		etiqueta = _toObjectFromJson<Etiquetas>(this.etiqueta) ?: Etiquetas.EtiquetaVacia(),
+		color = this.color
 	)
 
 }
@@ -101,6 +103,7 @@ fun DashboardRoom.fromDashboard(dashboard: Dashboard): DashboardRoom {
 		idKpi = dashboard.kpiOrigenDatos.id,
 		paneles = _toJson(dashboard.paneles.map { PanelDashboardRoom.fromPanel(it) }),
 		autogenerado = Utils.toSiNo(dashboard.autogenerado),
-		etiqueta = _toJson(dashboard.etiqueta)
+		etiqueta = _toJson(dashboard.etiqueta),
+		color = dashboard.color
 	)
 }

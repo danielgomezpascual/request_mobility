@@ -20,7 +20,8 @@ data class PanelUI(
     val visible : Boolean = true,
     val autogenerado: Boolean = false,
     val tipoPanel : TiposPanel = TiposPanel.PANEL_KPI,
-    val endPoint: EndPoint = EndPoint()
+    val endPoint: EndPoint = EndPoint(),
+    val color: Int = 0
 ){
     fun esDinamico () = kpi.dinamico
 
@@ -47,6 +48,7 @@ fun PanelUI.toPanel() = Panel(
     autogenerado = this.autogenerado,
     tipoPanel = this.tipoPanel,
     endPoint = this.endPoint,
+    color = this.color
 )
 
 
@@ -62,6 +64,7 @@ fun PanelUI.fromPanel(panel: Panel): PanelUI {
         seleccionado = panel.seleccionado,
         autogenerado = panel.autogenerado,
         tipoPanel =  panel.tipoPanel,
-        endPoint = panel.endPoint
+        endPoint = panel.endPoint,
+        color = panel.color
     )
 }

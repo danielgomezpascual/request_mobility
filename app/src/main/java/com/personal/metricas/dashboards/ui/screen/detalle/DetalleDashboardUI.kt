@@ -31,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.MA_Spacer
@@ -38,6 +39,7 @@ import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
 import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_SwitchNormal
+import com.personal.metricas.core.composables.combo.MA_ComboColores
 import com.personal.metricas.core.composables.combo.MA_ComboLista
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextBuscador
@@ -62,9 +64,13 @@ import com.personal.metricas.dashboards.ui.entidades.Etiquetas
 import com.personal.metricas.kpi.ui.composables.KpiComboItem
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.menu.Features
+import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.ui.componente.MA_Panel
+import com.personal.metricas.paneles.ui.componente.MA_SeleccionColor
+import com.personal.metricas.paneles.ui.entidades.ColoresSeleccion
 import com.personal.metricas.paneles.ui.entidades.PanelUI
+import com.personal.metricas.paneles.ui.screen.detalle.DetallePanelVM
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.mp.KoinPlatform.getKoin
@@ -137,7 +143,7 @@ fun DetalleDashboardUIScreen(
 							) {
 
 
-								MA_Avatar(dashboardUI.nombre)
+								MA_Avatar(dashboardUI.nombre,  color = Color(dashboardUI.color))
 
 
 								Column {
@@ -148,11 +154,33 @@ fun DetalleDashboardUIScreen(
 
 								MA_Card {
 									Column() {
-										MA_TextoNormal(valor = dashboardUI.nombre, titulo = "Nombre", // Equivalente a "Item"
-													   onValueChange = { valor ->
-														   viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeNombre(valor))
-													   })
 
+										Row() {
+											val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
+											MA_ComboColores(modifier = Modifier.weight(1f),
+															titulo = "",
+															descripcion = "Color",
+															valorInicial = {
+
+																val color: Color = Color(dashboardUI.color)
+																MA_SeleccionColor(color)
+															},
+															elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+															item = { colorSeleccion ->
+																MA_SeleccionColor(colorSeleccion.color)
+															},
+															onClickSeleccion = { colorSeleccion ->
+
+																viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeColor(colorSeleccion.color.toArgb()))
+															})
+
+
+
+											MA_TextoNormal(valor = dashboardUI.nombre, titulo = "Nombre", // Equivalente a "Item"
+														   onValueChange = { valor ->
+															   viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeNombre(valor))
+														   })
+										}
 										// No hay CheckBoxNormal para "Global" en Dashboard
 
 										MA_TextoNormal(

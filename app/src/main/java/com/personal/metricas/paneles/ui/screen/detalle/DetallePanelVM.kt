@@ -70,6 +70,7 @@ class DetallePanelVM(
 		data class Cargar(val identificador: Int) : Eventos()
 		data class OnChangeTitulo(val titulo: String) : Eventos()
 		data class OnChangeDescripcion(val descripcion: String) : Eventos()
+		data class OnChangeColor(val color: Int) : Eventos()
 		data class OnChangeKpiSeleccionado(val identificador: Int) : Eventos()
 		data class OnChangeTipoPanel(val identificador: TiposPanel) : Eventos()
 		data class onChangeOrientacion(val valor: String) : Eventos()
@@ -152,6 +153,12 @@ class DetallePanelVM(
 							is Eventos.OnChangeTitulo                -> {
 								estado.copy(panelUI = estado.panelUI.copy(titulo = evento.titulo,
 																		  configuracion = estado.panelUI.configuracion.copy(titulo = evento.titulo)))
+
+
+							}
+
+							is Eventos.OnChangeColor                 -> {
+								estado.copy(panelUI = estado.panelUI.copy(color = evento.color))
 
 
 							}
