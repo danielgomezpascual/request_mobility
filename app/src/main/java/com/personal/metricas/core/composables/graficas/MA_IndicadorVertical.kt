@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 
@@ -72,7 +73,7 @@ fun MA_IndicadorVertical(
                 MA_Indicador(texto = x.toString(), valor = y.toString(), colorIndicador = fila.color,
                              colorFondo =  Color(panelConfiguracion.colorFondoIndicador))
 
-
+                MA_Spacer()
             }
         }
     }

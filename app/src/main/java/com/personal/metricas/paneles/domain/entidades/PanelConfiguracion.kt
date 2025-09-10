@@ -35,7 +35,7 @@ data class PanelConfiguracion(
 	val condicionesCeldas: List<Condiciones> = listOf<Condiciones>(),
 	val permiteNotas: Boolean = true,
 	val valorMaximo: String = "10",
-	val colorFondoIndicador: Int = Color.White.toArgb(),
+	val colorFondoIndicador: Int = Color.Black.toArgb(),
 	val colorPanel: Int = Color.White.toArgb(),
 
 
