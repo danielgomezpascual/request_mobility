@@ -41,6 +41,7 @@ class SettingsViewModel(
 			val ajustes: Boolean = false,
 			val sincronizacion: Boolean = false,
 			val entornoProduccion: Boolean = false,
+			val sincronizarAuto: Boolean = false,
 
 			) : UIState()
 
@@ -57,6 +58,7 @@ class SettingsViewModel(
 		data class AccesoAjustes(val valor: Boolean) : Eventos()
 		data class AccesosSincronizacion(val valor: Boolean) : Eventos()
 		data class EntornoProduccion(val valor: Boolean) : Eventos()
+		data class SincronizarAuto(val valor: Boolean) : Eventos()
 
 	}
 
@@ -70,6 +72,7 @@ class SettingsViewModel(
 				ajustes = App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_AJUSTES, false),
 				sincronizacion = App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_SINCRONIZACION, false),
 				entornoProduccion = App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false),
+				sincronizarAuto = App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false),
 			)
 			return
 		}
@@ -96,6 +99,10 @@ class SettingsViewModel(
 					is Eventos.AccesosSincronizacion -> {
 						App.sharedPrerfences.put<Boolean>(Preferencias.ACCESO_SINCRONIZACION, evento.valor)
 						estado.copy(sincronizacion = evento.valor)
+					}
+is Eventos.SincronizarAuto -> {
+						App.sharedPrerfences.put<Boolean>(Preferencias.SINCRONIZAR_AUTO, evento.valor)
+						estado.copy(sincronizarAuto = evento.valor)
 					}
 
 					is Eventos.EntornoProduccion     -> {

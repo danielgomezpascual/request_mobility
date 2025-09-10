@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Dashboard
@@ -36,6 +37,7 @@ sealed class Features {
     data class Duplicar(val texto: String = "Duplicar", val icono: ImageVector = Icons.Filled.ContentCopy, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class Paneles(val texto: String = "Paneles", val icono: ImageVector = Icons.Filled.SelectAll, val color: Color = Color(170, 22, 39, 255)) : Features()
     data class Sincronizar(val texto: String = "Sincronizar", val icono: ImageVector = Icons.Filled.Sync, val color: Color = Color(22, 54, 170, 255)) : Features()
+    data class SincronizarAuto(val texto: String = "Sincronizar Auto", val icono: ImageVector = Icons.Filled.CloudSync, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class Herramientas(val texto: String = "Herramientas", val icono: ImageVector = Icons.Filled.Settings, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class InicializadorMetricas(val texto: String = "Cargar Metricas Predefinidas", val icono: ImageVector = Icons.Filled.Storm, val color: Color = Color(170, 22, 163, 255)) : Features()
     data class EndPoints(val texto: String = "End Points", val icono: ImageVector = Icons.Filled.Api, val color: Color = Color(22, 54, 170, 255)) : Features()

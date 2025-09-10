@@ -168,9 +168,21 @@ fun SucessSettingsScreen(
 					MA_Titulo2(valor = "Datos almacenados")
 					MA_Card {
 						Row() {
+
+							MA_Card(modifier = Modifier.weight(1f)) {
+
+								MA_SwitchNormal(titulo = Features.SincronizarAuto().texto,
+												valor = uiState.sincronizarAuto,
+												icono = Features.SincronizarAuto().icono)
+								{ viewModel.onEvent(Eventos.SincronizarAuto(it)) }
+							}
+
+
+							MA_Card(modifier = Modifier.weight(1f)) {
 							MA_IconBottom(modifier = Modifier.fillMaxSize(), icon = Features.BorrarDatos().icono,
 										  labelText = Features.BorrarDatos().texto,
 										  color = Features.BorrarDatos().color) { viewModel.onEvent(Eventos.EliminarDatos) }
+								}
 						}
 					}
 

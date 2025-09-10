@@ -66,24 +66,10 @@ class App : Application() {
 		sharedPrerfences = SharedPreferencesManager(applicationContext)
 		ENTORNO = if3(App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false), "PRO", "DEV")
 		NotificacionesManager().createNotificationChannel()
-
-		/*val auth = FirebaseManager().getAuth()
-
-		App.log.d(auth.currentUser?.displayName)
-		var isAuthenticated by remember { mutableStateOf(auth.currentUser != null) }
-*/
-
-
-		/*  val sincronizacionUrl: SincronizacionUrl = SincronizacionUrl()
-		  sincronizacionUrl.testJson()
-
-		  val obtenerDatosEndPoint: ObtenerDatosEndPoint = getKoin().get()
-		  obtenerDatosEndPoint.test()*/
-
-
-		App.log.d("Preparando para lanzar el worker")
-		planificadorSyncWorker(this)
-
+		App.log.i("Sincronizacion automática de datos ACTIVADA ${App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)}")
+		if (App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)) {
+			planificadorSyncWorker(this)
+		}
 	}
 
 
