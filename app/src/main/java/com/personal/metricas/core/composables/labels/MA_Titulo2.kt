@@ -38,7 +38,7 @@ fun MA_Titulo2(
 
 	Row(modifier = modifier
 		.fillMaxWidth()
-		.padding(top = 20.dp, bottom = 8.dp,
+		.padding(top = 8.dp, bottom = 8.dp,
 				 start = 5.dp, end = 5.dp
 		), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
 		if (valor.isNotEmpty()) {
@@ -49,7 +49,6 @@ fun MA_Titulo2(
 		Text(text = valor,
 			 fontSize = 16.sp,
 			 modifier = modifier,
-
 			 color = color, style = MaterialTheme.typography.titleMedium, textAlign = alineacion)
 		// HorizontalDivider()
 	}

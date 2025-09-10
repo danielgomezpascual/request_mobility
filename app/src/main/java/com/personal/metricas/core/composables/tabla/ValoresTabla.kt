@@ -44,7 +44,7 @@ data class Columnas(val nombre: String, val posicion: Int, var maximaLongitudCar
 		}
 
 
-		if (maximaLongitudDp > 180.dp){
+		if (maximaLongitudDp > 250.dp){
 			maximaLongitudDp = 180.dp
 		}
 

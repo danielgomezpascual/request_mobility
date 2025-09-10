@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.graphics.shapes.android)
+    implementation(libs.androidx.work.runtime.ktx)
     //implementation(libs.androidx.material3.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -102,12 +103,15 @@ dependencies {
 
     //===========================================================
     // ========== KOIN ============
-    var koin_version = "3.5.0"
-    implementation("io.insert-koin:koin-android:$koin_version") //Koin for Android
-    //Koin Componse  y view model....
-    implementation("io.insert-koin:koin-androidx-compose:$koin_version")
-    implementation("io.insert-koin:koin-androidx-compose-navigation:$koin_version")
+    var koin_version = "3.5.6"
 
+    // 1. Importa el BOM de Koin (Bill of Materials)
+    implementation(platform("io.insert-koin:koin-bom:$koin_version"))
+
+    implementation("io.insert-koin:koin-android")
+    implementation("io.insert-koin:koin-androidx-compose")
+    implementation("io.insert-koin:koin-androidx-compose-navigation")
+    implementation("io.insert-koin:koin-androidx-workmanager")
     //===========================================================
     // ========== RETROFIT ============
     var retroft_version = "2.10.0"
@@ -195,4 +199,10 @@ dependencies {
     //-- Firestore
     implementation("com.google.firebase:firebase-firestore")
 
+
+
+
+    val work_version = "2.9.0" // Revisa siempre la última versión estable
+    // WorkManager con soporte para Coroutines de Kotlin
+    implementation("androidx.work:work-runtime-ktx:$work_version")
 }

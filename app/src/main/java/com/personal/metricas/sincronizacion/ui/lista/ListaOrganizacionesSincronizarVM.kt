@@ -10,8 +10,10 @@ import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils._t
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
+import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
 import com.personal.metricas.sincronizacion.ui.entidades.OrganizacionesSincronizarUI
 import com.personal.metricas.sincronizacion.ui.entidades.fromOrganizacion
+import com.personal.metricas.sincronizacion.ui.entidades.toOrganizacion
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.metricas.transacciones.domain.entidades.Transacciones
 import com.personal.metricas.transacciones.domain.interactors.GuardarTransacciones
@@ -27,8 +29,9 @@ import kotlinx.coroutines.launch
 class ListaOrganizacionesSincronizarVM(
 
 	private val obtenerOrganizacion: ObtenerOrganizacionesCU,
+	private val realizarSincronizacionCU: RealizarSincronizacionCU,
 	private val repoTrx: TransaccionesRepoImp,
-	private val guardar: GuardarTransacciones,
+	//private val guardar: GuardarTransacciones,
 	private val notas: NotasManager,
 	private val dialog: DialogManager,
 
@@ -53,7 +56,7 @@ class ListaOrganizacionesSincronizarVM(
 			val mostrarDialogoSiNo: Boolean = false,
 			val texto: String = "",
 			val todos: Boolean = false,
-			val infoSincro: String = ""
+			val infoSincro: String = "",
 
 			) : UIState()
 
@@ -122,7 +125,6 @@ class ListaOrganizacionesSincronizarVM(
 		if (_uiState.value is UIState.Success) {
 
 
-
 			listaOrganizacionesSincronizarUI = listaOrganizacionesSincronizarUI.map { org ->
 				if (organizacionUI.organizationCode.equals(org.organizationCode)) {
 					val estado = organizacionUI.seleccionado
@@ -150,7 +152,8 @@ class ListaOrganizacionesSincronizarVM(
 
 						estado.copy(textoBuscar = textoBuscar,
 									organizaciones = listaOrganizacionesSincronizarUI.map {
-										it.copy(visible = (it.organizationCode.contains(textoBuscar, ignoreCase = true) ||(it.organizationId.contains(textoBuscar, ignoreCase = true) || it.organizationName.contains(textoBuscar, ignoreCase = true)))) })
+										it.copy(visible = (it.organizationCode.contains(textoBuscar, ignoreCase = true) || (it.organizationId.contains(textoBuscar, ignoreCase = true) || it.organizationName.contains(textoBuscar, ignoreCase = true))))
+									})
 					}
 
 				} else {
@@ -218,36 +221,16 @@ class ListaOrganizacionesSincronizarVM(
 
 			_uiState.value = (_uiState.value as UIState.Success).copy(trabajando = true)
 			viewModelScope.launch {
-
-				val totalOrganizaciones = oraganizciones.size
 				val orgSeleccionadas = oraganizciones.filter { it.seleccionado == true }
-
-				var contador = 0 ;
+				var contador = 0;
 				val totalOraganizacionesSincronizar = orgSeleccionadas.size
-
 				orgSeleccionadas.forEach { organizacion ->
-
-
 					async(Dispatchers.IO) {
-
-						val trx: List<Transacciones> = repoTrx.getTrxOracle(organizacion.organizationId)
-						contador = contador+1
-						val l: List<Transacciones> = trx.map {
-							it.cXmlField = ""
-							it.organizationCode = organizacion.organizationCode
-							it.organizationName = organizacion.organizationName
-							it.organizationId = organizacion.organizationId
-							it.masterOrganizationId = organizacion.masterOrganizationId
-							it
-						}
-
-						guardar.guardar(l)
-
+						contador = contador + 1
+						realizarSincronizacionCU.sincronizarOrganizacion(organizacion.toOrganizacion())
 						val s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
-						_uiState.value =(_uiState.value as UIState.Success).copy(infoSincro = s)
+						_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
 						App.log.v(s)
-
-
 						if (contador == totalOraganizacionesSincronizar) {
 							_uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
 							dialog.informacion(_t(R.string.information_actualizada)) { }

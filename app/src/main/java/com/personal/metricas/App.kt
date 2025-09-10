@@ -2,13 +2,6 @@ package com.personal.metricas
 
 import android.app.Application
 import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.google.firebase.Firebase
-import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.firestore
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.data.ds.remote.network.moduloNetwork
 import com.personal.metricas.core.log.di.moduloLog
@@ -22,10 +15,8 @@ import com.personal.metricas.dashboards.moduloDashboards
 import com.personal.metricas.endpoints.moduloEndPoints
 import com.personal.metricas.firebase.crashlytics.Crash
 import com.personal.metricas.firebase.domain.FirebaseManager
-import com.personal.metricas.firebase.domain.interactors.SubirContenidoLocalFirebase
 import com.personal.metricas.firebase.modulesFirebase
 import com.personal.metricas.inicializador.modulosInicializador
-import com.personal.metricas.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.metricas.kpi.moduloKpis
 import com.personal.metricas.menu.modulosMenu
 import com.personal.metricas.notas.moduloNotas
@@ -33,12 +24,13 @@ import com.personal.metricas.organizaciones.moduloOrganizaciones
 import com.personal.metricas.paneles.moduloPaneles
 import com.personal.metricas.settings.moduleSettings
 import com.personal.metricas.sincronizacion.moduloSincronizacion
+import com.personal.metricas.worker.sincronizacion.moduloWorker
+import com.personal.metricas.worker.sincronizacion.planificadorSyncWorker
 import com.personal.metricas.transacciones.moduloTransacciones
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 
 class App : Application() {
@@ -92,6 +84,9 @@ class App : Application() {
 
 		  val obtenerDatosEndPoint: ObtenerDatosEndPoint = getKoin().get()
 		  obtenerDatosEndPoint.test()*/
+App.log.d("Preparando para lanzar el worker")
+		planificadorSyncWorker(this)
+
 	}
 
 
@@ -101,6 +96,11 @@ class App : Application() {
 			androidLogger()
 			// Reference Android context
 			androidContext(this@App)
+
+			// ¡Añade esta línea!
+			// Le dice a Koin que se encargue de la creación de Workers.
+			workManagerFactory()
+
 			modules(
 				modulesFirebase,
 				moduloLog,
@@ -116,8 +116,12 @@ class App : Application() {
 				modulosInicializador,
 				modulosMenu,
 				moduloNotas,
-				moduleSettings
+				moduleSettings,
+
+				moduloWorker
 			)
+
+
 
 		}
 	}

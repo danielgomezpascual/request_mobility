@@ -22,6 +22,8 @@ object Utils {
 	
 }
 
+
+
 fun Context.esTrue(
     valor: String, valorTrue: String = "Y",
     diferenciarMayuscula: Boolean = true,

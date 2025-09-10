@@ -6,6 +6,7 @@ import com.personal.metricas.endpoints.data.ds.remote.EndPointsRemotoDS
 import com.personal.metricas.endpoints.data.ds.remote.servicio.EndPointRemotos
 import com.personal.metricas.endpoints.domain.ObtenerDatosEndPoint
 import com.personal.metricas.notas.domain.NotasManager
+import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
 import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.metricas.transacciones.domain.interactors.GuardarTransacciones
@@ -17,35 +18,40 @@ import retrofit2.Retrofit
 val moduloSincronizacion = module {
 
 
-    //
+	//
 
 
-
-    //Retrofit
-    single<EndPointRemotos>{ RetrofitServicioEndPointRemotos(get()) }
-    single<EndPointsRemotoDS>{ EndPointsRemotoDS(get<EndPointRemotos>()) }
-
-
-    //CU
-    single<ObtenerDatosEndPoint> { ObtenerDatosEndPoint(get<EndPointsRemotoDS>()) }
+	//Retrofit
+	single<EndPointRemotos> { RetrofitServicioEndPointRemotos(get()) }
+	single<EndPointsRemotoDS> { EndPointsRemotoDS(get<EndPointRemotos>()) }
 
 
+	//CU
+	single<ObtenerDatosEndPoint> { ObtenerDatosEndPoint(get<EndPointsRemotoDS>()) }
+	single<RealizarSincronizacionCU> {
+		RealizarSincronizacionCU(
+			repoTrx = get<TransaccionesRepoImp>(),
+			guardar = get<GuardarTransacciones>(),
+		)
+	}
 
-    //ViewModel
-    viewModel {
-        ListaOrganizacionesSincronizarVM(
-            obtenerOrganizacion = get<ObtenerOrganizacionesCU>(),
-            repoTrx = get<TransaccionesRepoImp>(),
-            guardar = get<GuardarTransacciones>(),
-            dialog = get<DialogManager>(),
-            notas = get<NotasManager>()
 
-        )
-    }
+	//ViewModel
+	viewModel {
+		ListaOrganizacionesSincronizarVM(
+			obtenerOrganizacion = get<ObtenerOrganizacionesCU>(),
+			realizarSincronizacionCU = get<RealizarSincronizacionCU>(),
+			repoTrx = get<TransaccionesRepoImp>(),
+			//guardar = get<GuardarTransacciones>(),
+			dialog = get<DialogManager>(),
+			notas = get<NotasManager>()
+
+		)
+	}
 
 }
 
 
 fun RetrofitServicioEndPointRemotos(retrofit: Retrofit): EndPointRemotos {
-    return retrofit.create(EndPointRemotos::class.java)
+	return retrofit.create(EndPointRemotos::class.java)
 }

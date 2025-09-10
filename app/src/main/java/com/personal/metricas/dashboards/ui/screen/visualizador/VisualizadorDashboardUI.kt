@@ -18,10 +18,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import com.personal.metricas.App
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.labels.MA_LabelEtiqueta
 import com.personal.metricas.core.composables.labels.MA_LabelExtendido
 import com.personal.metricas.core.composables.labels.MA_LabelLeyenda
+import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.labels.MA_Titulo2
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
@@ -29,6 +31,7 @@ import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
+import com.personal.metricas.core.utils.K
 import com.personal.metricas.dashboards.ui.screen.visualizador.VisualizadorDashboardVM.UIState
 import com.personal.metricas.menu.Features
 import com.personal.metricas.paneles.domain.entidades.PanelData
@@ -80,20 +83,28 @@ fun Success(
 			}
 		},
 		contenido = {
-
 			val scroll = rememberScrollState()
 			Box(Modifier) {
 				Column(modifier = Modifier.verticalScroll(state = scroll)) {
 
 					MA_Titulo2(uiState.dashboardUI.nombre)
-					MA_LabelEtiqueta(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Center, valor = uiState.dashboardUI.descripcion)
+					MA_LabelMini(
 
+						modifier = Modifier.fillMaxWidth(),
+						alineacion = TextAlign.End,
+						valor = "Sync:${App.sharedPrerfences.get(K.ULTIMA_SINCRONIZACION, "Sin datos")}")
+
+
+					if (uiState.dashboardUI.descripcion.isNotEmpty()) {
+						MA_LabelEtiqueta(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Center,
+										 valor = uiState.dashboardUI.descripcion)
+					}
 
 					uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->
 						lateinit var p: PanelUI
 						//val notasManager = getKoin().get<NotasManager>()
 						val notasManager = NotasManager.instancia()
-						MA_Panel(panelData = PanelData.fromPanelUI(panelUI,notasManager,  uiState.dashboardUI.parametros))
+						MA_Panel(panelData = PanelData.fromPanelUI(panelUI, notasManager, uiState.dashboardUI.parametros))
 
 					}
 
