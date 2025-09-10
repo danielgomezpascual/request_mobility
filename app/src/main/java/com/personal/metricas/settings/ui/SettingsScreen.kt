@@ -35,7 +35,6 @@ import com.personal.metricas.core.utils.Preferencias
 import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.menu.Features
 import com.personal.metricas.settings.ui.SettingsViewModel.*
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -156,7 +155,7 @@ fun SucessSettingsScreen(
 							AuthUI.getInstance()
 								.signOut(context)
 								.addOnCompleteListener {
-									navegacion(EventosNavegacion.MenuApp)
+									navegacion(EventosNavegacion.HomeApp)
 								}
 						}
 					}

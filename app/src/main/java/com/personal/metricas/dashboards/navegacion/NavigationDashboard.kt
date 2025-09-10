@@ -20,7 +20,6 @@ import com.personal.metricas.menu.navegacion.ScreenMenu
 import com.personal.metricas.paneles.navegacion.ScreenDetallePanel
 import com.personal.metricas.paneles.navegacion.ScreenListadoPaneles
 import com.personal.metricas.settings.navegacion.ScreenSettings
-import com.personal.metricas.settings.ui.SettingsScreen
 import com.personal.metricas.sincronizacion.ui.navegacion.ScreenMenuSincronizacion
 import com.personal.metricas.sincronizacion.ui.navegacion.ScreenOrganizacionesSincronizacion
 
@@ -64,7 +63,7 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 	when (navegacion) {
 		is EventosNavegacion.Cargar                 -> navController.navigate(DetalleDashboard(navegacion.identificador))
 
-		EventosNavegacion.MenuApp                   -> {
+		EventosNavegacion.HomeApp -> {
 			navController.navigate(ScreenMenu) { // ScreenMenu debe ser un objeto serializable o una ruta String
 				popUpTo(navController.graph.startDestinationId) { // Ejemplo: pop hasta el inicio del grafo actual
 					inclusive = true

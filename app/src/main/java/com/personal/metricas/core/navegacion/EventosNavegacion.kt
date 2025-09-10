@@ -1,7 +1,7 @@
 package com.personal.metricas.core.navegacion
 
 sealed class EventosNavegacion {
-	object MenuApp : EventosNavegacion()
+	object HomeApp : EventosNavegacion()
 	data class Cargar(val identificador: Int) : EventosNavegacion()
 
 

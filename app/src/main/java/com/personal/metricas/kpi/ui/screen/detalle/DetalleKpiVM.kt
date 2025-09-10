@@ -269,7 +269,7 @@ class DetalleKpiVM(
 						guardarPanel.guardar(PanelUI.crearPanelUI(kpiUI))
 
 						dialog.informacion(_t(R.string.panel_creado)) {
-							navegacion(EventosNavegacion.MenuApp)
+							navegacion(EventosNavegacion.HomeApp)
 						}
 					}
 				}
