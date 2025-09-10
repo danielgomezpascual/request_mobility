@@ -23,8 +23,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.himanshoe.charty.common.asSolidChartColor
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.TituloScreen
@@ -97,14 +99,17 @@ fun SuccessCuadriculaDashboard(
 					.fillMaxWidth() // fillMaxWidth para la columna principal
 			) {
 
-				Row() {
-					uiState.etiquetasDisponibles.forEach { etiqueta ->
-						Box(modifier = Modifier.clickable(enabled = true, onClick = {
-							viewModel.onEvento(CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta))
-						})) {
-							MA_EtiquetaItem(etiqueta)
+
+				if (uiState.etiquetasDisponibles.isNotEmpty()) {
+					Row() {
+						uiState.etiquetasDisponibles.forEach { etiqueta ->
+							Box(modifier = Modifier.clickable(enabled = true, onClick = {
+								viewModel.onEvento(CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta))
+							})) {
+								MA_EtiquetaItem(etiqueta)
 
 
+							}
 						}
 					}
 				}
@@ -132,19 +137,13 @@ fun SuccessCuadriculaDashboard(
 						Column(modifier = Modifier.padding(6.dp), verticalArrangement = Arrangement.Center,
 							   horizontalAlignment = Alignment.CenterHorizontally) {
 
-							MA_Avatar(item.nombre)
-
-
+							MA_Avatar(item.nombre, color = Color(item.color))
 
 
 							Row(verticalAlignment = Alignment.CenterVertically) {
 
 								if (item.home) MA_Icono(Icons.Default.Stars, Modifier.size(16.dp))
 								if (item.autogenerado) MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
-
-
-
-
 
 
 							}
