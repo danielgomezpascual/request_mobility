@@ -45,6 +45,7 @@ import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.core.composables.tabla.MA_Tabla
 import com.personal.metricas.core.utils._t
+import com.personal.metricas.core.utils.if3
 import com.personal.metricas.endpoints.domain.entidades.ResultadoEndPoint
 import com.personal.metricas.endpoints.domain.interactors.AlmacenarDatosRemotosEndPointCU
 import com.personal.metricas.menu.Features
@@ -268,8 +269,9 @@ fun MA_Panel(
 					}
 
 				)
-
-				MA_Card(color = Color(panelData.panelConfiguracion.colorPanel).copy(alpha = 0.2f),
+				val transparencia = if3(Color(panelData.panelConfiguracion.colorPanel) == Color.White, 1.0f, 0.2f)
+				MA_Card(
+					color = Color(panelData.panelConfiguracion.colorPanel).copy(alpha = transparencia),
 						modifier = Modifier.padding(6.dp)) {
 
 					Column(){
