@@ -64,12 +64,7 @@ class App : Application() {
 		context = applicationContext
 		dialog = DialogManager()
 		sharedPrerfences = SharedPreferencesManager(applicationContext)
-
-
-
-		ENTORNO = if3 (App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false) , "PRO", "DEV")
-
-
+		ENTORNO = if3(App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false), "PRO", "DEV")
 		NotificacionesManager().createNotificationChannel()
 
 		/*val auth = FirebaseManager().getAuth()
@@ -84,7 +79,9 @@ class App : Application() {
 
 		  val obtenerDatosEndPoint: ObtenerDatosEndPoint = getKoin().get()
 		  obtenerDatosEndPoint.test()*/
-App.log.d("Preparando para lanzar el worker")
+
+
+		App.log.d("Preparando para lanzar el worker")
 		planificadorSyncWorker(this)
 
 	}
@@ -120,7 +117,6 @@ App.log.d("Preparando para lanzar el worker")
 
 				moduloWorker
 			)
-
 
 
 		}

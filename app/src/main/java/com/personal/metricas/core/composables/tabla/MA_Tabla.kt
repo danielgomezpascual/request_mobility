@@ -11,12 +11,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.personal.metricas.App
+import com.personal.metricas.core.composables.edittext.MA_TextoEditable
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.listas.MA_Lista
@@ -95,6 +101,7 @@ fun MA_Tabla(
 	onClickSeleccionarFiltro: (Celda) -> Unit = {},
 	onClickInvertir: (Celda) -> Unit = {},
 	onClickSeleccionarFila: (Fila) -> Unit = {},
+	onClickFiltrarTexto: (String) -> Unit = {},
 ) {
 
 	val estadoScroll = rememberScrollState()
@@ -110,14 +117,25 @@ fun MA_Tabla(
 
 
 	Column(modifierColumn, verticalArrangement = Arrangement.Center,
-		   horizontalAlignment = Alignment.CenterHorizontally) {
+		   horizontalAlignment = Alignment.Start) {
+
 		if (celdasFiltro.isNotEmpty()) {
+
 			ModalInferiorFiltros() {
+				var str by remember { mutableStateOf(App.sharedPrerfences.get(K.TXT_FILTROS_LISTAS, "")) }
+
 				Column {
 					MA_Titulo("Filtro")
+
+					MA_TextoEditable(valor =str, titulo = "Buscar") { texto -> str = texto
+						App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS,str)
+						onClickFiltrarTexto(str)
+
+					}
 					MA_Lista(celdasFiltro) { celdaFiltro ->
 						MA_CeldaFiltro(celda = celdaFiltro,
-									   onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) }, onClickInvertir = { cf -> onClickInvertir(cf) })
+									   onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
+									   onClickInvertir = { cf -> onClickInvertir(cf) })
 					}
 				}
 

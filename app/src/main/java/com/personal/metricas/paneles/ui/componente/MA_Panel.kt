@@ -154,160 +154,189 @@ fun MA_Panel(
 	val identificador = panelData.dameIdentificador()
 
 
-		when (panelData.panel.tipoPanel) {
-			TiposPanel.PANEL_TEXTO ->{
-				MA_Card(color = Color(panelData.panelConfiguracion.colorPanel)) {
-					Column(modifier = Modifier.padding(5.dp)) {
-						MA_LabelNormal(panelData.panel.titulo)
-						MA_LabelMini(panelData.panel.descripcion)
-						MA_LabelMini(modifier= Modifier.fillMaxWidth().padding(horizontal = 2.dp), valor =  identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic )
-					}
+	when (panelData.panel.tipoPanel) {
+		TiposPanel.PANEL_TEXTO     -> {
+			MA_Card(color = Color(panelData.panelConfiguracion.colorPanel)) {
+				Column(modifier = Modifier.padding(5.dp)) {
+					MA_LabelNormal(panelData.panel.titulo)
+					MA_LabelMini(panelData.panel.descripcion)
+					MA_LabelMini(modifier = Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 2.dp), valor = identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic)
 				}
-			}
-			TiposPanel.PANEL_END_POINT -> {
-				MA_Card(color = Color(panelData.panelConfiguracion.colorPanel),modifier = Modifier
-					.clickable(enabled = true, onClick = {
-						scope.launch {
-							isLoading = true // ¡Mostramos el loading!
-							try {
-								App.log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
-								async() {
-									val procesarEndPoint: AlmacenarDatosRemotosEndPointCU = KoinJavaComponent.getKoin().get()
-									val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemoto(panelData.panel.endPoint)
-								}.await()
-								dialog.informacion(_t(R.string.information_actualizada)) { }
-							}
-							finally {
-								isLoading = false
-							}
-
-
-						}
-
-
-					})
-				) {
-					Column {
-						MA_IconBottom(icon = Features.EndPoints().icono,
-									  labelText = "${panelData.panel.titulo}",
-									  color = Features.EndPoints().color) {
-						}
-						MA_LabelMini(modifier= Modifier.fillMaxWidth().padding(horizontal = 2.dp),
-									 valor =  identificador, alineacion = TextAlign.End, size = 9.sp,
-									 fontStyle = FontStyle.Italic )
-
-					}
-
-
-				}
-
-			}
-
-			TiposPanel.PANEL_KPI       -> {
-				graficaComposable = dameTipoGrafica(
-					panelConfiguracion = configuracion,
-					modifier = modifier,
-					filas = fs,
-					posicionX = panelData.panelConfiguracion.columnaX,
-					posivionY = panelData.panelConfiguracion.columnaY
-
-				)
-
-
-
-				tablaComposable = dameTipoTabla(
-					panelConfiguracion = configuracion,
-					modifier = modifier,
-					filas = filasPintar,
-					notas = panelData.notasManager.notas,
-					celdasFiltro = celdasFiltro,
-					onClickSeleccionarFila = { fila ->
-						filas = filas.map { f ->
-							if (fila.seleccionada) {
-								f.copy(seleccionada = false)
-							} else {
-
-								if (f.equals(fila)) {
-									f.copy(seleccionada = true)
-								} else {
-									f.copy(seleccionada = false)
-								}
-							}
-
-						}
-						celdasFiltro = fila.celdas
-						panelData.valoresTabla.filas = filas
-					},
-					onClickInvertir = { cfi ->
-						celdasFiltro = celdasFiltro.map { c ->
-							if (c.titulo.equals(cfi.titulo)) {
-								if (!cfi.filtroInvertido) {
-									c.copy(filtroInvertido = true, seleccionada = true)
-								} else {
-									c.copy(filtroInvertido = false)
-								}
-							} else {
-								c
-							}
-						}
-						filas = cumplenFiltro(filas, celdasFiltro)
-						panelData.valoresTabla.filas = filas
-					},
-					onClickSeleccionarFiltro = { cf ->
-						celdasFiltro = celdasFiltro.map { c ->
-							if (c.titulo.equals(cf.titulo)) {
-								cf.copy(seleccionada = !cf.seleccionada)
-							} else {
-								c
-							}
-						}
-
-						filas = cumplenFiltro(filas, celdasFiltro)
-						panelData.valoresTabla.filas = filas
-
-
-					}
-
-				)
-				val transparencia = if3(Color(panelData.panelConfiguracion.colorPanel) == Color.White, 1.0f, 0.2f)
-				MA_Card(
-					color = Color(panelData.panelConfiguracion.colorPanel).copy(alpha = transparencia),
-						modifier = Modifier.padding(6.dp)) {
-
-					Column(){
-						when (configuracion.orientacion) {
-							PanelOrientacion.VERTICAL   -> {
-
-
-								MA_GraficaConTablaVertical(
-									modifier = modifier,
-									panelConfiguracion = configuracion,
-									grafica = { graficaComposable() },
-									tabla = { tablaComposable() },
-									alarmas = panelData.listaAlarmas
-								)
-							}
-
-							PanelOrientacion.HORIZONTAL -> {
-								MA_GraficaConTablaHorizontal(
-									modifier = modifier,
-									panelConfiguracion = configuracion,
-									grafica = { graficaComposable() },
-									tabla = { tablaComposable() },
-									alarmas = panelData.listaAlarmas
-								)
-							}
-						}
-						MA_LabelMini(modifier= Modifier.fillMaxWidth().padding(horizontal = 2.dp), valor =  identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic )
-
-					}
-
-				}
-
 			}
 		}
 
+		TiposPanel.PANEL_END_POINT -> {
+			MA_Card(color = Color(panelData.panelConfiguracion.colorPanel), modifier = Modifier
+				.clickable(enabled = true, onClick = {
+					scope.launch {
+						isLoading = true // ¡Mostramos el loading!
+						try {
+							App.log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
+							async() {
+								val procesarEndPoint: AlmacenarDatosRemotosEndPointCU = KoinJavaComponent.getKoin().get()
+								val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemoto(panelData.panel.endPoint)
+							}.await()
+							dialog.informacion(_t(R.string.information_actualizada)) { }
+						}
+						finally {
+							isLoading = false
+						}
 
+
+					}
+
+
+				})
+			) {
+				Column {
+					MA_IconBottom(icon = Features.EndPoints().icono,
+								  labelText = "${panelData.panel.titulo}",
+								  color = Features.EndPoints().color) {
+					}
+					MA_LabelMini(modifier = Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 2.dp),
+								 valor = identificador, alineacion = TextAlign.End, size = 9.sp,
+								 fontStyle = FontStyle.Italic)
+
+				}
+
+
+			}
+
+		}
+
+		TiposPanel.PANEL_KPI       -> {
+			graficaComposable = dameTipoGrafica(
+				panelConfiguracion = configuracion,
+				modifier = modifier,
+				filas = fs,
+				posicionX = panelData.panelConfiguracion.columnaX,
+				posivionY = panelData.panelConfiguracion.columnaY
+
+			)
+
+
+
+			tablaComposable = dameTipoTabla(
+				panelConfiguracion = configuracion,
+				modifier = modifier,
+				filas = filasPintar,
+				notas = panelData.notasManager.notas,
+				celdasFiltro = celdasFiltro,
+
+
+				onClickSeleccionarFila = { fila ->
+					filas = filas.map { f ->
+						if (fila.seleccionada) {
+							f.copy(seleccionada = false)
+						} else {
+
+							if (f.equals(fila)) {
+								f.copy(seleccionada = true)
+							} else {
+								f.copy(seleccionada = false)
+							}
+						}
+
+					}
+					celdasFiltro = fila.celdas
+					panelData.valoresTabla.filas = filas
+				},
+
+				onClickInvertir = { cfi ->
+					celdasFiltro = celdasFiltro.map { c ->
+						if (c.titulo.equals(cfi.titulo)) {
+							if (!cfi.filtroInvertido) {
+								c.copy(filtroInvertido = true, seleccionada = true)
+							} else {
+								c.copy(filtroInvertido = false)
+							}
+						} else {
+							c
+						}
+					}
+					filas = cumplenFiltro(filas, celdasFiltro)
+					panelData.valoresTabla.filas = filas
+				},
+
+				onClickSeleccionarFiltro = { cf ->
+
+
+					panelData.valoresTabla.filas = filas
+				},
+				onClickFiltrarTexto = { str ->
+/*
+
+						 filas.map { fila ->
+						var cumpleFiltro: Boolean = true
+						fila.celdas.forEach { celdaFila ->
+							celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
+
+								if ((celdaFila.titulo.equals(celdaFiltro.titulo))
+									&&
+									(!celdaFiltro.filtroInvertido && !(celdaFila.valor.equals(celdaFiltro.valor)))
+									||
+									(celdaFiltro.filtroInvertido && (celdaFila.valor.equals(celdaFiltro.valor)))
+								) {
+									cumpleFiltro = false
+								}
+							}
+
+						fila.copy(visible = cumpleFiltro)
+
+*/
+
+					panelData.valoresTabla.filas = filas.map { fila ->
+						fila.copy(visible = fila.toString().contains(str))
+					}
+
+
+				}
+
+			)
+
+			val transparencia = if3(Color(panelData.panelConfiguracion.colorPanel) == Color.White, 1.0f, 0.2f)
+			MA_Card(
+				color = Color(panelData.panelConfiguracion.colorPanel).copy(alpha = transparencia),
+				modifier = Modifier.padding(6.dp)) {
+
+				Column() {
+					when (configuracion.orientacion) {
+						PanelOrientacion.VERTICAL   -> {
+
+
+							MA_GraficaConTablaVertical(
+								modifier = modifier,
+								panelConfiguracion = configuracion,
+								grafica = { graficaComposable() },
+								tabla = { tablaComposable() },
+								alarmas = panelData.listaAlarmas
+							)
+						}
+
+						PanelOrientacion.HORIZONTAL -> {
+							MA_GraficaConTablaHorizontal(
+								modifier = modifier,
+								panelConfiguracion = configuracion,
+								grafica = { graficaComposable() },
+								tabla = { tablaComposable() },
+								alarmas = panelData.listaAlarmas
+							)
+						}
+					}
+					MA_LabelMini(modifier = Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 2.dp), valor = identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic)
+
+				}
+
+			}
+
+		}
+	}
 
 
 }
@@ -424,7 +453,7 @@ fun dameTipoGrafica(
 				)
 			}
 
-			is PanelTipoGrafica.SignalVertical                 -> {
+			is PanelTipoGrafica.SignalVertical         -> {
 				MA_SignalVertical(
 					modifier = modifier,
 					listaValores = datosPintar,
@@ -433,7 +462,8 @@ fun dameTipoGrafica(
 					panelConfiguracion = panelConfiguracion
 				)
 			}
-			is PanelTipoGrafica.SignalHorizontal                 -> {
+
+			is PanelTipoGrafica.SignalHorizontal       -> {
 				MA_SignalHorizontal(
 					modifier = modifier,
 					listaValores = datosPintar,
@@ -458,8 +488,8 @@ fun dameTipoTabla(
 	onClickSeleccionarFiltro: (Celda) -> Unit,
 	onClickInvertir: (Celda) -> Unit,
 	onClickSeleccionarFila: (Fila) -> Unit,
-
-	): @Composable () -> Unit {
+	onClickFiltrarTexto: (String) -> Unit,
+): @Composable () -> Unit {
 
 
 	if (panelConfiguracion.mostrarTabla) {
@@ -474,7 +504,8 @@ fun dameTipoTabla(
 				mostrarTitulos = panelConfiguracion.mostrarTituloTabla,
 				onClickSeleccionarFiltro = onClickSeleccionarFiltro,
 				onClickInvertir = onClickInvertir,
-				onClickSeleccionarFila = onClickSeleccionarFila
+				onClickSeleccionarFila = onClickSeleccionarFila,
+				onClickFiltrarTexto = onClickFiltrarTexto
 			)
 		}
 	} else {

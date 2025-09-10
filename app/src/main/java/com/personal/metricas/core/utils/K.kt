@@ -9,4 +9,8 @@ object K {
     const val ORGANIZACIONES: String = "ORGANIZACIONES"
     const val HASH_CODE: String = "HC"
     const val ULTIMA_SINCRONIZACION: String = "ULTIMA_SINCRONIZACION"
+
+    const val TXT_FILTROS_LISTAS: String = "TXT_FILTROS_LISTAS"
+
+
 }

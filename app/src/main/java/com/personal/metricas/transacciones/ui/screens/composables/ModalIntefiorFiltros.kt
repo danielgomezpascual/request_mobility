@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.modales.MA_BottomSheet
 import kotlinx.coroutines.launch
 
@@ -15,7 +16,9 @@ fun ModalInferiorFiltros(contenido: @Composable () -> Unit) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope() // Se mantiene dentro del componente
 
-    Button(onClick = { scope.launch { sheetState.show() } }) { Text("Abrir") }
+
+    MA_BotonSecundario(texto = "Abrir") { scope.launch { sheetState.show() } }
+    //Button(onClick = { scope.launch { sheetState.show() } }) { Text("Abrir") }
 
     MA_BottomSheet(
         sheetState,
