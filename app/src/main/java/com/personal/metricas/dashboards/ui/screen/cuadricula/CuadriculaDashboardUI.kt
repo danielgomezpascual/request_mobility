@@ -37,6 +37,7 @@ import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
+import com.personal.metricas.core.composables.labels.MA_Titulo2
 import com.personal.metricas.core.composables.layouts.MA_Columnas
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion

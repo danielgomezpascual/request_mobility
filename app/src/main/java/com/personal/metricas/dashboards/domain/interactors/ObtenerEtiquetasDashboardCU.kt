@@ -7,7 +7,7 @@ class ObtenerEtiquetasDashboardCU(private val obtenerDashboardsCU: ObtenerDashbo
 	suspend fun dameEtiquetas(): List<Etiquetas> {
 		val ds = obtenerDashboardsCU.getAll().first()
 		var etiquetas: MutableList<Etiquetas> = mutableListOf()
-		ds.forEach { d -> etiquetas.add(d.etiqueta) }
+		ds.forEach { d -> if (!d.etiqueta.etiqueta.isNullOrBlank())   etiquetas.add(d.etiqueta) }
 		return etiquetas.distinct()
 	}
 }

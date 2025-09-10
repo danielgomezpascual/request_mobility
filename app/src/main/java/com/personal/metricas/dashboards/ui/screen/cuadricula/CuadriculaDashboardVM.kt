@@ -96,10 +96,7 @@ class CuadriculaDashboardVM(
 
 				val l = listaOriginalDashboard.filter { ds ->
 					App.log.d("${ds.etiqueta.etiqueta} -> ${ds.etiqueta.etiqueta.equals(etiqueta.etiqueta)}")
-
-
 					(listaEtiquetasFiltrar.count { etiqueta -> ds.etiqueta.etiqueta.equals(etiqueta.etiqueta) } > 0)
-
 					&&     ds.nombre.contains(busquedaActual, ignoreCase = true)
 				}
 
