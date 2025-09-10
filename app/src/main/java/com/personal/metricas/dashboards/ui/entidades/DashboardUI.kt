@@ -23,7 +23,7 @@ data class DashboardUI(
 	val parametros: Parametros = Parametros(),
 	val autogenerado: Boolean = false,
 	val etiqueta: Etiquetas = Etiquetas.EtiquetaVacia()  ,
-	val color: Int = 0
+	val color: Int = -29696
 ){
 
 }

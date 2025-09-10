@@ -21,7 +21,7 @@ data class PanelUI(
     val autogenerado: Boolean = false,
     val tipoPanel : TiposPanel = TiposPanel.PANEL_KPI,
     val endPoint: EndPoint = EndPoint(),
-    val color: Int = 0
+    val color: Int = -13726889
 ){
     fun esDinamico () = kpi.dinamico
 

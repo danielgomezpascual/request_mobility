@@ -18,8 +18,7 @@ data class KpiUI(
     val dinamico : Boolean = false,
     val parametros: Parametros =  Parametros(),
     val autogenerado: Boolean = false,
-    val color: Int =-16119286
-
+    val color: Int = -12156236
     /*var panelData: PanelData = PanelData(),
     var resultadoSQL: ResultadoSQL = ResultadoSQL()*/
 ) {

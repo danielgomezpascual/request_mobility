@@ -115,19 +115,130 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 	fun dameEsquemaCondiciones() = EsquemaColores(id = 99, nombre = "Todos", colores = dameTodosColores())
 
 	fun dameTodosColores() = listOf<Color>(
-		Color(0x00FFFFFF),
-		Color(0xFF0A0A0A),
-		Color(0xFFFFFFFF),
-		Color(0xFFFF0000),
-		Color(0xFF00FF00),
-		Color(0xFF0000FF),
-		Color(0xFFFFFF00),
-		Color(0xFFFF00FF),
-		Color(0xFF00FFFF),
-		Color(0xFFFF69B4),
-		Color(0xFFFFA500),
-		Color(0xFF800080),
-		Color(0xFF008000),
+
+		Color(0x00FFFFFF), // Transparente
+		Color(0xFF0A0A0A), // Casi Negro
+		Color(0xFFFFFFFF), // Blanco
+		Color(0xFFFF0000), // Rojo
+		Color(0xFF00FF00), // Lima
+		Color(0xFF0000FF), // Azul
+		Color(0xFFFFFF00), // Amarillo
+		Color(0xFFFF00FF), // Fucsia
+		Color(0xFF00FFFF), // Cian
+		Color(0xFFFF69B4), // Rosa Fuerte
+		Color(0xFFFFA500), // Naranja
+		Color(0xFF800080), // Púrpura
+		Color(0xFF008000), // Verde
+
+		// --- Expansión a 100 colores ---
+
+		// Tonos de Rojo y Rosa
+		Color(0xFFDC143C), // Rojo Carmesí
+		Color(0xFFFFC0CB), // Rosa
+		Color(0xFFFFB6C1), // Rosa Claro
+		Color(0xFFDB7093), // Rosa Viejo
+		Color(0xFFCD5C5C), // Coral Indio
+		Color(0xFFF08080), // Coral Claro
+		Color(0xFFFA8072), // Salmón
+		Color(0xFFE9967A), // Salmón Oscuro
+
+		// Tonos de Naranja
+		Color(0xFFFF7F50), // Coral
+		Color(0xFFFF8C00), // Naranja Oscuro
+		Color(0xFFED9121), // Zanahoria
+
+		// Tonos de Amarillo
+		Color(0xFFFFFACD), // Limón Gasa
+		Color(0xFFF0E68C), // Caqui
+		Color(0xFFBDB76B), // Caqui Oscuro
+		Color(0xFFDAA520), // Vara de Oro
+
+		// Tonos de Verde
+		Color(0xFFADFF2F), // Verde Amarillo
+		Color(0xFF7FFF00), // Verde Cartujo
+		Color(0xFF7CFC00), // Verde Césped
+		Color(0xFF32CD32), // Verde Lima
+		Color(0xFF98FB98), // Verde Pálido
+		Color(0xFF8FBC8F), // Verde Mar Oscuro
+		Color(0xFF2E8B57), // Verde Mar
+		Color(0xFF3CB371), // Verde Mar Medio
+		Color(0xFF20B2AA), // Aguamarina Claro
+		Color(0xFF008B8B), // Cian Oscuro
+		Color(0xFF00CED1), // Turquesa Oscuro
+
+		// Tonos de Cian y Azul
+		Color(0xFFAFEEEE), // Turquesa Pálido
+		Color(0xFF7FFFD4), // Aguamarina
+		Color(0xFF40E0D0), // Turquesa
+		Color(0xFF48D1CC), // Turquesa Medio
+		Color(0xFFB0C4DE), // Azul Acero Claro
+		Color(0xFFADD8E6), // Azul Claro
+		Color(0xFF87CEEB), // Azul Cielo
+		Color(0xFF87CEFA), // Azul Cielo Claro
+		Color(0xFF00BFFF), // Azul Cielo Profundo
+		Color(0xFF1E90FF), // Azul Dodher
+		Color(0xFF6495ED), // Azul Aciano
+		Color(0xFF4169E1), // Azul Real
+		Color(0xFF0000CD), // Azul Medio
+		Color(0xFF00008B), // Azul Oscuro
+		Color(0xFF000080), // Azul Marino
+		Color(0xFF191970), // Azul Medianoche
+
+		// Tonos de Púrpura, Violeta y Magenta
+		Color(0xFF8A2BE2), // Azul Violeta
+		Color(0xFF9400D3), // Violeta Oscuro
+		Color(0xFF9932CC), // Orquídea Oscuro
+		Color(0xFFBA55D3), // Orquídea Medio
+		Color(0xFFDA70D6), // Orquídea
+		Color(0xFFEE82EE), // Violeta
+		Color(0xFFDDA0DD), // Ciruela
+		Color(0xFFD8BFD8), // Cardo
+		Color(0xFF4B0082), // Índigo
+		Color(0xFF6A5ACD), // Azul Pizarra
+		Color(0xFF7B68EE), // Azul Pizarra Medio
+		Color(0xFFC71585), // Violeta Rojo Medio
+
+		// Tonos Marrones
+		Color(0xFFFFF8DC), // Maíz
+		Color(0xFFDEB887), // Madera Rústica
+		Color(0xFFD2B48C), // Canela
+		Color(0xFFBC8F8F), // Marrón Rosado
+		Color(0xFFF4A460), // Marrón Arenoso
+		Color(0xFFD2691E), // Chocolate
+		Color(0xFFCD853F), // Perú
+		Color(0xFF8B4513), // Silla de Montar
+		Color(0xFFA0522D), // Siena
+		Color(0xFFA52A2A), // Marrón
+		// Color(0xFF800000), // Granate - Este ya estaba implícitamente, pero lo añadimos explícito
+		Color(0xFF800000), // Granate
+
+		// Tonos de Blanco y Grises
+		Color(0xFFF5F5F5), // Blanco Humo
+		Color(0xFFDCDCDC), // Gris Gacela
+		Color(0xFFD3D3D3), // Gris Claro
+		Color(0xFFC0C0C0), // Plata
+		Color(0xFFA9A9A9), // Gris Oscuro
+		Color(0xFF808080), // Gris
+		Color(0xFF696969), // Gris Ténue
+		Color(0xFF778899), // Gris Pizarra Claro
+		Color(0xFF708090), // Gris Pizarra
+		Color(0xFF2F4F4F), // Gris Pizarra Oscuro
+
+		// Colores Adicionales para completar
+		Color(0xFFFFD700), // Oro
+		Color(0xFFB8860B), // Vara de Oro Oscuro
+		Color(0xFFF5DEB3), // Trigo
+		Color(0xFF9ACD32), // Verde Amarillo
+		Color(0xFF556B2F), // Verde Oliva Oscuro
+		Color(0xFF6B8E23), // Verde Oliva
+		Color(0xFF4682B4), // Azul Acero
+		Color(0xFFB0E0E6), // Azul Pólvora
+		Color(0xFFFFE4E1), // Rosa Niebla
+		Color(0xFFFAEBD7), // Blanco Antiguo
+		Color(0xFFFDF5E6), // Lino Viejo
+		Color(0xFFFFEFD5), // Papaya Látigo
+		Color(0xFFFFDAB9), // Melocotón
+		Color(0xFFEEE8AA)  // Vara de Oro Pálido
 
 		)
 
