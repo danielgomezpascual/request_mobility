@@ -45,7 +45,7 @@ fun MA_IconBottom(
                 role = Role.Button, // Indicar semánticamente que es un botón
                 onClickLabel = labelText // Etiqueta para accesibilidad del clic
             )
-            .padding(vertical = 8.dp, horizontal = 4.dp), // Padding para el área táctil y visual
+            .padding(vertical = 6.dp, horizontal = 4.dp), // Padding para el área táctil y visual
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
