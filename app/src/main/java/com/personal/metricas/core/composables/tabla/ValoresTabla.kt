@@ -26,6 +26,7 @@ data class Columnas(val nombre: String, val posicion: Int, var maximaLongitudCar
 					var valores: List<String> = emptyList()){
 
 	val CONVERSOR : Int = 14
+
 	fun addValor(valor: String= ""): List<String>{
 
 		//App.log.d("valor $valor")
@@ -48,6 +49,10 @@ data class Columnas(val nombre: String, val posicion: Int, var maximaLongitudCar
 			maximaLongitudDp = 180.dp
 		}
 
+		if (posicion == 0){
+			//a la primera coluimna le summos 20 ya que en la mayoruia de las ocasiones lelva el idnicador
+			maximaLongitudDp = maximaLongitudDp +20.dp
+		}
 		return valores
 	}
 }
