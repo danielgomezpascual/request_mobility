@@ -230,6 +230,8 @@ fun MA_Panel(
 
 				onClickSeleccionarFila = { fila ->
 					filas = filas.map { f ->
+
+						App.log.d("Cambio en la seleccion del filtro")
 						if (fila.seleccionada) {
 							f.copy(seleccionada = false)
 						} else {
@@ -247,6 +249,7 @@ fun MA_Panel(
 				},
 
 				onClickInvertir = { cfi ->
+					App.log.d("Cambio en la INVERSION DEL FILTRO")
 					celdasFiltro = celdasFiltro.map { c ->
 						if (c.titulo.equals(cfi.titulo)) {
 							if (!cfi.filtroInvertido) {
@@ -263,7 +266,15 @@ fun MA_Panel(
 				},
 
 				onClickSeleccionarFiltro = { cf ->
+					celdasFiltro = celdasFiltro.map { c ->
+						if (c.titulo.equals(cf.titulo)) {
+							cf.copy(seleccionada = !cf.seleccionada)
+						} else {
+							c
+						}
+					}
 
+					filas = cumplenFiltro(filas, celdasFiltro)
 
 					panelData.valoresTabla.filas = filas
 				},

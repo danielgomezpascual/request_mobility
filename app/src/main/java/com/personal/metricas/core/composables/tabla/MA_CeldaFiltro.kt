@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.InvertColors
@@ -30,50 +31,53 @@ import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.utils.if3
 
 
-
 @Composable
 fun MA_CeldaFiltro(
 
-    modifier: Modifier = Modifier,
-    celda: Celda,
-    alineacion: TextAlign = TextAlign.Unspecified,
-    icono: Icons? = null,
-    onClickSeleccion: (Celda) -> Unit = {},
-    onClickInvertir: (Celda) -> Unit = {},
+	modifier: Modifier = Modifier,
+	celda: Celda,
+	alineacion: TextAlign = TextAlign.Unspecified,
+	icono: Icons? = null,
+	onClickSeleccion: (Celda) -> Unit = {},
+	onClickInvertir: (Celda) -> Unit = {},
 
-) {
+	) {
 
-    Row(verticalAlignment = Alignment.CenterVertically,/* modifier = Modifier.clickable { onClickSeleccion(celda) }*/) {
+	Row(verticalAlignment = Alignment.CenterVertically,
+		modifier = Modifier.fillMaxWidth().clickable { onClickSeleccion(celda) }) {
 
-        //MA_Circulo(color = if3(celda.seleccionada, Color.Yellow, Color.LightGray))
-       // Column {
-            MA_IconBottom(icon = Icons.Default.LightMode, color =  if3(celda.seleccionada, Color.Magenta, Color.LightGray), onClick = {
-                onClickSeleccion(celda)
-            })
+		//MA_Circulo(color = if3(celda.seleccionada, Color.Yellow, Color.LightGray))
+		// Column {
+		MA_IconBottom(icon = Icons.Default.LightMode,
+					  color = if3(celda.seleccionada, Color.Magenta, Color.LightGray), onClick = {
+			onClickSeleccion(celda)
+		})
 
-        MA_Spacer()
-            MA_IconBottom(icon = Icons.Default.InvertColors, color =  if3(celda.filtroInvertido, Color.Magenta, Color.LightGray), onClick = {
-                onClickInvertir(celda)
-            })
-            //MA_BotonSecundarioSinBorde(onClick = {onClickInvertir(celda)},  texto = "INV" )
-
-
-     //   }
-        MA_Spacer()
-        MA_LabelMini(valor =  "${celda.titulo} = ${celda.valor}")
-        /*Text(
-            text = "${celda.titulo} = ${celda.valor}",
-            modifier = modifier
-                .background(celda.fondoCelda)
-                .padding(4.dp),
-
-            color = celda.colorCelda,
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = alineacion
-        )*/
+		//MA_Icono(Icons.Default.LightMode, color = if3(celda.seleccionada, Color.Magenta, Color.LightGray))
+		MA_Spacer()
+		MA_IconBottom(icon = Icons.Default.InvertColors,
+					  color = if3(celda.filtroInvertido, Color.Magenta, Color.LightGray), onClick = {
+			onClickInvertir(celda)
+		})
+		//MA_BotonSecundarioSinBorde(onClick = {onClickInvertir(celda)},  texto = "INV" )
 
 
-        //MA_BotonSecundarioSinBorde(onClick = {onClickInvertir(celda)},  texto = "Invertir" )
-    }
+		//   }
+		MA_Spacer()
+		MA_LabelMini(valor = "${celda.titulo} = ${celda.valor}")
+		/*Text(
+			text = "${celda.titulo} = ${celda.valor}",
+			modifier = modifier
+				.background(celda.fondoCelda)
+				.padding(4.dp),
+
+			color = celda.colorCelda,
+			style = MaterialTheme.typography.bodySmall,
+			textAlign = alineacion
+		)*/
+
+
+		//MA_BotonSecundarioSinBorde(onClick = {onClickInvertir(celda)},  texto = "Invertir" )
+	}
 
 }
