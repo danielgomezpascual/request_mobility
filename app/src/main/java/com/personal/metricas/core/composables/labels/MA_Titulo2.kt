@@ -38,7 +38,7 @@ fun MA_Titulo2(
 
 	Row(modifier = modifier
 		.fillMaxWidth()
-		.padding(top = 8.dp, bottom = 8.dp,
+		.padding(top = 4.dp, bottom = 2.dp,
 				 start = 5.dp, end = 5.dp
 		), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
 		if (valor.isNotEmpty()) {
