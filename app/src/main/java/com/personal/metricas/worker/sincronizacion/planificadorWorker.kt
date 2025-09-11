@@ -8,6 +8,7 @@ import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.ExistingPeriodicWorkPolicy
 import com.personal.metricas.App
+import com.personal.metricas.core.utils.K
 
 // Esta función la puedes llamar desde tu Activity, ViewModel o Application.onCreate()
 fun planificadorSyncWorker(context: Context) {
@@ -38,8 +39,13 @@ fun planificadorSyncWorker(context: Context) {
 	// instancia de este trabajo planificada en todo momento.
 	val periodicSyncRequest = PeriodicWorkRequestBuilder<DataSyncWorker>(
 		15, // repeatInterval
-		TimeUnit.MINUTES // timeUnit
+		TimeUnit.MINUTES // time Unit
 	).setConstraints(constraints).build()
+
+
+	App.sharedPrerfences.put(K.ID_WORKER, periodicSyncRequest.id.toString())
+
+
 	workManager.enqueueUniquePeriodicWork(
 		DataSyncWorker.UNIQUE_WORK_NAME, // Un nombre único para este trabajo
 		ExistingPeriodicWorkPolicy.REPLACE, // Si ya existe, no hace nada. También puedes usar REPLACE.

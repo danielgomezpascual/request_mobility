@@ -2,12 +2,15 @@ package com.personal.metricas.settings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.personal.metricas.App
 import com.personal.metricas.App.Companion.ENTORNO
+import com.personal.metricas.App.Companion.context
 import com.personal.metricas.R
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.composables.dialogos.DialogosResultado
 import com.personal.metricas.core.room.AppDatabase
+import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils.Preferencias
 import com.personal.metricas.core.utils._t
 import com.personal.metricas.core.utils.if3
@@ -20,6 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class SettingsViewModel(
 	private val descargarFirebase: DescargarContenidoFirestore,
@@ -100,8 +104,14 @@ class SettingsViewModel(
 						App.sharedPrerfences.put<Boolean>(Preferencias.ACCESO_SINCRONIZACION, evento.valor)
 						estado.copy(sincronizacion = evento.valor)
 					}
-is Eventos.SincronizarAuto -> {
+
+					is Eventos.SincronizarAuto       -> {
 						App.sharedPrerfences.put<Boolean>(Preferencias.SINCRONIZAR_AUTO, evento.valor)
+						if (!evento.valor) {
+							val workId = App.sharedPrerfences.get(K.ID_WORKER, "")
+							WorkManager.getInstance(context).cancelWorkById(UUID.fromString(workId))
+
+						}
 						estado.copy(sincronizarAuto = evento.valor)
 					}
 

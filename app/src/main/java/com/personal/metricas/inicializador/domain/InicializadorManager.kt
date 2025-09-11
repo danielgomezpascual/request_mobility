@@ -87,7 +87,7 @@ class InicializadorManager(
 		val condiciones: Condiciones = Condiciones(id = 1,
 												   columna =
 													   Columnas(nombre = "LECTORA", posicion = 0, valores = emptyList()),
-												   color = 4,
+												   color = 0,
 												   condicionCelda = 1,
 												   predicado = "",
 												   descripion = "",
@@ -178,14 +178,14 @@ class InicializadorManager(
 			descripcion = "Evolucion de errores en el sistemas",
 			sql = """
 				SELECT
-					strftime('%m-%d', CREATION_DATE) AS 'DIA',
+					strftime('%m-%d', CREATION_DATE) AS 'DIA (M/D)',
 					COUNT(*) AS numero_de_errores
 				FROM
 					TRANSACCIONES
 				WHERE					
 					 REQ_STATUS = 2
 				GROUP BY
-					DIA
+					1
 				ORDER BY 1 DESC
 					;
 			""".trimIndent(),
@@ -377,7 +377,7 @@ class InicializadorManager(
 		var listaPametrosEP: List<Parametro> = Parametros.dameParametrosPorDefectoMobility()
 		listaPametrosEP = listaPametrosEP.plus(Parametro("P_ORGANIZATION_ID", "#ORGANIZATION_ID", "", false))
 		val endPoint = EndPointUI(
-			nombre = "Recargar  #ORGANIZATION_NAME (#ORGANIZATION_CODE)",
+			nombre = "Recargar datos)",
 			descripcion = "Obtener Trx",
 			url = "${Entornos.get(App.ENTORNO).url}GetSolicitudes",
 			parametros = Parametros(listaPametrosEP),
@@ -499,7 +499,7 @@ class InicializadorManager(
 			descripcion = "",
 			origen = "",
 			sql = """SELECT 
-						strftime('%m-%d %H:%M', CREATION_DATE) AS 'DIA',
+						strftime('%Y-%m-%d %H:%M', CREATION_DATE) AS 'DIA',
 						MOB_REQUEST_ID,
 						TIPO_MOV, 
 						NUMERO, 
@@ -899,7 +899,7 @@ class InicializadorManager(
 		val panelConteoTipo = operaciones.crearPanel(kpiConteoTransaccionesTipo,
 													 true,
 													 PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion.copy(limiteElementos = 0,
-																															  mostrarEtiquetas = true)
+																															  mostrarEtiquetas = true, ajustarContenidoAncho = true)
 		)
 
 
@@ -921,7 +921,7 @@ class InicializadorManager(
 													   true,
 													   PlantillasPanel.from(PlantillasPanel.TT.PanelesHorizontales.valor).configuracion.copy(limiteElementos = 0,
 																																			 mostrarEtiquetas = true,
-																																			 width = "150"))
+																																			 width = "500", height = "300"))
 
 
 

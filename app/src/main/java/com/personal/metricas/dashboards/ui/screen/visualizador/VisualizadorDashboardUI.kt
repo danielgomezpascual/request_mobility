@@ -92,7 +92,7 @@ fun Success(
 
 						modifier = Modifier.fillMaxWidth(),
 						alineacion = TextAlign.End,
-						valor = "Sync:${App.sharedPrerfences.get(K.ULTIMA_SINCRONIZACION, "Sin datos")}")
+						valor = "Sync: ${App.sharedPrerfences.get(K.ULTIMA_SINCRONIZACION, "Sin datos")}")
 
 
 					if (uiState.dashboardUI.descripcion.isNotEmpty()) {
