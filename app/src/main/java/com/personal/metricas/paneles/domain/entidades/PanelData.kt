@@ -137,12 +137,12 @@ data class PanelData(
 
 					App.log.v("Expresion $expresion")
 
-					if (valor.isNotEmpty() && valor.esNumerico()) {
+					if (valor.isNotEmpty() ) {
 						val contexto = MapContext().apply {
 							if (valor.esNumerico()) {
 								set("valor", valor.toFloat())
 							} else {
-								set("valor", 0)
+								set("valor", valor)
 							}
 
 						}
@@ -150,15 +150,6 @@ data class PanelData(
 						if ((condicion.condicionCelda > 0 && condicion.predicado.isEmpty()) || (resultado is Boolean && resultado)) {
 							color = EsquemaColores().dameEsquemaCondiciones().colores.get(condicion.color)
 							gestionAlarma(condicion, fila)
-							/*if (condicion.alarma.activa){
-								val id =if3(condicion.alarma.unica,"00${panel.id}00${panel.kpi.id}00${condicion.id}",System.currentTimeMillis().toString())
-								val alm = condicion.alarma.copy(id = id, color = condicion.color, titulo =  "${getAppName(App.context)} | ${condicion.alarma.titulo}", texto =notificacionesManager.dameTexto(condicion.alarma.texto, fila) )
-								if (listaAlarmas.filter { it.id.equals(id) }.size == 0) {
-									listaAlarmas.add(alm)
-									notificacionesManager.showNotificacion(context = App.context,
-																		   alarma = alm)
-								}
-							}*/
 						}
 					}
 				}

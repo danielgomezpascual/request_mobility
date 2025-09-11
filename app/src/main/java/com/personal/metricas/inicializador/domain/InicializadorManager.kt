@@ -71,9 +71,6 @@ class InicializadorManager(
 		crearVistas()
 
 
-		/*crearDashboardGeneral()
-		crearDashboardInfoLectoras()*/
-
 		crearDashboardGeneral()
 		crearDashboardGeneralExtra()
 		crearDashboardOrganizacion()
@@ -90,7 +87,7 @@ class InicializadorManager(
 		val condiciones: Condiciones = Condiciones(id = 1,
 												   columna =
 													   Columnas(nombre = "LECTORA", posicion = 0, valores = emptyList()),
-												   color = 0,
+												   color = 4,
 												   condicionCelda = 1,
 												   predicado = "",
 												   descripion = "",
@@ -201,149 +198,6 @@ class InicializadorManager(
 														   PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion.copy(ajustarContenidoAncho = false,
 																																	colores = EsquemaColores.Paletas.PERS.valor)
 		)
-		/*
-
-				//transacciones diarias
-				val kpiEstadoTransaccionesUltimoDia = KpiUI(
-					titulo = "Estado",
-					descripcion = "Estado en el que se encuentrna las transacciones en el último día",
-					origen = "",
-					sql = """
-						SELECT
-							CASE
-							WHEN REQ_STATUS = 0 THEN 'OK'
-							WHEN REQ_STATUS = 1 THEN 'ERROR'
-							WHEN REQ_STATUS = 2 THEN 'ERROR ORACLE'
-							WHEN REQ_STATUS = 3 THEN 'OK'
-							WHEN REQ_STATUS = 4 THEN 'REPROCESADO'
-							ELSE 'DESCONOCIDO'
-
-							END ESTADO,
-							COUNT(MOB_REQUEST_ID) AS TRX
-						FROM
-							TRX_7
-
-						GROUP BY
-							REQ_STATUS
-					""".trimIndent(),
-					dinamico = true,
-					parametros = Parametros()
-				)
-
-				//versiones en el ultimo dia
-				val kpiVersionesUltimoDia = KpiUI(
-					titulo = "Fragmentación",
-					descripcion = "Fragmentacion de versiones en las transacciones realizadas",
-					origen = "",
-					sql = """
-						SELECT
-							PROGRAM_VERSION as Version,
-							COUNT(MOB_REQUEST_ID) AS  Trx
-						FROM
-							TRX_7
-						GROUP BY
-							PROGRAM_VERSION
-						ORDER BY
-							1;
-					""".trimIndent(),
-					dinamico = true,
-					parametros = Parametros()
-				)
-
-
-				//versiones en el ultimo dia
-				val kpiHorasTransacciones = KpiUI(
-					titulo = "Transacciones por horas",
-					descripcion = "Estimación de las trnsacciones realizadas por horas",
-					origen = "",
-					sql = """
-						SELECT
-							STRFTIME('%H', CREATION_DATE) AS Hora,
-							COUNT(MOB_REQUEST_ID) AS NumeroDeTransacciones
-						FROM
-							TRANSACCIONES
-
-						GROUP BY
-							Hora
-						ORDER BY
-							1;
-					""".trimIndent(),
-					dinamico = true,
-					parametros = Parametros()
-				)
-
-				//versiones en el ultimo dia
-				val kpiErroresDiarios = KpiUI(
-					titulo = "Errores",
-					descripcion = "Errores diarios (REQ_STATUS = 2)",
-					origen = "",
-					sql = """
-						SELECT
-						   STRFTIME('%m-%d', CREATION_DATE)  AS Fecha,
-							COUNT(MOB_REQUEST_ID) AS NumeroDeErrores
-						FROM
-							TRANSACCIONES
-						WHERE
-							REQ_STATUS = 2
-						GROUP BY
-							Fecha
-						ORDER BY
-						1 desc
-					""".trimIndent(),
-					dinamico = true,
-					parametros = Parametros()
-				)
-
-				val kpiTransaccionesLectoras = KpiUI(
-					titulo = "Transacciones Lectoras 7 días",
-					descripcion = "Número de transacciones que ha realziado cada lectora en los ultimos 7 dias",
-					origen = "",
-					sql = """
-						SELECT
-							LECTORA_FISICA_ID as LECTORA,
-							COUNT(MOB_REQUEST_ID) AS TRX
-						FROM
-							TRX_7
-
-						GROUP BY
-							LECTORA_FISICA_ID
-						ORDER BY
-							2 DESC
-					""".trimIndent(),
-					dinamico = true,
-					parametros = Parametros()
-				)
-
-
-				//ultimas transaccion realizada
-				val kpiUltimaTransaccionRealizada = KpiUI(
-					titulo = "Ultima TRX de cada lectora",
-					descripcion = "Obtiene la última transaccionrealizada de cada lectora y los dias transcurridos",
-					origen = "",
-					sql = """
-						SELECT
-							LECTORA_FISICA_ID AS LECTORA,
-							MAX(DATE(CREATION_DATE)) AS 'ULT TRX',
-							CAST(julianday('now') - julianday(MAX(DATE(CREATION_DATE))) AS INTEGER) AS DIAS
-						FROM
-							TRANSACCIONES
-						GROUP BY
-							LECTORA_FISICA_ID
-						ORDER BY DIAS DESC
-
-					""".trimIndent(),
-					dinamico = true,
-					parametros = Parametros()
-				)
-		*/
-		/*
-				val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDia, true, PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion)
-				val panelFragmentacion = operaciones.crearPanel(kpiVersionesUltimoDia, true, PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion)
-				val panelHoras = operaciones.crearPanel(kpiHorasTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales()))
-				val panelErroresDiarios = operaciones.crearPanel(kpiErroresDiarios, true, PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion)
-				val panelTransaccionesLectoras = operaciones.crearPanel(kpiTransaccionesLectoras, true, PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion)
-				val panelUltimaTransaccionRalizada = operaciones.crearPanel(kpiUltimaTransaccionRealizada, true, PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion)
-		*/
 
 		val dh = operaciones.guardarDashboard(nombre = "General",
 											  listOf<PanelUI>(
@@ -368,14 +222,6 @@ class InicializadorManager(
 
 	suspend fun crearDashboardGeneralExtra() {
 
-		/*
-				val condiciones: Condiciones = Condiciones(id = 1,
-														   columna = Columnas("LECTORA_FISICA_ID", 0, valores = emptyList()),
-														   color = 0,
-														   condicionCelda = 1,
-														   predicado = "",
-														   descripion = "",
-														   alarma = Alarmas())*/
 
 		//transacciones diarias
 		val kpiTranasccionesEmpleo = KpiUI(
@@ -516,12 +362,12 @@ class InicializadorManager(
 			descripcion = "Organizaciones en el sistema",
 			origen = "",
 			sql = """SELECT DISTINCT
-		|  				ORGANIZATION_CODE,
-		|  				ORGANIZATION_ID,
-		|  				ORGANIZATION_NAME,
-		|  				MASTERORGANIZATION_ID 
-|  				   FROM
-|  				    TRANSACCIONES
+					ORGANIZATION_CODE,
+					ORGANIZATION_ID,
+					ORGANIZATION_NAME,
+					MASTERORGANIZATION_ID 
+  				   FROM
+  				    TRANSACCIONES
 				|  				    """.trimMargin(),
 			dinamico = false,
 			parametros = Parametros()))
@@ -568,11 +414,20 @@ class InicializadorManager(
 																	valores = emptyList()),
 														condicionCelda = 0,
 														color = 3,
-														predicado = "= 'ERROR'",
+														predicado = "== 'ERROR'",
 														descripion = "",
 														alarma = Alarmas())
 
-		val listaCondicionesErr = listOf<Condiciones>(condicionesError)
+		val condicionesReprocesameinto: Condiciones = Condiciones(1, Columnas("ESTADO",
+																	posicion = 4,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 5,
+														predicado = "== 'REPROCESAMIENTO'",
+														descripion = "",
+														alarma = Alarmas())
+
+		val listaCondicionesErr = listOf<Condiciones>(condicionesError, condicionesReprocesameinto)
 
 		//trasnacciones ultimo dia
 		val kpiTransaccionesUltimoDiaOrganizacion = KpiUI(
@@ -597,7 +452,10 @@ class InicializadorManager(
 		)
 		val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiTransaccionesUltimoDiaOrganizacion,
 																 true,
-																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(ajustarContenidoAncho = false, condiciones = listaCondicionesErr))
+
+																 PlantillasPanel.from(
+																	 PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(ajustarContenidoAncho = false,
+																															condiciones = listaCondicionesErr))
 
 		//errores que se han producido en el ultimo día
 		val erroresDia = KpiUI(
@@ -754,23 +612,15 @@ class InicializadorManager(
 
 
 		operaciones.guardarDashboard(nombre = "ORG #ORGANIZATION_ID #ORGANIZATION_CODE \n #ORGANIZATION_NAME",
-									 listOf<PanelUI>(//panelOrganizaciones,
-
+									 listOf<PanelUI>(
+										// panelOrganizaciones,
 										 panelEndPointSolicitudes,
-
 										 panelConteo,
 										 panelTransaccionesUltimoDia,
-										 panelErroresDia,
-
-										 panelConteoSemana,
+										panelErroresDia,
+										panelConteoSemana,
 										 panelTransaccionesSemana,
-
-
-										 panelErroresPeriodo,
-
-										 /*panelTransaccionesOrganizacion,
-										 panelEstadoTransacciones,
-										 panelOrigenErrores,*/
+										panelErroresPeriodo,
 										 panelErroresLectora
 
 									 ),

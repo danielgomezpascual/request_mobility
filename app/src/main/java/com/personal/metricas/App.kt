@@ -66,7 +66,7 @@ class App : Application() {
 		sharedPrerfences = SharedPreferencesManager(applicationContext)
 		ENTORNO = if3(App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false), "PRO", "DEV")
 		NotificacionesManager().createNotificationChannel()
-		App.log.i("Sincronizacion automática de datos ACTIVADA ${App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)}")
+		App.log.c("Sincronizacion automática de datos ACTIVADA ${App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)}")
 		if (App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)) {
 			planificadorSyncWorker(this)
 		}
