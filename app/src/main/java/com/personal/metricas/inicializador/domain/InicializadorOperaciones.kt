@@ -76,9 +76,10 @@ class InicializadorOperaciones(
 						 paneles = listOf<PanelUI>(element = panel),
 						 crearPaneles = crearPaneles,
 						 kpiOrigen = kpiOrigen,
-						 crearKPI = crearKPI)
+						 crearKPI = crearKPI, color = -6737204)
 
-	suspend fun guardarDashboard(nombre: String = "",   paneles: List<PanelUI>, crearPaneles: Boolean = false, kpiOrigen: KpiUI = KpiUI(), crearKPI: Boolean= false, etiqueta: Etiquetas = Etiquetas.EtiquetaVacia(),home: Boolean = false): DashboardUI {
+	suspend fun guardarDashboard(nombre: String = "",   paneles: List<PanelUI>, crearPaneles: Boolean = false, kpiOrigen: KpiUI = KpiUI(),
+								 crearKPI: Boolean= false, etiqueta: Etiquetas = Etiquetas.EtiquetaVacia(),home: Boolean = false, color:Int): DashboardUI {
 		var misPaneles: List<PanelUI> = paneles
 		if (crearPaneles) {
 			misPaneles = emptyList()
@@ -107,7 +108,8 @@ class InicializadorOperaciones(
 			kpiOrigen = kpi,
 			listaPaneles = listaPaneles,
 			parametros = Parametros(), 
-			autogenerado = true)
+			autogenerado = true,
+			color = color)
 
 		val identidicador: Long = guardarDashboard.guardar(dashboardUI.toDashboard())
 		val nuevoDashboard = dashboardUI.copy(id = identidicador.toInt())

@@ -21,6 +21,7 @@ import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 import org.koin.mp.KoinPlatform.getKoin
 
+
 class InicializadorManager(
 	private val operaciones: InicializadorOperaciones,
 	private val dialog: DialogManager,
@@ -68,55 +69,6 @@ class InicializadorManager(
 
 		eliminarDatosGeneradosPreviamente()
 		crearVistas()
-		val kpiOrganizaciones = (KpiUI(
-			titulo = "Organizaciones",
-			descripcion = "Organizaciones en el sistema",
-			origen = "",
-			sql = "SELECT DISTINCT  ORGANIZATION_CODE, ORGANIZATION_ID,SELECT DISTINCT  ORGANIZATION_CODE, ORGANIZATION_ID, ORGANIZATION_NAME, MASTERORGANIZATION_ID FROM TRANSACCIONES",
-			dinamico = false,
-			parametros = Parametros()))
-
-		val kpiLectoras = (KpiUI(
-			titulo = "Lectoras",
-			descripcion = "Lectoras",
-			origen = "",
-			sql = "SELECT DISTINCT  LECTORA_ID, LECTORA_FISICA_ID FROM  TRANSACCIONES",
-			dinamico = false,
-			parametros = Parametros()))
-
-		val kpiUsuarios = (KpiUI(
-			titulo = "Usuarios",
-			descripcion = "Usuarios",
-			origen = "",
-			sql = "SELECT DISTINCT  USUARIO_LECTORA FROM  TRANSACCIONES",
-			dinamico = false,
-			parametros = Parametros()))
-
-		val kpiMovimientos = (KpiUI(
-			titulo = "Movimientos",
-			descripcion = "Movimientos realizadoso",
-			origen = "",
-			sql = "SELECT TIPO_MOV,  COUNT(*) AS EL FROM  TRANSACCIONES WHERE REQ_STATUS = 0 GROUP BY 1 , 2 ",
-			dinamico = false,
-			parametros = Parametros()))
-
-		val kpiTransaccionesLectoiras = (KpiUI(
-			titulo = "Transaccione de \$LECTORA_FISICA_ID",
-			descripcion = "Lectoras",
-			origen = "",
-			sql = "SELECT MOB_REQUEST_ID, REQ_STATUS, LECTORA_FISICA_ID, USUARIO_LECTORA FROM  TRANSACCIONES WHERE LECTORA_FISICA_ID = '\$LECTORA_FISICA_ID'",
-			dinamico = true,
-			parametros = Parametros(ps = listOf<Parametro>(Parametro(key = "LECTORA_FISICA_ID", valor = "", defecto = "AU0604", fijo = false))))
-										)
-
-		val kpiTransacciones = KpiUI(
-			titulo = "Transacciones",
-			descripcion = "Transacciones",
-			origen = "",
-			sql = "SELECT 'TRX', COUNT(*) FROM TRANSACCIONES",
-			dinamico = true,
-			parametros = Parametros()
-		)
 
 
 		/*crearDashboardGeneral()
@@ -132,13 +84,12 @@ class InicializadorManager(
 	}
 
 
-
-
 	suspend fun crearDashboardGeneral() {
 
 
 		val condiciones: Condiciones = Condiciones(id = 1,
-												   columna = Columnas(nombre = "LECTORA_FISICA_ID", posicion =  0, valores =  emptyList()),
+												   columna =
+													   Columnas(nombre = "LECTORA", posicion = 0, valores = emptyList()),
 												   color = 0,
 												   condicionCelda = 1,
 												   predicado = "",
@@ -154,9 +105,9 @@ class InicializadorManager(
 			origen = "",
 			sql = """
 				SELECT
-					LECTORA_FISICA_ID,
+					LECTORA_FISICA_ID as 'LECTORA',
 					MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO,  USUARIO_LECTORA, 
-					strftime('%d-%m', CREATION_DATE)  AS Fecha
+					strftime('%d-%m %H:%M', CREATION_DATE)  AS Fecha
 				FROM
 					TRX_HOY  T
 			
@@ -184,7 +135,7 @@ class InicializadorManager(
 					strftime('%d-%m', CREATION_DATE)  AS Fecha
 				FROM
 					TRX_HOY  T
-				WHERE REQ_STATUS = 2
+				WHERE REQ_STATUS != 0
 				GROUP BY
 					Fecha
 				ORDER BY
@@ -203,11 +154,10 @@ class InicializadorManager(
 			descripcion = "Conteo de transacciones realizadas por organizacion procesadas correctamente",
 			sql = """
 				SELECT
-										ORGANIZATION_CODE AS 'CODE',
+					ORGANIZATION_CODE AS 'CODE',
 					COUNT(*) AS 'TRX',
 					ORGANIZATION_ID AS 'ID',
-					ORGANIZATION_NAME AS 'NOMBRE'
-					
+					ORGANIZATION_NAME AS 'NOMBRE'				
 				
 				FROM TRX_7
 				WHERE REQ_STATUS = '0'
@@ -231,15 +181,15 @@ class InicializadorManager(
 			descripcion = "Evolucion de errores en el sistemas",
 			sql = """
 				SELECT
-					strftime('%d-%m', CREATION_DATE) AS dia_y_mes,
+					strftime('%m-%d', CREATION_DATE) AS 'DIA',
 					COUNT(*) AS numero_de_errores
 				FROM
 					TRANSACCIONES
 				WHERE					
 					 REQ_STATUS = 2
 				GROUP BY
-					dia_y_mes
-				ORDER BY 1 ASC
+					DIA
+				ORDER BY 1 DESC
 					;
 			""".trimIndent(),
 			origen = "",
@@ -251,149 +201,149 @@ class InicializadorManager(
 														   PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion.copy(ajustarContenidoAncho = false,
 																																	colores = EsquemaColores.Paletas.PERS.valor)
 		)
+		/*
+
+				//transacciones diarias
+				val kpiEstadoTransaccionesUltimoDia = KpiUI(
+					titulo = "Estado",
+					descripcion = "Estado en el que se encuentrna las transacciones en el último día",
+					origen = "",
+					sql = """
+						SELECT
+							CASE
+							WHEN REQ_STATUS = 0 THEN 'OK'
+							WHEN REQ_STATUS = 1 THEN 'ERROR'
+							WHEN REQ_STATUS = 2 THEN 'ERROR ORACLE'
+							WHEN REQ_STATUS = 3 THEN 'OK'
+							WHEN REQ_STATUS = 4 THEN 'REPROCESADO'
+							ELSE 'DESCONOCIDO'
+
+							END ESTADO,
+							COUNT(MOB_REQUEST_ID) AS TRX
+						FROM
+							TRX_7
+
+						GROUP BY
+							REQ_STATUS
+					""".trimIndent(),
+					dinamico = true,
+					parametros = Parametros()
+				)
+
+				//versiones en el ultimo dia
+				val kpiVersionesUltimoDia = KpiUI(
+					titulo = "Fragmentación",
+					descripcion = "Fragmentacion de versiones en las transacciones realizadas",
+					origen = "",
+					sql = """
+						SELECT
+							PROGRAM_VERSION as Version,
+							COUNT(MOB_REQUEST_ID) AS  Trx
+						FROM
+							TRX_7
+						GROUP BY
+							PROGRAM_VERSION
+						ORDER BY
+							1;
+					""".trimIndent(),
+					dinamico = true,
+					parametros = Parametros()
+				)
 
 
-		//transacciones diarias
-		val kpiEstadoTransaccionesUltimoDia = KpiUI(
-			titulo = "Estado",
-			descripcion = "Estado en el que se encuentrna las transacciones en el último día",
-			origen = "",
-			sql = """
-				SELECT
-					CASE 
-					WHEN REQ_STATUS = 0 THEN 'OK' 
-					WHEN REQ_STATUS = 1 THEN 'ERROR'
-					WHEN REQ_STATUS = 2 THEN 'ERROR ORACLE'
-					WHEN REQ_STATUS = 3 THEN 'OK'
-					WHEN REQ_STATUS = 4 THEN 'REPROCESADO'
-					ELSE 'DESCONOCIDO'
-					
-					END ESTADO,
-					COUNT(MOB_REQUEST_ID) AS TRX
-				FROM
-					TRX_7
-				
-				GROUP BY
-					REQ_STATUS		
-			""".trimIndent(),
-			dinamico = true,
-			parametros = Parametros()
-		)
+				//versiones en el ultimo dia
+				val kpiHorasTransacciones = KpiUI(
+					titulo = "Transacciones por horas",
+					descripcion = "Estimación de las trnsacciones realizadas por horas",
+					origen = "",
+					sql = """
+						SELECT
+							STRFTIME('%H', CREATION_DATE) AS Hora,
+							COUNT(MOB_REQUEST_ID) AS NumeroDeTransacciones
+						FROM
+							TRANSACCIONES
 
-		//versiones en el ultimo dia
-		val kpiVersionesUltimoDia = KpiUI(
-			titulo = "Fragmentación",
-			descripcion = "Fragmentacion de versiones en las transacciones realizadas",
-			origen = "",
-			sql = """
-				SELECT
-					PROGRAM_VERSION as Version,
-					COUNT(MOB_REQUEST_ID) AS  Trx
-				FROM
-					TRX_7				
-				GROUP BY
-					PROGRAM_VERSION
-				ORDER BY
-					1;
-			""".trimIndent(),
-			dinamico = true,
-			parametros = Parametros()
-		)
+						GROUP BY
+							Hora
+						ORDER BY
+							1;
+					""".trimIndent(),
+					dinamico = true,
+					parametros = Parametros()
+				)
 
+				//versiones en el ultimo dia
+				val kpiErroresDiarios = KpiUI(
+					titulo = "Errores",
+					descripcion = "Errores diarios (REQ_STATUS = 2)",
+					origen = "",
+					sql = """
+						SELECT
+						   STRFTIME('%m-%d', CREATION_DATE)  AS Fecha,
+							COUNT(MOB_REQUEST_ID) AS NumeroDeErrores
+						FROM
+							TRANSACCIONES
+						WHERE
+							REQ_STATUS = 2
+						GROUP BY
+							Fecha
+						ORDER BY
+						1 desc
+					""".trimIndent(),
+					dinamico = true,
+					parametros = Parametros()
+				)
 
-		//versiones en el ultimo dia
-		val kpiHorasTransacciones = KpiUI(
-			titulo = "Transacciones por horas",
-			descripcion = "Estimación de las trnsacciones realizadas por horas",
-			origen = "",
-			sql = """
-				SELECT
-					STRFTIME('%H', CREATION_DATE) AS Hora,
-					COUNT(MOB_REQUEST_ID) AS NumeroDeTransacciones
-				FROM
-					TRANSACCIONES
-				
-				GROUP BY
-					Hora
-				ORDER BY
-					1;
-			""".trimIndent(),
-			dinamico = true,
-			parametros = Parametros()
-		)
+				val kpiTransaccionesLectoras = KpiUI(
+					titulo = "Transacciones Lectoras 7 días",
+					descripcion = "Número de transacciones que ha realziado cada lectora en los ultimos 7 dias",
+					origen = "",
+					sql = """
+						SELECT
+							LECTORA_FISICA_ID as LECTORA,
+							COUNT(MOB_REQUEST_ID) AS TRX
+						FROM
+							TRX_7
 
-		//versiones en el ultimo dia
-		val kpiErroresDiarios = KpiUI(
-			titulo = "Errores",
-			descripcion = "Errores diarios (REQ_STATUS = 2)",
-			origen = "",
-			sql = """
-				SELECT
-				   STRFTIME('%m-%d', CREATION_DATE)  AS Fecha,
-				    COUNT(MOB_REQUEST_ID) AS NumeroDeErrores
-				FROM
-				    TRANSACCIONES
-				WHERE
-				    REQ_STATUS = 2
-				GROUP BY
-				    Fecha
-				ORDER BY
-				1 desc
-			""".trimIndent(),
-			dinamico = true,
-			parametros = Parametros()
-		)
-
-		val kpiTransaccionesLectoras = KpiUI(
-			titulo = "Transacciones Lectoras 7 días",
-			descripcion = "Número de transacciones que ha realziado cada lectora en los ultimos 7 dias",
-			origen = "",
-			sql = """
-				SELECT
-					LECTORA_FISICA_ID as LECTORA,
-					COUNT(MOB_REQUEST_ID) AS TRX
-				FROM
-					TRX_7
-				
-				GROUP BY
-					LECTORA_FISICA_ID
-				ORDER BY
-					2 DESC				
-			""".trimIndent(),
-			dinamico = true,
-			parametros = Parametros()
-		)
+						GROUP BY
+							LECTORA_FISICA_ID
+						ORDER BY
+							2 DESC
+					""".trimIndent(),
+					dinamico = true,
+					parametros = Parametros()
+				)
 
 
-		//ultimas transaccion realizada
-		val kpiUltimaTransaccionRealizada = KpiUI(
-			titulo = "Ultima TRX de cada lectora",
-			descripcion = "Obtiene la última transaccionrealizada de cada lectora y los dias transcurridos",
-			origen = "",
-			sql = """				 
-				SELECT
-					LECTORA_FISICA_ID AS LECTORA,
-					MAX(DATE(CREATION_DATE)) AS 'ULT TRX',					
-					CAST(julianday('now') - julianday(MAX(DATE(CREATION_DATE))) AS INTEGER) AS DIAS
-				FROM
-					TRANSACCIONES
-				GROUP BY
-					LECTORA_FISICA_ID				
-				ORDER BY DIAS DESC
-   
-			""".trimIndent(),
-			dinamico = true,
-			parametros = Parametros()
-		)
+				//ultimas transaccion realizada
+				val kpiUltimaTransaccionRealizada = KpiUI(
+					titulo = "Ultima TRX de cada lectora",
+					descripcion = "Obtiene la última transaccionrealizada de cada lectora y los dias transcurridos",
+					origen = "",
+					sql = """
+						SELECT
+							LECTORA_FISICA_ID AS LECTORA,
+							MAX(DATE(CREATION_DATE)) AS 'ULT TRX',
+							CAST(julianday('now') - julianday(MAX(DATE(CREATION_DATE))) AS INTEGER) AS DIAS
+						FROM
+							TRANSACCIONES
+						GROUP BY
+							LECTORA_FISICA_ID
+						ORDER BY DIAS DESC
 
-
-		val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDia, true, PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion)
-		val panelFragmentacion = operaciones.crearPanel(kpiVersionesUltimoDia, true, PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion)
-		val panelHoras = operaciones.crearPanel(kpiHorasTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales()))
-		val panelErroresDiarios = operaciones.crearPanel(kpiErroresDiarios, true, PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion)
-		val panelTransaccionesLectoras = operaciones.crearPanel(kpiTransaccionesLectoras, true, PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion)
-		val panelUltimaTransaccionRalizada = operaciones.crearPanel(kpiUltimaTransaccionRealizada, true, PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion)
-
+					""".trimIndent(),
+					dinamico = true,
+					parametros = Parametros()
+				)
+		*/
+		/*
+				val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiEstadoTransaccionesUltimoDia, true, PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion)
+				val panelFragmentacion = operaciones.crearPanel(kpiVersionesUltimoDia, true, PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion)
+				val panelHoras = operaciones.crearPanel(kpiHorasTransacciones, true, PanelConfiguracion().copy(tipo = PanelTipoGrafica.BarrasFinasVerticales()))
+				val panelErroresDiarios = operaciones.crearPanel(kpiErroresDiarios, true, PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion)
+				val panelTransaccionesLectoras = operaciones.crearPanel(kpiTransaccionesLectoras, true, PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion)
+				val panelUltimaTransaccionRalizada = operaciones.crearPanel(kpiUltimaTransaccionRealizada, true, PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion)
+		*/
 
 		val dh = operaciones.guardarDashboard(nombre = "General",
 											  listOf<PanelUI>(
@@ -409,7 +359,8 @@ class InicializadorManager(
 												   panelUltimaTransaccionRalizada*/
 											  ),
 											  etiqueta = Etiquetas.EtiquetaValor("General"),
-											  home = true
+											  home = true,
+											  color = -16744448
 		)
 
 
@@ -417,16 +368,14 @@ class InicializadorManager(
 
 	suspend fun crearDashboardGeneralExtra() {
 
-
-		val condiciones: Condiciones = Condiciones(id = 1,
-												   columna = Columnas("LECTORA_FISICA_ID", 0, valores = emptyList()),
-												   color = 0,
-												   condicionCelda = 1,
-												   predicado = "",
-												   descripion = "",
-												   alarma = Alarmas())
-		val listaCondicionesBanderas: List<Condiciones> = listOf<Condiciones>(condiciones)
-
+		/*
+				val condiciones: Condiciones = Condiciones(id = 1,
+														   columna = Columnas("LECTORA_FISICA_ID", 0, valores = emptyList()),
+														   color = 0,
+														   condicionCelda = 1,
+														   predicado = "",
+														   descripion = "",
+														   alarma = Alarmas())*/
 
 		//transacciones diarias
 		val kpiTranasccionesEmpleo = KpiUI(
@@ -442,7 +391,7 @@ class InicializadorManager(
 				WHERE REQ_STATUS = '0' OR REQ_STATUS = '2'
 				GROUP  BY 1 
 				ORDER BY
-					1 DESC				
+					2 DESC				
 			""".trimIndent(),
 			dinamico = true,
 			parametros = Parametros()
@@ -455,11 +404,11 @@ class InicializadorManager(
 		//transacciones diarias
 		val kpiTranasccionesPorLectora = KpiUI(
 			titulo = "Transacciones por lectora",
-			descripcion = "Indicador de las lectoreas que más trabajo hacen",
+			descripcion = "Indicador de las lectoras que más trabajo se produce",
 			origen = "",
 			sql = """
 				SELECT
-					LECTORA_FISICA_ID,
+					LECTORA_FISICA_ID as 'LECTORA',
 					COUNT(*) AS 'NUM' 
 				FROM
 					TRANSACCIONES  T
@@ -479,13 +428,12 @@ class InicializadorManager(
 		//transacciones diarias
 		val kpiTranasccionesErrorPorLectora = KpiUI(
 			titulo = "Errores por lectora",
-			descripcion = "Indicador de errores que se proiducen por lectora",
+			descripcion = "Indicador de errores que se producen por lectora",
 			origen = "",
 			sql = """
 				SELECT
-					LECTORA_FISICA_ID AS 'LECT',
-					  
-					COUNT(*) AS 'NUM' 
+					LECTORA_FISICA_ID AS 'LECT',					  
+					COUNT(*) AS 'ERRORES' 
 				FROM
 					TRANSACCIONES  T
 				WHERE REQ_STATUS = '2'
@@ -499,17 +447,16 @@ class InicializadorManager(
 		val panelTransaccionesErrorLectora = operaciones.crearPanel(kpiTranasccionesErrorPorLectora,
 																	true,
 																	PlantillasPanel.from(PlantillasPanel.TT.BarrasAnchasVertivales.valor).configuracion.copy(
-																   colores = EsquemaColores.Paletas.ERRORES.valor,
-																   limiteElementos = 25,
-																   mostrarEtiquetas = true
-																   ))
-
+																		colores = EsquemaColores.Paletas.ERRORES.valor,
+																		limiteElementos = 25,
+																		mostrarEtiquetas = true
+																	))
 
 
 		//versiones en el ultimo dia
 		val kpiHorasTransacciones = KpiUI(
 			titulo = "Transacciones por horas",
-			descripcion = "Estimación de las trnsacciones realizadas por horas",
+			descripcion = "Estimación de ocupación.",
 			origen = "",
 			sql = """
 				SELECT
@@ -521,7 +468,7 @@ class InicializadorManager(
 				GROUP BY
 					Hora
 				ORDER BY
-					1;
+					1 ASC;
 			""".trimIndent(),
 			dinamico = true,
 			parametros = Parametros()
@@ -531,19 +478,18 @@ class InicializadorManager(
 																									   mostrarEtiquetas = true))
 
 
-
 		val dh = operaciones.guardarDashboard(nombre = "General Extra",
 
 											  listOf<PanelUI>(
 												  panelTransaccionesEmpleo,
 												  panelHoras,
-
 												  panelTransaccionesLectora,
 												  panelTransaccionesErrorLectora
 
 											  ),
 											  etiqueta = Etiquetas.EtiquetaValor("General"),
-											  home = true
+											  home = true,
+											  color = -16744448
 		)
 
 
@@ -552,11 +498,31 @@ class InicializadorManager(
 	suspend fun crearDashboardOrganizacion() {
 
 
+		/*
+				val condicion: Condiciones = Condiciones(1, Columnas("REQ_STATUS",
+																	 posicion = 5,
+																	 valores = emptyList()),
+														 condicionCelda = 0,
+														 color = 1,
+														 predicado = "== '2'",
+														 descripion = "",
+														 alarma = Alarmas())
+
+				val listaCondiciones = listOf<Condiciones>(condicion)*/
+
+
 		val kpiOrganizaciones = (KpiUI(
 			titulo = "Organizaciones",
 			descripcion = "Organizaciones en el sistema",
 			origen = "",
-			sql = "SELECT DISTINCT  ORGANIZATION_CODE, ORGANIZATION_ID, ORGANIZATION_NAME, MASTERORGANIZATION_ID FROM TRANSACCIONES",
+			sql = """SELECT DISTINCT
+		|  				ORGANIZATION_CODE,
+		|  				ORGANIZATION_ID,
+		|  				ORGANIZATION_NAME,
+		|  				MASTERORGANIZATION_ID 
+|  				   FROM
+|  				    TRANSACCIONES
+				|  				    """.trimMargin(),
 			dinamico = false,
 			parametros = Parametros()))
 		val k = operaciones.guardarKpi(kpiOrganizaciones)
@@ -565,7 +531,7 @@ class InicializadorManager(
 		var listaPametrosEP: List<Parametro> = Parametros.dameParametrosPorDefectoMobility()
 		listaPametrosEP = listaPametrosEP.plus(Parametro("P_ORGANIZATION_ID", "#ORGANIZATION_ID", "", false))
 		val endPoint = EndPointUI(
-			nombre = "Solicitudes ",
+			nombre = "Recargar  #ORGANIZATION_NAME (#ORGANIZATION_CODE)",
 			descripcion = "Obtener Trx",
 			url = "${Entornos.get(App.ENTORNO).url}GetSolicitudes",
 			parametros = Parametros(listaPametrosEP),
@@ -580,15 +546,15 @@ class InicializadorManager(
 
 
 		val kpiConteoTransacciones = KpiUI(
-			titulo = "DIA",
-			descripcion = "Transacciones realiadas",
+			titulo = "Resumen  transacciones",
+			descripcion = "",
 			origen = "",
 			sql = """
-				SELECT TIPO_MOV, COUNT(*) FROM   TRX_HOY  WHERE REQ_STATUS = 0  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY TIPO_MOV
+				SELECT TIPO_MOV, COUNT(*) FROM   TRX_HOY  WHERE   ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY TIPO_MOV
 				UNION 
-				SELECT 'ERROR', COUNT(*) FROM   TRX_HOY  WHERE REQ_STATUS = 2  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY TIPO_MOV
+				SELECT 'ERROR', COUNT(*) FROM   TRX_HOY  WHERE REQ_STATUS = 2  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY 1
 				UNION 
-				SELECT 'REPROCESAMIENTO ', COUNT(*) FROM   TRX_HOY  WHERE REQ_STATUS = 4  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY TIPO_MOV""",
+				SELECT 'REPROCESAMIENTO ', COUNT(*) FROM   TRX_HOY  WHERE REQ_STATUS = 4  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY 1""",
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
@@ -596,25 +562,49 @@ class InicializadorManager(
 												 true,
 												 PlantillasPanel.from(PlantillasPanel.TT.IndicadorHorizontal.valor).configuracion.copy(limiteElementos = 0))
 
+
+		val condicionesError: Condiciones = Condiciones(1, Columnas("ESTADO",
+																	posicion = 4,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 3,
+														predicado = "= 'ERROR'",
+														descripion = "",
+														alarma = Alarmas())
+
+		val listaCondicionesErr = listOf<Condiciones>(condicionesError)
+
 		//trasnacciones ultimo dia
 		val kpiTransaccionesUltimoDiaOrganizacion = KpiUI(
 			titulo = "Hoy",
 			descripcion = "Tranasacciones realizadas en el día de hoy ",
 			origen = "",
-			sql = "SELECT MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO, LECTORA_ID, USUARIO_LECTORA FROM TRX_HOY WHERE  ORGANIZATION_ID = '#ORGANIZATION_ID'",
+			sql = """SELECT 
+						MOB_REQUEST_ID, 
+						strftime('%d-%m %H:%M', CREATION_DATE) AS 'DIA', 
+						TIPO_MOV, 
+						NUMERO, 
+						ESTADO, 
+						LECTORA_ID, 
+						USUARIO_LECTORA 
+					FROM 
+						TRX_HOY 
+					WHERE 
+						 ORGANIZATION_ID = '#ORGANIZATION_ID'
+					ORDER BY MOB_REQUEST_ID DESC""".trimMargin(),
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
 		val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiTransaccionesUltimoDiaOrganizacion,
 																 true,
-																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(ajustarContenidoAncho = false))
+																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(ajustarContenidoAncho = false, condiciones = listaCondicionesErr))
 
 		//errores que se han producido en el ultimo día
 		val erroresDia = KpiUI(
 			titulo = "Errores en el día",
-			descripcion = "Tranasacciones realizadas en el día de hoy ",
+			descripcion = "",
 			origen = "",
-			sql = "SELECT MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO, LECTORA_ID, USUARIO_LECTORA FROM TRX_HOY WHERE  ORGANIZATION_ID = '#ORGANIZATION_ID' AND REQ_STATUS = '2'",
+			sql = "SELECT MOB_REQUEST_ID, strftime('%d-%m %H:%M', CREATION_DATE) AS 'DIA', TIPO_MOV, NUMERO, ESTADO, LECTORA_ID, USUARIO_LECTORA FROM TRX_HOY WHERE  ORGANIZATION_ID = '#ORGANIZATION_ID' AND REQ_STATUS = '2' ORDER BY MOB_REQUEST_ID DESC",
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
@@ -625,14 +615,14 @@ class InicializadorManager(
 
 		val kpiConteoTransaccionesSemana = KpiUI(
 			titulo = "Semana",
-			descripcion = "Transacciones realiadas",
+			descripcion = "Resumen de transacciones realziadas en los útimos 7 días",
 			origen = "",
 			sql = """
 				SELECT TIPO_MOV, COUNT(*) FROM   TRX_7  WHERE REQ_STATUS = 0  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY TIPO_MOV
 				UNION 
-				SELECT '. ERROR', COUNT(*) FROM   TRX_7  WHERE REQ_STATUS = 2  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY TIPO_MOV
+				SELECT 'ERROR', COUNT(*) FROM   TRX_7  WHERE REQ_STATUS = 2  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY 1
 				UNION 
-				SELECT '. REPROCESAMIENTO ', COUNT(*) FROM   TRX_7  WHERE REQ_STATUS = 4  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY TIPO_MOV
+				SELECT 'REPROCESAMIENTO ', COUNT(*) FROM   TRX_7  WHERE REQ_STATUS = 4  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY 1
 				ORDER BY 1 ASC
 				
 				""",
@@ -647,10 +637,24 @@ class InicializadorManager(
 		//trasnacciones ultima semana
 
 		val kpiTransaccionesSemana = KpiUI(
-			titulo = "Semana",
-			descripcion = "Tranasacciones realizadas en la ultima semana ",
+			titulo = "Tranasacciones realizadas en la ultima semana ",
+			descripcion = "",
 			origen = "",
-			sql = "SELECT strftime('%d-%m', CREATION_DATE) AS DIA, MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO,  REQ_STATUS, LECTORA_ID, USUARIO_LECTORA FROM TRX_7 WHERE  ORGANIZATION_ID = '#ORGANIZATION_ID'",
+			sql = """SELECT 
+						strftime('%m-%d %H:%M', CREATION_DATE) AS 'DIA',
+						MOB_REQUEST_ID,
+						TIPO_MOV, 
+						NUMERO, 
+						ESTADO,  
+						REQ_STATUS,
+						LECTORA_ID,
+						USUARIO_LECTORA
+					FROM 
+						TRX_7 
+					WHERE
+					  ORGANIZATION_ID = '#ORGANIZATION_ID'
+					ORDER BY 1 DESC
+				    """.trimMargin(),
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
@@ -659,7 +663,7 @@ class InicializadorManager(
 															 posicion = 5,
 															 valores = emptyList()),
 												 condicionCelda = 0,
-												 color = 1,
+												 color = 3,
 												 predicado = "== '2'",
 												 descripion = "",
 												 alarma = Alarmas())
@@ -673,19 +677,20 @@ class InicializadorManager(
 		//errores que se ham producido en el periodo
 		val kpiErroresPeriodo = KpiUI(
 			titulo = "Errores ",
-			descripcion = "Errores registrados en el perido indicado",
+			descripcion = "",
 			origen = "",
 			sql = """
 				SELECT
-					strftime('%d-%m', CREATION_DATE) AS dia_y_mes,
-					COUNT(*) AS numero_de_errores
+					strftime('%Y-%m-%d', CREATION_DATE) AS 'DIA',
+					COUNT(*) AS 'ERRORES'
 				FROM
 					TRANSACCIONES
 				WHERE
 					ORGANIZATION_ID = '#ORGANIZATION_ID' 
 					AND REQ_STATUS = 2
 				GROUP BY
-					dia_y_mes;
+					strftime('%Y-%m-%d', CREATION_DATE) 
+				ORDER BY 1 DESC
 				""",
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
@@ -771,7 +776,10 @@ class InicializadorManager(
 									 ),
 
 									 kpiOrigen = k,
-									 etiqueta = Etiquetas.EtiquetaValor("ORGS"))
+									 etiqueta = Etiquetas.EtiquetaValor("ORGS"),
+									 color = -2354116
+
+		)
 
 	}
 
@@ -928,7 +936,8 @@ class InicializadorManager(
 
 
 		operaciones.guardarDashboard(nombre = "#LECTORA_FISICA_ID",
-									 listOf<PanelUI>(//panelOrganizaciones,
+									 listOf<PanelUI>(
+//panelOrganizaciones,
 
 										 panelEndPointSolicitudes,
 
@@ -943,10 +952,11 @@ class InicializadorManager(
 										 panelErroresPeriodo,
 
 
-									 ),
+										 ),
 
 									 kpiOrigen = k,
-									 etiqueta = Etiquetas.EtiquetaValor("PDA"))
+									 etiqueta = Etiquetas.EtiquetaValor("PDA"),
+									 color = -16728065)
 
 	}
 
@@ -963,10 +973,8 @@ class InicializadorManager(
 		val k = operaciones.guardarKpi(kpiVersiones)
 
 
-
 		var listaPametrosKpi: List<Parametro> = Parametros.dameParametrosPorDefectoMobility()
 		listaPametrosKpi = listOf<Parametro>(Parametro(key = "PROGRAM_VERSION", valor = "", defecto = "PL: 1.0.37. ORA: 20180510. APK: 1.34.0.77", fijo = false))
-
 
 
 		val kpiAdopcionVersion = KpiUI(
@@ -991,9 +999,8 @@ class InicializadorManager(
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
 		val panelAdopcion = operaciones.crearPanel(kpiAdopcionVersion,
-													  true,
-													  PlantillasPanel.from(PlantillasPanel.TT.SignalVertical.valor).configuracion.copy(limiteElementos = 0, valorMaximo = "0", width = "300"))
-
+												   true,
+												   PlantillasPanel.from(PlantillasPanel.TT.SignalVertical.valor).configuracion.copy(limiteElementos = 0, valorMaximo = "0", width = "300"))
 
 
 		val kpiConteoTransacciones = KpiUI(
@@ -1021,10 +1028,8 @@ class InicializadorManager(
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
 		val panelConteoTotal = operaciones.crearPanel(kpiConteoTransacciones,
-												 true,
-												 PlantillasPanel.from(PlantillasPanel.TT.IndicadorHorizontal.valor).configuracion.copy(limiteElementos = 0))
-
-
+													  true,
+													  PlantillasPanel.from(PlantillasPanel.TT.IndicadorHorizontal.valor).configuracion.copy(limiteElementos = 0))
 
 
 		val kpiConteoTransaccionesTipo = KpiUI(
@@ -1042,12 +1047,10 @@ class InicializadorManager(
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
 		val panelConteoTipo = operaciones.crearPanel(kpiConteoTransaccionesTipo,
-													  true,
-													  PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion.copy(limiteElementos = 0,
-																															   mostrarEtiquetas = true))
-
-
-
+													 true,
+													 PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion.copy(limiteElementos = 0,
+																															  mostrarEtiquetas = true)
+		)
 
 
 		val kpiConteoTransaccionesEstado = KpiUI(
@@ -1065,10 +1068,10 @@ class InicializadorManager(
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
 		val panelConteoEstado = operaciones.crearPanel(kpiConteoTransaccionesEstado,
-													 true,
-													 PlantillasPanel.from(PlantillasPanel.TT.PanelesHorizontales.valor).configuracion.copy(limiteElementos = 0,
-																															  mostrarEtiquetas = true,
-																																		   width = "150"))
+													   true,
+													   PlantillasPanel.from(PlantillasPanel.TT.PanelesHorizontales.valor).configuracion.copy(limiteElementos = 0,
+																																			 mostrarEtiquetas = true,
+																																			 width = "150"))
 
 
 
@@ -1083,12 +1086,11 @@ class InicializadorManager(
 										 panelConteoEstado
 
 
-
-
 									 ),
 
 									 kpiOrigen = k,
-									 etiqueta = Etiquetas.EtiquetaValor("VS"))
+									 etiqueta = Etiquetas.EtiquetaValor("VS"),
+									 color = -5952982)
 
 	}
 }

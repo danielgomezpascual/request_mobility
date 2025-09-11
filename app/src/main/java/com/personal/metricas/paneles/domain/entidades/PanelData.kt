@@ -135,6 +135,8 @@ data class PanelData(
 
 					App.log.d("Posicion $valorY -> $valor")
 
+					App.log.v("Expresion $expresion")
+
 					if (valor.isNotEmpty() && valor.esNumerico()) {
 						val contexto = MapContext().apply {
 							if (valor.esNumerico()) {
