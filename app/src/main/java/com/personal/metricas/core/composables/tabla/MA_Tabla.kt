@@ -159,6 +159,7 @@ fun MA_Tabla(
 							.fillMaxWidth()
 							.weight(1f)
 					} else {
+						//modifierBox = modifierBox.width(celda.size)
 						modifierBox = modifierBox.width(celda.size)
 					}
 
