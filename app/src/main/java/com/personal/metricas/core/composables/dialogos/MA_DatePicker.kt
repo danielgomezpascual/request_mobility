@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,6 +31,7 @@ import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils.TiempoHora
+import com.personal.metricas.core.utils.if3
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -62,13 +64,14 @@ fun DatePickerButton(
 
 	val diaDefecto = TiempoHora.obtenerDiaDelMesNumerico().toString()
 	//MA_Titulo("Dia : $diaDefecto")
-
+		val diaBusqueda = App.sharedPrerfences.get(K.DIA, diaDefecto)
+	val color : Color = if3(diaBusqueda.equals(diaDefecto),MaterialTheme.colorScheme.primary, Color(252, 111, 4, 255))
 	Box(contentAlignment = Alignment.Center){
 		MA_LabelNormal(
-			modifier = Modifier.padding(top= 4.dp),
-			color = MaterialTheme.colorScheme.primary,
-			valor = App.sharedPrerfences.get(K.DIA, diaDefecto),
-			size = 18.sp, fontWeight = FontWeight.SemiBold)
+			modifier = Modifier.padding(top= 5.dp),
+			color = color,
+			valor =diaBusqueda,
+			size = 16.sp, fontWeight = FontWeight.Bold)
 
 
 
