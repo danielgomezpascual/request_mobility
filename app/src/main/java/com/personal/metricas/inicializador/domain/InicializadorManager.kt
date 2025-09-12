@@ -59,7 +59,8 @@ class InicializadorManager(
 		db.execSQL("CREATE VIEW  TRX_7 AS SELECT * FROM TRANSACCIONES T INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE WHERE DATE(CREATION_DATE) >= DATE('now', '-7 days')")
 
 		db.execSQL("DROP VIEW  IF EXISTS TRX_HOY ")
-		db.execSQL("CREATE VIEW IF NOT EXISTS TRX_HOY AS SELECT   * FROM  TRANSACCIONES T INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE WHERE  date(CREATION_DATE)  = date('now', 'localtime');")
+		//db.execSQL("CREATE VIEW IF NOT EXISTS TRX_HOY AS SELECT   * FROM  TRANSACCIONES T INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE WHERE  date(CREATION_DATE)  = date('now', 'localtime');")
+		db.execSQL("CREATE VIEW IF NOT EXISTS TRX_HOY AS SELECT   * FROM  TRANSACCIONES T INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE WHERE  date(CREATION_DATE)  >= date('now', '-3 days');")
 
 	}
 
@@ -95,6 +96,28 @@ class InicializadorManager(
 		val listaCondicionesBanderas: List<Condiciones> = listOf<Condiciones>(condiciones)
 
 
+
+		val condicionesError: Condiciones = Condiciones(1, Columnas("ESTADO",
+																	posicion = 4,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 3,
+														predicado = "== 'ERROR'",
+														descripion = "",
+														alarma = Alarmas())
+
+		val condicionesReprocesameinto: Condiciones = Condiciones(1, Columnas("ESTADO",
+																			  posicion = 4,
+																			  valores = emptyList()),
+																  condicionCelda = 0,
+																  color = 5,
+																  predicado = "== 'REPROCESADO'",
+																  descripion = "",
+																  alarma = Alarmas())
+
+		val listaCondicionesErr = listOf<Condiciones>(condicionesError, condicionesReprocesameinto)
+
+
 		//transacciones diarias
 		val kpiTransaccionesDiarias = KpiUI(
 			titulo = "Transacciones",
@@ -117,7 +140,7 @@ class InicializadorManager(
 		)
 		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesDiarias,
 															   true,
-															   PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(condicionesCeldas = listaCondicionesBanderas))
+															   PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(condicionesCeldas = listaCondicionesBanderas, condiciones = listaCondicionesErr, ajustarContenidoAncho = false))
 
 
 		//Errores TRX HOY
@@ -143,7 +166,7 @@ class InicializadorManager(
 		)
 		val panelTransaccionesDiariasError = operaciones.crearPanel(kpiTransaccionesDiariasError,
 																	true,
-																	PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(condicionesCeldas = listaCondicionesBanderas, colores = EsquemaColores.Paletas.ERRORES.valor, height = "200")
+																	PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(condicionesCeldas = listaCondicionesBanderas, colores = EsquemaColores.Paletas.ERRORES.valor, height = "200",  ajustarContenidoAncho = false)
 		)
 		// TRX por Organizacion en los ultimos 7 dias
 		val kpiTransaccionesPorOrganizacion = KpiUI(
@@ -179,7 +202,7 @@ class InicializadorManager(
 			sql = """
 				SELECT
 					strftime('%m-%d', CREATION_DATE) AS 'DIA (M/D)',
-					COUNT(*) AS numero_de_errores
+					COUNT(*) AS 'Errores'
 				FROM
 					TRANSACCIONES
 				WHERE					
@@ -195,8 +218,10 @@ class InicializadorManager(
 		)
 		val panelEvolucionErrores = operaciones.crearPanel(kpiEvolucionErrores,
 														   true,
-														   PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion.copy(ajustarContenidoAncho = false,
-																																	colores = EsquemaColores.Paletas.PERS.valor)
+														   PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion.copy(
+															   ajustarContenidoAncho = true,
+															   limiteElementos = 8,
+															   colores = EsquemaColores.Paletas.PERS.valor)
 		)
 
 		val dh = operaciones.guardarDashboard(nombre = "General",
@@ -205,12 +230,7 @@ class InicializadorManager(
 												  panelTransaccionesDiariasError,
 												  panelTransaccionesPorOrganizacion,
 												  panelEvolucionErrores
-												  /* panelTransaccionesUltimoDia,
-												   panelFragmentacion,
-												   panelHoras,
-												   panelErroresDiarios,
-												   panelTransaccionesLectoras,
-												   panelUltimaTransaccionRalizada*/
+
 											  ),
 											  etiqueta = Etiquetas.EtiquetaValor("General"),
 											  home = true,
@@ -244,7 +264,8 @@ class InicializadorManager(
 		)
 		val panelTransaccionesEmpleo = operaciones.crearPanel(kpiTranasccionesEmpleo,
 															  true,
-															  PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion)
+
+															  PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion.copy(ajustarContenidoAncho = true))
 
 
 		//transacciones diarias
@@ -268,7 +289,8 @@ class InicializadorManager(
 		)
 		val panelTransaccionesLectora = operaciones.crearPanel(kpiTranasccionesPorLectora,
 															   true,
-															   PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion.copy(limiteElementos = 25))
+															   PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor)
+																   .configuracion.copy(limiteElementos = 10, ajustarContenidoAncho = true))
 
 
 		//transacciones diarias
@@ -319,9 +341,11 @@ class InicializadorManager(
 			dinamico = true,
 			parametros = Parametros()
 		)
-		val panelHoras = operaciones.crearPanel(kpiHorasTransacciones, true, PanelConfiguracion().copy(tipo =
-																										   PanelTipoGrafica.BarrasFinasVerticales(),
-																									   mostrarEtiquetas = true))
+		val panelHoras = operaciones.crearPanel(kpiHorasTransacciones, true, PanelConfiguracion().copy(
+			ajustarContenidoAncho = true,
+			tipo =
+				PanelTipoGrafica.BarrasFinasVerticales(),
+			mostrarEtiquetas = true))
 
 
 		val dh = operaciones.guardarDashboard(nombre = "General Extra",
@@ -419,13 +443,13 @@ class InicializadorManager(
 														alarma = Alarmas())
 
 		val condicionesReprocesameinto: Condiciones = Condiciones(1, Columnas("ESTADO",
-																	posicion = 4,
-																	valores = emptyList()),
-														condicionCelda = 0,
-														color = 5,
-														predicado = "== 'REPROCESAMIENTO'",
-														descripion = "",
-														alarma = Alarmas())
+																			  posicion = 4,
+																			  valores = emptyList()),
+																  condicionCelda = 0,
+																  color = 5,
+																  predicado = "== 'REPROCESADO'",
+																  descripion = "",
+																  alarma = Alarmas())
 
 		val listaCondicionesErr = listOf<Condiciones>(condicionesError, condicionesReprocesameinto)
 
@@ -480,7 +504,7 @@ class InicializadorManager(
 				UNION 
 				SELECT 'ERROR', COUNT(*) FROM   TRX_7  WHERE REQ_STATUS = 2  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY 1
 				UNION 
-				SELECT 'REPROCESAMIENTO ', COUNT(*) FROM   TRX_7  WHERE REQ_STATUS = 4  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY 1
+				SELECT 'REPROCESADO ', COUNT(*) FROM   TRX_7  WHERE REQ_STATUS = 4  AND  ORGANIZATION_ID = '#ORGANIZATION_ID' GROUP BY 1
 				ORDER BY 1 ASC
 				
 				""",
@@ -534,12 +558,12 @@ class InicializadorManager(
 
 		//errores que se ham producido en el periodo
 		val kpiErroresPeriodo = KpiUI(
-			titulo = "Errores ",
+			titulo = "Errores",
 			descripcion = "",
 			origen = "",
 			sql = """
 				SELECT
-					strftime('%Y-%m-%d', CREATION_DATE) AS 'DIA',
+					strftime('%m-%d', CREATION_DATE) AS 'DIA (M/D)',
 					COUNT(*) AS 'ERRORES'
 				FROM
 					TRANSACCIONES
@@ -547,7 +571,7 @@ class InicializadorManager(
 					ORGANIZATION_ID = '#ORGANIZATION_ID' 
 					AND REQ_STATUS = 2
 				GROUP BY
-					strftime('%Y-%m-%d', CREATION_DATE) 
+					strftime('%m-%d', CREATION_DATE) 
 				ORDER BY 1 DESC
 				""",
 			dinamico = true,
@@ -613,14 +637,14 @@ class InicializadorManager(
 
 		operaciones.guardarDashboard(nombre = "ORG #ORGANIZATION_ID #ORGANIZATION_CODE \n #ORGANIZATION_NAME",
 									 listOf<PanelUI>(
-										// panelOrganizaciones,
+										 // panelOrganizaciones,
 										 panelEndPointSolicitudes,
 										 panelConteo,
 										 panelTransaccionesUltimoDia,
-										panelErroresDia,
-										panelConteoSemana,
+										 panelErroresDia,
+										 panelConteoSemana,
 										 panelTransaccionesSemana,
-										panelErroresPeriodo,
+										 panelErroresPeriodo,
 										 panelErroresLectora
 
 									 ),
@@ -673,7 +697,7 @@ class InicializadorManager(
 				UNION 
 				SELECT 'ERROR', COUNT(*) FROM   TRX_HOY  WHERE REQ_STATUS = 2  AND  LECTORA_FISICA_ID = '#LECTORA_FISICA_ID' GROUP BY TIPO_MOV
 				UNION 
-				SELECT 'REPROCESAMIENTO ', COUNT(*) FROM   TRX_HOY  WHERE REQ_STATUS = 4  AND  LECTORA_FISICA_ID = '#LECTORA_FISICA_ID' GROUP BY TIPO_MOV""",
+				SELECT 'REPROCESADO ', COUNT(*) FROM   TRX_HOY  WHERE REQ_STATUS = 4  AND  LECTORA_FISICA_ID = '#LECTORA_FISICA_ID' GROUP BY TIPO_MOV""",
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
@@ -682,6 +706,27 @@ class InicializadorManager(
 												 PlantillasPanel.from(PlantillasPanel.TT.IndicadorHorizontal.valor).configuracion.copy(limiteElementos = 0))
 
 		//trasnacciones ultimo dia
+
+		val condicionesError: Condiciones = Condiciones(1, Columnas("ESTADO",
+																	posicion = 3,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 3,
+														predicado = "== 'ERROR'",
+														descripion = "",
+														alarma = Alarmas())
+
+		val condicionesReprocesameinto: Condiciones = Condiciones(2, Columnas("ESTADO",
+																			  posicion = 3,
+																			  valores = emptyList()),
+																  condicionCelda = 0,
+																  color = 5,
+																  predicado = "== 'REPROCESAMIENTO'",
+																  descripion = "",
+																  alarma = Alarmas())
+
+		val listaCondicionesErr = listOf<Condiciones>(condicionesError, condicionesReprocesameinto)
+
 		val kpiTransaccionesUltimoDiaOrganizacion = KpiUI(
 			titulo = "Hoy",
 			descripcion = "Tranasacciones realizadas en el día de hoy ",
@@ -692,7 +737,8 @@ class InicializadorManager(
 		)
 		val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiTransaccionesUltimoDiaOrganizacion,
 																 true,
-																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(ajustarContenidoAncho = false))
+																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).
+																 configuracion.copy(ajustarContenidoAncho = false, condiciones =  listaCondicionesErr))
 
 		//errores que se han producido en el ultimo día
 		val erroresDia = KpiUI(
@@ -757,7 +803,7 @@ class InicializadorManager(
 
 		//errores que se ham producido en el periodo
 		val kpiErroresPeriodo = KpiUI(
-			titulo = "Errores ",
+			titulo = "Errores",
 			descripcion = "Errores registrados en el perido indicado",
 			origen = "",
 			sql = """
@@ -884,22 +930,23 @@ class InicializadorManager(
 
 		val kpiConteoTransaccionesTipo = KpiUI(
 			titulo = "Transacciones",
-			descripcion = "Transacciones realiadas",
+			descripcion = "Transacciones realizadas",
 			origen = "",
 			sql = """
 				SELECT TIPO_MOV,  COUNT(*)
 					FROM TRANSACCIONES
 				WHERE PROGRAM_VERSION = '#PROGRAM_VERSION'
 				GROUP BY 1						
-			
+				ORDER BY 2 
 					""",
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
 		val panelConteoTipo = operaciones.crearPanel(kpiConteoTransaccionesTipo,
 													 true,
-													 PlantillasPanel.from(PlantillasPanel.TT.Anillo.valor).configuracion.copy(limiteElementos = 0,
-																															  mostrarEtiquetas = true, ajustarContenidoAncho = true)
+													 PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion.copy(limiteElementos = 0,
+																															  mostrarEtiquetas = true,
+																															  ajustarContenidoAncho = true)
 		)
 
 

@@ -102,7 +102,7 @@ fun SuccessCuadriculaDashboard(
 
 
 				if (uiState.etiquetasDisponibles.isNotEmpty()) {
-					Row() {
+					Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
 						uiState.etiquetasDisponibles.forEach { etiqueta ->
 							Box(modifier = Modifier.clickable(enabled = true, onClick = {
 								viewModel.onEvento(CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta))

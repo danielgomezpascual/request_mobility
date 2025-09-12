@@ -53,7 +53,9 @@ fun MA_GraficoAnillo(
 
 
 	) {
-	MA_BaseGraficoCircular(modifier = modifier, listaValores = listaValores, posicionX = posicionX, posicionY = posivionY, rellenoCentro = rellenoCentro, panelConfiguracion = panelConfiguracion)
+	MA_BaseGraficoCircular(modifier = modifier, listaValores = listaValores,
+						   posicionX = posicionX, posicionY = posivionY,
+						   rellenoCentro = rellenoCentro, panelConfiguracion = panelConfiguracion)
 }
 
 @Composable
@@ -66,7 +68,9 @@ fun MA_GraficoCircular(
 	panelConfiguracion: PanelConfiguracion,
 ) {
 
-	MA_BaseGraficoCircular(modifier = modifier, listaValores = listaValores, posicionX = posicionX, posicionY = posivionY, rellenoCentro = rellenoCentro, panelConfiguracion = panelConfiguracion)
+	MA_BaseGraficoCircular(modifier = modifier, listaValores = listaValores,
+						   posicionX = posicionX, posicionY = posivionY,
+								   rellenoCentro = rellenoCentro, panelConfiguracion = panelConfiguracion)
 }
 
 

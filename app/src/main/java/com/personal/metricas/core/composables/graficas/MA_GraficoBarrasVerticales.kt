@@ -75,17 +75,6 @@ fun MA_GraficoBarrasVerticales(
 
 
 
-  /*  val data = listaValores.map {
-        BarData(
-            xValue = "${it.y}",
-            yValue = it.y,
-            barColor = (it.color).asSolidChartColor()
-
-            //, label = it.leyenda
-        )
-    }*/
-
-
     LineBarChart(
         modifier = Modifier
             .padding(10.dp)

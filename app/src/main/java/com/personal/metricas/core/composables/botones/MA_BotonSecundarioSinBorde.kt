@@ -11,11 +11,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 
 @Composable
-fun MA_BotonSecundarioSinBorde(texto: String, icono: ImageVector? = null, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun MA_BotonSecundarioSinBorde(texto: String, color : Color = MaterialTheme.colorScheme.primary, icono: ImageVector? = null, modifier: Modifier = Modifier, onClick: () -> Unit) {
 
         Row( modifier = modifier.clickable(enabled = true, onClick = onClick),
              verticalAlignment = Alignment.CenterVertically) {
@@ -23,7 +27,8 @@ fun MA_BotonSecundarioSinBorde(texto: String, icono: ImageVector? = null, modifi
                 MA_Icono(icono = icono,
                          color = MaterialTheme.colorScheme.inversePrimary)
             }
-            Text(text = texto)
+            Text(text = texto, color = color, fontStyle = FontStyle.Italic,
+                 textDecoration = TextDecoration.Underline, fontSize =  10.sp)
         }
 
 

@@ -54,8 +54,12 @@ data class Columnas(val nombre: String, val posicion: Int, var maximaLongitudCar
 		}
 
 		if (posicion == 0){
-			//a la primera coluimna le summos 20 ya que en la mayoruia de las ocasiones lelva el idnicador
-			maximaLongitudDp = maximaLongitudDp +30.dp
+			//a la primera columna le damos un extra ya que suele llevar un indicador.
+
+			maximaLongitudCaracteres = valor.length
+			maximaLongitudDp = (maximaLongitudCaracteres * CONVERSOR).dp + 40.dp
+
+
 		}
 		return valores
 	}
