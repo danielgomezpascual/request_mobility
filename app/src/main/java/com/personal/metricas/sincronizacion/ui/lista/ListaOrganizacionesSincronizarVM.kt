@@ -225,16 +225,19 @@ class ListaOrganizacionesSincronizarVM(
 				var contador = 0;
 				val totalOraganizacionesSincronizar = orgSeleccionadas.size
 				orgSeleccionadas.forEach { organizacion ->
+					contador = contador + 1
+					val s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
+					_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
 					async(Dispatchers.IO) {
-						contador = contador + 1
+
 						realizarSincronizacionCU.sincronizarOrganizacion(organizacion.toOrganizacion())
-						val s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
-						_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
-						App.log.v(s)
-						if (contador == totalOraganizacionesSincronizar) {
-							_uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
-							dialog.informacion(_t(R.string.information_actualizada)) { }
-						}
+
+					}.await()
+
+					App.log.v(s)
+					if (contador == totalOraganizacionesSincronizar) {
+						_uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
+						dialog.informacion(_t(R.string.information_actualizada)) { }
 					}
 
 				}
