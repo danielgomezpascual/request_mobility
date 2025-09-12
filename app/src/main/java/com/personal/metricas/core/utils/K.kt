@@ -11,6 +11,7 @@ object K {
 	const val ULTIMA_SINCRONIZACION: String = "ULTIMA_SINCRONIZACION"
 	const val TXT_FILTROS_LISTAS: String = "TXT_FILTROS_LISTAS"
 	const val ID_WORKER: String = ""
+	const val DIA: String = ""
 
 
 }

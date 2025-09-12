@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
@@ -19,13 +21,20 @@ fun MA_LabelNormal(
     alineacion : TextAlign = TextAlign.Unspecified,
     icono: Icons? = null,
     size : TextUnit = 12.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    stilo : FontStyle = FontStyle.Normal
 
 
 
     ) {
     Text(
-        text = valor, modifier = modifier, color = color,
+        text = valor,
+        modifier = modifier,
+        color = color,
         textAlign =  alineacion,
         fontSize =  size,
+        fontWeight = fontWeight,
+        fontStyle = stilo
+
         )
 }
