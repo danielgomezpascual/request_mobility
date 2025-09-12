@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ListaOrganizacionesSincronizarVM(
@@ -225,20 +226,31 @@ class ListaOrganizacionesSincronizarVM(
 				var contador = 0;
 				val totalOraganizacionesSincronizar = orgSeleccionadas.size
 				orgSeleccionadas.forEach { organizacion ->
-					contador = contador + 1
-					val s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
-					_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
+
+
+
 					async(Dispatchers.IO) {
+
+						var s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
+						_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
 
 						realizarSincronizacionCU.sincronizarOrganizacion(organizacion.toOrganizacion())
 
-					}.await()
+						contador = contador + 1
+						 s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
 
-					App.log.v(s)
-					if (contador == totalOraganizacionesSincronizar) {
-						_uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
-						dialog.informacion(_t(R.string.information_actualizada)) { }
+						_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
+						withContext(Dispatchers.Main){
+							if (contador == totalOraganizacionesSincronizar) {
+								_uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
+								dialog.informacion(_t(R.string.information_actualizada)) { }
+							}
+						}
+
 					}
+
+
+
 
 				}
 

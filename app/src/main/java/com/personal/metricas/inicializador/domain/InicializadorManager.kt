@@ -781,7 +781,14 @@ class InicializadorManager(
 			titulo = "Semana",
 			descripcion = "Tranasacciones realizadas en la ultima semana ",
 			origen = "",
-			sql = "SELECT strftime('%d-%m', CREATION_DATE) AS DIA,  MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO,  REQ_STATUS, LECTORA_ID, USUARIO_LECTORA FROM TRX_7 WHERE  LECTORA_FISICA_ID = '#LECTORA_FISICA_ID'",
+			sql = """SELECT 
+				|		strftime('%m-%d', CREATION_DATE) AS DIA '(M/D)',  MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO,  
+				|		REQ_STATUS, LECTORA_ID, USUARIO_LECTORA 
+				|FROM
+				| TRX_7 
+				|WHERE
+				|  LECTORA_FISICA_ID = '#LECTORA_FISICA_ID'
+				|ORDER BY 1 DESC """.trimMargin(),
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
@@ -808,7 +815,7 @@ class InicializadorManager(
 			origen = "",
 			sql = """
 				SELECT
-					strftime('%d-%m', CREATION_DATE) AS dia_y_mes,
+					strftime('%m-%d', CREATION_DATE) AS 'DIA(M/D)',
 					COUNT(*) AS numero_de_errores
 				FROM
 					TRANSACCIONES
@@ -816,7 +823,8 @@ class InicializadorManager(
 					LECTORA_FISICA_ID = '#LECTORA_FISICA_ID' 
 					AND REQ_STATUS = 2
 				GROUP BY
-					dia_y_mes;
+					1
+				ORDER BY 1 DESC;
 				""",
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)

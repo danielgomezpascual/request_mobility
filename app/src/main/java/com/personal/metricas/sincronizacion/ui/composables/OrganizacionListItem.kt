@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.formas.MA_Avatar
+import com.personal.metricas.core.composables.labels.MA_LabelMini
+import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.sincronizacion.ui.entidades.OrganizacionesSincronizarUI
 
 @Composable
@@ -31,7 +33,7 @@ fun OrganizacionListItem(organizacionUI: OrganizacionesSincronizarUI,
             modifier = Modifier.Companion
                 .fillMaxWidth()
                 .clickable { onClickItem(organizacionUI)/* Manejar clic en el usuario  viewModel.abrirUsuario(usuario)*/ }
-                .padding(16.dp),
+                .padding(6.dp),
             verticalAlignment = Alignment.Companion.CenterVertically
         ) {
 
@@ -45,16 +47,9 @@ fun OrganizacionListItem(organizacionUI: OrganizacionesSincronizarUI,
 
             // Nombre y detalles
             Column {
-                Text(
-                    text = "${organizacionUI.organizationId} - ${organizacionUI.organizationCode}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Companion.Bold
-                )
-                Text(
-                    text = "${organizacionUI.organizationName}  ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Companion.Normal
-                )
+
+                MA_LabelNegrita(valor = "${organizacionUI.organizationId} - ${organizacionUI.organizationCode}")
+                MA_LabelMini(valor =  "${organizacionUI.organizationName}", size = 12.sp)
 
 
             }

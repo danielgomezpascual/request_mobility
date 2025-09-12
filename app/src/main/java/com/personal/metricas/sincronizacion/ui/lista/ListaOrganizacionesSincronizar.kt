@@ -123,7 +123,7 @@ fun Success(
 					},
 				)
 
-				MA_LabelNegrita(valor = "Organizaciones")
+				MA_LabelNegrita(modifier = Modifier.padding(3.dp), valor = "Organizaciones")
 				MA_Card() {
 					Column {
 						Row(modifier = Modifier
