@@ -14,7 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,9 +32,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.MA_Spacer
+import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextBuscador
+import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.listas.MA_Lista
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
@@ -109,10 +114,6 @@ fun Success(
 					}
 				}
 
-				MA_CheckBoxNormal(valor = uiState.todos, titulo = "Aplicar a todos") {
-					viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.AplicarTodos(it))
-				}
-
 
 				// Barra de búsqueda
 				MA_TextBuscador(
@@ -122,27 +123,38 @@ fun Success(
 					},
 				)
 
-				Row(modifier = Modifier.horizontalScroll(rememberScrollState()).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-					uiState.organizaciones.filter { it.seleccionado }.forEach { organizacion ->
-						Box() {
-							MA_LabelNormal(modifier = Modifier
-								.padding(4.dp)
-								.background(color = Color(255, 171, 145, 255)),
-									valor = organizacion . organizationCode)
+				MA_LabelNegrita(valor = "Organizaciones")
+				MA_Card() {
+					Column {
+						Row(modifier = Modifier
+							.horizontalScroll(rememberScrollState())
+							.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+
+							MA_CheckBoxNormal(valor = uiState.todos, titulo = "") {
+								viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.AplicarTodos(it))
+							}
+							uiState.organizaciones.filter { it.seleccionado }.forEach { organizacion ->
+								Box(contentAlignment = Alignment.Center) {
+									MA_LabelNormal(modifier = Modifier
+										.padding(4.dp)
+										.background(color = Color(255, 245, 157, 255)),
+												   valor = organizacion.organizationCode)
+								}
+							}
+						}
+
+
+
+
+						MA_Lista(data = uiState.organizaciones.filter { it.visible }) { organizacionUI ->
+							OrganizacionListItem(organizacionUI = organizacionUI, onClickItem = {
+								viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.OnChangeSeleccionCheck(organizacionUI))
+							})
 						}
 					}
+
+
 				}
-
-
-
-
-				MA_Lista(data = uiState.organizaciones.filter { it.visible }) { organizacionUI ->
-					OrganizacionListItem(organizacionUI = organizacionUI, onClickItem = {
-						viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.OnChangeSeleccionCheck(organizacionUI))
-					})
-				}
-
-
 			}
 			if (uiState.trabajando) {
 				// Este es el nuevo componente de carga
