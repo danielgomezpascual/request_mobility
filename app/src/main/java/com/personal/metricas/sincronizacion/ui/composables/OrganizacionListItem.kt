@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.labels.MA_LabelMini

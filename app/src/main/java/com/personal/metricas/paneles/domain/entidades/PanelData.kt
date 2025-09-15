@@ -133,9 +133,7 @@ data class PanelData(
 
 					var valor: String = fila.celdas.get(valorY).valor as String
 
-					App.log.d("Posicion $valorY -> $valor")
-
-					App.log.v("Expresion $expresion")
+					
 
 					if (valor.isNotEmpty() ) {
 						val contexto = MapContext().apply {

@@ -278,6 +278,11 @@ fun MA_Panel(
 
 					panelData.valoresTabla.filas = filas
 				},
+				onClickBorrarFiltros = {
+					panelData.valoresTabla.filas = filas.map { fila ->
+						fila.copy(visible = true)
+					}
+				},
 				onClickFiltrarTexto = { str ->
 /*
 
@@ -500,6 +505,7 @@ fun dameTipoTabla(
 	onClickInvertir: (Celda) -> Unit,
 	onClickSeleccionarFila: (Fila) -> Unit,
 	onClickFiltrarTexto: (String) -> Unit,
+	onClickBorrarFiltros: () -> Unit,
 ): @Composable () -> Unit {
 
 
@@ -516,7 +522,8 @@ fun dameTipoTabla(
 				onClickSeleccionarFiltro = onClickSeleccionarFiltro,
 				onClickInvertir = onClickInvertir,
 				onClickSeleccionarFila = onClickSeleccionarFila,
-				onClickFiltrarTexto = onClickFiltrarTexto
+				onClickFiltrarTexto = onClickFiltrarTexto,
+				onClickBorrarFiltros= onClickBorrarFiltros
 			)
 		}
 	} else {

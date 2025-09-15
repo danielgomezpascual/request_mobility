@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.App
+import com.personal.metricas.core.composables.botones.MA_BotonSecundarioSinBorde
 import com.personal.metricas.core.composables.edittext.MA_TextoEditable
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.core.composables.labels.MA_Titulo
@@ -102,6 +103,7 @@ fun MA_Tabla(
 	onClickInvertir: (Celda) -> Unit = {},
 	onClickSeleccionarFila: (Fila) -> Unit = {},
 	onClickFiltrarTexto: (String) -> Unit = {},
+	onClickBorrarFiltros: () -> Unit
 ) {
 
 	val estadoScroll = rememberScrollState()
@@ -126,6 +128,7 @@ fun MA_Tabla(
 
 				Column {
 					MA_Titulo("Filtro")
+					MA_BotonSecundarioSinBorde("Borrar",color = Color.Red) {onClickBorrarFiltros() }
 
 					MA_TextoEditable(valor =str, titulo = "Buscar") { texto -> str = texto
 						App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS,str)
