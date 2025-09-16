@@ -19,11 +19,13 @@ import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.botones.MA_BotonSecundarioSinBorde
 import com.personal.metricas.core.composables.edittext.MA_TextoEditable
+import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.listas.MA_Lista
@@ -145,10 +147,11 @@ fun MA_Tabla(
 
 			}
 		}
-
+		MA_LabelMini(modifier= Modifier.fillMaxWidth(), alineacion = TextAlign.Start, valor = "${filas.size} filas" )
 		Row(modifier = Modifier
 			.padding(4.dp)
 			.fillMaxWidth()) {
+
 
 
 			if (mostrarTitulos && !filas.isEmpty()) {
@@ -172,6 +175,7 @@ fun MA_Tabla(
 					if (celda.titulo.equals(K.HASH_CODE)) {
 						//No pintamos titulo para el hashcode
 					} else {
+
 						Box(modifier = modifierBox.background(Color.Gray)) {
 							celda.celdaTitulo(modifierBox)
 						}
@@ -182,17 +186,11 @@ fun MA_Tabla(
 			}
 		}
 
-
-
-
-
-
 		MA_Lista(filas) { fila ->
 			MA_FilaTablaDatos(fila, notas, panelConfiguracion) { fila ->
 				onClickSeleccionarFila(fila)
 			}
 		}
-
 
 	}
 
