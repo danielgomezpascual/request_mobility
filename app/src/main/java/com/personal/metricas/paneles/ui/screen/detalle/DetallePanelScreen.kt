@@ -160,7 +160,7 @@ fun SucessScreenDetallePanel(
 
 			) {
 				MA_IconBottom(icon = Features.Previo().icono, color = Features.Previo().color) { scope.launch { sheetState.show() } }
-				MA_IconBottom(icon = Features.Duplicar().icono, color = Features.Duplicar().color) { viewModel.onEvent(DetallePanelVM.Eventos.Duplicar(navegacion)) }
+				//MA_IconBottom(icon = Features.Duplicar().icono, color = Features.Duplicar().color) { viewModel.onEvent(DetallePanelVM.Eventos.Duplicar(navegacion)) }
 				MA_Spacer()
 				MA_IconBottom(icon = Features.Eliminar().icono, color = Features.Eliminar().color) { viewModel.onEvent(DetallePanelVM.Eventos.Eliminar(navegacion)) }
 				MA_IconBottom(icon = Features.Guardar().icono, color = Features.Guardar().color) { viewModel.onEvent(DetallePanelVM.Eventos.Guardar(navegacion)) }

@@ -122,7 +122,7 @@ fun SuccessScreenDetalleKpi(
 
 
 				MA_IconBottom(icon = Features.Paneles().icono, color = Features.Paneles().color) { viewModel.onEvent(DetalleKpiVM.Eventos.CrearPanel(navegacion)) }
-				MA_IconBottom(icon = Features.Duplicar().icono, color = Features.Duplicar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.DuplicarKpi(navegacion)) }
+				//MA_IconBottom(icon = Features.Duplicar().icono, color = Features.Duplicar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.DuplicarKpi(navegacion)) }
 				MA_Spacer()
 				MA_IconBottom(icon = Features.Eliminar().icono, color = Features.Eliminar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.Eliminar(navegacion)) }
 				MA_IconBottom(icon = Features.Guardar().icono, color = Features.Guardar().color) { viewModel.onEvent(DetalleKpiVM.Eventos.Guardar(navegacion)) }
