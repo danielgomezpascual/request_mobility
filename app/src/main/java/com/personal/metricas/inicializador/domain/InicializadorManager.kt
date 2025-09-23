@@ -152,12 +152,11 @@ class InicializadorManager(
 				SELECT
 					LECTORA_ID,
 					MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO,  USUARIO_LECTORA, 
-					strftime('%d-%m', CREATION_DATE)  AS Fecha
+					strftime('%d-%m %H:%M', CREATION_DATE)  AS Fecha
 				FROM
 					TRX_HOY  T
-				WHERE REQ_STATUS != 0
-				GROUP BY
-					Fecha
+				WHERE REQ_STATUS = 2
+				
 				ORDER BY
 					1 DESC				
 			""".trimIndent(),
@@ -168,6 +167,7 @@ class InicializadorManager(
 																	true,
 																	PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(condicionesCeldas = listaCondicionesBanderas, colores = EsquemaColores.Paletas.ERRORES.valor, height = "200",  ajustarContenidoAncho = false)
 		)
+
 		// TRX por Organizacion en los ultimos 7 dias
 		val kpiTransaccionesPorOrganizacion = KpiUI(
 			titulo = "Transacciones por Organizacion ",
