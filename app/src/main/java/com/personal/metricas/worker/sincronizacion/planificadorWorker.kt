@@ -38,8 +38,8 @@ fun planificadorSyncWorker(context: Context) {
 	// Usamos enqueueUniquePeriodicWork para asegurarnos de que solo haya una
 	// instancia de este trabajo planificada en todo momento.
 	val periodicSyncRequest = PeriodicWorkRequestBuilder<DataSyncWorker>(
-		15, // repeatInterval
-		TimeUnit.MINUTES // time Unit
+		1, // repeatInterval
+		TimeUnit.HOURS // time Unit
 	).setConstraints(constraints).build()
 
 
