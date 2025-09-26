@@ -134,8 +134,11 @@ fun MA_SignalHorizontal(
 							gapRatio = 0.15f
 						)
 						MA_Spacer()
+
+
+
 						Text(
-							text = valor.toInt().toString(),
+							text = valor.toFloat().toString(),
 							modifier = Modifier.padding(6.dp),
 							color = color,
 							fontWeight = FontWeight(800),

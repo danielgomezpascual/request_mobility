@@ -38,16 +38,6 @@ fun MA_SignalVertical(
 
 
 	var maximo = -1f
-	listaValores.forEach { f ->
-		val v = f.celdas.get(posicionY).valor
-		App.log.d("Valor $v")
-		if (v.esNumerico()) {
-			if (v.toFloat() > maximo) {
-				maximo = v.toFloat()
-			}
-		}
-	}
-	/*var maximo = -1f
 	if (panelConfiguracion.valorMaximo.equals("0")) {
 		listaValores.forEach { f ->
 			val v = f.celdas.get(posicionY).valor
@@ -60,8 +50,7 @@ fun MA_SignalVertical(
 		}
 	}else{
 		maximo = panelConfiguracion.valorMaximo.toFloat()
-	}*/
-
+	}
 
 
 	App.log.c("Maximo: $maximo")
@@ -120,7 +109,7 @@ fun MA_SignalVertical(
 							//val color = Color.Red
 
 							Text(
-								text = valor.toInt().toString(),
+								text = valor.str(4).toString(),
 								modifier = Modifier.padding(6.dp),
 								color = color,
 								fontWeight = FontWeight(800),
@@ -166,6 +155,11 @@ fun MA_SignalVertical(
 
 		}
 	}
+}
+
+fun String.str(longitud: Int ): String {
+		if (this.length <= longitud) return this
+	return this.substring(0,longitud)
 }
 
 
