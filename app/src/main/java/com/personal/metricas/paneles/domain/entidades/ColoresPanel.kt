@@ -12,7 +12,10 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 		GRISES(1),
 		FOSFORITOS(2),
 		PERS(3),
-		ERRORES(4)
+		ERRORES(4),
+		PERS_ROJA(5),
+		PERS_VERDE(6),
+		PERS_AMARILLA(7),
 	}
 
 
@@ -23,6 +26,9 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 		Paletas.GRISES.valor    -> EsquemaColores(Paletas.GRISES.valor, "Grises", dameTonosGrises())
 		Paletas.FOSFORITOS.valor    -> EsquemaColores(Paletas.FOSFORITOS.valor, "Fosforitos", dameColoresFosforitos())
 		Paletas.PERS.valor    -> EsquemaColores(Paletas.PERS.valor, "Pers, Azul", dameColoresPersinaAzul())
+		Paletas.PERS_ROJA.valor    -> EsquemaColores(Paletas.PERS_ROJA.valor, "Pers, Roja", dameColoresPersinaRoja())
+		Paletas.PERS_VERDE.valor    -> EsquemaColores(Paletas.PERS_VERDE.valor, "Pers Verde", dameColoresPersinaVerde())
+		Paletas.PERS_AMARILLA.valor    -> EsquemaColores(Paletas.PERS_AMARILLA.valor, "Pers Amarilla", dameColoresPersinaAmarilla())
 		Paletas.ERRORES.valor    -> EsquemaColores(Paletas.ERRORES.valor, "Errores", dameColoresErrores())
 		else -> EsquemaColores(Paletas.NORMAL.valor, "Normal", dameColoresBasicos())
 	}
@@ -32,6 +38,9 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 		Paletas.GRISES.valor    -> dameTonosGrises()
 		Paletas.FOSFORITOS.valor    -> dameColoresFosforitos()
 		Paletas.PERS.valor    -> dameColoresPersinaAzul()
+		Paletas.PERS_ROJA.valor    -> dameColoresPersinaRoja()
+		Paletas.PERS_VERDE.valor    -> dameColoresPersinaVerde()
+		Paletas.PERS_AMARILLA.valor    -> dameColoresPersinaAmarilla()
 		Paletas.ERRORES.valor    -> dameColoresErrores()
 		else -> dameColoresBasicos()
 	}
@@ -43,6 +52,9 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 				   get(Paletas.GRISES.valor),
 				   get(Paletas.FOSFORITOS.valor),
 				   get(Paletas.PERS.valor),
+				   get(Paletas.PERS_ROJA.valor),
+				   get(Paletas.PERS_VERDE.valor),
+				   get(Paletas.PERS_AMARILLA.valor),
 				   get(Paletas.ERRORES.valor)
 		)
 
@@ -52,6 +64,22 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 		Color(0xFF4FC3F7),
 	)
 
+	fun dameColoresPersinaRoja() = listOf<Color>(
+		Color(0xFFFCE4EC),
+		Color(0xFFEF9A9A),
+	)
+
+
+	fun dameColoresPersinaVerde() = listOf<Color>(
+		Color(0xFFE8F5E9),
+		Color(0xFFA5D6A7),
+	)
+
+
+	fun dameColoresPersinaAmarilla() = listOf<Color>(
+		Color(0xFFFFFDE7),
+		Color(0xFFFFE082),
+	)
 
 	fun dameColoresBasicos() = listOf<Color>(
 		Color(0xFFFF0000),

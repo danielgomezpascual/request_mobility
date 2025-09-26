@@ -78,6 +78,7 @@ class InicializadorManager(
 		crearDashboardVersiones()
 		crearDashboardLectoras()
 
+		crearDashboardErrores()
 
 	}
 
@@ -94,7 +95,6 @@ class InicializadorManager(
 												   descripion = "",
 												   alarma = Alarmas())
 		val listaCondicionesBanderas: List<Condiciones> = listOf<Condiciones>(condiciones)
-
 
 
 		val condicionesError: Condiciones = Condiciones(1, Columnas("ESTADO",
@@ -165,7 +165,7 @@ class InicializadorManager(
 		)
 		val panelTransaccionesDiariasError = operaciones.crearPanel(kpiTransaccionesDiariasError,
 																	true,
-																	PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(condicionesCeldas = listaCondicionesBanderas, colores = EsquemaColores.Paletas.ERRORES.valor, height = "200",  ajustarContenidoAncho = false)
+																	PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(condicionesCeldas = listaCondicionesBanderas, colores = EsquemaColores.Paletas.ERRORES.valor, height = "200", ajustarContenidoAncho = false)
 		)
 
 		// TRX por Organizacion en los ultimos 7 dias
@@ -737,8 +737,7 @@ class InicializadorManager(
 		)
 		val panelTransaccionesUltimoDia = operaciones.crearPanel(kpiTransaccionesUltimoDiaOrganizacion,
 																 true,
-																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).
-																 configuracion.copy(ajustarContenidoAncho = false, condiciones =  listaCondicionesErr))
+																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(ajustarContenidoAncho = false, condiciones = listaCondicionesErr))
 
 		//errores que se han producido en el ultimo día
 		val erroresDia = KpiUI(
@@ -953,8 +952,8 @@ class InicializadorManager(
 		val panelConteoTipo = operaciones.crearPanel(kpiConteoTransaccionesTipo,
 													 true,
 													 PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion.copy(limiteElementos = 0,
-																															  mostrarEtiquetas = true,
-																															  ajustarContenidoAncho = true)
+																																mostrarEtiquetas = true,
+																																ajustarContenidoAncho = true)
 		)
 
 
@@ -979,6 +978,44 @@ class InicializadorManager(
 																																			 width = "500", height = "300"))
 
 
+		val condiciones: Condiciones = Condiciones(id = 1,
+												   columna =
+													   Columnas(nombre = "LECTORA", posicion = 0, valores = emptyList()),
+												   color = 0,
+												   condicionCelda = 1,
+												   predicado = "",
+												   descripion = "",
+												   alarma = Alarmas())
+		val listaCondicionesBanderas: List<Condiciones> = listOf<Condiciones>(condiciones)
+
+
+		val kpiTransaccionesPorOrganizacion = KpiUI(
+			titulo = "Transacciones",
+			descripcion = "Estado Transacciones realiadas",
+			origen = "",
+			sql = """									
+			
+			SELECT LECTORA_ID, LECTORA_FISICA_ID, COUNT(*)
+			FROM TRANSACCIONES T INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE
+			WHERE PROGRAM_VERSION = '#PROGRAM_VERSION'
+						GROUP BY 1 ,2
+			 ORDER BY 1, 2
+				
+				
+				
+					""",
+
+
+			dinamico = true,
+			parametros = Parametros(ps = listaPametrosKpi)
+		)
+		val panelTransaccionesPorOrganizacion = operaciones.crearPanel(kpiTransaccionesPorOrganizacion,
+																	   true,
+
+																	   PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(limiteElementos = 0,
+																																				   mostrarEtiquetas = true,
+																																				   condiciones = listaCondicionesBanderas,
+																																				   width = "500", height = "300"))
 
 
 		operaciones.guardarDashboard(nombre = "VERSION #PROGRAM_VERSION",
@@ -988,8 +1025,8 @@ class InicializadorManager(
 										 panelAdopcion,
 										 panelConteoTotal,
 										 panelConteoTipo,
-										 panelConteoEstado
-
+										 panelConteoEstado,
+										 panelTransaccionesPorOrganizacion
 
 									 ),
 
@@ -998,4 +1035,339 @@ class InicializadorManager(
 									 color = -5952982)
 
 	}
+
+	suspend fun crearDashboardErrores() {
+
+
+		val kpiErroresGeneral = (KpiUI(
+			titulo = "Errores DE HOY",
+			descripcion = "Errores HOY",
+			origen = "",
+			sql = """ 
+				SELECT
+				 	LECTORA_FISICA_ID as 'LECTORA',
+					ORGANIZATION_CODE,  
+					LECTORA_ID, 
+					
+					strftime('%d-%m %H:%M', CREATION_DATE)  AS Fecha, 
+					MOB_REQUEST_ID,NUMERO, TIPO_MOV , 
+					REQ_MESSAGE  
+				FROM 
+					TRANSACCIONES
+				WHERE 
+					REQ_STATUS = 2 
+					AND date(CREATION_DATE) = date('now', 'localtime') 
+
+				ORDER BY 
+					MOB_REQUEST_ID DESC """,
+			dinamico = false,
+			parametros = Parametros()))
+		val k = operaciones.guardarKpi(kpiErroresGeneral)
+
+		val condiciones: Condiciones = Condiciones(id = 1,
+												   columna =
+													   Columnas(nombre = "LECTORA", posicion = 0, valores = emptyList()),
+												   color = 0,
+												   condicionCelda = 1,
+												   predicado = "",
+												   descripion = "",
+												   alarma = Alarmas())
+		val listaCondicionesBanderas: List<Condiciones> = listOf<Condiciones>(condiciones)
+
+
+		val panelErroresGeneral = operaciones.crearPanel(
+			kpiErroresGeneral,
+			true,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(limiteElementos = 25,
+									colores =  5,
+									ajustarContenidoAncho = false,
+									condicionesCeldas = listaCondicionesBanderas,
+									width = "500", height = "600"))
+
+
+
+		val kpiRatioErrores = (KpiUI(
+			titulo = "Ratio",
+			descripcion = "Ratio de errores sobre las transacciones corectas",
+			origen = "",
+			sql = """ 
+				SELECT
+					strftime('%d-%m', CREATION_DATE) AS 'Fecha',
+					COUNT(*) AS 'TRX',
+				
+					-- Contadores
+					SUM(CASE WHEN REQ_STATUS = 2 THEN 1 ELSE 0 END) AS 'ERRORES',
+					SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS 'OK',
+				
+					-- Porcentajes (redondeados a 2 decimales)
+					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 2 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% ERR',
+					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% OK'
+				FROM
+					TRANSACCIONES
+				GROUP BY
+					strftime('%d-%m', CREATION_DATE)
+				ORDER BY
+					1 DESC;
+				;""",
+			dinamico = false,
+			parametros = Parametros()))
+		val kErroresRatio = operaciones.guardarKpi(kpiRatioErrores)
+
+
+		val condicionesRatio: Condiciones = Condiciones(1, Columnas("% ERR",
+																	posicion = 4,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 3,
+														predicado = "> 5",
+														descripion = "",
+														alarma = Alarmas())
+
+
+		val panelErroresRatio = operaciones.crearPanel(
+			kErroresRatio,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(
+					colores = 5,
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(condicionesRatio),
+									ajustarContenidoAncho = false,
+									width = "500", height = "600"))
+
+
+
+
+		val panelEvolucionErrores   = operaciones.crearPanel(
+		kErroresRatio,
+		false,
+		PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor)
+			.configuracion.copy(limiteElementos = 10,
+								mostrarTabla = false,
+								ajustarContenidoAncho = false,
+								columnaX = 0,
+								columnaY = 2,
+								width = "500", height = "300"))
+
+
+
+
+
+
+		val panelEvolucionPorcentaje   = operaciones.crearPanel(
+			kErroresRatio,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SignalVertical.valor)
+				.configuracion.copy(titulo="Nivel de alerta", limiteElementos = 0,
+									ajustarContenidoAncho = false,
+									columnaX = 0,
+									columnaY = 4,
+									valorMaximo = "10",
+									width = "500", height = "300"))
+
+
+
+		val kpiTransaccionesSolucionadas = (KpiUI(
+			titulo = "Transaccion solucionadas",
+			descripcion = "Transacciones que se han solucionado tras un nuevo procesamiento",
+			origen = "",
+			sql = """ 
+				SELECT
+					t_error.ORGANIZATION_CODE         AS ORG,
+					t_error.LECTORA_FISICA_ID            AS LECTORA,
+					t_error.numero            AS NUMERO,
+					t_error.CREATION_DATE     AS CREACION,
+					t_exito.CREATION_DATE     AS OK,
+					t_error.req_message     AS MENS
+					
+				FROM
+					Transacciones AS t_error
+				INNER JOIN
+					Transacciones AS t_exito ON t_error.numero = t_exito.numero
+				WHERE
+					t_error.req_status = '2' -- La transacción original debe ser un error
+					AND t_exito.req_status = '0' -- La transacción vinculada debe ser un éxito
+					AND t_error.MOB_REQUEST_ID < t_exito.MOB_REQUEST_ID -- Asegura que la solución es posterior al error
+				ORDER BY t_error.CREATION_DATE DESC 
+				;""",
+			dinamico = false,
+			parametros = Parametros()))
+		val kTransaccionesSolucionadas = operaciones.guardarKpi(kpiTransaccionesSolucionadas)
+
+
+	/*	val condicionesRatio: Condiciones = Condiciones(1, Columnas("% ERR",
+																	posicion = 4,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 3,
+														predicado = "> 5",
+														descripion = "",
+														alarma = Alarmas())
+*/
+
+		val panelTransaccionesSolucionadas = operaciones.crearPanel(
+			kTransaccionesSolucionadas,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(
+					colores = 5,
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(condicionesRatio),
+					ajustarContenidoAncho = false,
+					width = "500", height = "600"))
+
+	//----------------------------------------------------------------------------------------------------
+		val kpiTransaccionesPendientesSolucion = (KpiUI(
+			titulo = "Transaccion pendientes  (PERIODO)",
+			descripcion = "Transacciones pendientes de solucion (PERIODO)",
+			origen = "",
+			sql = """ 
+				SELECT
+					t_error.MOB_REQUEST_ID AS id_transaccion_error,
+					t_error.numero AS numero_transaccion,
+					t_error.CREATION_DATE AS fecha_error,
+					t_error.REQ_MESSAGE AS mensaje_error
+				FROM
+					Transacciones AS t_error
+				WHERE
+					t_error.req_status = 2
+					AND NOT EXISTS (
+						-- Subconsulta que busca si existe alguna transacción de éxito para el mismo número
+						SELECT 1
+						FROM Transacciones AS t_exito
+						WHERE
+							t_exito.numero = t_error.numero
+							AND t_exito.req_status =0
+					)
+					
+				order by 1 desc	
+				""",
+			dinamico = false,
+			parametros = Parametros()))
+		val kTransaccionesPendientesSolucionadas = operaciones.guardarKpi(kpiTransaccionesPendientesSolucion)
+
+
+
+		val panelTransaccionesPendientesSolucionadas = operaciones.crearPanel(
+			kTransaccionesPendientesSolucionadas,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(
+					colores = 5,
+					limiteElementos = 20,
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(condicionesRatio),
+					ajustarContenidoAncho = false,
+					width = "500", height = "600"))
+
+	//----------------------------------------------------------------------------------------------------
+
+		val kpiTransaccionesPendientesSolucionDIA = (KpiUI(
+			titulo = "Transaccion pendientes (DIA)",
+			descripcion = "Transacciones pendientes de solucion DIA",
+			origen = "",
+			sql = """ 
+				SELECT
+					t_error.MOB_REQUEST_ID AS id_transaccion_error,
+					t_error.numero AS numero_transaccion,
+					t_error.CREATION_DATE AS fecha_error,
+					t_error.REQ_MESSAGE AS mensaje_error
+				FROM
+					TRX_HOY AS t_error
+				WHERE
+					t_error.req_status = 2
+					AND NOT EXISTS (
+						-- Subconsulta que busca si existe alguna transacción de éxito para el mismo número
+						SELECT 1
+						FROM Transacciones AS t_exito
+						WHERE
+							t_exito.numero = t_error.numero
+							AND t_exito.req_status = 0
+					)
+					
+				order by 1 desc	
+				""",
+			dinamico = false,
+			parametros = Parametros()))
+		val kTransaccionesPendientesSolucionadasDIA = operaciones.guardarKpi(kpiTransaccionesPendientesSolucionDIA)
+
+
+
+
+		val kpiErroresOrganizacion = (KpiUI(
+			titulo = "Errores por organizacion (TOP  10)",
+			descripcion = "Errores por organizacines",
+			origen = "",
+			sql = """ 
+				SELECT
+				 	
+					ORGANIZATION_CODE,  
+					COUNT(LECTORA_ID) 
+					
+					/*strftime('%d-%m %H:%M', CREATION_DATE)  AS Fecha, 
+					MOB_REQUEST_ID,NUMERO, TIPO_MOV , 
+					REQ_MESSAGE */ 
+				FROM 
+					TRANSACCIONES
+				WHERE 
+					REQ_STATUS = 2 
+					--AND date(CREATION_DATE) = date('now', 'localtime') 
+				GROUP BY ORGANIZATION_CODE
+				ORDER BY 
+					2 DESC """,
+			dinamico = false,
+			parametros = Parametros()))
+		val kErrorOrganizacion = operaciones.guardarKpi(kpiErroresOrganizacion)
+
+
+
+		val panelErroresOrganizacin = operaciones.crearPanel(
+			kErrorOrganizacion,
+			true,
+			PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor)
+				.configuracion.copy(limiteElementos = 10,
+									columnaX = 0,
+									columnaY = 1,
+									ajustarContenidoAncho = true,
+									width = "500", height = "600"))
+
+
+
+
+
+		val panelTransaccionesPendientesSolucionadasDIA = operaciones.crearPanel(
+			kTransaccionesPendientesSolucionadasDIA,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(
+					colores = 5,
+
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(condicionesRatio),
+					ajustarContenidoAncho = false,
+					width = "500", height = "500"))
+
+
+
+
+
+				operaciones.guardarDashboard(nombre = "ERRORES",
+									 listOf<PanelUI>(
+										 panelErroresGeneral,
+										 panelEvolucionErrores,
+										 panelErroresRatio,
+										 panelEvolucionPorcentaje,
+										 panelTransaccionesSolucionadas,
+										 panelTransaccionesPendientesSolucionadasDIA,
+										 panelTransaccionesPendientesSolucionadas,
+										 panelErroresOrganizacin
+
+									 ),
+
+									// kpiOrigen = k,
+									 etiqueta = Etiquetas.EtiquetaValor("ERRORES"),
+									 color = -5952982)
+	}
+
 }
