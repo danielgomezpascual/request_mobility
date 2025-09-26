@@ -123,7 +123,7 @@ fun SuccessCuadriculaDashboard(
 				)
 
 
-				MA_Columnas(data = uiState.lista) { item ->
+				MA_Columnas(data = uiState.lista.sortedBy { it.nombre }) { item ->
 
 					MA_Card(
 						modifier = Modifier
