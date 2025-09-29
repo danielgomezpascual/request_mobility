@@ -19,21 +19,29 @@ class TransaccionesRemotoDS(private val apiTransacciones: TransaccionesApiRemoto
     override suspend fun getAll(organizacion: String): List<Transacciones> {
         val r: ParamTransacciones = ParamTransacciones(P_ORGANIZATION_ID = organizacion)
         val headers = r.objectToHeaderMap()
-        val response = apiTransacciones.getAll(headers)
-        val trxRemotas: List<TrxResponseRetrofit> = response.Response.items
-        val trx: List<Transacciones> = trxRemotas.map {
-            val t = it.toTransacciones()
-         /*   App.log.d("Etiquetas  ${t.cXmlField.getValueFromTagWithJsoup("contador_etiquetas") }")
-            App.log.d("Detalles  ${t.cXmlField.getValueFromTagWithJsoup("contador_detalles") }")
-            App.log.d("Lecrora fisica  ${t.cXmlField.getValueFromTagWithJsoup("lectora_fisica_id") }")*/
+        var trx: List<Transacciones> =emptyList()
+        try{
+            val response = apiTransacciones.getAll(headers)
+            val trxRemotas: List<TrxResponseRetrofit> = response.Response.items
+           trx = trxRemotas.map {
+                val t = it.toTransacciones()
+                /*   App.log.d("Etiquetas  ${t.cXmlField.getValueFromTagWithJsoup("contador_etiquetas") }")
+				   App.log.d("Detalles  ${t.cXmlField.getValueFromTagWithJsoup("contador_detalles") }")
+				   App.log.d("Lecrora fisica  ${t.cXmlField.getValueFromTagWithJsoup("lectora_fisica_id") }")*/
 
-            t.etiquetas = t.cXmlField.getValueFromTagWithJsoup("contador_etiquetas")?:"0"
-            t.detalles = t.cXmlField.getValueFromTagWithJsoup("contador_detalles")?:"0"
-            t.lectoraFisicaId = t.cXmlField.getValueFromTagWithJsoup("lectora_fisica_id")?:"0"
+                t.etiquetas = t.cXmlField.getValueFromTagWithJsoup("contador_etiquetas")?:"0"
+                t.detalles = t.cXmlField.getValueFromTagWithJsoup("contador_detalles")?:"0"
+                t.lectoraFisicaId = t.cXmlField.getValueFromTagWithJsoup("lectora_fisica_id")?:"0"
 
-            t
+                t
+            }
+        }catch (e: Exception){
+            trx = emptyList()
+        }finally {
+            return trx
         }
-        return trx
+
+
 
 
     }

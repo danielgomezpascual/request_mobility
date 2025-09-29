@@ -96,6 +96,8 @@ fun MA_SignalVertical(
 						val valor = y.toString()
 						val color = fila.color
 
+
+						App.log.d("X: $x Y: $y")
 						Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
 							.width(100.dp)
 							.height(350.dp)
@@ -109,7 +111,7 @@ fun MA_SignalVertical(
 							//val color = Color.Red
 
 							Text(
-								text = valor.str(4).toString(),
+								text = valor.str(4),
 								modifier = Modifier.padding(6.dp),
 								color = color,
 								fontWeight = FontWeight(800),

@@ -127,7 +127,7 @@ class InicializadorManager(
 				SELECT
 					LECTORA_FISICA_ID as 'LECTORA',
 					MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO,  USUARIO_LECTORA, 
-					strftime('%d-%m %H:%M', CREATION_DATE)  AS Fecha
+					strftime('%m-%d %H:%M', CREATION_DATE)  AS Fecha
 				FROM
 					TRX_HOY  T
 			
@@ -150,15 +150,15 @@ class InicializadorManager(
 			origen = "",
 			sql = """
 				SELECT
-					LECTORA_ID,
+					LECTORA_FISICA_ID,
 					MOB_REQUEST_ID, TIPO_MOV, NUMERO, ESTADO,  USUARIO_LECTORA, 
-					strftime('%d-%m %H:%M', CREATION_DATE)  AS Fecha
+					strftime('%m-%d %H:%M', CREATION_DATE)  AS Fecha
 				FROM
 					TRX_HOY  T
 				WHERE REQ_STATUS = 2
 				
 				ORDER BY
-					1 DESC				
+					2 DESC				
 			""".trimIndent(),
 			dinamico = true,
 			parametros = Parametros()
@@ -224,12 +224,39 @@ class InicializadorManager(
 															   colores = EsquemaColores.Paletas.PERS.valor)
 		)
 
+
+		//transacciones diarias
+		val kpiConteoTransacciones = KpiUI(
+			titulo = "Conteo Transacciones",
+			descripcion = "Transacciones por dia",
+			origen = "",
+			sql = """
+				SELECT
+					strftime('%m-%d', CREATION_DATE)  AS Fecha, 
+					COUNT(*) AS TRX
+										
+				FROM
+					TRANSACCIONES
+				GROUP BY 1
+				
+				ORDER BY				
+				1 DESC				
+			""".trimIndent(),
+			dinamico = true,
+			parametros = Parametros()
+		)
+		val panelConteoTransacciones = operaciones.crearPanel(kpiConteoTransacciones,
+															  true,
+															  PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion.copy(limiteElementos = 20, ajustarContenidoAncho = true))
+
+
 		val dh = operaciones.guardarDashboard(nombre = "General",
 											  listOf<PanelUI>(
 												  panelTransaccionesDiarias,
 												  panelTransaccionesDiariasError,
 												  panelTransaccionesPorOrganizacion,
-												  panelEvolucionErrores
+												  panelEvolucionErrores,
+												  panelConteoTransacciones
 
 											  ),
 											  etiqueta = Etiquetas.EtiquetaValor("General"),
@@ -460,7 +487,7 @@ class InicializadorManager(
 			origen = "",
 			sql = """SELECT 
 						MOB_REQUEST_ID, 
-						strftime('%d-%m %H:%M', CREATION_DATE) AS 'DIA', 
+						strftime('%m-%d %H:%M', CREATION_DATE) AS 'DIA', 
 						TIPO_MOV, 
 						NUMERO, 
 						ESTADO, 
@@ -486,7 +513,7 @@ class InicializadorManager(
 			titulo = "Errores en el día",
 			descripcion = "",
 			origen = "",
-			sql = "SELECT MOB_REQUEST_ID, strftime('%d-%m %H:%M', CREATION_DATE) AS 'DIA', TIPO_MOV, NUMERO, ESTADO, LECTORA_ID, USUARIO_LECTORA FROM TRX_HOY WHERE  ORGANIZATION_ID = '#ORGANIZATION_ID' AND REQ_STATUS = '2' ORDER BY MOB_REQUEST_ID DESC",
+			sql = "SELECT MOB_REQUEST_ID, strftime('%m-%d %H:%M', CREATION_DATE) AS 'DIA', TIPO_MOV, NUMERO, ESTADO, LECTORA_ID, USUARIO_LECTORA FROM TRX_HOY WHERE  ORGANIZATION_ID = '#ORGANIZATION_ID' AND REQ_STATUS = '2' ORDER BY MOB_REQUEST_ID DESC",
 			dinamico = true,
 			parametros = Parametros(ps = listaPametrosKpi)
 		)
@@ -635,6 +662,64 @@ class InicializadorManager(
 														 PlantillasPanel.from(PlantillasPanel.TT.SignalVertical.valor).configuracion)
 
 
+		val kpiRatioErrores = (KpiUI(
+			titulo = "Ratios",
+			descripcion = "Ratios de errores sobre las transacciones corectas",
+			origen = "",
+			sql = """ 
+				SELECT
+					strftime('%m-%d', CREATION_DATE) AS 'Fecha',
+					COUNT(*) AS 'TRX',
+				
+					-- Contadores
+					SUM(CASE WHEN REQ_STATUS = 2 THEN 1 ELSE 0 END) AS 'ERRORES',
+					SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS 'OK',
+				
+					-- Porcentajes (redondeados a 2 decimales)
+					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 2 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% ERR',
+					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% OK'
+				FROM
+					TRANSACCIONES
+				WHERE
+					ORGANIZATION_ID = '#ORGANIZATION_ID'
+				GROUP BY
+					strftime('%m-%d', CREATION_DATE)
+				ORDER BY
+					1 DESC
+					
+				LIMIT 15;
+				;""",
+			dinamico = true,
+			parametros = Parametros(ps = listOf<Parametro>(Parametro(key = "ORGANIZATION_ID", valor = "", defecto = "2206", fijo = false)))
+
+
+		))
+
+		val kErroresRatio = operaciones.guardarKpi(kpiRatioErrores)
+
+
+		val condicionesRatio: Condiciones = Condiciones(1, Columnas("% ERR",
+																	posicion = 4,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 3,
+														predicado = "> 5",
+														descripion = "",
+														alarma = Alarmas())
+
+
+		val panelErroresRatio = operaciones.crearPanel(
+			kErroresRatio,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(
+					colores = 7,
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(condicionesRatio),
+					ajustarContenidoAncho = false,
+					width = "500", height = "600"))
+
+
 		operaciones.guardarDashboard(nombre = "ORG #ORGANIZATION_ID #ORGANIZATION_CODE \n #ORGANIZATION_NAME",
 									 listOf<PanelUI>(
 										 // panelOrganizaciones,
@@ -645,7 +730,8 @@ class InicializadorManager(
 										 panelConteoSemana,
 										 panelTransaccionesSemana,
 										 panelErroresPeriodo,
-										 panelErroresLectora
+										 panelErroresLectora,
+										 panelErroresRatio
 
 									 ),
 
@@ -833,7 +919,59 @@ class InicializadorManager(
 														 PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion.copy(colores = EsquemaColores.Paletas.ERRORES.valor, limiteElementos = 0, mostrarEtiquetas = true, ajustarContenidoAncho = true))
 
 
+		val kpiRatioErrores = (KpiUI(
+			titulo = "Ratios",
+			descripcion = "Ratios de errores sobre las transacciones corectas",
+			origen = "",
+			sql = """ 
+				SELECT
+					strftime('%m-%d', CREATION_DATE) AS 'Fecha',
+					COUNT(*) AS 'TRX',
+				
+					-- Contadores
+					SUM(CASE WHEN REQ_STATUS = 2 THEN 1 ELSE 0 END) AS 'ERRORES',
+					SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS 'OK',
+				
+					-- Porcentajes (redondeados a 2 decimales)
+					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 2 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% ERR',
+					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% OK'
+				FROM
+					TRANSACCIONES
+				WHERE
+					LECTORA_FISICA_ID = '#LECTORA_FISICA_ID' 
+				GROUP BY
+					strftime('%m-%d', CREATION_DATE)
+				ORDER BY
+					1 DESC
+					
+				LIMIT 15;
+				;""",
+			dinamico = true,
+			parametros = Parametros(ps = listaPametrosKpi)))
 
+		val kErroresRatio = operaciones.guardarKpi(kpiRatioErrores)
+
+
+		val condicionesRatio: Condiciones = Condiciones(1, Columnas("% ERR",
+																	posicion = 4,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 3,
+														predicado = "> 5",
+														descripion = "",
+														alarma = Alarmas())
+
+
+		val panelErroresRatio = operaciones.crearPanel(
+			kErroresRatio,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(
+					colores = 7,
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(condicionesRatio),
+					ajustarContenidoAncho = false,
+					width = "500", height = "600"))
 
 
 
@@ -853,9 +991,9 @@ class InicializadorManager(
 
 
 										 panelErroresPeriodo,
+										 panelErroresRatio
 
-
-										 ),
+									 ),
 
 									 kpiOrigen = k,
 									 etiqueta = Etiquetas.EtiquetaValor("PDA"),
@@ -1018,6 +1156,64 @@ class InicializadorManager(
 																																				   width = "500", height = "300"))
 
 
+		val kpiRatioErrores = (KpiUI(
+			titulo = "Ratios",
+			descripcion = "Ratios de errores sobre las transacciones corectas",
+			origen = "",
+			sql = """ 
+				SELECT
+					strftime('%m-%d', CREATION_DATE) AS 'Fecha',
+					COUNT(*) AS 'TRX',
+				
+					-- Contadores
+					SUM(CASE WHEN REQ_STATUS = 2 THEN 1 ELSE 0 END) AS 'ERRORES',
+					SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS 'OK',
+				
+					-- Porcentajes (redondeados a 2 decimales)
+					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 2 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% ERR',
+					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% OK'
+				FROM
+					TRANSACCIONES
+				WHERE
+					PROGRAM_VERSION = '#PROGRAM_VERSION'
+				GROUP BY
+					strftime('%m-%d', CREATION_DATE)
+				ORDER BY
+					1 DESC
+					
+				LIMIT 15;
+				;""",
+			dinamico = true,
+			parametros = Parametros(ps = listaPametrosKpi)
+
+
+		))
+
+		val kErroresRatio = operaciones.guardarKpi(kpiRatioErrores)
+
+
+		val condicionesRatio: Condiciones = Condiciones(1, Columnas("% ERR",
+																	posicion = 4,
+																	valores = emptyList()),
+														condicionCelda = 0,
+														color = 3,
+														predicado = "> 5",
+														descripion = "",
+														alarma = Alarmas())
+
+
+		val panelErroresRatio = operaciones.crearPanel(
+			kErroresRatio,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(
+					colores = 7,
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(condicionesRatio),
+					ajustarContenidoAncho = false,
+					width = "500", height = "600"))
+
+
 		operaciones.guardarDashboard(nombre = "VERSION #PROGRAM_VERSION",
 									 listOf<PanelUI>(//panelOrganizaciones,
 
@@ -1026,8 +1222,8 @@ class InicializadorManager(
 										 panelConteoTotal,
 										 panelConteoTipo,
 										 panelConteoEstado,
-										 panelTransaccionesPorOrganizacion
-
+										 panelTransaccionesPorOrganizacion,
+										 panelErroresRatio
 									 ),
 
 									 kpiOrigen = k,
@@ -1049,7 +1245,7 @@ class InicializadorManager(
 					ORGANIZATION_CODE,  
 					LECTORA_ID, 
 					
-					strftime('%d-%m %H:%M', CREATION_DATE)  AS Fecha, 
+					strftime('%m-%d %H:%M', CREATION_DATE)  AS Fecha, 
 					MOB_REQUEST_ID,NUMERO, TIPO_MOV , 
 					REQ_MESSAGE  
 				FROM 
@@ -1080,11 +1276,10 @@ class InicializadorManager(
 			true,
 			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
 				.configuracion.copy(limiteElementos = 25,
-									colores =  5,
+									colores = 5,
 									ajustarContenidoAncho = false,
 									condicionesCeldas = listaCondicionesBanderas,
 									width = "500", height = "600"))
-
 
 
 		val kpiRatioErrores = (KpiUI(
@@ -1093,7 +1288,7 @@ class InicializadorManager(
 			origen = "",
 			sql = """ 
 				SELECT
-					strftime('%d-%m', CREATION_DATE) AS 'Fecha',
+					strftime('%m-%d', CREATION_DATE) AS 'Fecha',
 					COUNT(*) AS 'TRX',
 				
 					-- Contadores
@@ -1106,7 +1301,7 @@ class InicializadorManager(
 				FROM
 					TRANSACCIONES
 				GROUP BY
-					strftime('%d-%m', CREATION_DATE)
+					strftime('%m-%d', CREATION_DATE)
 				ORDER BY
 					1 DESC;
 				;""",
@@ -1133,39 +1328,32 @@ class InicializadorManager(
 					colores = 5,
 					indicadorColor = false,
 					condiciones = listOf<Condiciones>(condicionesRatio),
+					ajustarContenidoAncho = false,
+					width = "500", height = "600"))
+
+
+		val panelEvolucionErrores = operaciones.crearPanel(
+			kErroresRatio,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor)
+				.configuracion.copy(limiteElementos = 10,
+									mostrarTabla = false,
 									ajustarContenidoAncho = false,
-									width = "500", height = "600"))
+									columnaX = 0,
+									columnaY = 2,
+									width = "500", height = "300"))
 
 
-
-
-		val panelEvolucionErrores   = operaciones.crearPanel(
-		kErroresRatio,
-		false,
-		PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor)
-			.configuracion.copy(limiteElementos = 10,
-								mostrarTabla = false,
-								ajustarContenidoAncho = false,
-								columnaX = 0,
-								columnaY = 2,
-								width = "500", height = "300"))
-
-
-
-
-
-
-		val panelEvolucionPorcentaje   = operaciones.crearPanel(
+		val panelEvolucionPorcentaje = operaciones.crearPanel(
 			kErroresRatio,
 			false,
 			PlantillasPanel.from(PlantillasPanel.TT.SignalVertical.valor)
-				.configuracion.copy(titulo="Nivel de alerta", limiteElementos = 0,
+				.configuracion.copy(titulo = "Nivel de alerta", limiteElementos = 0,
 									ajustarContenidoAncho = false,
 									columnaX = 0,
 									columnaY = 4,
 									valorMaximo = "10",
 									width = "500", height = "300"))
-
 
 
 		val kpiTransaccionesSolucionadas = (KpiUI(
@@ -1196,15 +1384,15 @@ class InicializadorManager(
 		val kTransaccionesSolucionadas = operaciones.guardarKpi(kpiTransaccionesSolucionadas)
 
 
-	/*	val condicionesRatio: Condiciones = Condiciones(1, Columnas("% ERR",
-																	posicion = 4,
-																	valores = emptyList()),
-														condicionCelda = 0,
-														color = 3,
-														predicado = "> 5",
-														descripion = "",
-														alarma = Alarmas())
-*/
+		/*	val condicionesRatio: Condiciones = Condiciones(1, Columnas("% ERR",
+																		posicion = 4,
+																		valores = emptyList()),
+															condicionCelda = 0,
+															color = 3,
+															predicado = "> 5",
+															descripion = "",
+															alarma = Alarmas())
+	*/
 
 		val panelTransaccionesSolucionadas = operaciones.crearPanel(
 			kTransaccionesSolucionadas,
@@ -1217,7 +1405,7 @@ class InicializadorManager(
 					ajustarContenidoAncho = false,
 					width = "500", height = "600"))
 
-	//----------------------------------------------------------------------------------------------------
+		//----------------------------------------------------------------------------------------------------
 		val kpiTransaccionesPendientesSolucion = (KpiUI(
 			titulo = "Transaccion pendientes  (PERIODO)",
 			descripcion = "Transacciones pendientes de solucion (PERIODO)",
@@ -1248,7 +1436,6 @@ class InicializadorManager(
 		val kTransaccionesPendientesSolucionadas = operaciones.guardarKpi(kpiTransaccionesPendientesSolucion)
 
 
-
 		val panelTransaccionesPendientesSolucionadas = operaciones.crearPanel(
 			kTransaccionesPendientesSolucionadas,
 			false,
@@ -1261,7 +1448,7 @@ class InicializadorManager(
 					ajustarContenidoAncho = false,
 					width = "500", height = "600"))
 
-	//----------------------------------------------------------------------------------------------------
+		//----------------------------------------------------------------------------------------------------
 
 		val kpiTransaccionesPendientesSolucionDIA = (KpiUI(
 			titulo = "Transaccion pendientes (DIA)",
@@ -1293,8 +1480,6 @@ class InicializadorManager(
 		val kTransaccionesPendientesSolucionadasDIA = operaciones.guardarKpi(kpiTransaccionesPendientesSolucionDIA)
 
 
-
-
 		val kpiErroresOrganizacion = (KpiUI(
 			titulo = "Errores por organizacion (TOP  10)",
 			descripcion = "Errores por organizacines",
@@ -1305,7 +1490,7 @@ class InicializadorManager(
 					ORGANIZATION_CODE,  
 					COUNT(LECTORA_ID) 
 					
-					/*strftime('%d-%m %H:%M', CREATION_DATE)  AS Fecha, 
+					/*strftime('%m-%d %H:%M', CREATION_DATE)  AS Fecha, 
 					MOB_REQUEST_ID,NUMERO, TIPO_MOV , 
 					REQ_MESSAGE */ 
 				FROM 
@@ -1321,7 +1506,6 @@ class InicializadorManager(
 		val kErrorOrganizacion = operaciones.guardarKpi(kpiErroresOrganizacion)
 
 
-
 		val panelErroresOrganizacin = operaciones.crearPanel(
 			kErrorOrganizacion,
 			true,
@@ -1331,9 +1515,6 @@ class InicializadorManager(
 									columnaY = 1,
 									ajustarContenidoAncho = true,
 									width = "500", height = "600"))
-
-
-
 
 
 		val panelTransaccionesPendientesSolucionadasDIA = operaciones.crearPanel(
@@ -1352,7 +1533,7 @@ class InicializadorManager(
 
 
 
-				operaciones.guardarDashboard(nombre = "ERRORES",
+		operaciones.guardarDashboard(nombre = "ERRORES",
 									 listOf<PanelUI>(
 										 panelErroresGeneral,
 										 panelEvolucionErrores,
@@ -1365,7 +1546,7 @@ class InicializadorManager(
 
 									 ),
 
-									// kpiOrigen = k,
+			// kpiOrigen = k,
 									 etiqueta = Etiquetas.EtiquetaValor("ERRORES"),
 									 color = -5952982)
 	}

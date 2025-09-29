@@ -312,7 +312,10 @@ fun DetalleDashboardUIScreen(
 											)
 
 
-											MA_ListaReordenable_EstiloYouTube(data = dashboardUI.listaPaneles.filter { it.visible }.sortedBy { it.orden }, itemContent = { panel, isDragging ->
+											MA_ListaReordenable_EstiloYouTube(
+												data = dashboardUI.listaPaneles.filter { it.visible }.sortedWith(compareByDescending<PanelUI> { it.seleccionado }.thenBy { it.orden }.thenBy { it.titulo }),
+
+																			  itemContent = { panel, isDragging ->
 												// Tu Composable para el ítem.
 												// Puedes usar 'isDragging' para cambiar la apariencia si lo deseas
 												// ej. MiPanelItem(panel, if (isDragging) Modifier.border(...) else Modifier)

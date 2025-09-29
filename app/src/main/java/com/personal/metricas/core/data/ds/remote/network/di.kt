@@ -13,56 +13,56 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 val moduloNetwork = module {
-    single { provideHttpLoggingInterceptor() }
-    single { provideOkHttpClient(get()) }
-    single { provideRetrofit(get()) }
+	single { provideHttpLoggingInterceptor() }
+	single { provideOkHttpClient(get()) }
+	single { provideRetrofit(get()) }
 }
 
 fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-    val logging = HttpLoggingInterceptor()
-    logging.level = HttpLoggingInterceptor.Level.BASIC
-    return logging
+	val logging = HttpLoggingInterceptor()
+	logging.level = HttpLoggingInterceptor.Level.BASIC
+	return logging
 }
 
 fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
 
-    val dispatcher = Dispatcher().apply {
-        // Aumentamos el número máximo de peticiones totales.
-        // Pongámoslo en 500 para que coincida con tu necesidad.
-        maxRequests = 500
+	val dispatcher = Dispatcher().apply {
+		// Aumentamos el número máximo de peticiones totales.
+		// Pongámoslo en 500 para que coincida con tu necesidad.
+		maxRequests = 500
 
-        // Aumentamos el número máximo de peticiones por host.
-        // Si todas van al mismo dominio, este es el límite más importante.
-        maxRequestsPerHost = 500
-    }
+		// Aumentamos el número máximo de peticiones por host.
+		// Si todas van al mismo dominio, este es el límite más importante.
+		maxRequestsPerHost = 500
+	}
 
-    val httpClient : OkHttpClient = OkHttpClient.Builder()
-        .dispatcher(dispatcher)
-        .addInterceptor(loggingInterceptor)
-        .readTimeout(200L, TimeUnit.SECONDS)
-        .retryOnConnectionFailure(true)
-        .connectTimeout(200L, TimeUnit.SECONDS)
-        .connectionPool(ConnectionPool(100,3, TimeUnit.MINUTES))
-        //.connectionSpecs()
-        .build()
+	val httpClient: OkHttpClient = OkHttpClient.Builder()
+		.dispatcher(dispatcher)
+	//	.addInterceptor(loggingInterceptor)
+		.readTimeout(10L, TimeUnit.SECONDS)
+		.retryOnConnectionFailure(false)
+		.connectTimeout(10L, TimeUnit.SECONDS)
+		.connectionPool(ConnectionPool(100, 3, TimeUnit.MINUTES))
+		//.connectionSpecs()
+		.build()
 
 
-    return  httpClient
+	return httpClient
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    //val BASE_URL = "https://FB6A6494573A4A9187C8537186167BA0.mobile.ocp.oraclecloud.com:443/mobile/custom/ApiMaxamWS_DEV/"
+	//val BASE_URL = "https://FB6A6494573A4A9187C8537186167BA0.mobile.ocp.oraclecloud.com:443/mobile/custom/ApiMaxamWS_DEV/"
 
-    val BASE_URL = Entornos.get(App.ENTORNO).url
+	val BASE_URL = Entornos.get(App.ENTORNO).url
 
 
-    //50549f8c1ecf43fd869820846a8b4a15.mobile.ocp.oraclecloud.com/mobile/custom/ApiMaxamWS/Users
+	//50549f8c1ecf43fd869820846a8b4a15.mobile.ocp.oraclecloud.com/mobile/custom/ApiMaxamWS/Users
 
-    return Retrofit.Builder()
-        .baseUrl(BASE_URL) // Reemplaza con tu URL base
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
+	return Retrofit.Builder()
+		.baseUrl(BASE_URL) // Reemplaza con tu URL base
+		.client(okHttpClient)
+		.addConverterFactory(GsonConverterFactory.create())
 
-        //.addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .build()
+		//.addCallAdapterFactory(CoroutineCallAdapterFactory())
+		.build()
 }

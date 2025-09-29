@@ -105,7 +105,7 @@ class DetalleDashboardVM(
 					if (estado is UIState.Success) {
 						when (eventos) {
 							is Eventos.OnChangeNombre          -> estado.copy(dashboardUI = estado.dashboardUI.copy(nombre = eventos.valor))
-							is Eventos.OnChangeColor          -> estado.copy(dashboardUI = estado.dashboardUI.copy(color = eventos.color	))
+							is Eventos.OnChangeColor           -> estado.copy(dashboardUI = estado.dashboardUI.copy(color = eventos.color))
 							is Eventos.OnChangeDescripcion     -> estado.copy(dashboardUI = estado.dashboardUI.copy(descripcion = eventos.valor))
 							is Eventos.OnActualizarPaneles     -> {
 
@@ -128,7 +128,6 @@ class DetalleDashboardVM(
 							}
 
 
-
 							Eventos.OnNuevaEtiqueta            -> {
 								estado.copy(etiquetaSeleccionada = Etiquetas.EtiquetaVacia(), dashboardUI = estado.dashboardUI.copy(etiqueta = estado.etiquetaSeleccionada))
 							}
@@ -136,17 +135,19 @@ class DetalleDashboardVM(
 							is Eventos.OnEditarEtiqueta        -> {
 								estado.copy(etiquetaSeleccionada = eventos.etiqueta)
 							}
+
 							is Eventos.ModificarValorEtiqueta  -> {
 								//val e = Etiquetas(etiqueta = eventos.valor)
 								val et = estado.etiquetaSeleccionada.copy(eventos.valor)
 								val es = estado.copy(etiquetaSeleccionada = et)
-								App.log.d(es.etiquetaSeleccionada.toString() )
-								App.log.d(es.etiquetasDisponibles.toString() )
+								App.log.d(es.etiquetaSeleccionada.toString())
+								App.log.d(es.etiquetasDisponibles.toString())
 								es
 							}
+
 							is Eventos.OnGuardarEtiqueta       -> {
 
-								estado.copy(etiquetasDisponibles =  estado.etiquetasDisponibles.plus(estado.etiquetaSeleccionada),
+								estado.copy(etiquetasDisponibles = estado.etiquetasDisponibles.plus(estado.etiquetaSeleccionada),
 											etiquetaSeleccionada = estado.etiquetaSeleccionada,
 											dashboardUI = estado.dashboardUI.copy(etiqueta = estado.etiquetaSeleccionada))
 
