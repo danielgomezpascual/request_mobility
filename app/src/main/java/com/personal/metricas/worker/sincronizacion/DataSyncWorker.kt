@@ -40,6 +40,8 @@ class DataSyncWorker(
 
 			App.sharedPrerfences.put(K.ULTIMA_SINCRONIZACION, TiempoHora.ahora())
 
+			/*
+			con este metodo se sincronizacban todas las seleccionadas.
 			organizacionesSeleccionadasPrevias.forEach { organizacion ->
 				if (organizacion.isNotEmpty()){
 					val org : Organizaciones? = organizaciones.filter { it.organizationId.equals(organizacion) }.firstOrNull()
@@ -49,7 +51,7 @@ class DataSyncWorker(
 					}
 				}
 
-			}
+			}*/
 
 			// ----------------------------------------------------
 			// AQUÍ VA TU LÓGICA
