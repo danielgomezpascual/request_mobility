@@ -8,6 +8,9 @@ import com.personal.metricas.endpoints.navegacion.NavegacionEndPoints
 import com.personal.metricas.kpi.navegacion.NavegacionKpis
 import com.personal.metricas.menu.navegacion.NavegavionMenu
 import com.personal.metricas.menu.navegacion.ScreenMenu
+import com.personal.metricas.organizaciones.ui.lista.ListaOrganizaciones
+import com.personal.metricas.organizaciones.ui.navegacion.NavegacionOrganizaciones
+import com.personal.metricas.organizaciones.ui.navegacion.ScreenOrganizacionesLista
 import com.personal.metricas.paneles.navegacion.NavegacionPaneles
 import com.personal.metricas.settings.navegacion.NavegacionSettings
 import com.personal.metricas.sincronizacion.ui.navegacion.NavegacionSincronizacion
@@ -18,6 +21,7 @@ fun NavegacionGuia() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = ScreenMenu) {
+    //NavHost(navController = navController, startDestination = ScreenOrganizacionesLista) {
         NavegavionMenu(navController)
         NavegacionTransacciones(navController)
         NavegacionKpis(navController)
@@ -26,5 +30,6 @@ fun NavegacionGuia() {
         NavegacionDashboard(navController)
         NavegacionEndPoints(navController)
         NavegacionSettings(navController)
+        NavegacionOrganizaciones(navController)
     }
 }

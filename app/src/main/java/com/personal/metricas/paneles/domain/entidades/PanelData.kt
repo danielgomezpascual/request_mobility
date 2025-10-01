@@ -38,7 +38,8 @@ data class PanelData(
 
 	companion object {
 
-		fun fromPanelUI(panelUI: PanelUI, notasManager: NotasManager, parametrosOrigenDatos: Parametros): PanelData {
+		fun fromPanelUI(panelUI: PanelUI, notasManager: NotasManager,
+						parametrosOrigenDatos: Parametros): PanelData {
 			val panelConfiguracion = panelUI.configuracion
 
 			//se reeemplazxan los parametors del dashboards en la sql

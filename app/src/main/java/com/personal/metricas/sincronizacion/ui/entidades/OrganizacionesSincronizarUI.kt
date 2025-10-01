@@ -20,6 +20,7 @@ fun OrganizacionesSincronizarUI.fromOrganizacion(organizacion: Organizaciones) =
 		organizationName = organizacion.organizationName,
 		organizationId = organizacion.organizationId,
 		masterOrganizationId = organizacion.masterOrganizationId,
+
 	)
 
 

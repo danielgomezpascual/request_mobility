@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "93b341819e29a5a04bac666441985300",
+    "identityHash": "d917bff69ccf5598e3d5e296c17ea6be",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -501,12 +501,62 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "Organizaciones",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`organizationCode` TEXT NOT NULL, `organizationName` TEXT NOT NULL, `organizationId` TEXT NOT NULL, `masterOrganizationId` TEXT NOT NULL, `seleccionada` TEXT NOT NULL, `tiempos` TEXT NOT NULL, PRIMARY KEY(`organizationCode`))",
+        "fields": [
+          {
+            "fieldPath": "organizationCode",
+            "columnName": "organizationCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organizationName",
+            "columnName": "organizationName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organizationId",
+            "columnName": "organizationId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "masterOrganizationId",
+            "columnName": "masterOrganizationId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seleccionada",
+            "columnName": "seleccionada",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tiempos",
+            "columnName": "tiempos",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "organizationCode"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '93b341819e29a5a04bac666441985300')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd917bff69ccf5598e3d5e296c17ea6be')"
     ]
   }
 }

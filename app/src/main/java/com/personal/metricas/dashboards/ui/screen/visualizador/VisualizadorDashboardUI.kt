@@ -104,6 +104,7 @@ fun Success(
 						lateinit var p: PanelUI
 						//val notasManager = getKoin().get<NotasManager>()
 						val notasManager = NotasManager.instancia()
+
 						MA_Panel(panelData = PanelData.fromPanelUI(panelUI, notasManager, uiState.dashboardUI.parametros))
 
 					}

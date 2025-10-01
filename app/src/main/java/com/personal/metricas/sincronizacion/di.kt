@@ -6,6 +6,8 @@ import com.personal.metricas.endpoints.data.ds.remote.EndPointsRemotoDS
 import com.personal.metricas.endpoints.data.ds.remote.servicio.EndPointRemotos
 import com.personal.metricas.endpoints.domain.ObtenerDatosEndPoint
 import com.personal.metricas.notas.domain.NotasManager
+import com.personal.metricas.organizaciones.domain.interactors.AlmacenarOrganizacionCU
+import com.personal.metricas.organizaciones.domain.repositorio.IRepoOrganizaciones
 import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
 import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
@@ -36,6 +38,8 @@ val moduloSincronizacion = module {
 	}
 
 
+	single<AlmacenarOrganizacionCU> { AlmacenarOrganizacionCU(repo = get<IRepoOrganizaciones>()) }
+
 	//ViewModel
 	viewModel {
 		ListaOrganizacionesSincronizarVM(
@@ -44,7 +48,8 @@ val moduloSincronizacion = module {
 			repoTrx = get<TransaccionesRepoImp>(),
 			//guardar = get<GuardarTransacciones>(),
 			dialog = get<DialogManager>(),
-			notas = get<NotasManager>()
+			notas = get<NotasManager>(),
+			guardarOrganizacion = get<AlmacenarOrganizacionCU>()
 
 		)
 	}

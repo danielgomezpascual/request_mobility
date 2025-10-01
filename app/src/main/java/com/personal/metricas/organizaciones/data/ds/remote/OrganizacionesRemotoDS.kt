@@ -23,6 +23,22 @@ class OrganizacionesRemotoDS(private val api: OrganizacionesApiRemoto) : IDataSo
         val organizaciones: List<OrganizacionesRetrofit> = response.Response.items
         val orgs: List<Organizaciones> = organizaciones.map { it.toOrganizacion() }
         return orgs
+    }
 
+
+    override suspend fun guardar(organizacion: Organizaciones): Long {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun eliminar(organizacion: Organizaciones) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun eliminarTodas() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun obtener(id: String): Organizaciones {
+        TODO("Not yet implemented")
     }
 }

@@ -1,14 +1,10 @@
 package com.personal.metricas.menu.screen
 
-import MA_IconBottom
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,20 +18,16 @@ import androidx.compose.ui.Modifier
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.TituloScreen
-import com.personal.metricas.core.composables.dialogos.AppGlobalDialogs
-import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.composables.listas.MA_NoData
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
-import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.navegacion.EventosNavegacion
-import com.personal.metricas.core.navegacion.NavegacionGuia
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.core.utils.Parametros
-import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.firebase.autenticacion.ui.AuthScreen
-import com.personal.metricas.menu.Features
+import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.menu.screen.HomeVM.UIState
+import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.ui.componente.MA_Panel
 import org.koin.androidx.compose.koinViewModel
@@ -83,7 +75,7 @@ fun SuccessMenu(
 		// Si no, muestra la pantalla de autenticación
 		AuthScreen(
 			onSignInSuccess = { isAuthenticated = true },
-			onSignInError = { error ->  App.log.d("Eerrror") }
+			onSignInError = { error -> App.log.d("Eerrror") }
 		)
 		return
 	}

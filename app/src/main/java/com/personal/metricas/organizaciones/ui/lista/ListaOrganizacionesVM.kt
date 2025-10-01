@@ -1,4 +1,4 @@
-package com.personal.metricas.sincronizacion.ui.lista
+package com.personal.metricas.organizaciones.ui.lista
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,8 +16,6 @@ import com.personal.metricas.sincronizacion.ui.entidades.OrganizacionesSincroniz
 import com.personal.metricas.sincronizacion.ui.entidades.fromOrganizacion
 import com.personal.metricas.sincronizacion.ui.entidades.toOrganizacion
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
-import com.personal.metricas.transacciones.domain.entidades.Transacciones
-import com.personal.metricas.transacciones.domain.interactors.GuardarTransacciones
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,15 +26,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ListaOrganizacionesSincronizarVM(
+class ListaOrganizacionesVM(
 
 	private val obtenerOrganizacion: ObtenerOrganizacionesCU,
-	private val realizarSincronizacionCU: RealizarSincronizacionCU,
-	private val repoTrx: TransaccionesRepoImp,
-	//private val guardar: GuardarTransacciones,
-	private val notas: NotasManager,
-	private val dialog: DialogManager,
-	private val guardarOrganizacion: AlmacenarOrganizacionCU
+
 	) : ViewModel() {
 
 
@@ -71,8 +64,6 @@ class ListaOrganizacionesSincronizarVM(
 		data class Buscar(val texto: String) : Eventos()
 		data class OnChangeSeleccionCheck(val organizacionUI: OrganizacionesSincronizarUI) : Eventos()
 		data class AplicarTodos(val valor: Boolean) : Eventos()
-		object RealizarSincronizacion : Eventos()
-		object EliminarDatosActuales : Eventos()
 
 
 	}
@@ -84,8 +75,6 @@ class ListaOrganizacionesSincronizarVM(
 			is Eventos.Buscar                 -> modificarTextoBusqueta(evento.texto)
 			is Eventos.OnChangeSeleccionCheck -> onChangeSeleccion(evento.organizacionUI)
 			is Eventos.AplicarTodos           -> aplicarTodos(evento.valor)
-			Eventos.RealizarSincronizacion    -> realizarSincronizacion()
-			Eventos.EliminarDatosActuales     -> eliminarDatosActuales()
 
 
 		}
@@ -110,9 +99,9 @@ class ListaOrganizacionesSincronizarVM(
 	private fun cargaInicial() {
 		viewModelScope.launch {
 
-			listaOrganizacionesSincronizarUI = obtenerOrganizacion.getAll().mapIndexed {indice, organzacion ->
+			listaOrganizacionesSincronizarUI = obtenerOrganizacion.getAll().mapIndexed { indice, organzacion ->
 				val orgUI = OrganizacionesSincronizarUI().fromOrganizacion(organzacion)
-				guardarOrganizacion.guardar(orgUI)
+				//	guardarOrganizacion.guardar(orgUI)
 				orgUI
 			}
 			organizacionesOriginal = listaOrganizacionesSincronizarUI
@@ -167,100 +156,8 @@ class ListaOrganizacionesSincronizarVM(
 
 			}
 
-			/*if (estado is ListaOrganizacionesSincronizarVM.UIState.Success) {
-				estado.copy(textoBuscar = texto, organizaciones = l)
-			} else {
-				estado
-			}*/
-
-
-			/*val l = if (!texto.isEmpty()) {
-
-				listaOrganizacionesSincronizarUI.filter {
-					it.organizationName.contains(other = textoBuscar, ignoreCase = true) || it.organizationCode.contains(other = textoBuscar, ignoreCase = true)
-
-				}
-			} else {
-				listaOrganizacionesSincronizarUI.forEach { i }
-			}*/
-
 
 		}
-	}
-
-
-	private fun eliminarDatosActuales() {
-		dialog.sino(_t(R.string.seguro_que_desea_elminar_los_datos_actuales_de_la_base_de_dtos)) { resp ->
-			if (resp == DialogosResultado.Si) {
-				viewModelScope.launch {
-					repoTrx.eliminarTodo()
-					notas.eliminarNotas()
-					dialog.informacion("Datos eliminados") { }
-				}
-
-			}
-		}
-
-	}
-
-
-	private fun realizarSincronizacion() {
-
-		if (_uiState.value is UIState.Success) {
-
-			val oraganizciones = (_uiState.value as UIState.Success).organizaciones
-
-			var cadenasOrganizacionesSeleccionadas = ""
-			val orgSeleccionadas = oraganizciones.filter { it.seleccionado == true }
-
-
-			orgSeleccionadas.forEach { cadenasOrganizacionesSeleccionadas += it.organizationId + ";" }
-
-			App.sharedPrerfences.put(K.ORGANIZACIONES, cadenasOrganizacionesSeleccionadas)
-
-			if (orgSeleccionadas.isEmpty()) {
-				dialog.informacion(_t(R.string.no_hay_ninguna_organizaci_n_seleccionada_seleccione_alguna_previamnete)) { }
-				return
-			}
-
-
-			_uiState.value = (_uiState.value as UIState.Success).copy(trabajando = true)
-			viewModelScope.launch {
-				val orgSeleccionadas = oraganizciones.filter { it.seleccionado == true }
-				var contador = 0;
-				val totalOraganizacionesSincronizar = orgSeleccionadas.size
-				orgSeleccionadas.forEach { organizacion ->
-
-
-
-					async(Dispatchers.IO) {
-
-						var s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
-						_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
-
-						realizarSincronizacionCU.sincronizarOrganizacion(organizacion.toOrganizacion())
-
-						contador = contador + 1
-						 s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
-
-						_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
-						withContext(Dispatchers.Main){
-							if (contador == totalOraganizacionesSincronizar) {
-								_uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
-								dialog.informacion(_t(R.string.information_actualizada)) { }
-							}
-						}
-
-					}
-
-
-
-
-				}
-
-			}
-		}
-
 	}
 
 

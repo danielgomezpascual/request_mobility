@@ -27,6 +27,9 @@ sealed class EventosNavegacion {
 	object CuadriculaDashboard : EventosNavegacion()
 
 
+	//Organizaciones --------------
+	object ListaOrganizaciones: EventosNavegacion()
+	data class CargarSincronizacionOrganizacion(val identificador: String) : EventosNavegacion()
 
 	//======== EndPoints =============
 	object MenuEndPoints : EventosNavegacion()

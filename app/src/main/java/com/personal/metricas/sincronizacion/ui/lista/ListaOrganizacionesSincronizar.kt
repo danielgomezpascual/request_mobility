@@ -3,21 +3,15 @@ package com.personal.metricas.sincronizacion.ui.lista
 import MA_IconBottom
 import MA_Morph
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.componentes.TituloScreen
@@ -43,11 +36,9 @@ import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
-import com.personal.metricas.dashboards.ui.screen.detalle.DetalleDashboardVM
 import com.personal.metricas.menu.Features
-import com.personal.metricas.sincronizacion.ui.composables.OrganizacionListItem
+import com.personal.metricas.sincronizacion.ui.composables.OrganizacionListItemSincronizar
 import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM.UIState
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -147,9 +138,14 @@ fun Success(
 
 
 						MA_Lista(data = uiState.organizaciones.filter { it.visible }) { organizacionUI ->
-							OrganizacionListItem(organizacionUI = organizacionUI, onClickItem = {
-								viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.OnChangeSeleccionCheck(organizacionUI))
-							})
+							OrganizacionListItemSincronizar(
+								organizacionUI = organizacionUI,
+								onClickItem = {
+									viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.OnChangeSeleccionCheck(organizacionUI))
+								},
+
+
+								)
 						}
 					}
 

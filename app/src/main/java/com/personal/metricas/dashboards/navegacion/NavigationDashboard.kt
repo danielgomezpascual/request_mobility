@@ -17,6 +17,7 @@ import com.personal.metricas.kpi.navegacion.ScreenDetalleKpi
 import com.personal.metricas.kpi.navegacion.ScreenListadoKpis
 import com.personal.metricas.menu.navegacion.ScreenHerramientas
 import com.personal.metricas.menu.navegacion.ScreenMenu
+import com.personal.metricas.organizaciones.ui.navegacion.ScreenDetalleOrganizacionSincronizacion
 import com.personal.metricas.paneles.navegacion.ScreenDetallePanel
 import com.personal.metricas.paneles.navegacion.ScreenListadoPaneles
 import com.personal.metricas.settings.navegacion.ScreenSettings
@@ -61,9 +62,9 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 	App.log.d("Nasvegacion")
 
 	when (navegacion) {
-		is EventosNavegacion.Cargar                 -> navController.navigate(DetalleDashboard(navegacion.identificador))
+		is EventosNavegacion.Cargar                           -> navController.navigate(DetalleDashboard(navegacion.identificador))
 
-		EventosNavegacion.HomeApp -> {
+		EventosNavegacion.HomeApp                             -> {
 			navController.navigate(ScreenMenu) { // ScreenMenu debe ser un objeto serializable o una ruta String
 				popUpTo(navController.graph.startDestinationId) { // Ejemplo: pop hasta el inicio del grafo actual
 					inclusive = true
@@ -71,23 +72,22 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 			}
 		}
 
-		EventosNavegacion.Volver                    -> {
+		EventosNavegacion.Volver                              -> {
 			navController.navigate(ListadoDashboards) {
 				popUpTo<ListadoDashboards>() { inclusive = true }
 			}
 		}
 
 
-		is EventosNavegacion.VisualizadorDashboard  -> {
+		is EventosNavegacion.VisualizadorDashboard            -> {
 			navController.navigate(VisualizadorDashboard(navegacion.identificador,
 														 navegacion.parametrosJson))
 		}
 
 		//====== KPI =====
-		EventosNavegacion.MenuKpis                  -> navController.navigate(ScreenListadoKpis)
-		EventosNavegacion.NuevoKPI                  -> navController.navigate(ScreenDetalleKpi(0))
-		is EventosNavegacion.CargarKPI              -> {
-
+		EventosNavegacion.MenuKpis                            -> navController.navigate(ScreenListadoKpis)
+		EventosNavegacion.NuevoKPI                            -> navController.navigate(ScreenDetalleKpi(0))
+		is EventosNavegacion.CargarKPI                        -> {
 			App.log.d("Avbrirr detalle")
 			navController.navigate(
 				ScreenDetalleKpi(navegacion.identificador)
@@ -96,31 +96,42 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 
 
 		//======= Paneles =========
-		EventosNavegacion.MenuPaneles               -> navController.navigate(ScreenListadoPaneles)
-		EventosNavegacion.NuevoPanel                -> navController.navigate(ScreenDetallePanel(0))
-		is EventosNavegacion.CargarPanel            -> navController.navigate(ScreenDetallePanel(navegacion.identificador))
+		EventosNavegacion.MenuPaneles                         -> navController.navigate(ScreenListadoPaneles)
+		EventosNavegacion.NuevoPanel                          -> navController.navigate(ScreenDetallePanel(0))
+		is EventosNavegacion.CargarPanel                      -> navController.navigate(ScreenDetallePanel(navegacion.identificador))
 
 		//==== Dashboard =======================
-		EventosNavegacion.MenuDashboard             -> navController.navigate(ListadoDashboards)
-		EventosNavegacion.NuevoDashboard            -> navController.navigate(DetalleDashboard(0))
-		is EventosNavegacion.CargarDashboard  -> navController.navigate(DetalleDashboard(navegacion.identificador))
-		EventosNavegacion.CuadriculaDashboard -> navController.navigate(CuadriculaDashboards)
+		EventosNavegacion.MenuDashboard                       -> navController.navigate(ListadoDashboards)
+		EventosNavegacion.NuevoDashboard                      -> navController.navigate(DetalleDashboard(0))
+		is EventosNavegacion.CargarDashboard                  -> navController.navigate(DetalleDashboard(navegacion.identificador))
+		EventosNavegacion.CuadriculaDashboard                 -> navController.navigate(CuadriculaDashboards)
 
 
 		//==== Sincronizacion =======================
-		EventosNavegacion.Sincronizacion            -> navController.navigate(ScreenOrganizacionesSincronizacion)
+		EventosNavegacion.Sincronizacion                      -> navController.navigate(ScreenOrganizacionesSincronizacion)
+
+		//==== Organizaciones =======================
+		EventosNavegacion.ListaOrganizaciones                 -> navController.navigate(ListadoDashboards)
+
+		is EventosNavegacion.CargarSincronizacionOrganizacion -> {
+			navController.navigate(
+				ScreenDetalleOrganizacionSincronizacion(navegacion.identificador)
+			)
+
+		}
 
 
 		//==== Herramientas =======================
-		EventosNavegacion.MenuHerramientas          -> navController.navigate(ScreenHerramientas)
+		EventosNavegacion.MenuHerramientas                    -> navController.navigate(ScreenHerramientas)
 
 
 		//==== End Points =======================
-		is EventosNavegacion.CargarEndPoint         -> navController.navigate(ScreenDetalleEndPoints(navegacion.identificador))
-		EventosNavegacion.MenuEndPoints             -> navController.navigate(ScreenListadoEndPoints)
-		EventosNavegacion.NuevoEndPonint            -> navController.navigate(ScreenDetalleEndPoints(0))
+		is EventosNavegacion.CargarEndPoint                   -> navController.navigate(ScreenDetalleEndPoints(navegacion.identificador))
+		EventosNavegacion.MenuEndPoints                       -> navController.navigate(ScreenListadoEndPoints)
+		EventosNavegacion.NuevoEndPonint                      -> navController.navigate(ScreenDetalleEndPoints(0))
 
-		EventosNavegacion.SincronizacionMenu        -> navController.navigate(ScreenMenuSincronizacion)
-		EventosNavegacion.Settings                  -> navController.navigate(ScreenSettings)
+		EventosNavegacion.SincronizacionMenu                  -> navController.navigate(ScreenMenuSincronizacion)
+		EventosNavegacion.Settings                            -> navController.navigate(ScreenSettings)
+
 	}
 }
