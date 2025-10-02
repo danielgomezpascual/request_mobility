@@ -2,16 +2,23 @@ package com.personal.metricas.paneles.ui.componente
 
 import MA_IconBottom
 import MA_Morph
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,8 +51,14 @@ import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.core.composables.tabla.MA_Tabla
+import com.personal.metricas.core.navegacion.EventosNavegacion
+import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils._t
+import com.personal.metricas.core.utils._toJson
 import com.personal.metricas.core.utils.if3
+import com.personal.metricas.dashboards.domain.entidades.Dashboard
+import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardCU
+import com.personal.metricas.dashboards.navegacion.goto
 import com.personal.metricas.endpoints.domain.entidades.ResultadoEndPoint
 import com.personal.metricas.endpoints.domain.interactors.AlmacenarDatosRemotosEndPointCU
 import com.personal.metricas.menu.Features
@@ -55,8 +68,10 @@ import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.metricas.paneles.domain.entidades.TiposPanel
+import com.personal.metricas.transacciones.domain.entidades.ResultadoSQL
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import org.koin.compose.getKoin
 import org.koin.java.KoinJavaComponent
 
 import kotlin.collections.filter
@@ -162,12 +177,15 @@ fun MA_Panel(
 					MA_LabelMini(panelData.panel.descripcion)
 					MA_LabelMini(modifier = Modifier
 						.fillMaxWidth()
-						.padding(horizontal = 2.dp), valor = identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic)
+						.padding(horizontal = 2.dp), valor = identificador,
+								 alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic)
 				}
 			}
 		}
 
 		TiposPanel.PANEL_END_POINT -> {
+
+
 			MA_Card(color = Color(panelData.panelConfiguracion.colorPanel), modifier = Modifier
 				.clickable(enabled = true, onClick = {
 					scope.launch {
@@ -186,8 +204,6 @@ fun MA_Panel(
 
 
 					}
-
-
 				})
 			) {
 				Column {
@@ -202,11 +218,31 @@ fun MA_Panel(
 								 fontStyle = FontStyle.Italic)
 
 				}
-
-
 			}
 
 		}
+
+
+		TiposPanel.PANEL_CONECTOR  -> {
+
+			App.log.lista("Valres tabla", panelData.valoresTabla.filas)
+			App.log.lista("Valres tabla", filasPintar)
+
+			Row(modifier = Modifier.horizontalScroll(state = rememberScrollState())) {
+				filasPintar.forEach { fila ->
+
+					pintarPanelConectores(panelData, panelData.panel.conector.identificador, fila)
+				}
+
+			}
+
+
+			/*ResultadoSQL.fromSqlToTabla(panelData..kpiOrigenDatos.sql).filas.forEach { fila ->
+				pintarPanelConectores(panelData, dashboardResult,fila )
+			}*/
+
+		}
+
 
 		TiposPanel.PANEL_KPI       -> {
 			graficaComposable = dameTipoGrafica(
@@ -356,6 +392,42 @@ fun MA_Panel(
 
 
 }
+
+@Composable
+fun pintarPanelConectores(panelData: PanelData, identificadorDashboard: Int, fila: Fila = Fila()) {
+
+	MA_Card(
+		elevacion = 3.dp,
+		color = Color(panelData.panelConfiguracion.colorPanel),
+		modifier = Modifier
+			.padding(1.dp)
+			//.background(color = Color(225, 245, 254, 255))
+			.clickable {
+				goto(EventosNavegacion.VisualizadorDashboard(identificadorDashboard, _toJson(fila.toParametros())),
+					 App.navController)
+			}
+	) {
+		Column {
+			val s: String = Parametros.reemplazar(panelData.panel.titulo, fila.toParametros(), fila.toParametros())
+
+			MA_IconBottom(
+				icon = Features.Dashboard().icono,
+				labelText = s,
+				color = Features.Dashboard().color
+			) {}
+			MA_LabelMini(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 2.dp),
+				valor = s,
+				alineacion = TextAlign.End,
+				size = 9.sp,
+				fontStyle = FontStyle.Italic
+			)
+		}
+	}
+}
+
 
 fun cumplenFiltro(filas: List<Fila>, celdasFiltro: List<Celda>): List<Fila> = filas.map { fila ->
 	var cumpleFiltro: Boolean = true
@@ -523,7 +595,7 @@ fun dameTipoTabla(
 				onClickInvertir = onClickInvertir,
 				onClickSeleccionarFila = onClickSeleccionarFila,
 				onClickFiltrarTexto = onClickFiltrarTexto,
-				onClickBorrarFiltros= onClickBorrarFiltros
+				onClickBorrarFiltros = onClickBorrarFiltros
 			)
 		}
 	} else {

@@ -13,14 +13,20 @@ import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.utils._t
 import com.personal.metricas.core.utils.if3
 import com.personal.metricas.core.utils.siVacio
+import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardsCU
+import com.personal.metricas.dashboards.ui.entidades.DashboardUI
+import com.personal.metricas.dashboards.ui.entidades.fromDashboard
+import com.personal.metricas.dashboards.ui.entidades.fromDashboardLight
 import com.personal.metricas.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.kpi.ui.entidades.fromKPI
 import com.personal.metricas.paneles.domain.entidades.Condiciones
+import com.personal.metricas.paneles.domain.entidades.Conector
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
+import com.personal.metricas.paneles.domain.entidades.TIPO_CONECTOR
 import com.personal.metricas.paneles.domain.entidades.TiposPanel
 import com.personal.metricas.paneles.domain.interactors.EliminarPanelCU
 import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
@@ -34,6 +40,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
@@ -46,6 +53,7 @@ class DetallePanelVM(
 	private val guardarPanelCU: GuardarPanelCU,
 	private val eliminarPanelCU: EliminarPanelCU,
 	private val obtenerKpis: ObtenerKpisCU,
+	private val obtenerDashboardsCU: ObtenerDashboardsCU,
 	private val dialog: DialogManager,
 
 	) : ViewModel() {
@@ -55,9 +63,11 @@ class DetallePanelVM(
 
 	sealed class UIState() {
 		data class Success(
-			val panelUI: PanelUI, val kpiDisponibles: List<KpiUI> = emptyList<KpiUI>(),
+			val panelUI: PanelUI,
+			val kpiDisponibles: List<KpiUI> = emptyList<KpiUI>(),
 			val valoresTabla: ValoresTabla = ValoresTabla(), val condicionFila: Condiciones? = null,
 			val condicionCelda: Condiciones? = null,
+			val dashboardDisponibles: List<DashboardUI> = emptyList<DashboardUI>(),
 
 
 			) : UIState()
@@ -72,6 +82,7 @@ class DetallePanelVM(
 		data class OnChangeDescripcion(val descripcion: String) : Eventos()
 		data class OnChangeColor(val color: Int) : Eventos()
 		data class OnChangeKpiSeleccionado(val identificador: Int) : Eventos()
+		data class OnChangeDashboardSeleccionado(val dsh: DashboardUI) : Eventos()
 		data class OnChangeTipoPanel(val identificador: TiposPanel) : Eventos()
 		data class onChangeOrientacion(val valor: String) : Eventos()
 
@@ -135,14 +146,14 @@ class DetallePanelVM(
 
 	fun onEvent(evento: Eventos) {
 		when (evento) {
-			is Eventos.ObtenerKpisDisponibles -> obtenerKpis()
-			is Eventos.Cargar                 -> cargar(evento.identificador)
-			is Eventos.Guardar                -> guardar(evento.navegacion)
-			is Eventos.Eliminar               -> eliminar(evento.navegacion)
-			is Eventos.Duplicar               -> duplicar(evento.navegacion)
+			//is Eventos.ObtenerKpisDisponibles -> obtenerKpis()
+			is Eventos.Cargar   -> cargar(evento.identificador)
+			is Eventos.Guardar  -> guardar(evento.navegacion)
+			is Eventos.Eliminar -> eliminar(evento.navegacion)
+			is Eventos.Duplicar -> duplicar(evento.navegacion)
 
-			is Eventos.Preview                -> preview(evento.navegacion)
-			else                              -> {
+			is Eventos.Preview  -> preview(evento.navegacion)
+			else                -> {
 				_uiState.update { estado ->
 					if (estado is UIState.Success) {
 						when (evento) {
@@ -180,6 +191,16 @@ class DetallePanelVM(
 
 								)
 							}
+
+							is Eventos.OnChangeDashboardSeleccionado -> {
+								val conector: Conector = Conector(tipo = TIPO_CONECTOR.CONECTAR_DASHBOARD,
+																  identificador = evento.dsh.id,
+																  descripcion = evento.dsh.nombre)
+
+								estado.copy(panelUI = estado.panelUI.copy(conector = conector))
+
+							}
+
 
 							is Eventos.onChangeOrientacion           -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
@@ -536,41 +557,36 @@ class DetallePanelVM(
 
 	private fun cargar(identificador: Int) {
 		viewModelScope.launch {
+
+
 			withContext(Dispatchers.IO) {
-				obtenerKpis()
+				//obtenerKpis()
+
+				//obtenerDahsboards()
 				if (identificador == 0) {
-					_uiState.value = UIState.Success(panelUI = PanelUI())
+					_uiState.value = UIState.Success(panelUI = PanelUI(), kpiDisponibles = obtenerKpis(), dashboardDisponibles = obtenerDahsboards())
 				} else {
-					val panelUI: PanelUI =
-						PanelUI().fromPanel(obtenerPanelCU.obtener(id = identificador))
+					val panelUI: PanelUI = PanelUI().fromPanel(obtenerPanelCU.obtener(id = identificador))
 					val valoresTabla = ResultadoSQL.fromSqlToTabla(panelUI.kpi.sql, panelUI.kpi.parametros)
-					_uiState.value = UIState.Success(panelUI = panelUI, valoresTabla = valoresTabla)
+					_uiState.value = UIState.Success(panelUI = panelUI, valoresTabla = valoresTabla, kpiDisponibles = obtenerKpis(), dashboardDisponibles = obtenerDahsboards())
 				}
 			}
 		}
 	}
 
-	fun obtenerKpis() {
 
-		viewModelScope.launch {
-			obtenerKpis.getAll().map { listaKpi -> listaKpi.map { k -> KpiUI().fromKPI(k) } }
-				.flowOn(Dispatchers.IO)
-				.catch { ex -> _uiState.update { UIState.Error(ex.toString()) } }
-				.collect { listakpi ->
-					_uiState.update { estado ->
-						if (estado is UIState.Success) {
-							estado.copy(kpiDisponibles = listakpi)
-						} else {
-							estado
-						}
-						//10.201.6.2
-						//
-					}
-				}
-
-
-		}
+	suspend fun obtenerDahsboards(): List<DashboardUI> {
+		val dsh: List<DashboardUI> = obtenerDashboardsCU.getAll().first().map { k -> DashboardUI().fromDashboardLight(k) }
+		return dsh
 	}
+
+	suspend fun obtenerKpis(): List<KpiUI> {
+
+		val kpis: List<KpiUI> = obtenerKpis.getAll().first().map { k -> KpiUI().fromKPI(k) }
+		return kpis
+
+	}
+
 
 	private fun guardar(navegacion: (EventosNavegacion) -> Unit) {
 

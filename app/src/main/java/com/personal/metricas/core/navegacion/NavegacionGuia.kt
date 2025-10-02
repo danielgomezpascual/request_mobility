@@ -3,6 +3,7 @@ package com.personal.metricas.core.navegacion
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.personal.metricas.App
 import com.personal.metricas.dashboards.navegacion.NavegacionDashboard
 import com.personal.metricas.endpoints.navegacion.NavegacionEndPoints
 import com.personal.metricas.kpi.navegacion.NavegacionKpis
@@ -19,7 +20,7 @@ import com.personal.metricas.transacciones.navegacion.NavegacionTransacciones
 @Composable
 fun NavegacionGuia() {
     val navController = rememberNavController()
-
+    App.navController = navController
     NavHost(navController = navController, startDestination = ScreenMenu) {
     //NavHost(navController = navController, startDestination = ScreenOrganizacionesLista) {
         NavegavionMenu(navController)

@@ -6,17 +6,17 @@ import com.personal.metricas.kpi.domain.entidades.Kpi
 import com.personal.metricas.paneles.domain.entidades.Panel
 
 data class Dashboard(
-	val id: Int,
-	val tipo: TipoDashboard,
-	val nombre: String,
-	val logo: String,
-	val home: Boolean,
-	val descripcion: String,
-	val kpiOrigenDatos: Kpi,
+	val id: Int = 0,
+	val tipo: TipoDashboard = TipoDashboard.Estatico(),
+	val nombre: String = "",
+	val logo: String = "",
+	val home: Boolean = false,
+	val descripcion: String = "",
+	val kpiOrigenDatos: Kpi= Kpi(),
 	val paneles: List<Panel> = listOf<Panel>(),
 	val parametros : Parametros = Parametros(),
 	val autogenerado :Boolean = false,
-	val etiqueta: Etiquetas,
+	val etiqueta: Etiquetas = Etiquetas(),
 	val color: Int = 0
 ){
 	

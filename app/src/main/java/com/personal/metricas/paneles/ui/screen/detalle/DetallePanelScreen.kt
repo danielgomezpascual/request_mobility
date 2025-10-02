@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material.icons.filled.Details
 import androidx.compose.material.icons.filled.Directions
 import androidx.compose.material.icons.filled.DoubleArrow
-import androidx.compose.material.icons.filled.ExposurePlus1
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.FormatColorText
 import androidx.compose.material.icons.filled.FrontHand
@@ -35,7 +33,6 @@ import androidx.compose.material.icons.filled.SpaceBar
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.TableView
 import androidx.compose.material.icons.filled.Textsms
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -51,18 +48,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.room.util.TableInfo
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
-import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_SwitchNormal
 import com.personal.metricas.core.composables.combo.MA_Combo
 import com.personal.metricas.core.composables.combo.MA_ComboColores
 import com.personal.metricas.core.composables.combo.MA_ComboLista
 import com.personal.metricas.core.composables.componentes.TituloScreen
-import com.personal.metricas.core.composables.edittext.MA_TextoEditable
 import com.personal.metricas.core.composables.edittext.MA_TextoNormal
 import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.imagenes.MA_Icono
@@ -76,10 +70,10 @@ import com.personal.metricas.core.composables.tabla.Columnas
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
-import com.personal.metricas.dashboards.ui.screen.detalle.DetalleDashboardVM
+import com.personal.metricas.dashboards.ui.composables.MA_DashboardComboItem
+import com.personal.metricas.dashboards.ui.entidades.DashboardUI
 import com.personal.metricas.kpi.ui.composables.KpiComboItem
 import com.personal.metricas.kpi.ui.entidades.KpiUI
-import com.personal.metricas.kpi.ui.screen.detalle.DetalleKpiVM
 import com.personal.metricas.menu.Features
 import com.personal.metricas.paneles.domain.entidades.Condiciones
 import com.personal.metricas.paneles.domain.entidades.EsquemaColores
@@ -93,6 +87,7 @@ import com.personal.metricas.paneles.ui.componente.MA_CondicionCeldaPanel
 import com.personal.metricas.paneles.ui.componente.MA_CondicionCeldaPanelLista
 import com.personal.metricas.paneles.ui.componente.MA_CondicionPanel
 import com.personal.metricas.paneles.ui.componente.MA_CondicionPanelLista
+import com.personal.metricas.paneles.ui.componente.MA_ConectorItem
 import com.personal.metricas.paneles.ui.componente.MA_Panel
 import com.personal.metricas.paneles.ui.componente.MA_SeleccionColor
 import com.personal.metricas.paneles.ui.componente.MA_SeleccionPlantillaPanel
@@ -240,8 +235,35 @@ fun SucessScreenDetallePanel(
 				}
 
 
-				if (panelUI.tipoPanel == TiposPanel.PANEL_KPI) {
-					//KPI
+				if (panelUI.tipoPanel == TiposPanel.PANEL_CONECTOR) {
+
+
+					MA_Titulo2("Conector")
+					MA_Card {
+						Box(modifier = Modifier.height(100.dp)) {
+							MA_ComboLista<DashboardUI>(modifier = Modifier, titulo = "",
+													   descripcion = "Seleccione el Dashboard a enlazar",
+													   valorInicial = {
+														   MA_ConectorItem( panelUI.conector)
+													   },
+													   elementosSeleccionables = uiState.dashboardDisponibles,
+													   item = { dshUI ->
+														   MA_DashboardComboItem(dashboardUI = dshUI)
+													   },
+													   onClickSeleccion = { dshUI ->
+														   viewModel.onEvent(DetallePanelVM.Eventos.OnChangeDashboardSeleccionado(
+															   dshUI))
+													   })
+
+						}
+					}
+
+				}
+
+
+				if (panelUI.tipoPanel == TiposPanel.PANEL_CONECTOR || panelUI.tipoPanel == TiposPanel.PANEL_KPI) {
+
+
 					MA_Titulo2("KPI")
 					MA_Card {
 						Box(modifier = Modifier.height(100.dp)) {
@@ -249,6 +271,7 @@ fun SucessScreenDetallePanel(
 								MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "",
 													 descripcion = "Seleccione el KPI a enlazar",
 													 valorInicial = {
+														 App.log.d(panelUI.kpi.toString())
 														 KpiComboItem(kpiUI = panelUI.kpi)
 
 													 },
@@ -276,6 +299,10 @@ fun SucessScreenDetallePanel(
 
 
 					}
+				}
+				if (panelUI.tipoPanel == TiposPanel.PANEL_KPI) {
+					//KPI
+
 					val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
 					MA_Titulo2(valor = "Plantilla")
 					MA_Card {

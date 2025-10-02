@@ -1,5 +1,7 @@
 package com.personal.metricas.paneles.domain.entidades
 
+import com.personal.metricas.dashboards.domain.entidades.Dashboard
+import com.personal.metricas.dashboards.ui.entidades.DashboardUI
 import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.kpi.domain.entidades.Kpi
 
@@ -14,7 +16,8 @@ data class Panel(val id: Int = 0 ,
                  val autogenerado : Boolean = false,
                  val endPoint: EndPoint = EndPoint(),
                  val tipoPanel: TiposPanel = TiposPanel.PANEL_KPI,
-                 val color: Int = 0
+                 val color: Int = 0,
+                 val conector: Conector = Conector()
 ){
     fun esDinamico(): Boolean = kpi.esDinamico()
 }

@@ -3,6 +3,7 @@ package com.personal.metricas.paneles // O com.personal.metricas.dashboards
 
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.room.AppDatabase
+import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardsCU
 import com.personal.metricas.kpi.domain.interactors.ObtenerKpisCU
 import com.personal.metricas.paneles.data.ds.local.PanelesRoomDS
 import com.personal.metricas.paneles.data.ds.local.dao.PanelesDao
@@ -21,37 +22,39 @@ import org.koin.dsl.module
 val moduloPaneles = module {
 
 
-    // Database
-    single<PanelesDao> { get<AppDatabase>().panelesDao() }
-    single<PanelesRoomDS> { PanelesRoomDS(get<PanelesDao>()) }
+	// Database
+	single<PanelesDao> { get<AppDatabase>().panelesDao() }
+	single<PanelesRoomDS> { PanelesRoomDS(get<PanelesDao>()) }
 
 
-    //Repositiorio
-    single<PanelesRepositorio> {
-        PanelesRepositorioImp(
-            listOf(
-                get<PanelesRoomDS>()
-            )
-        )
-    }
+	//Repositiorio
+	single<PanelesRepositorio> {
+		PanelesRepositorioImp(
+			listOf(
+				get<PanelesRoomDS>()
+			)
+		)
+	}
 
-    //Casos de uso
-    single<EliminarPanelCU> { EliminarPanelCU(get<PanelesRepositorio>()) }
-    single<EliminarTodosPanelesCU> { EliminarTodosPanelesCU(get<PanelesRepositorio>()) }
-    single<GuardarPanelCU> { GuardarPanelCU(get<PanelesRepositorio>()) }
-    single<ObtenerPanelCU> { ObtenerPanelCU(get<PanelesRepositorio>()) }
-    single<ObtenerPanelesCU> { ObtenerPanelesCU(get<PanelesRepositorio>()) }
+	//Casos de uso
+	single<EliminarPanelCU> { EliminarPanelCU(get<PanelesRepositorio>()) }
+	single<EliminarTodosPanelesCU> { EliminarTodosPanelesCU(get<PanelesRepositorio>()) }
+	single<GuardarPanelCU> { GuardarPanelCU(get<PanelesRepositorio>()) }
+	single<ObtenerPanelCU> { ObtenerPanelCU(get<PanelesRepositorio>()) }
+	single<ObtenerPanelesCU> { ObtenerPanelesCU(get<PanelesRepositorio>()) }
 
-    //ViewMOdel
-    viewModel { PanelesListadoVM(get<ObtenerPanelesCU>()) }
-    viewModel {
-        DetallePanelVM(
-            get<ObtenerPanelCU>(),
-            get<GuardarPanelCU>(),
-            get<EliminarPanelCU>(),
-            get<ObtenerKpisCU>(),
-            get<DialogManager>()
-        )
-    }
+	//ViewMOdel
+	viewModel { PanelesListadoVM(get<ObtenerPanelesCU>()) }
+	viewModel {
+		DetallePanelVM(
+			obtenerPanelCU = get<ObtenerPanelCU>(),
+			guardarPanelCU = get<GuardarPanelCU>(),
+			eliminarPanelCU = get<EliminarPanelCU>(),
+			obtenerKpis = get<ObtenerKpisCU>(),
+			obtenerDashboardsCU = get<ObtenerDashboardsCU>(),
+			dialog = get<DialogManager>()
+
+		)
+	}
 }
 

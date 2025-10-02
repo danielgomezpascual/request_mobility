@@ -1,9 +1,13 @@
 package com.personal.metricas.paneles.ui.entidades
 
+import com.personal.metricas.dashboards.ui.entidades.DashboardUI
+import com.personal.metricas.dashboards.ui.entidades.fromDashboard
+import com.personal.metricas.dashboards.ui.entidades.toDashboard
 import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.kpi.ui.entidades.fromKPI
 import com.personal.metricas.kpi.ui.entidades.toKpi
+import com.personal.metricas.paneles.domain.entidades.Conector
 import com.personal.metricas.paneles.domain.entidades.Panel
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.TiposPanel
@@ -21,7 +25,8 @@ data class PanelUI(
     val autogenerado: Boolean = false,
     val tipoPanel : TiposPanel = TiposPanel.PANEL_KPI,
     val endPoint: EndPoint = EndPoint(),
-    val color: Int = -13726889
+    val color: Int = -13726889,
+    val conector: Conector = Conector()
 ){
     fun esDinamico () = kpi.dinamico
 
@@ -48,7 +53,10 @@ fun PanelUI.toPanel() = Panel(
     autogenerado = this.autogenerado,
     tipoPanel = this.tipoPanel,
     endPoint = this.endPoint,
-    color = this.color
+    color = this.color,
+    conector =  this.conector
+
+
 )
 
 
@@ -65,6 +73,8 @@ fun PanelUI.fromPanel(panel: Panel): PanelUI {
         autogenerado = panel.autogenerado,
         tipoPanel =  panel.tipoPanel,
         endPoint = panel.endPoint,
-        color = panel.color
+        color = panel.color,
+        conector = panel.conector
+
     )
 }

@@ -59,7 +59,7 @@ fun NavGraphBuilder.NavegacionDashboard(navController: NavController) {
 // basándose en el ejemplo proporcionado.
 fun goto(navegacion: EventosNavegacion, navController: NavController) {
 
-	App.log.d("Nasvegacion")
+
 
 	when (navegacion) {
 		is EventosNavegacion.Cargar                           -> navController.navigate(DetalleDashboard(navegacion.identificador))

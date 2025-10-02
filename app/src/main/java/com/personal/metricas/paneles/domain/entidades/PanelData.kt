@@ -38,8 +38,10 @@ data class PanelData(
 
 	companion object {
 
-		fun fromPanelUI(panelUI: PanelUI, notasManager: NotasManager,
+		fun fromPanelUI(panelUI: PanelUI,
+						notasManager: NotasManager,
 						parametrosOrigenDatos: Parametros): PanelData {
+
 			val panelConfiguracion = panelUI.configuracion
 
 			//se reeemplazxan los parametors del dashboards en la sql
@@ -52,6 +54,13 @@ data class PanelData(
 			when (panelUI.tipoPanel) {
 				TiposPanel.PANEL_TEXTO     -> {
 
+				}
+
+				TiposPanel.PANEL_CONECTOR -> {
+
+					tabla = ResultadoSQL.fromSqlToTabla(sql = pui.kpi.sql,
+														parametrosKpi = pui.kpi.parametros,
+														parametrosOrigenDatos = parametrosOrigenDatos)
 				}
 
 				TiposPanel.PANEL_END_POINT -> {
@@ -99,7 +108,8 @@ data class PanelData(
 		val id = when (panel.tipoPanel) {
 			TiposPanel.PANEL_END_POINT -> "E${panel.endPoint.id}"
 			TiposPanel.PANEL_KPI       -> "K${panel.kpi.id}"
-			TiposPanel.PANEL_TEXTO     -> "T${panel.kpi.id}"
+			TiposPanel.PANEL_TEXTO    -> "T${panel.kpi.id}"
+			TiposPanel.PANEL_CONECTOR -> "C${panel.conector.identificador}"
 		}
 
 		return "$idPanel.$id"

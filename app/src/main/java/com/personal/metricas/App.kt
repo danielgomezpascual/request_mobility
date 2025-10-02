@@ -2,6 +2,7 @@ package com.personal.metricas
 
 import android.app.Application
 import android.content.Context
+import androidx.navigation.NavController
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.data.ds.remote.network.moduloNetwork
 import com.personal.metricas.core.log.di.moduloLog
@@ -45,7 +46,7 @@ class App : Application() {
 		lateinit var sharedPrerfences: SharedPreferencesManager
 
 		lateinit var crash: Crash
-
+		lateinit var navController : NavController
 
 	}
 
