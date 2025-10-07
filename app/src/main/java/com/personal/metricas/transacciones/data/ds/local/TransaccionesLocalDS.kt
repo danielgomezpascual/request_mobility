@@ -24,9 +24,9 @@ class TransaccionesLocalDS(private val dao: TansaccionesDao) : IRepoTransaccione
     }
 
 
-    override suspend fun getAll(organizacion: String): List<Transacciones> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getAll(organizacion: String): List<Transacciones>  =
+        (dao.getPorOrganizacion(organizacion)?:listOf<TransaccionesRoom>()).map { it.toTransacciones() }
+
 
     override suspend fun eliminar(transaccion: Transacciones) {
         TODO("Not yet implemented")
@@ -44,9 +44,14 @@ class TransaccionesLocalDS(private val dao: TansaccionesDao) : IRepoTransaccione
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTrxOracle(organizacion: String): List<Transacciones> {
-        TODO("Not yet implemented")
+    override suspend fun obtenerTransaccionesPorOrganizacion(organizationCode: String): List<Transacciones>
+    = (dao.getPorOrganizacion(organizationCode)?:listOf<TransaccionesRoom>()).map {
+        it.toTransacciones()
     }
+
+
+
+
 
     override suspend fun guardar(trx: List<Transacciones>): Long {
        dao.insert(trx.map { TransaccionesRoom(MOB_REQUEST_ID = 0 ).fromTransaccion(it) })

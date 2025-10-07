@@ -23,7 +23,7 @@ object PanelesGenericos {
 							COUNT(MOB_REQUEST_ID) AS 'Trx'
 						FROM
 							TRANSACCIONES
-							$keyReemplazarPorActuacion
+							$keyReemplazarPorActuacion						
 						GROUP BY
 							Hora
 						ORDER BY
@@ -38,7 +38,6 @@ object PanelesGenericos {
 		}
 
 
-		App.log.d(sql)
 		val kpiHorasTransacciones = KpiUI(
 			titulo = "Transacciones por horas",
 			descripcion = "Estimación de procesamiento de transacciones por horas (Trabajo de TRX real).",

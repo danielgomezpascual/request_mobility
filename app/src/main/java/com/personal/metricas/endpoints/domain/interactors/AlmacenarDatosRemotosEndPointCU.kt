@@ -62,7 +62,7 @@ class AlmacenarDatosRemotosEndPointCU(
 				val organizacion = obtenerOrganizacionesCU.getAll().first { it.organizationId.equals(organizacionId) }
 
 				App.log.d(" Organizacion: ${organizacion.toString()}")
-				val trx: List<Transacciones> = repoTrx.getTrxOracle(organizacion.organizationId)
+				val trx: List<Transacciones> = repoTrx.obtenerTransaccionesPorOrganizacion(organizacion.organizationId)
 
 
 

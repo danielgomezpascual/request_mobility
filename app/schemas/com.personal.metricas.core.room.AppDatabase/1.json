@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8ca4e03043d7bc8bfc2b595e6f615a11",
+    "identityHash": "19100fdea237c3dcc0030cd44b57a17a",
     "entities": [
       {
         "tableName": "Transacciones",
@@ -510,7 +510,7 @@
       },
       {
         "tableName": "Organizaciones",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`organizationCode` TEXT NOT NULL, `organizationName` TEXT NOT NULL, `organizationId` TEXT NOT NULL, `masterOrganizationId` TEXT NOT NULL, `seleccionada` TEXT NOT NULL, `tiempos` TEXT NOT NULL, PRIMARY KEY(`organizationCode`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`organizationCode` TEXT NOT NULL, `organizationName` TEXT NOT NULL, `organizationId` TEXT NOT NULL, `masterOrganizationId` TEXT NOT NULL, `activo` TEXT NOT NULL, `visible` TEXT NOT NULL, `color` TEXT NOT NULL, `formaSincronizar` TEXT NOT NULL, `horas` TEXT NOT NULL, PRIMARY KEY(`organizationCode`))",
         "fields": [
           {
             "fieldPath": "organizationCode",
@@ -537,14 +537,32 @@
             "notNull": true
           },
           {
-            "fieldPath": "seleccionada",
-            "columnName": "seleccionada",
+            "fieldPath": "activo",
+            "columnName": "activo",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "tiempos",
-            "columnName": "tiempos",
+            "fieldPath": "visible",
+            "columnName": "visible",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "formaSincronizar",
+            "columnName": "formaSincronizar",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "horas",
+            "columnName": "horas",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -562,7 +580,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8ca4e03043d7bc8bfc2b595e6f615a11')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '19100fdea237c3dcc0030cd44b57a17a')"
     ]
   }
 }

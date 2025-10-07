@@ -18,7 +18,8 @@ class OrganizacionesRoomDS(private val dao: OrganizacionesDao) : IDataSourceOrga
 
     override suspend fun eliminarTodas() = dao.vaciarTabla()
 
-    override suspend fun guardar(org: Organizaciones): Long = dao.insert(OrganizacionesRoom().fromOrganizaciones(organizacion = org))
+    override suspend fun guardar(org: Organizaciones): Long =
+        dao.insert(OrganizacionesRoom().fromOrganizaciones(organizacion = org))
 
     override suspend fun obtener(id: String): Organizaciones = (dao.getPorID(id) ?: OrganizacionesRoom()).toOrganizaciones()
 

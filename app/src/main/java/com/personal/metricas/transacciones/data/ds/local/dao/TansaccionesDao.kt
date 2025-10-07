@@ -17,4 +17,8 @@ abstract class TansaccionesDao : BaseDaoExtended<TransaccionesRoom>(), KoinCompo
 
     @Query("SELECT * FROM  Transacciones WHERE MOB_REQUEST_ID = :mob_request_id")
     abstract suspend fun getPorID(mob_request_id: Int): TransaccionesRoom?
+
+
+    @Query("SELECT * FROM  Transacciones WHERE ORGANIZATION_CODE = :organization_code")
+    abstract suspend fun getPorOrganizacion(organization_code: String): List<TransaccionesRoom>?
 }

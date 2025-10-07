@@ -12,6 +12,7 @@ data class OrganizacionUI(
 	val visible: Boolean = true,
 	val color: Int = -12156236,
 	val formaSincronizar: FORMA_SINCRONIZAR = FORMA_SINCRONIZAR.AUTO,
+	val horas: String = "",
 
 	) {
 	companion object {
@@ -21,8 +22,12 @@ data class OrganizacionUI(
 				organizationName = organizacion.organizationName,
 				organizationId = organizacion.organizationId,
 				masterOrganizationId = organizacion.masterOrganizationId,
-
-				)
+				activo = organizacion.activo,
+				visible = organizacion.visible,
+				color = organizacion.color,
+				formaSincronizar = organizacion.formaSincronizar,
+				horas = organizacion.horas,
+			)
 	}
 
 }
@@ -34,5 +39,10 @@ fun OrganizacionUI.toOrganizacion() =
 		organizationName = this.organizationName,
 		organizationId = this.organizationId,
 		masterOrganizationId = this.masterOrganizationId,
+		activo = this.activo,
+		visible = this.visible,
+		color = this.color,
+		formaSincronizar = this.formaSincronizar,
+		horas = this.horas,
 	)
 

@@ -1,15 +1,9 @@
 package com.personal.metricas.sincronizacion.domain.interactors
 
-import com.personal.metricas.App
-import com.personal.metricas.R
-import com.personal.metricas.core.utils._t
 import com.personal.metricas.organizaciones.domain.entidades.Organizaciones
-import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM.UIState
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.metricas.transacciones.domain.entidades.Transacciones
 import com.personal.metricas.transacciones.domain.interactors.GuardarTransacciones
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 
 class RealizarSincronizacionCU(
 	private val repoTrx: TransaccionesRepoImp,
@@ -28,7 +22,7 @@ class RealizarSincronizacionCU(
 	}
 
 	suspend fun sincronizarOrganizacion(organizacion: Organizaciones){
-		val trx: List<Transacciones> = repoTrx.getTrxOracle(organizacion.organizationId)
+		val trx: List<Transacciones> = repoTrx.obtenerTransaccionesPorOrganizacion(organizacion.organizationId)
 		//contador = contador+1
 		val l: List<Transacciones> = trx.map {
 			it.cXmlField = ""

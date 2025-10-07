@@ -13,9 +13,12 @@ import com.personal.metricas.organizaciones.data.ds.remote.OrganizacionesRemotoD
 import com.personal.metricas.organizaciones.data.ds.remote.servicio.OrganizacionesApiRemoto
 import com.personal.metricas.organizaciones.data.repositorio.OrganizacionesRepoImp
 import com.personal.metricas.organizaciones.domain.interactors.AlmacenarOrganizacionCU
+import com.personal.metricas.organizaciones.domain.interactors.GuardarPlanificacionOrganizacinCU
+import com.personal.metricas.organizaciones.domain.interactors.ObtenerHorasTransaccionesOrganizacionCU
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionCU
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.metricas.organizaciones.domain.repositorio.IRepoOrganizaciones
+import com.personal.metricas.organizaciones.domain.repositorio.TransaccionesOrganizacionImp
 import com.personal.metricas.organizaciones.ui.detalle.OrganizacionesDetalleVM
 import com.personal.metricas.organizaciones.ui.lista.ListaOrganizaciones
 import com.personal.metricas.organizaciones.ui.lista.ListaOrganizacionesVM
@@ -25,7 +28,10 @@ import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
 import com.personal.metricas.paneles.ui.screen.detalle.DetallePanelVM
 import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
 import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
+import com.personal.metricas.transacciones.data.ds.local.TransaccionesLocalDS
+import com.personal.metricas.transacciones.data.ds.remote.TransaccionesRemotoDS
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
+import com.personal.metricas.transacciones.domain.repositorios.IRepoTransacciones
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -60,6 +66,21 @@ val moduloOrganizaciones = module {
 	single<ObtenerOrganizacionesCU> { ObtenerOrganizacionesCU(get<IRepoOrganizaciones>()) }
 	single<ObtenerOrganizacionCU> { ObtenerOrganizacionCU(get<IRepoOrganizaciones>()) }
 
+
+	//Repo
+	single<TransaccionesOrganizacionImp> {
+		TransaccionesOrganizacionImp(listOf(
+			get<TransaccionesLocalDS>()
+			//get<TransaccionesRemotoDS>())
+		))
+	}
+
+
+
+	single<ObtenerHorasTransaccionesOrganizacionCU> { ObtenerHorasTransaccionesOrganizacionCU(get<TransaccionesOrganizacionImp>()) }
+
+	single<GuardarPlanificacionOrganizacinCU> { GuardarPlanificacionOrganizacinCU(get<IRepoOrganizaciones>()) }
+
 	viewModel {
 		ListaOrganizacionesVM(
 			obtenerOrganizacion = get<ObtenerOrganizacionesCU>()
@@ -68,6 +89,8 @@ val moduloOrganizaciones = module {
 	viewModel {
 		OrganizacionesDetalleVM(
 			obtenerOrganizacionCU = get<ObtenerOrganizacionCU>(),
+			obtenerHorasTransaccionesOrganizacionCU = get<ObtenerHorasTransaccionesOrganizacionCU>(),
+			guardarPlanificacionOrganizacinCU = get<GuardarPlanificacionOrganizacinCU>(),
 			dialog = get<DialogManager>()
 		)
 	}

@@ -26,6 +26,7 @@ import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.combo.MA_Combo
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.formas.MA_Avatar
+import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.labels.MA_Titulo2
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
@@ -120,7 +121,6 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 
 					Column() {
 
-
 						MA_CheckBoxNormal(valor = organizacionUI.activo, titulo = "Activar sincronizacióm") {
 							viewModel.onEvent(OrganizacionesDetalleVM.Eventos.ActivarSincronizacion(it))
 						}
@@ -139,7 +139,8 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 
 
 				MA_Titulo2("Horas Sincronziacion")
-				val initialSelectionString = "00:30; 02:00; 09:00;10:30;18:00;19:30"
+
+				val initialSelectionString = uiState.organizacionUI.horas
 
 				var mySelectedHours by remember { mutableStateOf<Set<LocalTime>>(ParseTimesToSet(initialSelectionString)) }
 				MA_Card {
@@ -151,6 +152,7 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 							onSelectionChanged = { updatedHours ->
 								mySelectedHours = updatedHours
 								val horas = updatedHours.joinToString(separator = ";")
+								viewModel.onEvent(OrganizacionesDetalleVM.Eventos.OnChangeHoras(horas))
 								App.log.d("Horas -> $horas")
 							}
 						)
@@ -160,38 +162,15 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 				MA_Titulo2("Carga del servidor")
 
 
-			/*	val kpiHorasTransacciones = KpiUI(
-					titulo = "Transacciones por horas",
-					descripcion = "Estimación de procesamiento de transacciones por horas (Trabajo de TRX real).",
-					origen = "",
-					sql = """
-						SELECT
-							STRFTIME('%H', CREATION_DATE) AS Hora,
-							COUNT(MOB_REQUEST_ID) AS 'Trx'
-						FROM
-							TRANSACCIONES
-						
-						GROUP BY
-							Hora
-						ORDER BY
-							1 ASC;
-					""".trimIndent(),
-					dinamico = true,
-					parametros = Parametros()
-				)
+				//transacciones por horas en el servidor (todos las organizaciones)
+				val p : PanelData = PanelData.fromPanelUI(
+					PanelesGenericos.PanelHoras(ACTUA_SOBRE.GENERAL), NotasManager(), Parametros())
+				MA_Panel(panelData = p.copy(panelConfiguracion = p.panelConfiguracion.copy(height = "350")))
 
-				val configuracion = PanelConfiguracion().copy(
-					ajustarContenidoAncho = true,
-					tipo = PanelTipoGrafica.BarrasFinasVerticales(),
-					mostrarTabla = false,
-					mostrarEtiquetas = true)
 
-				//val kpi = if3(crearKPI, guardarKpi(kpiUI), kpiUI)
-				val panel = PanelUI.Companion.crearPanelUI(kpiHorasTransacciones, configuracion)*/
-
-				MA_Panel(panelData = PanelData.fromPanelUI(PanelesGenericos.PanelHoras(ACTUA_SOBRE.GENERAL), NotasManager(), Parametros()))
-				MA_Panel(panelData = PanelData.fromPanelUI(PanelesGenericos.PanelHoras(ACTUA_SOBRE.ORGANIZACION, organizacionUI.organizationCode), NotasManager(), Parametros()))
-
+				//transacciones por horas de la organizacion seleccioanda
+				val p2: PanelData =PanelData.fromPanelUI(PanelesGenericos.PanelHoras(ACTUA_SOBRE.ORGANIZACION, organizacionUI.organizationCode), NotasManager(), Parametros())
+				MA_Panel(panelData =  p2.copy(panelConfiguracion = p2.panelConfiguracion.copy(height = "350")))
 
 
 
@@ -204,13 +183,13 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 					origen = "",
 					sql = """
 						SELECT
-  ORGANIZATION_CODE,
-  COUNT(*) AS recuento,
-  ROUND((COUNT(*) * 100.0 / SUM(COUNT(*)) OVER ()),2) AS porcentaje
-FROM
-  TRANSACCIONES
-GROUP BY
-  ORGANIZATION_CODE;;
+						  ORGANIZATION_CODE,
+						  COUNT(*) AS recuento,
+						  ROUND((COUNT(*) * 100.0 / SUM(COUNT(*)) OVER ()),2) AS porcentaje
+						FROM
+						  TRANSACCIONES
+						GROUP BY
+						  ORGANIZATION_CODE;;
 					""".trimIndent(),
 					dinamico = true,
 					parametros = Parametros()
