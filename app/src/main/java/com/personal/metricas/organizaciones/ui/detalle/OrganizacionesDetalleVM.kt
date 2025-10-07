@@ -40,6 +40,7 @@ class OrganizacionesDetalleVM(
 	private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
 	val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
+	private var _organizacion: Organizaciones = Organizaciones()
 
 	sealed class UIState {
 		data class Success(
@@ -59,12 +60,16 @@ class OrganizacionesDetalleVM(
 		data class ActivarSincronizacion(val activo: Boolean) : Eventos()
 		data class OnChangeFormaSincronizar(val metodo: String) : Eventos()
 		data class OnChangeHoras(val horas: String) : Eventos()
+		data object CargarHorasPorCarga : Eventos()
 
 	}
 
 	fun onEvent(evento: OrganizacionesDetalleVM.Eventos) {
 		App.log.d("Eventyo ${evento.toString()}")
 		when (evento) {
+			is Eventos.CargarHorasPorCarga->{
+				cargarHorasPorCargaTransacciones()
+			}
 			is Eventos.Cargar   -> cargar(evento.identificador)
 			is Eventos.Guardar  -> guardar(evento.navegacion)
 			is Eventos.Eliminar -> eliminar(evento.navegacion)
@@ -100,14 +105,39 @@ class OrganizacionesDetalleVM(
 			withContext(Dispatchers.IO) {
 				val organizacion: Organizaciones = obtenerOrganizacionCU.get(codigo) ?: Organizaciones()
 				val oraganizacionUI = OrganizacionUI.fromOrganizacion(organizacion)
-				val horasTransacciones = obtenerHorasTransaccionesOrganizacionCU.obtener(organizacion)
-				_uiState.value = OrganizacionesDetalleVM.UIState.Success(organizacionUI = oraganizacionUI.copy(horas = horasTransacciones))
+				_organizacion = organizacion
+				_uiState.value = OrganizacionesDetalleVM.UIState.Success(organizacionUI = oraganizacionUI)
 
 			}
 		}
 	}
 
+	fun cargarHorasPorCargaTransacciones(){
 
+		viewModelScope.launch {
+			withContext(Dispatchers.IO) {
+
+
+
+				val horasTransacciones = obtenerHorasTransaccionesOrganizacionCU.obtener(_organizacion)
+
+				App.log.d(horasTransacciones)
+				_uiState.update{estado ->
+
+					if (estado is UIState.Success) {
+						 estado.copy(estado.organizacionUI.copy(horas = horasTransacciones))
+					}else{
+						estado
+					}
+
+				}
+				//_uiState.value = OrganizacionesDetalleVM.UIState.Success(organizacionUI = oraganizacionUI)
+
+			}
+		}
+
+
+	}
 	fun guardar(navegacion: (EventosNavegacion) -> Unit) {
 
 		viewModelScope.launch {

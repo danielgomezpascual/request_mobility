@@ -11,6 +11,8 @@ class OrganizacionesRepoImp(fuentesDatos: List<IDataSourceOrganizaciones>) :
     BaseRepositorio<IDataSourceOrganizaciones>(fuentesDatos), IRepoOrganizaciones {
 
         override suspend fun getAll(): List<Organizaciones>  = dameDS(TIPO_DS.RETROFIT).getAll()
+        override suspend fun getAllLocal(): List<Organizaciones> = dameDS(TIPO_DS.ROOM).getAll()
+
 
         override suspend fun guardar(organizacion: Organizaciones): Long {
                 App.log.d(organizacion.toString())

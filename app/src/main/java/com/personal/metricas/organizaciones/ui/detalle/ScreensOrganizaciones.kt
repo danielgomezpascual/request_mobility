@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.personal.metricas.App
+import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.combo.MA_Combo
@@ -138,11 +139,15 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 				}
 
 
-				MA_Titulo2("Horas Sincronziacion")
+				MA_Titulo2("Sincronizacion")
 
+						
 				val initialSelectionString = uiState.organizacionUI.horas
+				//var mySelectedHours by remember { mutableStateOf<Set<LocalTime>>(ParseTimesToSet(initialSelectionString)) }
+				var mySelectedHours by remember(initialSelectionString) {
+					mutableStateOf<Set<LocalTime>>(ParseTimesToSet(initialSelectionString))
+				}
 
-				var mySelectedHours by remember { mutableStateOf<Set<LocalTime>>(ParseTimesToSet(initialSelectionString)) }
 				MA_Card {
 					Column() {
 						TimeSelector(
@@ -159,6 +164,16 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 					}
 				}
 
+
+
+				//transacciones por horas de la organizacion seleccioanda
+				val p2: PanelData =PanelData.fromPanelUI(PanelesGenericos.PanelHoras(ACTUA_SOBRE.ORGANIZACION, organizacionUI.organizationCode), NotasManager(), Parametros())
+				MA_Panel(panelData =  p2.copy(panelConfiguracion = p2.panelConfiguracion.copy(height = "350")))
+				MA_BotonSecundario(texto = "Cargar horas en funcion de las trx de la organizacion") {
+
+					viewModel.onEvent(OrganizacionesDetalleVM.Eventos.CargarHorasPorCarga)
+				}
+
 				MA_Titulo2("Carga del servidor")
 
 
@@ -166,12 +181,6 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 				val p : PanelData = PanelData.fromPanelUI(
 					PanelesGenericos.PanelHoras(ACTUA_SOBRE.GENERAL), NotasManager(), Parametros())
 				MA_Panel(panelData = p.copy(panelConfiguracion = p.panelConfiguracion.copy(height = "350")))
-
-
-				//transacciones por horas de la organizacion seleccioanda
-				val p2: PanelData =PanelData.fromPanelUI(PanelesGenericos.PanelHoras(ACTUA_SOBRE.ORGANIZACION, organizacionUI.organizationCode), NotasManager(), Parametros())
-				MA_Panel(panelData =  p2.copy(panelConfiguracion = p2.panelConfiguracion.copy(height = "350")))
-
 
 
 				MA_Titulo2("Impacto de tranacciones")

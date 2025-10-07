@@ -64,7 +64,11 @@ fun DatePickerButton(
 
 	val diaDefecto = TiempoHora.obtenerDiaDelMesNumerico().toString()
 	//MA_Titulo("Dia : $diaDefecto")
-		val diaBusqueda = App.sharedPrerfences.get(K.DIA, diaDefecto)
+
+	App.log.d("Dia defecto $diaDefecto");
+	App.log.d("Dia Preferencias $diaDefecto");
+	val diaBusqueda = App.sharedPrerfences.get(K.DIA, diaDefecto)
+
 	val color : Color = if3(diaBusqueda.equals(diaDefecto),MaterialTheme.colorScheme.primary, Color(252, 111, 4, 255))
 	Box(contentAlignment = Alignment.Center){
 		MA_LabelNormal(

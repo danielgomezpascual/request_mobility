@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import com.personal.metricas.App
 import com.personal.metricas.core.utils.K
 
@@ -28,8 +29,8 @@ fun planificadorSyncWorker(context: Context) {
 
 
 	//---- PARA REAKUZAR TREST ---
-	/*val periodicSyncRequest = OneTimeWorkRequestBuilder<DataSyncWorker>().setConstraints(constraints).build()
-	workManager.enqueue(periodicSyncRequest)*/
+	val periodicSyncRequest = OneTimeWorkRequestBuilder<DataSyncWorker>().setConstraints(constraints).build()
+	workManager.enqueue(periodicSyncRequest)
 
 
 
@@ -37,20 +38,22 @@ fun planificadorSyncWorker(context: Context) {
 	// Encolamos el trabajo periódico.
 	// Usamos enqueueUniquePeriodicWork para asegurarnos de que solo haya una
 	// instancia de este trabajo planificada en todo momento.
-	val periodicSyncRequest = PeriodicWorkRequestBuilder<DataSyncWorker>(
+	/*val periodicSyncRequest = PeriodicWorkRequestBuilder<DataSyncWorker>(
 		1, // repeatInterval
 		TimeUnit.HOURS // time Unit
 	).setConstraints(constraints).build()
 
 
-	App.sharedPrerfences.put(K.ID_WORKER, periodicSyncRequest.id.toString())
 
 
 	workManager.enqueueUniquePeriodicWork(
 		DataSyncWorker.UNIQUE_WORK_NAME, // Un nombre único para este trabajo
 		ExistingPeriodicWorkPolicy.REPLACE, // Si ya existe, no hace nada. También puedes usar REPLACE.
 		periodicSyncRequest
-	)
+	)*/
+
+	App.sharedPrerfences.put(K.ID_WORKER, periodicSyncRequest.id.toString())
+
 
 	App.log.d("Scheduler Trabajo periódico de sincronización planificado.")
 }

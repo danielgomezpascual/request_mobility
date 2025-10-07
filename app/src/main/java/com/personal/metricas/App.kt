@@ -26,13 +26,16 @@ import com.personal.metricas.paneles.moduloPaneles
 import com.personal.metricas.settings.moduleSettings
 import com.personal.metricas.sincronizacion.moduloSincronizacion
 import com.personal.metricas.worker.sincronizacion.moduloWorker
-import com.personal.metricas.worker.sincronizacion.planificadorSyncWorker
 import com.personal.metricas.transacciones.moduloTransacciones
+import com.personal.metricas.worker.sincronizacion.planificadorSyncWorker
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 class App : Application() {
 
@@ -46,7 +49,7 @@ class App : Application() {
 		lateinit var sharedPrerfences: SharedPreferencesManager
 
 		lateinit var crash: Crash
-		lateinit var navController : NavController
+		lateinit var navController: NavController
 
 	}
 
@@ -68,11 +71,49 @@ class App : Application() {
 		ENTORNO = if3(App.sharedPrerfences.get<Boolean>(Preferencias.ENTORNO_PRO, false), "PRO", "DEV")
 		NotificacionesManager().createNotificationChannel()
 		App.log.c("Sincronizacion automática de datos ACTIVADA ${App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)}")
-		if (App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)) {
-			planificadorSyncWorker(this)
-		}
+		//	if (App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)) {
+		planificadorSyncWorker(this)
+		//}
+		// Define el formato deseado (HH para formato 24h, mm para minutos)
+		/*
+		val formatter = DateTimeFormatter.ofPattern("HH:mm")
+		val horaActual = LocalTime.now()
+		val _horaActual = horaActual.format(formatter)
+
+
+
+		val hora30 = LocalTime.now().minusMinutes(30)
+		val _hora30 =  hora30.format(formatter)
+		App.log.d(_horaActual)
+		App.log.d(_hora30)
+		val horasEjemplo = "12:00;15:30;14:30;16:30;15:00;14:00;16:00;17:00;19:00;20:00;"
+		App.log.c("Hay horas: ${horasEnPeriodo(horasEjemplo)}")*/
 	}
 
+
+	fun horasEnPeriodo(horas: String): Boolean {
+		// 1. Define el rango de tiempo
+		val now = LocalTime.now()
+		val thirtyMinutesAgo = now.minusMinutes(30)
+
+		// 2. Procesa el String de entrada y comprueba
+		return horas
+			.split(';') // Divide el string en una lista de horas: ["15:30", "14:30", ...]
+			.filter { it.isNotBlank() } // Elimina elementos vacíos si hay un ";" al final
+			.any { hourStr ->
+				// La función 'any' devuelve true en cuanto una de las comprobaciones sea exitosa
+				try {
+					// Convierte el string "HH:mm" a un objeto LocalTime
+					val timeToCheck = LocalTime.parse(hourStr)
+
+					// La lógica clave: ¿La hora está DESPUÉS de hace 30 min Y ANTES de ahora?
+					timeToCheck.isAfter(thirtyMinutesAgo) && timeToCheck.isBefore(now)
+				} catch (e: DateTimeParseException) {
+					// Si una hora está mal formateada, la ignoramos y continuamos
+					false
+				}
+			}
+	}
 
 	fun initKoin() {
 		startKoin {

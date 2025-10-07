@@ -10,8 +10,8 @@ object K {
 	const val HASH_CODE: String = "HC"
 	const val ULTIMA_SINCRONIZACION: String = "ULTIMA_SINCRONIZACION"
 	const val TXT_FILTROS_LISTAS: String = "TXT_FILTROS_LISTAS"
-	const val ID_WORKER: String = ""
-	const val DIA: String = ""
+	const val ID_WORKER: String = "WORKER"
+	const val DIA: String = "DIA"
 
 
 }
