@@ -13,6 +13,7 @@ import com.personal.metricas.organizaciones.data.ds.remote.OrganizacionesRemotoD
 import com.personal.metricas.organizaciones.data.ds.remote.servicio.OrganizacionesApiRemoto
 import com.personal.metricas.organizaciones.data.repositorio.OrganizacionesRepoImp
 import com.personal.metricas.organizaciones.domain.interactors.AlmacenarOrganizacionCU
+import com.personal.metricas.organizaciones.domain.interactors.GenerarPlanificacionAutomaticaOrganizaciones
 import com.personal.metricas.organizaciones.domain.interactors.GuardarPlanificacionOrganizacinCU
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerHorasTransaccionesOrganizacionCU
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionCU
@@ -60,14 +61,6 @@ val moduloOrganizaciones = module {
 		)
 	}
 
-
-	//single<IRepoOrganizaciones> { OrganizacionesRepoImp() }
-	//CU
-	single<ObtenerOrganizacionesCU> { ObtenerOrganizacionesCU(get<IRepoOrganizaciones>()) }
-	single<ObtenerOrganizacionCU> { ObtenerOrganizacionCU(get<IRepoOrganizaciones>()) }
-
-
-	//Repo
 	single<TransaccionesOrganizacionImp> {
 		TransaccionesOrganizacionImp(listOf(
 			get<TransaccionesLocalDS>()
@@ -76,16 +69,34 @@ val moduloOrganizaciones = module {
 	}
 
 
-
+	//single<IRepoOrganizaciones> { OrganizacionesRepoImp() }
+	//CU
+	single<ObtenerOrganizacionesCU> { ObtenerOrganizacionesCU(get<IRepoOrganizaciones>()) }
+	single<ObtenerOrganizacionCU> { ObtenerOrganizacionCU(get<IRepoOrganizaciones>()) }
 	single<ObtenerHorasTransaccionesOrganizacionCU> { ObtenerHorasTransaccionesOrganizacionCU(get<TransaccionesOrganizacionImp>()) }
-
 	single<GuardarPlanificacionOrganizacinCU> { GuardarPlanificacionOrganizacinCU(get<IRepoOrganizaciones>()) }
+
+	single<GenerarPlanificacionAutomaticaOrganizaciones> {
+		GenerarPlanificacionAutomaticaOrganizaciones(
+			get<ObtenerOrganizacionesCU>(),
+			obtenerHoras = get<ObtenerHorasTransaccionesOrganizacionCU>(),
+			guardarOrganizacion = get<GuardarPlanificacionOrganizacinCU>()
+		)
+	}
+
+
+
+
 
 	viewModel {
 		ListaOrganizacionesVM(
-			obtenerOrganizacion = get<ObtenerOrganizacionesCU>()
+			obtenerOrganizacion = get<ObtenerOrganizacionesCU>(),
+			autoPlanificacion = get<GenerarPlanificacionAutomaticaOrganizaciones>(),
+			dialog = get<DialogManager>()
 		)
 	}
+
+
 	viewModel {
 		OrganizacionesDetalleVM(
 			obtenerOrganizacionCU = get<ObtenerOrganizacionCU>(),

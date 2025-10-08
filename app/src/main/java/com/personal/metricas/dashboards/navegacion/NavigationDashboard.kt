@@ -18,6 +18,7 @@ import com.personal.metricas.kpi.navegacion.ScreenListadoKpis
 import com.personal.metricas.menu.navegacion.ScreenHerramientas
 import com.personal.metricas.menu.navegacion.ScreenMenu
 import com.personal.metricas.organizaciones.ui.navegacion.ScreenDetalleOrganizacionSincronizacion
+import com.personal.metricas.organizaciones.ui.navegacion.ScreenOrganizacionesLista
 import com.personal.metricas.paneles.navegacion.ScreenDetallePanel
 import com.personal.metricas.paneles.navegacion.ScreenListadoPaneles
 import com.personal.metricas.settings.navegacion.ScreenSettings
@@ -111,7 +112,7 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 		EventosNavegacion.Sincronizacion                      -> navController.navigate(ScreenOrganizacionesSincronizacion)
 
 		//==== Organizaciones =======================
-		EventosNavegacion.ListaOrganizaciones                 -> navController.navigate(ListadoDashboards)
+		EventosNavegacion.ListaOrganizaciones                 -> navController.navigate(ScreenOrganizacionesLista)
 
 		is EventosNavegacion.CargarSincronizacionOrganizacion -> {
 			navController.navigate(

@@ -1,5 +1,6 @@
 package com.personal.metricas.organizaciones.ui.lista
 
+import MA_IconBottom
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +26,9 @@ import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
+import com.personal.metricas.menu.Features
 import com.personal.metricas.organizaciones.ui.composables.OrganizacionListItem
+import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -73,7 +76,10 @@ fun ListaOrganizacionesSuccess(
 				verticalAlignment = Alignment.Top
 
 			) {
-
+				MA_IconBottom(icon = Features.PlanificadorAuto().icono,
+							  color = Features.PlanificadorAuto().color) {
+					viewModel.onEvent(ListaOrganizacionesVM.Eventos.AutoPlanificacion)
+				}
 			}
 		},
 		contenido = {

@@ -10,6 +10,7 @@ import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils._t
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.organizaciones.domain.interactors.AlmacenarOrganizacionCU
+import com.personal.metricas.organizaciones.domain.interactors.GenerarPlanificacionAutomaticaOrganizaciones
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
 import com.personal.metricas.sincronizacion.ui.entidades.OrganizacionesSincronizarUI
@@ -29,7 +30,8 @@ import kotlinx.coroutines.withContext
 class ListaOrganizacionesVM(
 
 	private val obtenerOrganizacion: ObtenerOrganizacionesCU,
-
+private val autoPlanificacion : GenerarPlanificacionAutomaticaOrganizaciones,
+	private val dialog: DialogManager,
 	) : ViewModel() {
 
 
@@ -61,6 +63,7 @@ class ListaOrganizacionesVM(
 
 	sealed class Eventos {
 		object Cargar : Eventos()
+		object AutoPlanificacion : Eventos()
 		data class Buscar(val texto: String) : Eventos()
 		data class OnChangeSeleccionCheck(val organizacionUI: OrganizacionesSincronizarUI) : Eventos()
 		data class AplicarTodos(val valor: Boolean) : Eventos()
@@ -72,6 +75,7 @@ class ListaOrganizacionesVM(
 	fun onEvent(evento: Eventos) {
 		when (evento) {
 			Eventos.Cargar                    -> cargaInicial()
+			Eventos.AutoPlanificacion                    -> autoPlanificacion()
 			is Eventos.Buscar                 -> modificarTextoBusqueta(evento.texto)
 			is Eventos.OnChangeSeleccionCheck -> onChangeSeleccion(evento.organizacionUI)
 			is Eventos.AplicarTodos           -> aplicarTodos(evento.valor)
@@ -80,7 +84,16 @@ class ListaOrganizacionesVM(
 		}
 	}
 
+	private fun autoPlanificacion(){
+		viewModelScope.launch {
+			withContext(Dispatchers.IO){
+				autoPlanificacion.realizarPlanificacionAutomativa()
+			}
+			dialog.informacion("proceso finalizado") { }
 
+		}
+
+	}
 	private fun aplicarTodos(seleccion: Boolean) {
 		if (_uiState.value is UIState.Success) {
 

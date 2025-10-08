@@ -43,6 +43,28 @@ fun HerramientasScreen(
 				   modifier = Modifier.fillMaxSize()) {
 
 
+				MA_Titulo2("Planificador")
+				Row() {
+					MA_Card(
+						modifier = Modifier
+							.weight(1f)
+							.fillMaxWidth()
+							.clickable(
+								enabled = true,
+								onClick = {
+
+									navegacion(EventosNavegacion.ListaOrganizaciones)
+								})
+					) {
+						MA_IconBottom(icon = Features.Planificador().icono,
+									  labelText = Features.Planificador().texto,
+									  color = Features.Planificador().color) {
+							navegacion(EventosNavegacion.ListaOrganizaciones)
+						}
+
+
+					}
+				}
 
 				MA_Titulo2("Componentes")
 				Row() {

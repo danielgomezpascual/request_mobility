@@ -21,8 +21,8 @@ import com.personal.metricas.transacciones.navegacion.NavegacionTransacciones
 fun NavegacionGuia() {
     val navController = rememberNavController()
     App.navController = navController
-    //NavHost(navController = navController, startDestination = ScreenMenu) {
-    NavHost(navController = navController, startDestination = ScreenOrganizacionesLista) {
+    NavHost(navController = navController, startDestination = ScreenMenu) {
+    //NavHost(navController = navController, startDestination = ScreenOrganizacionesLista) {
         NavegavionMenu(navController)
         NavegacionTransacciones(navController)
         NavegacionKpis(navController)

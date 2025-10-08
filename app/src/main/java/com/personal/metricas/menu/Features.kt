@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.GolfCourse
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Preview
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storm
@@ -41,6 +42,8 @@ sealed class Features {
     data class Herramientas(val texto: String = "Herramientas", val icono: ImageVector = Icons.Filled.Settings, val color: Color = Color(22, 54, 170, 255)) : Features()
     data class InicializadorMetricas(val texto: String = "Cargar Metricas Predefinidas", val icono: ImageVector = Icons.Filled.Storm, val color: Color = Color(170, 22, 163, 255)) : Features()
     data class EndPoints(val texto: String = "End Points", val icono: ImageVector = Icons.Filled.Api, val color: Color = Color(22, 54, 170, 255)) : Features()
+    data class Planificador(val texto: String = "Planificador Sincronizacion", val icono: ImageVector = Icons.Filled.School, val color: Color = Color(170, 22, 22, 255)) : Features()
+    data class PlanificadorAuto(val texto: String = "Planificador Auto", val icono: ImageVector = Icons.Filled.School, val color: Color = Color(44, 170, 22, 255)) : Features()
     data class CerrarSesion(val texto: String = "Cerrar sesión", val icono: ImageVector = Icons.Filled.ExitToApp, val color: Color = Color(22, 54, 170, 255)) : Features()
 
 
