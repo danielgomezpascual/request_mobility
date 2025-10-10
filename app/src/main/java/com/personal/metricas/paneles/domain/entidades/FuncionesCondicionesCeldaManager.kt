@@ -12,7 +12,17 @@ import com.personal.metricas.core.composables.tabla.MA_LabelCelda
 import kotlin.Int
 import kotlin.collections.listOf
 
+
+
 class FuncionesCondicionesCeldaManager {
+
+	companion object{
+	val BANDERAS : Int = 1
+	val ICONOS_POR_PARTES : Int = 2
+	val MAXIMO_MINIMO : Int = 3
+
+	val SIN_DEFINIR : Int = 0
+	}
 	
 	fun get() = listOf<FuncionesCondicionCelda>(FuncionesCondicionCelda(0,
 			nombre = "Ninguna",

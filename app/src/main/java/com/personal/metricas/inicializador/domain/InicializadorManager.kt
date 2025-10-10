@@ -1,6 +1,5 @@
 package com.personal.metricas.inicializador.domain
 
-import androidx.compose.ui.unit.dp
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.dialogos.DialogManager
@@ -24,6 +23,8 @@ import org.koin.mp.KoinPlatform.getKoin
 
 class InicializadorManager(
 	private val operaciones: InicializadorOperaciones,
+	private val initGeneral: InitDahsboardGeneral,
+	private val initOrganizacioes: InitDashboardOrganizaciones,
 	private val dialog: DialogManager,
 ) {
 	val appDatabase = getKoin().get<AppDatabase>()
@@ -71,14 +72,16 @@ class InicializadorManager(
 		eliminarDatosGeneradosPreviamente()
 		crearVistas()
 
+		initGeneral.init()
+initOrganizacioes.init()
+		//crearDashboardGeneral()
+		//crearDashboardErrores()
 
-		crearDashboardGeneral()
-		crearDashboardGeneralExtra()
+	/*	crearDashboardGeneralExtra()
 		crearDashboardOrganizacion()
 		crearDashboardVersiones()
-		crearDashboardLectoras()
+		crearDashboardLectoras()*/
 
-		crearDashboardErrores()
 
 	}
 
@@ -191,7 +194,7 @@ class InicializadorManager(
 		val panelTransaccionesPorOrganizacion = operaciones.crearPanel(kpiTransaccionesPorOrganizacion,
 																	   true,
 																	   PlantillasPanel.from(PlantillasPanel.TT.BarrasAnchasVertivales.valor).configuracion.copy(ajustarContenidoAncho = false,
-																																								colores = EsquemaColores.Paletas.NORMAL.valor)
+																																								colores = EsquemaColores.Paletas.MULTICOLOR.valor)
 		)
 
 

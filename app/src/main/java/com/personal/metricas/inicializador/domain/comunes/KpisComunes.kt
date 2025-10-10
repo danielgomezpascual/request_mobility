@@ -1,0 +1,115 @@
+package com.personal.metricas.inicializador.domain.comunes
+
+import com.personal.metricas.core.utils.Parametros
+import com.personal.metricas.inicializador.domain.CONDICIONES_PANELES
+import com.personal.metricas.inicializador.domain.InicializadorOperaciones
+import com.personal.metricas.inicializador.domain.sqls.SQL
+import com.personal.metricas.kpi.ui.entidades.KpiUI
+import com.personal.metricas.paneles.domain.entidades.Condiciones
+import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
+import com.personal.metricas.paneles.ui.entidades.PanelUI
+
+class KpisComunes(private val operaciones: InicializadorOperaciones) {
+
+
+	var kpiTransaccionesDiarias: KpiUI = KpiUI()
+	var kpiTransaccionesHistoricos: KpiUI = KpiUI()
+	var kpiRatioOkError: KpiUI = KpiUI()
+
+
+	suspend fun crearKpiOrganizaciones(): KpiUI {
+		val kpiOrganizaciones = (KpiUI(
+			titulo = "Organizaciones",
+			descripcion = "Organizaciones en el sistema",
+			origen = "",
+			sql = SQL.ORGANIZACIONES_TRANSACCIONES,
+			dinamico = false,
+			parametros = Parametros()))
+		val k = operaciones.guardarKpi(kpiOrganizaciones)
+		return k
+	}
+
+
+	suspend fun obtenerPanelTransaccionesHistorico(filtroOrganizacion : Boolean = false, filtroLectora : Boolean = false): PanelUI {
+		var _kpiTransaccionesHistoricos = KpiUI(
+			titulo = "Histórico",
+			descripcion = "Histórico de transacciones",
+			origen = "",
+			sql = SQL.INFO_TRANSACCIONES_HISTORICO,
+			dinamico = true,
+			parametros = Parametros()
+		)
+		kpiTransaccionesHistoricos = operaciones.guardarKpi(_kpiTransaccionesHistoricos)
+
+		val panelTransaccionesHistorico = operaciones.crearPanel(kpiTransaccionesHistoricos,
+																 false,
+																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(
+																	 indicadorColor = false,
+																	 condicionesCeldas = CONDICIONES_PANELES.listaCondicionesBanderas,
+																	 condiciones = CONDICIONES_PANELES.listaCondicionesErr,
+																	 ajustarContenidoAncho = false,
+
+																	 ))
+
+		return panelTransaccionesHistorico
+
+	}
+
+	suspend fun obtenerPanelTransaccionesErrores(filtroOrganizacion : Boolean = false, filtroLectora : Boolean = false): PanelUI {
+		val _kpiRatioOkError = KpiUI(
+			titulo = "Ratios",
+			descripcion = "Ratios de errores sobre las transacciones corectas",
+			origen = "",
+			sql = SQL.RATIO_OK_ERROR,
+			dinamico = true,
+			parametros = Parametros())
+		kpiTransaccionesDiarias = operaciones.guardarKpi(_kpiRatioOkError)
+
+
+		val panelErroresRatio = operaciones.crearPanel(
+			kpiTransaccionesDiarias,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor)
+				.configuracion.copy(
+					colores = 7,
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(CONDICIONES_PANELES.COND_RATIO_ERRORES),
+					ajustarContenidoAncho = false,
+					width = "500", height = "600",
+					filtroOrganizacion = filtroOrganizacion,
+					filtroLectora =  filtroLectora
+				))
+		return panelErroresRatio
+	}
+
+	suspend fun obtenerPanelTransaccionesDiarias(filtroOrganizacion : Boolean = false, filtroLectora : Boolean = false): PanelUI {
+		val _kpiTransaccionesDiarias = KpiUI(
+			titulo = "Transacciones",
+			descripcion = "Transacciones realizadas hoy",
+			origen = "",
+			sql = SQL.INFO_TRANSACCIONES_HOY,
+			dinamico = true,
+			parametros = Parametros()
+		)
+
+		kpiTransaccionesDiarias = operaciones.guardarKpi(_kpiTransaccionesDiarias)
+
+
+		val panelTransaccionesDiarias = operaciones.crearPanel(kpiTransaccionesDiarias,
+															   false,
+															   PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(
+																   indicadorColor = false,
+																   condicionesCeldas = CONDICIONES_PANELES.listaCondicionesBanderas,
+																   condiciones = CONDICIONES_PANELES.listaCondicionesErr,
+																   ajustarContenidoAncho = false,
+																   filtroOrganizacion = filtroOrganizacion,
+																   filtroLectora =  filtroLectora
+
+
+																   ))
+		return panelTransaccionesDiarias
+
+
+	}
+}
+

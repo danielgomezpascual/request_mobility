@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,6 +52,7 @@ import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Fila
 import com.personal.metricas.core.composables.tabla.MA_Tabla
+import com.personal.metricas.core.log.domain.MyLog
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils._t
@@ -82,8 +84,7 @@ import kotlin.collections.map
 fun MA_Panel(
 	modifier: Modifier = Modifier,
 	panelData: PanelData,
-
-	) {
+) {
 
 	var tieneErrores: Boolean = false
 	var mensajeError: String = ""
@@ -225,12 +226,12 @@ fun MA_Panel(
 
 		TiposPanel.PANEL_CONECTOR  -> {
 
+
 			App.log.lista("Valres tabla", panelData.valoresTabla.filas)
 			App.log.lista("Valres tabla", filasPintar)
 
 			Row(modifier = Modifier.horizontalScroll(state = rememberScrollState())) {
 				filasPintar.forEach { fila ->
-
 					pintarPanelConectores(panelData, panelData.panel.conector.identificador, fila)
 				}
 
@@ -245,6 +246,24 @@ fun MA_Panel(
 
 
 		TiposPanel.PANEL_KPI       -> {
+
+
+
+			var panelDataState by remember {
+				mutableStateOf(panelData)
+			}
+
+
+			Box(modifier = Modifier.background(color = Color(174, 213, 129, 255)).clickable(enabled = true, onClick = {
+
+				panelDataState = panelDataState.copy(
+					indice = panelDataState.indice + 1
+				)
+			})) {
+				MA_LabelNormal("Indice : ${panelDataState.indice}")
+			}
+
+
 			graficaComposable = dameTipoGrafica(
 				panelConfiguracion = configuracion,
 				modifier = modifier,

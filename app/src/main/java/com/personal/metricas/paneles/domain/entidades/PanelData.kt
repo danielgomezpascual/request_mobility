@@ -33,14 +33,17 @@ data class PanelData(
 	var notasManager: NotasManager = NotasManager(),
 	var notificacionesManager: NotificacionesManager = NotificacionesManager(),
 	var listaAlarmas: MutableList<Alarmas> = mutableListOf<Alarmas>(),
+	var indice : Int = 0
 
 	) {
 
 	companion object {
 
-		fun fromPanelUI(panelUI: PanelUI,
-						notasManager: NotasManager,
-						parametrosOrigenDatos: Parametros): PanelData {
+		fun fromPanelUI(
+			panelUI: PanelUI,
+			notasManager: NotasManager,
+			parametrosOrigenDatos: Parametros,
+		): PanelData {
 
 			val panelConfiguracion = panelUI.configuracion
 
@@ -56,9 +59,49 @@ data class PanelData(
 
 				}
 
-				TiposPanel.PANEL_CONECTOR -> {
+				TiposPanel.PANEL_CONECTOR  -> {
 
-					tabla = ResultadoSQL.fromSqlToTabla(sql = pui.kpi.sql,
+
+					//si debemos añadir el filtro de la organizacion
+					var sql = pui.kpi.sql
+					if (pui.configuracion.filtroOrganizacion) {
+						var organizationCode = ""
+						parametrosOrigenDatos.ps.forEach { parametro ->
+							if (parametro.key.equals("organizationCode", true)) {
+								organizationCode = parametro.valor
+							}
+						}
+						if (organizationCode.isNotEmpty()) {
+							if (sql.contains("WHERE")) {
+								sql = sql.replace(" WHERE ", "WHERE ORGANIZATION_CODE = '$organizationCode' AND ")
+							} else {
+								sql = sql + " WHERE  ORGANIZATION_CODE = '$organizationCode'"
+							}
+
+							App.log.v(sql)
+						}
+					}
+
+					if (pui.configuracion.filtroLectora) {
+						var lectoraFisicaID = ""
+						parametrosOrigenDatos.ps.forEach { parametro ->
+							if (parametro.key.equals("LECTORA_FISICA_ID", true)) {
+								lectoraFisicaID = parametro.valor
+							}
+						}
+						if (lectoraFisicaID.isNotEmpty()) {
+							if (sql.contains("WHERE")) {
+								sql = sql.replace(" WHERE ", "WHERE LECTORA_FISICA_ID = '$lectoraFisicaID' AND ")
+							} else {
+								sql = sql + " WHERE  LECTORA_FISICA_ID = '$lectoraFisicaID'"
+							}
+
+							App.log.v(sql)
+						}
+					}
+
+
+					tabla = ResultadoSQL.fromSqlToTabla(sql = sql,
 														parametrosKpi = pui.kpi.parametros,
 														parametrosOrigenDatos = parametrosOrigenDatos)
 				}
@@ -79,7 +122,54 @@ data class PanelData(
 
 				TiposPanel.PANEL_KPI       -> {
 
-					tabla = ResultadoSQL.fromSqlToTabla(sql = pui.kpi.sql,
+
+					//si debemos añadir el filtro de la organizacion
+					var sql = pui.kpi.sql
+					if (pui.configuracion.filtroOrganizacion) {
+						var organizationCode = ""
+						parametrosOrigenDatos.ps.forEach { parametro ->
+							if ((parametro.key.equals("organizationCode", true))
+							|| (parametro.key.equals("organization_code", true))){
+								organizationCode = parametro.valor
+							}
+						}
+						if (organizationCode.isNotEmpty()) {
+
+
+							sql  = DynamicQuery(sql)
+								.addWhere("ORGANIZATION_CODE = '$organizationCode'", organizationCode)
+								.build().sql
+							/*if (sql.contains("WHERE")) {
+								sql = sql.replace(" WHERE ", "WHERE ORGANIZATION_CODE = '$organizationCode' AND ")
+							} else {
+								sql = sql + " WHERE  ORGANIZATION_CODE = '$organizationCode'"
+							}*/
+						}
+					}
+
+					if (pui.configuracion.filtroLectora) {
+						var lectoraFisicaID = ""
+						parametrosOrigenDatos.ps.forEach { parametro ->
+							if (parametro.key.equals("LECTORA_FISICA_ID", true)) {
+								lectoraFisicaID = parametro.valor
+							}
+						}
+						if (lectoraFisicaID.isNotEmpty()) {
+							/*if (sql.contains("WHERE")) {
+								sql = sql.replace(" WHERE ", "WHERE LECTORA_FISICA_ID = '$lectoraFisicaID' AND ")
+							} else {
+								sql = sql + " WHERE  LECTORA_FISICA_ID = '$lectoraFisicaID'"
+							}*/
+							sql  = DynamicQuery(sql)
+								.addWhere("LECTORA_FISICA_ID = '$lectoraFisicaID'", lectoraFisicaID)
+								.build().sql
+
+						}
+					}
+
+					App.log.v(sql)
+
+					tabla = ResultadoSQL.fromSqlToTabla(sql = pui.kpi.copy(sql = sql).sql,
 														parametrosKpi = pui.kpi.parametros,
 														parametrosOrigenDatos = parametrosOrigenDatos)
 				}
@@ -108,8 +198,8 @@ data class PanelData(
 		val id = when (panel.tipoPanel) {
 			TiposPanel.PANEL_END_POINT -> "E${panel.endPoint.id}"
 			TiposPanel.PANEL_KPI       -> "K${panel.kpi.id}"
-			TiposPanel.PANEL_TEXTO    -> "T${panel.kpi.id}"
-			TiposPanel.PANEL_CONECTOR -> "C${panel.conector.identificador}"
+			TiposPanel.PANEL_TEXTO     -> "T${panel.kpi.id}"
+			TiposPanel.PANEL_CONECTOR  -> "C${panel.conector.identificador}"
 		}
 
 		return "$idPanel.$id"
@@ -140,13 +230,14 @@ data class PanelData(
 					val expresion = jexl.createExpression("valor " + condicion.predicado)
 
 					//val valorY = panelConfiguracion.columnaY
-					val valorY = condicion.columna.posicion
+					//val valorY = condicion.columna.posicion
 
-					var valor: String = fila.celdas.get(valorY).valor as String
+					//var valor: String = fila.celdas.get(valorY).valor as String
+					var valor: String = fila.dameValor(condicion.columna.nombre)
 
-					
 
-					if (valor.isNotEmpty() ) {
+
+					if (valor.isNotEmpty()) {
 						val contexto = MapContext().apply {
 							if (valor.esNumerico()) {
 								set("valor", valor.toFloat())

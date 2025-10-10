@@ -8,6 +8,7 @@ import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelOrientacion
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
+import kotlin.Boolean
 
 data class PanelConfiguracionRoom(
 	val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,
@@ -56,6 +57,11 @@ data class PanelConfiguracionRoom(
 	val colorFondoIndicador: Int = Color.White.toArgb(),
 	val colorPanel: Int = Color.White.toArgb(),
 
+
+	val filtroOrganizacion: Boolean = false,
+	val filtroLectora: Boolean = false
+
+
 ) {
 
 
@@ -70,7 +76,7 @@ data class PanelConfiguracionRoom(
 				is PanelTipoGrafica.IndicadorVertical      -> panelConfiguracion.tipo.id
 				is PanelTipoGrafica.Lineas                 -> panelConfiguracion.tipo.id
 				is PanelTipoGrafica.SignalVertical         -> panelConfiguracion.tipo.id
-				is PanelTipoGrafica.SignalHorizontal         -> panelConfiguracion.tipo.id
+				is PanelTipoGrafica.SignalHorizontal       -> panelConfiguracion.tipo.id
 			}
 
 			return PanelConfiguracionRoom(
@@ -101,10 +107,13 @@ data class PanelConfiguracionRoom(
 				filasColor = panelConfiguracion.filasColor,
 				condiciones = panelConfiguracion.condiciones,
 				condicionesCeldas = panelConfiguracion.condicionesCeldas,
-				permiteNotas  = panelConfiguracion.permiteNotas,
-				valorMaximo  = panelConfiguracion.valorMaximo,
-				colorFondoIndicador  = panelConfiguracion.colorFondoIndicador,
-				colorPanel  = panelConfiguracion.colorPanel,
+				permiteNotas = panelConfiguracion.permiteNotas,
+				valorMaximo = panelConfiguracion.valorMaximo,
+				colorFondoIndicador = panelConfiguracion.colorFondoIndicador,
+				colorPanel = panelConfiguracion.colorPanel,
+				filtroOrganizacion = panelConfiguracion.filtroOrganizacion,
+				filtroLectora = panelConfiguracion.filtroLectora,
+
 			)
 		}
 	}
@@ -159,7 +168,11 @@ data class PanelConfiguracionRoom(
 			valorMaximo = this.valorMaximo,
 			colorFondoIndicador = this.colorFondoIndicador,
 			colorPanel = this.colorPanel,
-			)
+
+
+			filtroOrganizacion = this.filtroOrganizacion,
+					filtroLectora = this.filtroLectora,
+		)
 	}
 }
 

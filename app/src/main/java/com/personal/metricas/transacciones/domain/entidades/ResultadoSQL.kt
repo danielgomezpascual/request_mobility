@@ -27,7 +27,7 @@ data class ResultadoSQL(
 		}
 
 		fun fromSqlToTabla(sql: String, parametrosKpi: Parametros = Parametros(), parametrosOrigenDatos: Parametros = Parametros()): ValoresTabla {
-
+			App.log.c("Ejecuta SQL")
 			val sqlConReemplazos = Parametros.reemplazar(str = sql, parametrosKpi = parametrosKpi, parametrosDashboard = parametrosOrigenDatos)
 			val trxDao = getKoin().get<AppDatabase>().transaccionesDao()
 			val lista = trxDao.sqlToListString(sqlConReemplazos)

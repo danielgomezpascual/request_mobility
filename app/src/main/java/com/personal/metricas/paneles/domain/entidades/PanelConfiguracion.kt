@@ -2,8 +2,6 @@ package com.personal.metricas.paneles.domain.entidades
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 data class PanelConfiguracion(
 	val orientacion: PanelOrientacion = PanelOrientacion.VERTICAL,
@@ -27,7 +25,7 @@ data class PanelConfiguracion(
 	val agruparValores: Boolean = true,
 	val columnaX: Int = 0,
 	val columnaY: Int = 1,
-	val colores: Int = EsquemaColores.Paletas.NORMAL.valor,
+	val colores: Int = EsquemaColores.Paletas.MULTICOLOR.valor,
 	var ajustarContenidoAncho: Boolean = false,
 	var indicadorColor: Boolean = true,
 	var filasColor: Boolean = true,
@@ -39,4 +37,6 @@ data class PanelConfiguracion(
 	val colorPanel: Int = Color.White.toArgb(),
 
 
+	val filtroOrganizacion: Boolean = false,
+	val filtroLectora: Boolean = false,
 )

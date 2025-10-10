@@ -23,7 +23,7 @@ fun Test_MASelectorColores() {
 
 
 
-    MA_SelectorEsquemaColores(EsquemaColores().get(EsquemaColores.Paletas.NORMAL.valor))
+    MA_SelectorEsquemaColores(EsquemaColores().get(EsquemaColores.Paletas.MULTICOLOR.valor))
 }
 
 @Composable

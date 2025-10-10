@@ -20,10 +20,14 @@ import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import kotlin.collections.plus
 
-data class Columnas(val nombre: String, val posicion: Int, var maximaLongitudCaracteres : Int = -1 ,
+data class Columnas(val nombre: String,
+					val posicion: Int = 0,
+					var maximaLongitudCaracteres : Int = -1 ,
 					var maximaLongitudDp: Dp = 0.dp,
 					var valorMaximo: String = "",
 					var valores: List<String> = emptyList()){
+
+
 
 	val CONVERSOR : Int = 12
 

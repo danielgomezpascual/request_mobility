@@ -266,33 +266,55 @@ fun SucessScreenDetallePanel(
 
 					MA_Titulo2("KPI")
 					MA_Card {
-						Box(modifier = Modifier.height(100.dp)) {
-							Row(verticalAlignment = Alignment.CenterVertically) {
-								MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "",
-													 descripcion = "Seleccione el KPI a enlazar",
-													 valorInicial = {
-														 App.log.d(panelUI.kpi.toString())
-														 KpiComboItem(kpiUI = panelUI.kpi)
+						Box(modifier = Modifier.height(250.dp)) {
+							Column(){
+								Row(verticalAlignment = Alignment.CenterVertically) {
+									MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "",
+														 descripcion = "Seleccione el KPI a enlazar",
+														 valorInicial = {
+															 App.log.d(panelUI.kpi.toString())
+															 KpiComboItem(kpiUI = panelUI.kpi)
 
-													 },
-													 elementosSeleccionables = uiState.kpiDisponibles,
-													 item = { kpiUI ->
-														 KpiComboItem(kpiUI = kpiUI)
-													 },
-													 onClickSeleccion = { kpiUI ->
-														 viewModel.onEvent(DetallePanelVM.Eventos.OnChangeKpiSeleccionado(
-															 kpiUI.id))
-													 })
+														 },
+														 elementosSeleccionables = uiState.kpiDisponibles,
+														 item = { kpiUI ->
+															 KpiComboItem(kpiUI = kpiUI)
+														 },
+														 onClickSeleccion = { kpiUI ->
+															 viewModel.onEvent(DetallePanelVM.Eventos.OnChangeKpiSeleccionado(
+																 kpiUI.id))
+														 })
 
-								Box(modifier = Modifier
-									.clickable(enabled = true, onClick = {
-										App.log.d("Clined")
-										navegacion(EventosNavegacion.CargarKPI(panelUI.kpi.id))
-									})) {
-									MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+									Box(modifier = Modifier
+										.clickable(enabled = true, onClick = {
+											App.log.d("Clined")
+											navegacion(EventosNavegacion.CargarKPI(panelUI.kpi.id))
+										})) {
+										MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
+									}
+
 								}
 
+								MA_SwitchNormal(valor = panelUI.configuracion.filtroOrganizacion,
+												titulo = "Filtrar organiacion",
+												icono = Icons.Filled.TableView,
+												modifier = Modifier.weight(1f),
+												onValueChange = { valor ->
+													viewModel.onEvent(DetallePanelVM.Eventos.onChangeFiltroOrganizacion(valor))
+												})
+
+								MA_Spacer()
+								MA_SwitchNormal(valor = panelUI.configuracion.filtroLectora,
+												titulo = "Filtrar Lectora",
+												icono = Icons.Filled.TableView,
+												modifier = Modifier.weight(1f),
+												onValueChange = { valor ->
+													viewModel.onEvent(DetallePanelVM.Eventos.onChangeFiltroLectora(valor))
+												})
+
+
 							}
+
 
 
 						}
