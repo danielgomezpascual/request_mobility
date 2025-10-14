@@ -106,9 +106,9 @@ fun Success(
 						val notasManager = NotasManager.instancia()
 						val panelData = PanelData.fromPanelUI(panelUI, notasManager,
 															  uiState.dashboardUI.parametros)
-						if (panelData.indice < 5 ){
+
 							MA_Panel(								panelData = panelData,						)
-						}
+
 
 
 

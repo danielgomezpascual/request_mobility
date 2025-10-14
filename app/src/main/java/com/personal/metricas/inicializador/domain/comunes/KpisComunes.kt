@@ -30,7 +30,7 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 	}
 
 
-	suspend fun obtenerPanelTransaccionesHistorico(filtroOrganizacion : Boolean = false, filtroLectora : Boolean = false): PanelUI {
+	suspend fun obtenerPanelTransaccionesHistorico(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
 		var _kpiTransaccionesHistoricos = KpiUI(
 			titulo = "Histórico",
 			descripcion = "Histórico de transacciones",
@@ -44,18 +44,20 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 		val panelTransaccionesHistorico = operaciones.crearPanel(kpiTransaccionesHistoricos,
 																 false,
 																 PlantillasPanel.from(PlantillasPanel.TT.SoloTabla.valor).configuracion.copy(
-																	 indicadorColor = false,
+																	 indicadorColor = true,
 																	 condicionesCeldas = CONDICIONES_PANELES.listaCondicionesBanderas,
 																	 condiciones = CONDICIONES_PANELES.listaCondicionesErr,
 																	 ajustarContenidoAncho = false,
+																	 filtroOrganizacion = filtroOrganizacion,
+																	 filtroLectora = filtroLectora
 
-																	 ))
+																 ))
 
 		return panelTransaccionesHistorico
 
 	}
 
-	suspend fun obtenerPanelTransaccionesErrores(filtroOrganizacion : Boolean = false, filtroLectora : Boolean = false): PanelUI {
+	suspend fun obtenerPanelTransaccionesErrores(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
 		val _kpiRatioOkError = KpiUI(
 			titulo = "Ratios",
 			descripcion = "Ratios de errores sobre las transacciones corectas",
@@ -77,12 +79,12 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 					ajustarContenidoAncho = false,
 					width = "500", height = "600",
 					filtroOrganizacion = filtroOrganizacion,
-					filtroLectora =  filtroLectora
+					filtroLectora = filtroLectora
 				))
 		return panelErroresRatio
 	}
 
-	suspend fun obtenerPanelTransaccionesDiarias(filtroOrganizacion : Boolean = false, filtroLectora : Boolean = false): PanelUI {
+	suspend fun obtenerPanelTransaccionesDiarias(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
 		val _kpiTransaccionesDiarias = KpiUI(
 			titulo = "Transacciones",
 			descripcion = "Transacciones realizadas hoy",
@@ -103,10 +105,10 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 																   condiciones = CONDICIONES_PANELES.listaCondicionesErr,
 																   ajustarContenidoAncho = false,
 																   filtroOrganizacion = filtroOrganizacion,
-																   filtroLectora =  filtroLectora
+																   filtroLectora = filtroLectora
 
 
-																   ))
+															   ))
 		return panelTransaccionesDiarias
 
 

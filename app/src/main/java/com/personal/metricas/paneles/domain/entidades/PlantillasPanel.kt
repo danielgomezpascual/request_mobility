@@ -80,7 +80,7 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 															   espacioTabla = "100",
 															   ocuparTodoEspacio = true,
 															   width = "500",
-															   height = "300",
+															   height = "600",
 															   mostrarGrafica = false,
 															   mostrarTabla = true,
 															   mostrarTituloTabla = true,

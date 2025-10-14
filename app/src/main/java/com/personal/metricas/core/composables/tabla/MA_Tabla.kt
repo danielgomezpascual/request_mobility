@@ -97,15 +97,17 @@ fun MA_Tabla(
 	panelConfiguracion: PanelConfiguracion = PanelConfiguracion(ajustarContenidoAncho = false, indicadorColor = false, filasColor = false
 
 	),
-	filas: List<Fila>,
+	filasOriginal: List<Fila>,
 	notas: List<Notas> = emptyList<Notas>(),
 	celdasFiltro: List<Celda> = emptyList<Celda>(),
 	mostrarTitulos: Boolean = true,
+	indice: Int = 0,
+	elementos: Int = 1000,
 	onClickSeleccionarFiltro: (Celda) -> Unit = {},
 	onClickInvertir: (Celda) -> Unit = {},
 	onClickSeleccionarFila: (Fila) -> Unit = {},
 	onClickFiltrarTexto: (String) -> Unit = {},
-	onClickBorrarFiltros: () -> Unit
+	onClickBorrarFiltros: () -> Unit,
 ) {
 
 	val estadoScroll = rememberScrollState()
@@ -118,7 +120,7 @@ fun MA_Tabla(
 	}
 
 
-
+	val filas = filasOriginal.filter { it.visible }.drop(indice * elementos).take(elementos)
 
 	Column(modifierColumn, verticalArrangement = Arrangement.Center,
 		   horizontalAlignment = Alignment.Start) {
@@ -130,10 +132,11 @@ fun MA_Tabla(
 
 				Column {
 					MA_Titulo("Filtro")
-					MA_BotonSecundarioSinBorde("Borrar",color = Color.Red) {onClickBorrarFiltros() }
+					MA_BotonSecundarioSinBorde("Borrar", color = Color.Red) { onClickBorrarFiltros() }
 
-					MA_TextoEditable(valor =str, titulo = "Buscar") { texto -> str = texto
-						App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS,str)
+					MA_TextoEditable(valor = str, titulo = "Buscar") { texto ->
+						str = texto
+						App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
 						onClickFiltrarTexto(str)
 
 					}
@@ -147,11 +150,10 @@ fun MA_Tabla(
 
 			}
 		}
-		MA_LabelMini(modifier= Modifier.fillMaxWidth(), alineacion = TextAlign.Start, valor = "${filas.size} filas" )
+		MA_LabelMini(modifier = Modifier.fillMaxWidth(), alineacion = TextAlign.Start, valor = "${filas.size} filas")
 		Row(modifier = Modifier
 			.padding(4.dp)
 			.fillMaxWidth()) {
-
 
 
 			if (mostrarTitulos && !filas.isEmpty()) {

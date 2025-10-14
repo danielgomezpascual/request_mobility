@@ -8,7 +8,7 @@ import com.personal.metricas.paneles.domain.entidades.FuncionesCondicionesCeldaM
 
 object CONDICIONES_PANELES {
 
-	val BANDERAS: com.personal.metricas.paneles.domain.entidades.Condiciones = Condiciones(id = 1,
+	val BANDERAS: Condiciones = Condiciones(id = 1,
 																						   columna = Columnas(nombre = "LECTORA"),
 																						   color = EsquemaColores.MUTICOLOR,
 																						   condicionCelda = FuncionesCondicionesCeldaManager.BANDERAS,

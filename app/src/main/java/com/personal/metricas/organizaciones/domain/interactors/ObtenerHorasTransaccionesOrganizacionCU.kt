@@ -2,6 +2,7 @@ package com.personal.metricas.organizaciones.domain.interactors
 
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.dialogos.AppGlobalDialogs
+import com.personal.metricas.core.utils.if3
 import com.personal.metricas.organizaciones.domain.entidades.HorasTransacciones
 import com.personal.metricas.organizaciones.domain.entidades.Organizaciones
 import com.personal.metricas.transacciones.domain.entidades.Transacciones
@@ -29,6 +30,11 @@ class ObtenerHorasTransaccionesOrganizacionCU(private val repoTransacciones: IRe
 			.entries.sortedByDescending { it.value }
 
 
+
+		//25% mas usadas -> van a tener peticiones dobles en las horas
+		val top10Percent = horas.take(ceil(horas.size * 0.10).toInt())
+
+
 		//25% mas usadas -> van a tener peticiones dobles en las horas
 		val top25Percent = horas.take(ceil(horas.size * 0.25).toInt())
 
@@ -37,13 +43,23 @@ class ObtenerHorasTransaccionesOrganizacionCU(private val repoTransacciones: IRe
 
 		var strHoras : String =""
 
+		top10Percent.forEach { (hora, _) ->
+			val h  = if3((hora >=23) ,  0, hora +1 )
+			var horaFormateada = h.toString().padStart(2, '0')
+			strHoras += "$horaFormateada:00;"
+		}
+
 		top25Percent.forEach { (hora, _) ->
-			val horaFormateada = hora.toString().padStart(2, '0')
+			val h  = if3((hora >=23) ,  0, hora +1 )
+			var horaFormateada = h.toString().padStart(2, '0')
+
 			strHoras += "$horaFormateada:30;"
 		}
 
 		top50Percent.forEach { (hora, _) ->
-			val horaFormateada = hora.toString().padStart(2, '0')
+			val h  = if3((hora >=23) ,  0, hora +1 )
+			var horaFormateada = h.toString().padStart(2, '0')
+
 			strHoras += "$horaFormateada:00;"
 		}
 

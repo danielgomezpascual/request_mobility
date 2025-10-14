@@ -2,6 +2,7 @@ package com.personal.metricas.core.composables.tabla
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,13 +20,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.dialogos.DialogosResultado
+import com.personal.metricas.core.composables.formas.MA_Circulo
 import com.personal.metricas.core.composables.imagenes.MA_Icono
+import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.utils.K
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.core.utils.if3
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.notas.domain.entidades.Notas
+import com.personal.metricas.paneles.domain.entidades.MA_Func_BanderasLectoras
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -117,11 +122,38 @@ fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>,
 				}
 			} else {
 				if (indicadorColor && indice == 0) {
-					MA_Indicador(modifierCelda, fila.color) {
-						celda.contenido(modifierCelda)
+
+					Row(modifier = modifierCelda) {
+						MA_Circulo(color = color, size = 30.dp)
+
+						MA_LabelCelda(celda.valor)
 					}
+					/*MA_Indicador(modifierCelda, fila.color) {
+						celda.contenido(modifierCelda)
+					}*/
+
 				} else {
-					celda.contenido(modifierCelda)
+
+
+						when (celda.condicion.condicionCelda) {
+							1 -> {
+								Box(modifier = modifierCelda) {
+									MA_Func_BanderasLectoras(celda.valor)
+								}
+								//celda.contenido(modifierCelda)
+							}
+							else-> {
+								//celda.contenido(modifierCelda)
+								Box(modifier = modifierCelda){
+									MA_LabelCelda(celda.valor)
+								}
+
+
+							}
+						}
+
+
+
 				}
 			}
 

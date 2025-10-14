@@ -314,7 +314,7 @@ fun SuccessScreenDetalleKpi(
 				MA_Titulo2("Resultado")
 				MA_Card(Modifier.height(400.dp)) {
 					Column() {
-						MA_Tabla(filas = filas) { }
+						MA_Tabla(filasOriginal = filas) { }
 					}
 				}
 			}

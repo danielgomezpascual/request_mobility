@@ -205,4 +205,10 @@ dependencies {
     val work_version = "2.9.0" // Revisa siempre la última versión estable
     // WorkManager con soporte para Coroutines de Kotlin
     implementation("androidx.work:work-runtime-ktx:$work_version")
+
+
+
+    //Excel
+    implementation("io.github.evanrupert:excelkt:1.0.2")
+
 }

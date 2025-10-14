@@ -8,6 +8,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.core.utils.if3
+import com.personal.metricas.paneles.domain.entidades.Condiciones
+import com.personal.metricas.paneles.domain.entidades.FuncionesCondicionCelda
 
 data class Celda(
 	val valor: String = "",
@@ -31,4 +33,5 @@ data class Celda(
 	},
 	val seleccionada: Boolean = false,
 	val filtroInvertido: Boolean = false,
+	val condicion: Condiciones  = Condiciones(0, columna = Columnas(""), color = 0 , condicionCelda = 0, predicado = "")
 )

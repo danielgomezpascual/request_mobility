@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.personal.metricas.App
 import com.personal.metricas.App.Companion.dialog
 import com.personal.metricas.R
+import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.MA_Marco
 import com.personal.metricas.core.composables.graficas.MA_GraficoAnillo
@@ -78,6 +80,7 @@ import org.koin.java.KoinJavaComponent
 
 import kotlin.collections.filter
 import kotlin.collections.map
+import kotlin.math.ceil
 
 
 @Composable
@@ -248,20 +251,7 @@ fun MA_Panel(
 		TiposPanel.PANEL_KPI       -> {
 
 
-
-			var panelDataState by remember {
-				mutableStateOf(panelData)
-			}
-
-
-			Box(modifier = Modifier.background(color = Color(174, 213, 129, 255)).clickable(enabled = true, onClick = {
-
-				panelDataState = panelDataState.copy(
-					indice = panelDataState.indice + 1
-				)
-			})) {
-				MA_LabelNormal("Indice : ${panelDataState.indice}")
-			}
+			var panelDataState by remember { mutableStateOf(panelData) }
 
 
 			graficaComposable = dameTipoGrafica(
@@ -276,13 +266,12 @@ fun MA_Panel(
 
 
 			tablaComposable = dameTipoTabla(
+				panelDataState,
 				panelConfiguracion = configuracion,
 				modifier = modifier,
 				filas = filasPintar,
 				notas = panelData.notasManager.notas,
 				celdasFiltro = celdasFiltro,
-
-
 				onClickSeleccionarFila = { fila ->
 					filas = filas.map { f ->
 
@@ -302,8 +291,8 @@ fun MA_Panel(
 					celdasFiltro = fila.celdas
 					panelData.valoresTabla.filas = filas
 				},
-
 				onClickInvertir = { cfi ->
+					panelDataState = panelDataState.copy(indice = 0)
 					App.log.d("Cambio en la INVERSION DEL FILTRO")
 					celdasFiltro = celdasFiltro.map { c ->
 						if (c.titulo.equals(cfi.titulo)) {
@@ -319,8 +308,8 @@ fun MA_Panel(
 					filas = cumplenFiltro(filas, celdasFiltro)
 					panelData.valoresTabla.filas = filas
 				},
-
 				onClickSeleccionarFiltro = { cf ->
+					panelDataState = panelDataState.copy(indice = 0)
 					celdasFiltro = celdasFiltro.map { c ->
 						if (c.titulo.equals(cf.titulo)) {
 							cf.copy(seleccionada = !cf.seleccionada)
@@ -334,37 +323,21 @@ fun MA_Panel(
 					panelData.valoresTabla.filas = filas
 				},
 				onClickBorrarFiltros = {
+					panelDataState = panelDataState.copy(indice = 0)
 					panelData.valoresTabla.filas = filas.map { fila ->
 						fila.copy(visible = true)
 					}
 				},
 				onClickFiltrarTexto = { str ->
-/*
-
-						 filas.map { fila ->
-						var cumpleFiltro: Boolean = true
-						fila.celdas.forEach { celdaFila ->
-							celdasFiltro.filter { it.seleccionada }.forEach { celdaFiltro ->
-
-								if ((celdaFila.titulo.equals(celdaFiltro.titulo))
-									&&
-									(!celdaFiltro.filtroInvertido && !(celdaFila.valor.equals(celdaFiltro.valor)))
-									||
-									(celdaFiltro.filtroInvertido && (celdaFila.valor.equals(celdaFiltro.valor)))
-								) {
-									cumpleFiltro = false
-								}
-							}
-
-						fila.copy(visible = cumpleFiltro)
-
-*/
-
+					panelDataState = panelDataState.copy(indice = 0)
 					panelData.valoresTabla.filas = filas.map { fila ->
 						fila.copy(visible = fila.toString().contains(str))
 					}
 
 
+				},
+				onClickIndicePaginacion = { indice ->
+					panelDataState = panelDataState.copy(indice = indice)
 				}
 
 			)
@@ -587,6 +560,7 @@ fun dameTipoGrafica(
 
 @Composable
 fun dameTipoTabla(
+	panelData: PanelData,
 	panelConfiguracion: PanelConfiguracion,
 	modifier: Modifier,
 	filas: List<Fila>,
@@ -597,25 +571,52 @@ fun dameTipoTabla(
 	onClickSeleccionarFila: (Fila) -> Unit,
 	onClickFiltrarTexto: (String) -> Unit,
 	onClickBorrarFiltros: () -> Unit,
+	onClickIndicePaginacion: (Int) -> Unit,
 ): @Composable () -> Unit {
 
 
 	if (panelConfiguracion.mostrarTabla) {
 		return {
-			MA_Tabla(
-				modifier = Modifier.fillMaxSize(),
-				panelConfiguracion = panelConfiguracion,
-				//tabla = valoresTabla,
-				filas = filas,
-				notas = notas,
-				celdasFiltro = celdasFiltro,
-				mostrarTitulos = panelConfiguracion.mostrarTituloTabla,
-				onClickSeleccionarFiltro = onClickSeleccionarFiltro,
-				onClickInvertir = onClickInvertir,
-				onClickSeleccionarFila = onClickSeleccionarFila,
-				onClickFiltrarTexto = onClickFiltrarTexto,
-				onClickBorrarFiltros = onClickBorrarFiltros
-			)
+			Column {
+
+
+				Box(modifier = Modifier.weight(1f)){
+					MA_Tabla(
+						modifier = Modifier.fillMaxSize(),
+						panelConfiguracion = panelConfiguracion,
+						//tabla = valoresTabla,
+						filasOriginal = filas,
+						notas = notas,
+						celdasFiltro = celdasFiltro,
+						mostrarTitulos = panelConfiguracion.mostrarTituloTabla,
+						indice = panelData.indice,
+						elementos = panelData.elementos,
+						onClickSeleccionarFiltro = onClickSeleccionarFiltro,
+						onClickInvertir = onClickInvertir,
+						onClickSeleccionarFila = onClickSeleccionarFila,
+						onClickFiltrarTexto = onClickFiltrarTexto,
+						onClickBorrarFiltros = onClickBorrarFiltros
+					)
+				}
+				MA_Spacer()
+				val paginasComoDouble = filas.size.toDouble() / panelData.elementos.toDouble()
+				val numeroDePaginas = ceil(paginasComoDouble).toInt()
+				if (numeroDePaginas  > 1 ) {
+					Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+
+						(0..numeroDePaginas - 1).forEach { it ->
+							if (it == panelData.indice) {
+								MA_LabelNegrita(valor = it.toString(), modifier.clickable(enabled = true, onClick = { onClickIndicePaginacion(it) }))
+							} else {
+								MA_LabelMini(valor = it.toString(), modifier.clickable(enabled = true, onClick = { onClickIndicePaginacion(it) }))
+							}
+
+							MA_Spacer()
+						}
+					}
+				}
+			}
+
 		}
 	} else {
 		return {}

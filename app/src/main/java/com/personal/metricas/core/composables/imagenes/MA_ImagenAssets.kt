@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
 import java.io.IOException
 
 fun Context.assetExists(path: String): Boolean {
@@ -26,9 +27,17 @@ fun Context.assetExists(path: String): Boolean {
 
 @Composable
 fun MA_ImagenAssets(nombreArchivo: String, modifier: Modifier = Modifier) {
+
+	// Construimos la ruta completa que Coil entiende
+	val rutaCompletaCoil = "file:///android_asset/$nombreArchivo"
+
+	AsyncImage(
+		model = rutaCompletaCoil,
+		contentDescription = "bnd",
+		modifier = modifier
+	)
 	
-	
-	val context = LocalContext.current
+	/*val context = LocalContext.current
 	val existe = context.assetExists(nombreArchivo)
 	var fileAssets =""
 	if (!existe) {
@@ -42,7 +51,7 @@ fun MA_ImagenAssets(nombreArchivo: String, modifier: Modifier = Modifier) {
 	Image(bitmap = bitmap.asImageBitmap(),
 			contentDescription = "Descripción de tu imagen desde assets")
 	
-	
+	*/
 }
 
 @Preview(showBackground = true)

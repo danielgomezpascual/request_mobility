@@ -2,11 +2,16 @@ package com.personal.metricas.paneles.domain.entidades
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.personal.metricas.App
+import com.personal.metricas.core.composables.imagenes.MA_ImagenAssets
 import com.personal.metricas.core.composables.tabla.Celda
 import com.personal.metricas.core.composables.tabla.Columnas
 import com.personal.metricas.core.composables.tabla.Fila
+import com.personal.metricas.core.composables.tabla.MA_LabelCelda
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.composables.tabla.ValoresTabla
 import com.personal.metricas.core.notificaciones.NotificacionesManager
@@ -33,7 +38,8 @@ data class PanelData(
 	var notasManager: NotasManager = NotasManager(),
 	var notificacionesManager: NotificacionesManager = NotificacionesManager(),
 	var listaAlarmas: MutableList<Alarmas> = mutableListOf<Alarmas>(),
-	var indice : Int = 0
+	var indice: Int = 0,
+	var elementos: Int = 25,
 
 	) {
 
@@ -129,14 +135,14 @@ data class PanelData(
 						var organizationCode = ""
 						parametrosOrigenDatos.ps.forEach { parametro ->
 							if ((parametro.key.equals("organizationCode", true))
-							|| (parametro.key.equals("organization_code", true))){
+								|| (parametro.key.equals("organization_code", true))) {
 								organizationCode = parametro.valor
 							}
 						}
 						if (organizationCode.isNotEmpty()) {
 
 
-							sql  = DynamicQuery(sql)
+							sql = DynamicQuery(sql)
 								.addWhere("ORGANIZATION_CODE = '$organizationCode'", organizationCode)
 								.build().sql
 							/*if (sql.contains("WHERE")) {
@@ -160,7 +166,7 @@ data class PanelData(
 							} else {
 								sql = sql + " WHERE  LECTORA_FISICA_ID = '$lectoraFisicaID'"
 							}*/
-							sql  = DynamicQuery(sql)
+							sql = DynamicQuery(sql)
 								.addWhere("LECTORA_FISICA_ID = '$lectoraFisicaID'", lectoraFisicaID)
 								.build().sql
 
@@ -256,83 +262,134 @@ data class PanelData(
 				fila.copy(color = color)
 			}
 		}
-
-
-		//miramos si tenemos alguna condicin para alguna celda
+// Verificamos si hay condiciones para optimizar el rendimiento.
 		if (panelConfiguracion.condicionesCeldas.isNotEmpty()) {
-			val funcionesCondicionesCelda: FuncionesCondicionesCeldaManager = FuncionesCondicionesCeldaManager()
+			// Inicializamos las herramientas fuera del bucle principal para no recrearlas en cada iteración.
 			val jexl = JexlBuilder().create()
+			val esquemaColoresCondiciones = EsquemaColores().dameEsquemaCondiciones()
 
-			valoresTabla.filas = valoresTabla.filas.mapIndexed { indice, fila ->
+			// Opcional: Pre-compilamos las expresiones JEXL para un mayor rendimiento.
+			val expresionesCompiladas = panelConfiguracion.condicionesCeldas.associateWith { condicion ->
+				try {
+					jexl.createExpression("valor ${condicion.predicado}")
+				}
+				catch (e: Exception) {
+					// Manejar expresión inválida si es necesario.
+					null
+				}
+			}
 
-				var nuevasCeldas: List<Celda> = fila.celdas
-				//         var hayModificaciones: Boolean = false
+			// Usamos .map para transformar la lista de filas original en una nueva.
+			valoresTabla.filas = valoresTabla.filas.map { fila ->
+				// Convertimos la lista de celdas a una lista mutable para poder modificarla eficientemente.
+				val celdasModificables = fila.celdas.toMutableList()
+				var seRealizaronCambios = false
 
-
+				// Iteramos sobre cada condición.
 				panelConfiguracion.condicionesCeldas.forEach { condicionCelda ->
-
 					try {
+						// Obtenemos la expresión pre-compilada.
+						val expresion = expresionesCompiladas[condicionCelda] ?: return@forEach // Salta a la siguiente condición si la expresión es nula.
 
+						val valor = fila.dameValor(condicionCelda.columna.nombre)
+						val contexto = MapContext().apply { set("valor", valor) }
 
-						val columnaEvaluar: Columnas = condicionCelda.columna
-						val posicionEvaluar = columnaEvaluar.posicion
-						val exp = "valor " + condicionCelda.predicado
-						App.log.d("Expresion a evaluar $exp")
-						val expresion = jexl.createExpression(exp)
-						val valor: String = fila.celdas.get(posicionEvaluar).valor as String
-						val contexto = MapContext().apply {
-							set("valor", valor)
-						}
-						val resultadoCondicion: Any = expresion.evaluate(contexto)
+						val resultadoCondicion = expresion.evaluate(contexto)
+
+						// Verificamos si la condición se cumple.
 						if ((condicionCelda.condicionCelda > 0 && condicionCelda.predicado.isEmpty()) || (resultadoCondicion is Boolean && resultadoCondicion)) {
-							val colorCondicion = EsquemaColores().dameEsquemaCondiciones().colores.get(condicionCelda.color)
-							gestionAlarma(condicionCelda, fila)
-							/*	if (condicionCelda.alarma.activa){
+							val columna = fila.dameColumnaVacia(condicionCelda.columna.nombre)
 
-									val alm = condicionCelda.alarma.copy(color = condicionCelda.color, titulo =  "${getAppName(App.context)} | ${condicionCelda.alarma.titulo}", texto =notificacionesManager.dameTexto(condicionCelda.alarma.texto, fila) )
-									listaAlarmas.add(alm)
-									notificacionesManager.showNotificacion(context = App.context,
-																		   alarma = alm
-																		 )
-								}*/
+							// Aseguramos que la columna existe antes de proceder.
+							if (columna != null) {
+								val posicionEvaluar = columna.posicion
+								seRealizaronCambios = true
 
-							nuevasCeldas = nuevasCeldas.mapIndexed { indice, celda ->
-								if (indice == posicionEvaluar) {
-									val celdaConCondicion: FuncionesCondicionCelda = funcionesCondicionesCelda.aplicarCondicion(valor, condicionCelda, valoresTabla.columnas.get(indice))
-									if (condicionCelda.condicionCelda > 0) {
+								gestionAlarma(condicionCelda, fila)
 
-										celda.copy(colorCelda = colorCondicion, contenido = {
-											Box(modifier = Modifier.background(color = colorCondicion)) {
-												celdaConCondicion.composable()
-											}
-										})
+								val colorCondicion = esquemaColoresCondiciones.colores[condicionCelda.color]
+								val celdaOriginal = celdasModificables[posicionEvaluar]
 
-									} else {
-										celda.copy(colorCelda = colorCondicion)
-									}
+								// Creamos la nueva celda y la reemplazamos directamente en la lista mutable.
+								celdasModificables[posicionEvaluar] = if (condicionCelda.condicionCelda > 0) {
+									celdaOriginal.copy(colorCelda = colorCondicion, condicion = condicionCelda)
 								} else {
-									celda
+									celdaOriginal.copy(colorCelda = colorCondicion)
 								}
 							}
-						} /*else {
-                            nuevasCeldas = nuevasCeldas
-                        }*/
+						}
 					}
 					catch (e: Exception) {
 						e.printStackTrace()
-						// nuevasCeldas = nuevasCeldas
 					}
-
-
 				}
-				fila.copy(celdas = nuevasCeldas)
 
-
-				/*   fila.celdas
-				   fila.copy(color = color)*/
+				// Si se aplicó alguna modificación, creamos una nueva fila con las celdas actualizadas.
+				// Si no, devolvemos la fila original para evitar la creación de objetos innecesarios.
+				if (seRealizaronCambios) {
+					fila.copy(celdas = celdasModificables)
+				} else {
+					fila
+				}
 			}
 		}
+//------------------------------------------------------------------------------------------------------------
+		//miramos si tenemos alguna condicin para alguna celda
+		/*	if (panelConfiguracion.condicionesCeldas.isNotEmpty()) {
+				val funcionesCondicionesCelda: FuncionesCondicionesCeldaManager = FuncionesCondicionesCeldaManager()
+				val jexl = JexlBuilder().create()
 
+				valoresTabla.filas = valoresTabla.filas.mapIndexed { indice, fila ->
+
+					var nuevasCeldas: List<Celda> = fila.celdas
+					//         var hayModificaciones: Boolean = false
+
+
+					panelConfiguracion.condicionesCeldas.forEach { condicionCelda ->
+						try {
+							//val columnaEvaluar: Columnas = condicionCelda.columna
+							//	val posicionEvaluar = fila.dameValor(condicionCelda.columna.nombre)
+							val exp = "valor " + condicionCelda.predicado
+							App.log.d("Expresion a evaluar ${condicionCelda.columna.toString()} ${condicionCelda.id} - ${condicionCelda.condicionCelda}")
+							val expresion = jexl.createExpression(exp)
+							val valor: String = fila.dameValor(condicionCelda.columna.nombre)
+							val contexto = MapContext().apply {
+								set("valor", valor)
+							}
+							val resultadoCondicion: Any = expresion.evaluate(contexto)
+							if ((condicionCelda.condicionCelda > 0 && condicionCelda.predicado.isEmpty()) || (resultadoCondicion is Boolean && resultadoCondicion)) {
+								val colorCondicion = EsquemaColores().dameEsquemaCondiciones().colores.get(condicionCelda.color)
+								gestionAlarma(condicionCelda, fila)
+								val columna = fila.dameColumnaVacia(condicionCelda.columna.nombre)!!
+								val posicionEvaluar = columna.posicion
+
+								nuevasCeldas = nuevasCeldas.mapIndexed { indice, celda ->
+									if (indice == posicionEvaluar) {
+										//val celdaConCondicion: FuncionesCondicionCelda = funcionesCondicionesCelda.aplicarCondicion(valor, condicionCelda, columna)
+										if (condicionCelda.condicionCelda > 0) {
+											celda.copy(colorCelda = colorCondicion, condicion = condicionCelda)
+										} else {
+											celda.copy(colorCelda = colorCondicion)
+										}
+									} else {
+										celda
+									}
+								}
+
+
+							}
+						}
+						catch (e: Exception) {
+							e.printStackTrace()
+							// nuevasCeldas = nuevasCeldas
+						}
+
+
+					}
+					fila.copy(celdas = nuevasCeldas)
+				}
+			}*/
+//------------------------------------------------------------------------------------------------------------
 
 
 		return valoresTabla.filas
