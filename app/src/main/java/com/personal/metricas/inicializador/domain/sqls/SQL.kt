@@ -71,7 +71,7 @@ object SQL {
 	""".trimIndent()
 
 	val INFO_TRANSACCIONES_HISTORICO : String = """
-			SELECT
+			SELECT 
 				strftime('%m-%d %H:%M', CREATION_DATE)  AS Fecha, 
 				ORGANIZATION_CODE, 
 				LECTORA_FISICA_ID as 'LECTORA',
@@ -83,7 +83,9 @@ object SQL {
 				TRANSACCIONES  T
 				LEFT  JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE
 			ORDER BY
-				FECHA DESC	
+				FECHA DESC
+					
+			LIMIT 100
 	""".trimIndent()
 
 

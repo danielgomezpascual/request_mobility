@@ -35,9 +35,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 @Composable
-fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>,
-					  configuracion: PanelConfiguracion,
-					  onClick: (Fila) -> Unit) {
+fun MA_FilaTablaDatos(
+	fila: Fila, notas: List<Notas>,
+	configuracion: PanelConfiguracion,
+	onClick: (Fila) -> Unit,
+) {
 
 	val modifier = Modifier.Companion
 	val filasColor = configuracion.filasColor
@@ -135,23 +137,23 @@ fun MA_FilaTablaDatos(fila: Fila, notas: List<Notas>,
 				} else {
 
 
-						when (celda.condicion.condicionCelda) {
-							1 -> {
-								Box(modifier = modifierCelda) {
-									MA_Func_BanderasLectoras(celda.valor)
-								}
-								//celda.contenido(modifierCelda)
+					when (celda.condicion.condicionCelda) {
+						1    -> {
+							Box(modifier = modifierCelda) {
+								MA_Func_BanderasLectoras(celda.valor)
 							}
-							else-> {
-								//celda.contenido(modifierCelda)
-								Box(modifier = modifierCelda){
-									MA_LabelCelda(celda.valor)
-								}
-
-
-							}
+							//celda.contenido(modifierCelda)
 						}
 
+						else -> {
+							//celda.contenido(modifierCelda)
+							Box(modifier = modifierCelda) {
+								MA_LabelCelda(celda.valor)
+							}
+
+
+						}
+					}
 
 
 				}

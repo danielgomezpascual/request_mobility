@@ -25,4 +25,5 @@
     <string name="sin_informacion">Sin Informacion</string>
     <string name="subida_a_firestore_finalizada">Subida a Firestore finalizada</string>
     <string name="descarga_de_firestore_fializada">Descarga de Firestore Fializada</string>
+    <string name="datos_exportados">Datos exportados</string>
 </resources>

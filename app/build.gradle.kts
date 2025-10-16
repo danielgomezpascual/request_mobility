@@ -48,10 +48,16 @@ android {
         schemaDirectory("$projectDir/schemas")
     }
     packagingOptions {
-        exclude("META-INF/LICENSE.md")
+        /*exclude("META-INF/LICENSE.md")
         exclude("META-INF/LICENSE-notice.md")
         exclude("META-INF/LICENSE")
-        exclude("META-INF/LICENSE-notice")
+        exclude("META-INF/LICENSE-notice")*/
+        excludes += "/META-INF/DEPENDENCIES"
+        excludes += "/META-INF/LICENSE"
+        excludes += "/META-INF/NOTICE"
+        excludes += "META-INF/INDEX.LIST"
+        excludes += "META-INF/LICENSE.txt"
+        excludes += "META-INF/NOTICE.txt"
     }
 
 
@@ -210,5 +216,14 @@ dependencies {
 
     //Excel
     implementation("io.github.evanrupert:excelkt:1.0.2")
+
+    // Para archivos de Excel modernos (.xlsx)
+    implementation("org.apache.poi:poi-ooxml:5.2.5")
+
+    // Si necesitas trabajar con archivos de Excel antiguos (.xls)
+    // implementation("org.apache.poi:poi:5.2.5")
+
+    // Otras dependencias que puedas necesitar
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
 }

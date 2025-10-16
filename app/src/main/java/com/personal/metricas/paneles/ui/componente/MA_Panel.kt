@@ -602,7 +602,7 @@ fun dameTipoTabla(
 				val paginasComoDouble = filas.size.toDouble() / panelData.elementos.toDouble()
 				val numeroDePaginas = ceil(paginasComoDouble).toInt()
 				if (numeroDePaginas  > 1 ) {
-					Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+					Row(modifier = Modifier.horizontalScroll(rememberScrollState()).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
 
 						(0..numeroDePaginas - 1).forEach { it ->
 							if (it == panelData.indice) {
