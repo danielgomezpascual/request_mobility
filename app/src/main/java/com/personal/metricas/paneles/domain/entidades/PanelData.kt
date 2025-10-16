@@ -65,53 +65,6 @@ data class PanelData(
 
 				}
 
-				TiposPanel.PANEL_CONECTOR  -> {
-
-
-					//si debemos añadir el filtro de la organizacion
-					var sql = pui.kpi.sql
-					if (pui.configuracion.filtroOrganizacion) {
-						var organizationCode = ""
-						parametrosOrigenDatos.ps.forEach { parametro ->
-							if (parametro.key.equals("organizationCode", true)) {
-								organizationCode = parametro.valor
-							}
-						}
-						if (organizationCode.isNotEmpty()) {
-							if (sql.contains("WHERE")) {
-								sql = sql.replace(" WHERE ", "WHERE ORGANIZATION_CODE = '$organizationCode' AND ")
-							} else {
-								sql = sql + " WHERE  ORGANIZATION_CODE = '$organizationCode'"
-							}
-
-							App.log.v(sql)
-						}
-					}
-
-					if (pui.configuracion.filtroLectora) {
-						var lectoraFisicaID = ""
-						parametrosOrigenDatos.ps.forEach { parametro ->
-							if (parametro.key.equals("LECTORA_FISICA_ID", true)) {
-								lectoraFisicaID = parametro.valor
-							}
-						}
-						if (lectoraFisicaID.isNotEmpty()) {
-							if (sql.contains("WHERE")) {
-								sql = sql.replace(" WHERE ", "WHERE LECTORA_FISICA_ID = '$lectoraFisicaID' AND ")
-							} else {
-								sql = sql + " WHERE  LECTORA_FISICA_ID = '$lectoraFisicaID'"
-							}
-
-							App.log.v(sql)
-						}
-					}
-
-
-					tabla = ResultadoSQL.fromSqlToTabla(sql = sql,
-														parametrosKpi = pui.kpi.parametros,
-														parametrosOrigenDatos = parametrosOrigenDatos)
-				}
-
 				TiposPanel.PANEL_END_POINT -> {
 
 					var listaParametrosReemplazados: MutableList<Parametro> = mutableListOf<Parametro>()
@@ -126,55 +79,16 @@ data class PanelData(
 					pui = pui.copy(endPoint = endPoint.copy(parametros = p))
 				}
 
+				TiposPanel.PANEL_CONECTOR  -> {
+					val sql = parametrosOrigenDatos.addFiltrosOrganizacionLectora(pui.kpi.sql, pui.configuracion.filtroOrganizacion, pui.configuracion.filtroLectora)
+					tabla = ResultadoSQL.fromSqlToTabla(sql = sql,
+														parametrosKpi = pui.kpi.parametros,
+														parametrosOrigenDatos = parametrosOrigenDatos)
+				}
+
+
 				TiposPanel.PANEL_KPI       -> {
-
-
-					//si debemos añadir el filtro de la organizacion
-					var sql = pui.kpi.sql
-					if (pui.configuracion.filtroOrganizacion) {
-						var organizationCode = ""
-						parametrosOrigenDatos.ps.forEach { parametro ->
-							if ((parametro.key.equals("organizationCode", true))
-								|| (parametro.key.equals("organization_code", true))) {
-								organizationCode = parametro.valor
-							}
-						}
-						if (organizationCode.isNotEmpty()) {
-
-
-							sql = DynamicQuery(sql)
-								.addWhere("ORGANIZATION_CODE = '$organizationCode'", organizationCode)
-								.build().sql
-							/*if (sql.contains("WHERE")) {
-								sql = sql.replace(" WHERE ", "WHERE ORGANIZATION_CODE = '$organizationCode' AND ")
-							} else {
-								sql = sql + " WHERE  ORGANIZATION_CODE = '$organizationCode'"
-							}*/
-						}
-					}
-
-					if (pui.configuracion.filtroLectora) {
-						var lectoraFisicaID = ""
-						parametrosOrigenDatos.ps.forEach { parametro ->
-							if (parametro.key.equals("LECTORA_FISICA_ID", true)) {
-								lectoraFisicaID = parametro.valor
-							}
-						}
-						if (lectoraFisicaID.isNotEmpty()) {
-							/*if (sql.contains("WHERE")) {
-								sql = sql.replace(" WHERE ", "WHERE LECTORA_FISICA_ID = '$lectoraFisicaID' AND ")
-							} else {
-								sql = sql + " WHERE  LECTORA_FISICA_ID = '$lectoraFisicaID'"
-							}*/
-							sql = DynamicQuery(sql)
-								.addWhere("LECTORA_FISICA_ID = '$lectoraFisicaID'", lectoraFisicaID)
-								.build().sql
-
-						}
-					}
-
-					App.log.v(sql)
-
+					val sql = parametrosOrigenDatos.addFiltrosOrganizacionLectora(pui.kpi.sql, pui.configuracion.filtroOrganizacion, pui.configuracion.filtroLectora)
 					tabla = ResultadoSQL.fromSqlToTabla(sql = pui.kpi.copy(sql = sql).sql,
 														parametrosKpi = pui.kpi.parametros,
 														parametrosOrigenDatos = parametrosOrigenDatos)

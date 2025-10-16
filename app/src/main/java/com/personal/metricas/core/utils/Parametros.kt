@@ -3,6 +3,7 @@ package com.personal.metricas.core.utils
 import android.util.Base64
 import com.personal.metricas.App
 import com.personal.metricas.core.data.ds.remote.network.retrofit.request.Entornos
+import com.personal.metricas.paneles.domain.entidades.DynamicQuery
 
 data class Parametros(val ps: List<Parametro> = emptyList<Parametro>()) {
 
@@ -49,8 +50,48 @@ data class Parametros(val ps: List<Parametro> = emptyList<Parametro>()) {
 			}
 			return strReemplazos
 		}
-	}
 
+
+
+	}
+	fun addFiltrosOrganizacionLectora(sqlOriginal: String , filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false) :String{
+		var sql: String = sqlOriginal
+		if (filtroOrganizacion) {
+			var organizationCode = ""
+			ps.forEach { parametro ->
+				if ((parametro.key.equals("organizationCode", true))
+					|| (parametro.key.equals("organization_code", true))) {
+					organizationCode = parametro.valor
+				}
+			}
+			if (organizationCode.isNotEmpty()) {
+
+
+				sql = DynamicQuery(sql)
+					.addWhere("ORGANIZATION_CODE = '$organizationCode'", organizationCode)
+					.build().sql
+
+			}
+		}
+
+		if (filtroLectora) {
+			var lectoraFisicaID = ""
+			ps.forEach { parametro ->
+				if (parametro.key.equals("LECTORA_FISICA_ID", true)) {
+					lectoraFisicaID = parametro.valor
+				}
+			}
+			if (lectoraFisicaID.isNotEmpty()) {
+
+				sql = DynamicQuery(sql)
+					.addWhere("LECTORA_FISICA_ID = '$lectoraFisicaID'", lectoraFisicaID)
+					.build().sql
+
+			}
+		}
+
+		return sql
+	}
 }
 
 data class Parametro(val key: String = "", val valor: String = "", val defecto: String = "", val fijo: Boolean = false) {

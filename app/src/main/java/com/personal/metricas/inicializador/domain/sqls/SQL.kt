@@ -85,7 +85,7 @@ object SQL {
 			ORDER BY
 				FECHA DESC
 					
-			LIMIT 100
+			LIMIT 200
 	""".trimIndent()
 
 

@@ -156,7 +156,6 @@ fun MA_Tabla(
 
 			//MA_Icono(icono =  Icons.Default.TableRows, color = Color.DarkGray	 )
 			MA_LabelMini(modifier = Modifier, alineacion = TextAlign.Start, valor = "${filasOriginal.filter { it.visible }.size} registros")
-			
 
 
 			Row(modifier = Modifier
