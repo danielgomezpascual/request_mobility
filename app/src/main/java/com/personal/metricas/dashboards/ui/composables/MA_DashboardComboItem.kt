@@ -1,16 +1,12 @@
 package com.personal.metricas.dashboards.ui.composables
 
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HdrAuto
@@ -24,11 +20,8 @@ import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
-import com.personal.metricas.core.composables.layouts.MA_Columnas
 import com.personal.metricas.core.composables.listas.MA_Divider
-import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.dashboards.ui.entidades.DashboardUI
-import com.personal.metricas.paneles.ui.componente.MA_InfoPanelVertical
 
 
 @Composable
@@ -61,16 +54,7 @@ fun MA_DashboardComboItem(dashboardUI: DashboardUI) {
 
 			}
 		}
-/*
-		val m = Modifier.sizeIn(minHeight = 0.dp, maxHeight = 250.dp)
-		MA_Columnas(modifier = m, columnas = 3, data = dashboardUI.listaPaneles.filter { it.seleccionado }) {
-			Box(contentAlignment = Alignment.Center, modifier = Modifier.background(color = Color(233, 244, 255, 255))
-				//.padding(4.dp)
-			) {
-				MA_InfoPanelVertical(modifier = m, panel = it, mostrarNombre = true)
-			}
 
-		}*/
 
 
 

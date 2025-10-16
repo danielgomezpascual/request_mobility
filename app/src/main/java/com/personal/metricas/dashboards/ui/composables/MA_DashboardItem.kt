@@ -28,7 +28,7 @@ import com.personal.metricas.core.composables.layouts.MA_Columnas
 import com.personal.metricas.core.composables.listas.MA_Divider
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.dashboards.ui.entidades.DashboardUI
-import com.personal.metricas.paneles.ui.componente.MA_InfoPanelVertical
+import com.personal.metricas.paneles.ui.componente.MA_InfoPanel
 
 
 @Composable
@@ -68,7 +68,8 @@ fun MA_DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -
 			Box(contentAlignment = Alignment.Center, modifier = Modifier.background(color = Color(233, 244, 255, 255))
 				//.padding(4.dp)
 			) {
-				MA_InfoPanelVertical(modifier = m, panel = it, mostrarNombre = true)
+				//MA_InfoPanelVertical(modifier = m, panel = it, mostrarNombre = true)
+				MA_InfoPanel(panel = it, mostrarNombre = true)
 			}
 
 		}
