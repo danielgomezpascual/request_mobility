@@ -3,7 +3,7 @@ package com.personal.metricas.inicializador.domain.sqls
 object SQL {
 
 
-	val RATIO_OK_ERROR : String = """				
+	val RATIO_OK_ERROR: String = """				
 		SELECT
 					strftime('%m-%d', CREATION_DATE) AS 'Fecha',
 					COUNT(*) AS 'TRX',
@@ -26,7 +26,7 @@ object SQL {
 				LIMIT 30""".trimIndent()
 
 
-	val RATIO_RESULTADO_TRX : String = """				
+	val RATIO_RESULTADO_TRX: String = """				
 						SELECT
 					strftime('%m-%d', CREATION_DATE) AS 'Fecha',
 					COUNT(*) AS 'TRX',
@@ -55,7 +55,7 @@ object SQL {
 		""".trimIndent()
 
 
-	val INFO_TRANSACCIONES_HOY : String = """
+	val INFO_TRANSACCIONES_HOY: String = """
 			SELECT
 				strftime('%m-%d %H:%M', CREATION_DATE)  AS Fecha, 
 				ORGANIZATION_CODE, 
@@ -70,7 +70,7 @@ object SQL {
 				FECHA DESC	
 	""".trimIndent()
 
-	val INFO_TRANSACCIONES_HISTORICO : String = """
+	val INFO_TRANSACCIONES_HISTORICO: String = """
 			SELECT 
 				strftime('%m-%d %H:%M', CREATION_DATE)  AS Fecha, 
 				ORGANIZATION_CODE, 
@@ -89,7 +89,7 @@ object SQL {
 	""".trimIndent()
 
 
-	val CONTEO_TRANSACCIONES : String = """		
+	val CONTEO_TRANSACCIONES: String = """		
 			SELECT
 					strftime('%m-%d', CREATION_DATE)  AS Fecha, 
 					COUNT(*) AS TRX
@@ -103,6 +103,20 @@ object SQL {
 	""".trimIndent()
 
 
+	val TRANSACCIONES_POR_HORAS: String = """		
+			SELECT
+					strftime('%H', CREATION_DATE)  AS Fecha, 
+					COUNT(*) AS TRX
+									
+			FROM
+					TRANSACCIONES
+				GROUP BY strftime('%H', CREATION_DATE) 
+				
+				ORDER BY				
+				1 asc 
+	""".trimIndent()
+
+
 	val ORGANIZACIONES_TRANSACCIONES = """
 		SELECT DISTINCT
 					ORGANIZATION_CODE,
@@ -111,7 +125,72 @@ object SQL {
 					MASTERORGANIZATION_ID 
 			   FROM
 				TRANSACCIONES
+				ORDER BY ORGANIZATION_CODE
 		
 	""".trimIndent()
+
+
+	val TIPOS_TRANSACCIONES_OK = """
+		SELECT TIPO_MOV  ,
+		 COUNT(* ) 
+		 FROM TRANSACCIONES
+		  WHERE REQ_STATUS = '0' 
+		  GROUP BY 1 
+		  ORDER BY 2  DESC
+		
+	""".trimIndent()
+
+	val TIPOS_TRANSACCIONES_ERROR = """
+		SELECT TIPO_MOV  , COUNT(* ) 
+		FROM TRANSACCIONES 
+		WHERE REQ_STATUS = '2' 
+		GROUP BY 1 
+		ORDER BY  2 DESC
+		
+	""".trimIndent()
+
+	val CONTEO_ESTADO_TRNSACCIONES = """
+		SELECT ET.ESTADO  , COUNT(* ) 
+		FROM TRANSACCIONES  T 
+		INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE  
+		GROUP BY ET.ESTADO  
+		ORDER BY T.REQ_STATUS
+		
+	""".trimIndent()
+
+
+	val CONTEO_ESTADO_TRNSACCIONES_HOY = """
+		SELECT ET.ESTADO  , COUNT(* ) 
+		FROM TRANSACCIONES  T 
+		INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE  
+		GROUP BY ET.ESTADO  ORDER BY T.REQ_STATUS
+		
+	""".trimIndent()
+
+
+	val CONTEO_TRANSACCIONES_POR_ORGANIZACION = """
+		 SELECT ORGANIZATION_CODE, ORGANIZATION_NAME,  COUNT(* ) 
+		 FROM TRANSACCIONES  T 
+		 GROUP BY ORGANIZATION_CODE, ORGANIZATION_NAME  ORDER BY ORGANIZATION_CODE ASC		
+	""".trimIndent()
+
+	val CONTEO_TRANSACCIONES_POR_LECTORA = """
+		 SELECT LECTORA_FISICA_ID, COUNT(* ) 
+		 FROM TRANSACCIONES  T 
+		 INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE 
+		  GROUP BY LECTORA_FISICA_ID  ORDER BY T.REQ_STATUS
+		
+	""".trimIndent()
+
+
+	val LECTORAS_TRANSACCIONES = """
+		 SELECT DISTINCT  LECTORA_FISICA_ID ,
+		  ORGANIZATION_CODE,
+		   ORGANIZATION_NAME 
+		   FROM TRANSACCIONES ORDER BY LECTORA_FISICA_ID ASC
+		
+	""".trimIndent()
+
+
 }
 

@@ -43,7 +43,7 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 	val obtenerKpi: ObtenerKpiCU = getKoin().get()
 
 	val type = object : TypeToken<List<PanelDashboardRoom>>() {}.type
-	val panelesDashboard: List<PanelDashboardRoom> = Gson().fromJson<List<PanelDashboardRoom>>(this.paneles, type)
+	val panelesDashboard: List<PanelDashboardRoom> = Gson().fromJson<List<PanelDashboardRoom>>(this.paneles, type)?:emptyList()
 
 	App.log.d(paneles)
 	App.log.d(panelesDashboard)

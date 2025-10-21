@@ -6,6 +6,7 @@ import com.personal.metricas.inicializador.domain.InicializadorOperaciones
 import com.personal.metricas.inicializador.domain.sqls.SQL
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.paneles.domain.entidades.Condiciones
+import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 
@@ -23,6 +24,19 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 			descripcion = "Organizaciones en el sistema",
 			origen = "",
 			sql = SQL.ORGANIZACIONES_TRANSACCIONES,
+			dinamico = false,
+			parametros = Parametros()))
+		val k = operaciones.guardarKpi(kpiOrganizaciones)
+		return k
+	}
+
+
+	suspend fun crearKpiLectoras(): KpiUI {
+		val kpiOrganizaciones = (KpiUI(
+			titulo = "Lectoras",
+			descripcion = "Lectoras del sistema",
+			origen = "",
+			sql = SQL.LECTORAS_TRANSACCIONES,
 			dinamico = false,
 			parametros = Parametros()))
 		val k = operaciones.guardarKpi(kpiOrganizaciones)
@@ -113,5 +127,164 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 
 
 	}
+
+
+	suspend fun obtenerPanelConteoTransacciones(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+		val _kpiConteoTransacciones = KpiUI(
+			titulo = "Transacciones",
+			descripcion = "Conteo de Transacciones diario",
+			origen = "",
+			sql = SQL.CONTEO_TRANSACCIONES,
+			dinamico = true,
+			parametros = Parametros()
+		)
+
+		val kpiConteoTransacciones = operaciones.guardarKpi(_kpiConteoTransacciones)
+
+
+		val panelConteoTransaccionesDiaria = operaciones.crearPanel(kpiConteoTransacciones,
+																	false,
+																	PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor).configuracion.copy(
+																		indicadorColor = false,
+																		condicionesCeldas = CONDICIONES_PANELES.listaCondicionesBanderas,
+																		condiciones = CONDICIONES_PANELES.listaCondicionesErr,
+																		ajustarContenidoAncho = true,
+																		filtroOrganizacion = filtroOrganizacion,
+																		filtroLectora = filtroLectora
+
+
+																	))
+		return panelConteoTransaccionesDiaria
+
+
+	}
+
+
+	suspend fun obtenerPanelTransaccionesPorHoras(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+		val _kpiConteoTransacciones = KpiUI(
+			titulo = "Transacciones",
+			descripcion = "Conteo de Transacciones diario",
+			origen = "",
+			sql = SQL.TRANSACCIONES_POR_HORAS,
+			dinamico = true,
+			parametros = Parametros()
+		)
+
+		val kpiConteoTransacciones = operaciones.guardarKpi(_kpiConteoTransacciones)
+
+
+		val panelConteoTransaccionesDiaria = operaciones.crearPanel(kpiConteoTransacciones,
+																	false,
+																	PlantillasPanel.from(PlantillasPanel.TT.BarrasFinasVertivales.valor).configuracion.copy(
+																		limiteElementos = 0,
+																		indicadorColor = false,
+																		condicionesCeldas = CONDICIONES_PANELES.listaCondicionesBanderas,
+																		condiciones = CONDICIONES_PANELES.listaCondicionesErr,
+																		ajustarContenidoAncho = true,
+																		filtroOrganizacion = filtroOrganizacion,
+																		filtroLectora = filtroLectora
+
+
+																	))
+		return panelConteoTransaccionesDiaria
+
+
+	}
+
+
+
+
+	suspend fun obtenerPanelTransaccionesOK(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+		val _kpiConteoTransacciones = KpiUI(
+			titulo = "Tipo Transacciones OK",
+			descripcion = "Transacciones procesadas correctamente",
+			origen = "",
+			sql = SQL.TIPOS_TRANSACCIONES_OK,
+			dinamico = true,
+			parametros = Parametros()
+		)
+
+		val kpiConteoTransacciones = operaciones.guardarKpi(_kpiConteoTransacciones)
+
+
+		val panelConteoTransaccionesDiaria = operaciones.crearPanel(kpiConteoTransacciones,
+																	false,
+																	PlantillasPanel.from(PlantillasPanel.TT.PanelesHorizontales.valor).configuracion.copy(
+																		colores = EsquemaColores().get(EsquemaColores.PERS_VERDE).id,
+																		limiteElementos = 0,
+																		indicadorColor = false,
+																		ajustarContenidoAncho = true,
+																		filtroOrganizacion = filtroOrganizacion,
+																		filtroLectora = filtroLectora
+
+
+																	))
+		return panelConteoTransaccionesDiaria
+
+
+	}
+
+	suspend fun obtenerPanelTransaccionesError(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+		val _kpiConteoTransacciones = KpiUI(
+			titulo = "Tipo Transacciones ERROR",
+			descripcion = "Transacciones procesadas ERRONEAMENTE",
+			origen = "",
+			sql = SQL.TIPOS_TRANSACCIONES_ERROR,
+			dinamico = true,
+			parametros = Parametros()
+		)
+
+		val kpiConteoTransacciones = operaciones.guardarKpi(_kpiConteoTransacciones)
+
+
+		val panelConteoTransaccionesDiaria = operaciones.crearPanel(kpiConteoTransacciones,
+																	false,
+																	PlantillasPanel.from(PlantillasPanel.TT.PanelesHorizontales.valor).configuracion.copy(
+																		colores = EsquemaColores().get(EsquemaColores.PERS_ROJA).id,
+																		limiteElementos = 0,
+																		indicadorColor = false,
+																		ajustarContenidoAncho = true,
+																		filtroOrganizacion = filtroOrganizacion,
+																		filtroLectora = filtroLectora
+
+
+																	))
+		return panelConteoTransaccionesDiaria
+
+
+	}
+
+	suspend fun obtenerPanelTransaccionesEstado(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+		val _kpiConteoTransacciones = KpiUI(
+			titulo = "Tipo Transacciones ",
+			descripcion = "Transacciones procesadas",
+			origen = "",
+			sql = SQL.CONTEO_ESTADO_TRNSACCIONES,
+			dinamico = true,
+			parametros = Parametros()
+		)
+
+		val kpiConteoTransacciones = operaciones.guardarKpi(_kpiConteoTransacciones)
+
+
+		val panelConteoTransaccionesDiaria = operaciones.crearPanel(kpiConteoTransacciones,
+																	false,
+																	PlantillasPanel.from(PlantillasPanel.TT.PanelesHorizontales.valor).configuracion.copy(
+																		colores = EsquemaColores().get(EsquemaColores.PERS_AMARILLA).id,
+																		limiteElementos = 0,
+																		indicadorColor = false,
+																		ajustarContenidoAncho = true,
+																		filtroOrganizacion = filtroOrganizacion,
+																		filtroLectora = filtroLectora
+
+
+																	))
+		return panelConteoTransaccionesDiaria
+
+
+	}
+
+
+
 }
 

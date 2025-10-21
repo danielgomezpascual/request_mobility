@@ -3,6 +3,7 @@ package com.personal.metricas.paneles.domain.entidades
 import androidx.compose.ui.graphics.Color
 
 data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores: List<Color> = emptyList<Color>()) {
+
 	init {
 
 	}

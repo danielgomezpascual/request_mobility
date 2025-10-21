@@ -71,6 +71,14 @@ class InicializadorOperaciones(
 
 	}
 
+	suspend fun guardarPanel(panel: PanelUI): PanelUI {
+		val identificadorPanel = guardarPaneles.guardar(panel)
+		val nuevoPanel = panel.copy(id = identificadorPanel.toInt())
+		return nuevoPanel
+
+	}
+
+
 	suspend fun guardarDashboard(nombre: String = "", panel: PanelUI, crearPaneles: Boolean = false, kpiOrigen: KpiUI = KpiUI(), crearKPI: Boolean = false): DashboardUI =
 		guardarDashboard(nombre = nombre,
 						 paneles = listOf<PanelUI>(element = panel),
@@ -91,7 +99,6 @@ class InicializadorOperaciones(
 		}
 
 		val listaPaneles: List<PanelUI> = misPaneles.mapIndexed { indice, panel -> panel.copy(seleccionado = true, orden = indice) }
-
 
 
 

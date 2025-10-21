@@ -233,7 +233,7 @@ fun MA_Panel(
 			App.log.lista("Valres tabla", panelData.valoresTabla.filas)
 			App.log.lista("Valres tabla", filasPintar)
 
-			Row(modifier = Modifier.horizontalScroll(state = rememberScrollState())) {
+			Row(modifier = Modifier.fillMaxWidth().horizontalScroll(state = rememberScrollState()), horizontalArrangement = Arrangement.Center) {
 				filasPintar.forEach { fila ->
 					pintarPanelConectores(panelData, panelData.panel.conector.identificador, fila)
 				}

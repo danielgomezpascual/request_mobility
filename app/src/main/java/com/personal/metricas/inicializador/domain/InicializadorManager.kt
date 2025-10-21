@@ -25,6 +25,7 @@ class InicializadorManager(
 	private val operaciones: InicializadorOperaciones,
 	private val initGeneral: InitDahsboardGeneral,
 	private val initOrganizacioes: InitDashboardOrganizaciones,
+	private val initLectoras: InitDahsboardLectoras,
 	private val dialog: DialogManager,
 ) {
 	val appDatabase = getKoin().get<AppDatabase>()
@@ -72,8 +73,12 @@ class InicializadorManager(
 		eliminarDatosGeneradosPreviamente()
 		crearVistas()
 
-		initGeneral.init()
-initOrganizacioes.init()
+		val dashboardLectora = initLectoras.dashboardLectoar()
+		val dashboardUI = initOrganizacioes.generaDashboardOrganizaciones(dashboardLectora)
+
+		initGeneral.init(dashboardUI)
+
+
 		//crearDashboardGeneral()
 		//crearDashboardErrores()
 
