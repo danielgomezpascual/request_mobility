@@ -18,6 +18,7 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 		val PERS_ROJA: Int = 5
 		val PERS_VERDE: Int = 6
 		val PERS_AMARILLA: Int = 7
+		val FIJO: Int = 8
 	}
 
 
@@ -30,12 +31,14 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 		PERS_ROJA(5),
 		PERS_VERDE(6),
 		PERS_AMARILLA(7),
+		FIJO(8),
 	}
 
 
 	
+	fun getFijo(colores: List<Color> =dameColoresFijo()) = get(Paletas.FIJO.valor, colores)
 
-	fun get(tipo: Int) = when (tipo) {
+	fun get(tipo: Int, colores: List<Color> = dameColoresFijo()) = when (tipo) {
 		Paletas.MULTICOLOR.valor -> EsquemaColores(Paletas.MULTICOLOR.valor, "Normal", dameColoresBasicos())
 		Paletas.GRISES.valor     -> EsquemaColores(Paletas.GRISES.valor, "Grises", dameTonosGrises())
 		Paletas.FOSFORITOS.valor    -> EsquemaColores(Paletas.FOSFORITOS.valor, "Fosforitos", dameColoresFosforitos())
@@ -44,6 +47,7 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 		Paletas.PERS_VERDE.valor    -> EsquemaColores(Paletas.PERS_VERDE.valor, "Pers Verde", dameColoresPersinaVerde())
 		Paletas.PERS_AMARILLA.valor    -> EsquemaColores(Paletas.PERS_AMARILLA.valor, "Pers Amarilla", dameColoresPersinaAmarilla())
 		Paletas.ERRORES.valor    -> EsquemaColores(Paletas.ERRORES.valor, "Errores", dameColoresErrores())
+		Paletas.FIJO.valor    -> EsquemaColores(Paletas.FIJO.valor, "Fijo", colores)
 		else                     -> EsquemaColores(Paletas.MULTICOLOR.valor, "Normal", dameColoresBasicos())
 	}
 
@@ -56,8 +60,11 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 		Paletas.PERS_VERDE.valor    -> dameColoresPersinaVerde()
 		Paletas.PERS_AMARILLA.valor    -> dameColoresPersinaAmarilla()
 		Paletas.ERRORES.valor    -> dameColoresErrores()
+		Paletas.FIJO.valor    -> dameColoresFijo()
 		else -> dameColoresBasicos()
 	}
+
+
 
 
 	fun dameListasDisponibles() =
@@ -69,33 +76,36 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 			get(Paletas.PERS_ROJA.valor),
 			get(Paletas.PERS_VERDE.valor),
 			get(Paletas.PERS_AMARILLA.valor),
-			get(Paletas.ERRORES.valor)
+			get(Paletas.ERRORES.valor),
+			get(Paletas.FIJO.valor)
 		)
 
 
-	fun dameColoresPersinaAzul() = listOf<Color>(
+	private fun dameColoresFijo()= listOf<Color>(Color.Red)
+
+	private fun dameColoresPersinaAzul() = listOf<Color>(
 		Color(0xFFBBDEFB),
 		Color(0xFF4FC3F7),
 	)
 
-	fun dameColoresPersinaRoja() = listOf<Color>(
+	private fun dameColoresPersinaRoja() = listOf<Color>(
 		Color(0xFFFCE4EC),
 		Color(0xFFEF9A9A),
 	)
 
 
-	fun dameColoresPersinaVerde() = listOf<Color>(
+	private fun dameColoresPersinaVerde() = listOf<Color>(
 		Color(0xFFE8F5E9),
 		Color(0xFFA5D6A7),
 	)
 
 
-	fun dameColoresPersinaAmarilla() = listOf<Color>(
+	private 	fun dameColoresPersinaAmarilla() = listOf<Color>(
 		Color(0xFFFFFDE7),
 		Color(0xFFFFE082),
 	)
 
-	fun dameColoresBasicos() = listOf<Color>(
+	private 	fun dameColoresBasicos() = listOf<Color>(
 		Color(0xFFFF0000),
 		Color(0xFF00FF00),
 		Color(0xFF0000FF),
@@ -109,7 +119,7 @@ data class EsquemaColores(val id: Int = 0, val nombre: String = "", val colores:
 
 		)
 
-	fun dameTonosGrises() = listOf<Color>(
+	private 	fun dameTonosGrises() = listOf<Color>(
 		Color(0xFF000000),  // Negro
 		Color(0xFF212121),  // Gris casi negro
 		Color(0xFF424242),  // Gris oscuro

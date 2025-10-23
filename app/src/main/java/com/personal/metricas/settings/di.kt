@@ -10,7 +10,6 @@ import com.personal.metricas.firebase.domain.interactors.SubirContenidoLocalFire
 import com.personal.metricas.kpi.data.ds.local.dao.KpisDao
 import com.personal.metricas.notas.data.ds.local.dao.NotasDao
 import com.personal.metricas.notas.domain.NotasManager
-import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.metricas.paneles.data.ds.local.dao.PanelesDao
 import com.personal.metricas.settings.ui.SettingsScreen
 import com.personal.metricas.settings.ui.SettingsViewModel

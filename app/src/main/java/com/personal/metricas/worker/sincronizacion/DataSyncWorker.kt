@@ -8,9 +8,10 @@ import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils.Preferencias
 import com.personal.metricas.core.utils.TiempoHora
 import com.personal.metricas.organizaciones.domain.entidades.Organizaciones
-import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
+
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesPlanificacionCU
 import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
+import com.personal.metricas.sincronizacion.domain.interactors.TIPO_SINCRONIZACION
 import java.time.LocalTime
 import java.time.format.DateTimeParseException
 
@@ -43,12 +44,12 @@ class DataSyncWorker(
 
 				organizaciones.forEach { organizacion ->
 					//si esta activo y la hora esta dentro, REALIZAMOS LA SINCRONIZACION
-					App.log.d("Organizacion ${organizacion.organizationCode} : ${organizacion.horas}")
+				//	App.log.d("Organizacion ${organizacion.organizationCode} : ${organizacion.horas}")
 
 					if (organizacion.activo && horasEnPeriodo(organizacion.horas)) {
-						App.log.v("SINCRONIZANDO ${organizacion.organizationCode}")
-						realizarSincronizacionCU.sincronizarOrganizacion(organizacion)
-						App.log.d("Organizacion Sincronziada... $organizacion")
+						//App.log.v("SINCRONIZANDO ${organizacion.organizationCode}")
+						realizarSincronizacionCU.sincronizarOrganizacion(organizacion, TIPO_SINCRONIZACION.PLANIFICADA)
+						//App.log.d("Organizacion Sincronziada... $organizacion")
 					}
 
 				}

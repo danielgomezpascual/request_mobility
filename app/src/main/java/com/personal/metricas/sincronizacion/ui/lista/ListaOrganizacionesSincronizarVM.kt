@@ -10,8 +10,10 @@ import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils._t
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.organizaciones.domain.interactors.AlmacenarOrganizacionCU
-import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
+import com.personal.metricas.sincronizacion.domain.interactors.ObtenerOrganizacionesCU
+
 import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
+import com.personal.metricas.sincronizacion.domain.interactors.TIPO_SINCRONIZACION
 import com.personal.metricas.sincronizacion.ui.entidades.OrganizacionesSincronizarUI
 import com.personal.metricas.sincronizacion.ui.entidades.fromOrganizacion
 import com.personal.metricas.sincronizacion.ui.entidades.toOrganizacion
@@ -112,7 +114,7 @@ class ListaOrganizacionesSincronizarVM(
 
 			listaOrganizacionesSincronizarUI = obtenerOrganizacion.getAll().mapIndexed {indice, organzacion ->
 				val orgUI = OrganizacionesSincronizarUI().fromOrganizacion(organzacion)
-				guardarOrganizacion.guardar(orgUI)
+			//	guardarOrganizacion.guardar(orgUI)
 				orgUI
 			}
 			organizacionesOriginal = listaOrganizacionesSincronizarUI
@@ -238,7 +240,7 @@ class ListaOrganizacionesSincronizarVM(
 						var s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
 						_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
 
-						realizarSincronizacionCU.sincronizarOrganizacion(organizacion.toOrganizacion())
+						realizarSincronizacionCU.sincronizarOrganizacion(organizacion.toOrganizacion(), TIPO_SINCRONIZACION.MANUAL)
 
 						contador = contador + 1
 						 s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"

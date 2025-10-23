@@ -126,7 +126,7 @@ fun MA_FilaTablaDatos(
 				if (indicadorColor && indice == 0) {
 
 					Row(modifier = modifierCelda) {
-						MA_Circulo(color = color, size = 30.dp)
+						MA_Circulo(color = color, size = 20.dp)
 
 						MA_LabelCelda(celda.valor)
 					}

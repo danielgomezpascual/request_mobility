@@ -3,7 +3,6 @@ package com.personal.metricas.worker.sincronizacion
 import com.personal.metricas.organizaciones.data.ds.local.OrganizacionesRoomDS
 import com.personal.metricas.organizaciones.data.ds.remote.OrganizacionesRemotoDS
 import com.personal.metricas.organizaciones.data.repositorio.OrganizacionesRepoImp
-import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesPlanificacionCU
 import com.personal.metricas.organizaciones.domain.repositorio.IRepoOrganizaciones
 import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU

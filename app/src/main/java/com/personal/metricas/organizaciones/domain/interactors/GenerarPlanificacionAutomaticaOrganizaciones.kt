@@ -5,7 +5,7 @@ import com.personal.metricas.core.composables.listas.MA_ListaReordenable_EstiloY
 import java.lang.Exception
 
 class GenerarPlanificacionAutomaticaOrganizaciones(
-	private val obtenerOrganizaciones: ObtenerOrganizacionesCU,
+	private val obtenerOrganizaciones: ObtenerOrganizacionesLocalCU,
 	private val obtenerHoras: ObtenerHorasTransaccionesOrganizacionCU,
 	private val guardarOrganizacion: GuardarPlanificacionOrganizacinCU,
 ) {

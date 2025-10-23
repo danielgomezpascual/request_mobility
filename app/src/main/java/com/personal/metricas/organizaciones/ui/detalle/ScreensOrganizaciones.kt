@@ -39,6 +39,7 @@ import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils.if3
 import com.personal.metricas.inicializador.domain.ACTUA_SOBRE
 import com.personal.metricas.inicializador.domain.PanelesGenericos
+import com.personal.metricas.inicializador.domain.sqls.SQL
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.menu.Features
 import com.personal.metricas.notas.domain.NotasManager
@@ -50,9 +51,11 @@ import com.personal.metricas.organizaciones.ui.entidades.FORMA_SINCRONIZAR
 import com.personal.metricas.organizaciones.ui.entidades.OrganizacionUI
 import com.personal.metricas.paneles.domain.entidades.Alarmas
 import com.personal.metricas.paneles.domain.entidades.Condiciones
+import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.paneles.domain.entidades.PanelData
 import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
+import com.personal.metricas.paneles.domain.entidades.PlantillasPanel
 import com.personal.metricas.paneles.ui.componente.MA_Panel
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 import org.koin.androidx.compose.koinViewModel
@@ -183,9 +186,7 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 				MA_Panel(panelData = p.copy(panelConfiguracion = p.panelConfiguracion.copy(height = "350")))
 
 
-				MA_Titulo2("Impacto de tranacciones")
-
-
+				MA_Titulo2("Impacto de transacciones")
 				val kpiPorcentajeTrx = KpiUI(
 					titulo = "Transacciones",
 					descripcion = "Transacciones cargadas por la organizacion",
@@ -220,20 +221,49 @@ fun ScreenDetalleOrganizacionSincronizacionSuccess(
 					tipo = PanelTipoGrafica.Circular(),
 					colores = 3,
 					mostrarEtiquetas = false, condiciones = listaCondicionesErr)
-
-
-
-
-
 				//val kpi = if3(crearKPI, guardarKpi(kpiUI), kpiUI)
 				val panelPorcentajeTrx = PanelUI.Companion.crearPanelUI(kpiPorcentajeTrx, configuracionPorcentajeTrx)
-
 				MA_Panel(panelData = PanelData.fromPanelUI(panelPorcentajeTrx, NotasManager(), Parametros()))
 
 
 
+				MA_Titulo2("Sincronizaciones")
 
-				//Mostramos las horas que trabaja cada organizacin
+
+				val _kpiLog = KpiUI(
+					titulo = "Tipo Transacciones ",
+					descripcion = "Transacciones procesadas",
+					origen = "",
+					sql = "SELECT hora, tipo FROM logs  where organization_Code = '${organizacionUI.organizationCode}' ORDER BY hora DESC",
+					dinamico = true,
+					parametros = Parametros()
+				)
+
+				val co: Condiciones = Condiciones(1, Columnas("ORGANIZATION_CODE",
+																				 posicion = 1,
+																				 valores = emptyList()),
+																	 condicionCelda = 0,
+																	 color = 3,
+																	 predicado = "== '${organizacionUI.organizationCode}'",
+																	 descripion = "",
+																	 alarma = Alarmas())
+				val lco = listOf<Condiciones>(co)
+				val configLog = PanelConfiguracion().copy(
+					indicadorColor = false,
+					ajustarContenidoAncho = true,
+					tipo = PanelTipoGrafica.Circular(),
+					mostrarTabla = true,
+					mostrarGrafica = false,
+					colores = 3,
+					mostrarEtiquetas = false,
+					)
+
+
+				val panelSincro = PanelUI.Companion.crearPanelUI(_kpiLog, configLog)
+				MA_Panel(panelData = PanelData.fromPanelUI(panelSincro, NotasManager(), Parametros()))
+
+
+
 
 
 			}

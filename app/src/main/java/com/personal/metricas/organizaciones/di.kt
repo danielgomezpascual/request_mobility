@@ -2,13 +2,8 @@ package com.personal.metricas.organizaciones
 
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.room.AppDatabase
-import com.personal.metricas.kpi.data.ds.local.KpisRoomDS
-import com.personal.metricas.kpi.data.ds.local.dao.KpisDao
-import com.personal.metricas.kpi.domain.interactors.ObtenerKpisCU
-import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.organizaciones.data.ds.local.OrganizacionesRoomDS
 import com.personal.metricas.organizaciones.data.ds.local.dao.OrganizacionesDao
-import com.personal.metricas.organizaciones.data.ds.local.entidades.OrganizacionesRoom
 import com.personal.metricas.organizaciones.data.ds.remote.OrganizacionesRemotoDS
 import com.personal.metricas.organizaciones.data.ds.remote.servicio.OrganizacionesApiRemoto
 import com.personal.metricas.organizaciones.data.repositorio.OrganizacionesRepoImp
@@ -17,22 +12,14 @@ import com.personal.metricas.organizaciones.domain.interactors.GenerarPlanificac
 import com.personal.metricas.organizaciones.domain.interactors.GuardarPlanificacionOrganizacinCU
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerHorasTransaccionesOrganizacionCU
 import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionCU
-import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
+
+import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesLocalCU
 import com.personal.metricas.organizaciones.domain.repositorio.IRepoOrganizaciones
 import com.personal.metricas.organizaciones.domain.repositorio.TransaccionesOrganizacionImp
 import com.personal.metricas.organizaciones.ui.detalle.OrganizacionesDetalleVM
-import com.personal.metricas.organizaciones.ui.lista.ListaOrganizaciones
 import com.personal.metricas.organizaciones.ui.lista.ListaOrganizacionesVM
-import com.personal.metricas.paneles.domain.interactors.EliminarPanelCU
-import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
-import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
-import com.personal.metricas.paneles.ui.screen.detalle.DetallePanelVM
-import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
-import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
+import com.personal.metricas.sincronizacion.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.metricas.transacciones.data.ds.local.TransaccionesLocalDS
-import com.personal.metricas.transacciones.data.ds.remote.TransaccionesRemotoDS
-import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
-import com.personal.metricas.transacciones.domain.repositorios.IRepoTransacciones
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -71,14 +58,14 @@ val moduloOrganizaciones = module {
 
 	//single<IRepoOrganizaciones> { OrganizacionesRepoImp() }
 	//CU
-	single<ObtenerOrganizacionesCU> { ObtenerOrganizacionesCU(get<IRepoOrganizaciones>()) }
+	single<ObtenerOrganizacionesLocalCU> { ObtenerOrganizacionesLocalCU(get<IRepoOrganizaciones>()) }
 	single<ObtenerOrganizacionCU> { ObtenerOrganizacionCU(get<IRepoOrganizaciones>()) }
 	single<ObtenerHorasTransaccionesOrganizacionCU> { ObtenerHorasTransaccionesOrganizacionCU(get<TransaccionesOrganizacionImp>()) }
 	single<GuardarPlanificacionOrganizacinCU> { GuardarPlanificacionOrganizacinCU(get<IRepoOrganizaciones>()) }
 
 	single<GenerarPlanificacionAutomaticaOrganizaciones> {
 		GenerarPlanificacionAutomaticaOrganizaciones(
-			get<ObtenerOrganizacionesCU>(),
+			get<ObtenerOrganizacionesLocalCU>(),
 			obtenerHoras = get<ObtenerHorasTransaccionesOrganizacionCU>(),
 			guardarOrganizacion = get<GuardarPlanificacionOrganizacinCU>()
 		)
@@ -90,8 +77,10 @@ val moduloOrganizaciones = module {
 
 	viewModel {
 		ListaOrganizacionesVM(
-			obtenerOrganizacion = get<ObtenerOrganizacionesCU>(),
+			obtenerOrganizacion = get<ObtenerOrganizacionesLocalCU>(),
 			autoPlanificacion = get<GenerarPlanificacionAutomaticaOrganizaciones>(),
+			guardar = get<AlmacenarOrganizacionCU>(),
+			obtenerOrganizacionesRemoto = get<ObtenerOrganizacionesCU>(),
 			dialog = get<DialogManager>()
 		)
 	}

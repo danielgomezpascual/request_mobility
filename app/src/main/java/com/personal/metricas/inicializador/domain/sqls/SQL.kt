@@ -192,5 +192,25 @@ object SQL {
 	""".trimIndent()
 
 
+	val LOG_SINCRONZIACIONES = """
+		 SELECT  ORGANIZATION_CODE AS ORG, HORA, TIPO , TRX 
+		   FROM LOGS 
+		   ORDER BY ID DESC
+		
+	""".trimIndent()
+
+
+	val LOG_CONTEO_SINCRONZIACIONES = """
+	SELECT
+  TIPO,
+  COUNT(1) AS Cantidad,
+  ROUND((COUNT(1) * 100.0 / SUM(COUNT(1)) OVER ()),2) AS Porcentaje
+FROM
+  LOGS
+GROUP BY
+  TIPO
+		
+	""".trimIndent()
+
 }
 

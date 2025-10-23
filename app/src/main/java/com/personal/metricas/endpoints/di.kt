@@ -6,18 +6,19 @@ import com.personal.metricas.endpoints.data.ds.local.EndPointLocalDS
 import com.personal.metricas.endpoints.data.ds.local.dao.EndPointDao
 import com.personal.metricas.endpoints.data.ds.remote.EndPointsRemotoDS
 import com.personal.metricas.endpoints.data.repositorios.EndPointRepositorioImp
+import com.personal.metricas.endpoints.domain.interactors.AlmacenarDatosRemotosEndPointCU
 import com.personal.metricas.endpoints.domain.interactors.EliminarEndPointCU
 import com.personal.metricas.endpoints.domain.interactors.GuardarEndPointCU
-import com.personal.metricas.endpoints.domain.interactors.AlmacenarDatosRemotosEndPointCU
 import com.personal.metricas.endpoints.domain.interactors.ObtenerEndPointCU
 import com.personal.metricas.endpoints.domain.interactors.ObtenerEndPointsCU
 import com.personal.metricas.endpoints.domain.repositorios.EndPointRepositorio
 import com.personal.metricas.endpoints.domain.servicios.ConversorJsonToTabla
 import com.personal.metricas.endpoints.ui.screen.detalle.DetalleEndPointVM
 import com.personal.metricas.endpoints.ui.screen.listado.EndPointsListadoVM
-import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
+
 import com.personal.metricas.paneles.domain.interactors.GuardarPanelCU
 import com.personal.metricas.paneles.domain.interactors.ObtenerPanelCU
+import com.personal.metricas.sincronizacion.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.metricas.transacciones.domain.interactors.GuardarTransacciones
 import org.koin.androidx.viewmodel.dsl.viewModel

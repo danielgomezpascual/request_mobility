@@ -8,6 +8,8 @@ import com.personal.metricas.endpoints.data.ds.local.dao.EndPointDao
 import com.personal.metricas.endpoints.data.ds.local.entidades.EndPointRoom
 import com.personal.metricas.kpi.data.ds.local.dao.KpisDao
 import com.personal.metricas.kpi.data.ds.local.entidades.KpisRoom
+import com.personal.metricas.log.data.ds.local.dao.LogDao
+import com.personal.metricas.log.data.ds.local.entidades.LogRoom
 import com.personal.metricas.notas.data.ds.local.dao.NotasDao
 import com.personal.metricas.notas.data.ds.local.entidades.NotasRoom
 import com.personal.metricas.organizaciones.data.ds.local.dao.OrganizacionesDao
@@ -21,7 +23,7 @@ import com.personal.metricas.transacciones.data.ds.local.entities.TransaccionesR
 @Database(
     entities = [TransaccionesRoom::class, KpisRoom::class, DashboardRoom::class,
         PanelesRoom::class, EndPointRoom::class, NotasRoom::class,
-        OrganizacionesRoom::class
+        OrganizacionesRoom::class, LogRoom::class
                ],
     version = 1,
     exportSchema = true
@@ -35,6 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun endPointDao(): EndPointDao
     abstract fun notasDao(): NotasDao
     abstract fun organizacionesDao(): OrganizacionesDao
+    abstract fun logDao(): LogDao
 
 
 }

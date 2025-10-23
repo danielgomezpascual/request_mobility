@@ -9,7 +9,8 @@ import com.personal.metricas.endpoints.data.ds.remote.EndPointsRemotoDS
 import com.personal.metricas.endpoints.domain.entidades.EndPoint
 import com.personal.metricas.endpoints.domain.entidades.ResultadoEndPoint
 import com.personal.metricas.endpoints.domain.servicios.ConversorJsonToTabla
-import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
+import com.personal.metricas.sincronizacion.domain.interactors.ObtenerOrganizacionesCU
+
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
 import com.personal.metricas.transacciones.domain.entidades.Transacciones
 import com.personal.metricas.transacciones.domain.interactors.GuardarTransacciones

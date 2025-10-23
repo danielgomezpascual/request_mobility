@@ -26,6 +26,7 @@ class InicializadorManager(
 	private val initGeneral: InitDahsboardGeneral,
 	private val initOrganizacioes: InitDashboardOrganizaciones,
 	private val initLectoras: InitDahsboardLectoras,
+	private val initLog: InitDahsboardLog,
 	private val dialog: DialogManager,
 ) {
 	val appDatabase = getKoin().get<AppDatabase>()
@@ -75,9 +76,8 @@ class InicializadorManager(
 
 		val dashboardLectora = initLectoras.dashboardLectoar()
 		val dashboardUI = initOrganizacioes.generaDashboardOrganizaciones(dashboardLectora)
-
-		initGeneral.init(dashboardUI)
-
+		initGeneral.crearGeneral(dashboardUI)
+		initLog.crearDashboard()
 
 		//crearDashboardGeneral()
 		//crearDashboardErrores()

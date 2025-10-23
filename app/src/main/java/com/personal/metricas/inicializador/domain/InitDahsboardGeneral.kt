@@ -1,17 +1,12 @@
 package com.personal.metricas.inicializador.domain
 
-import com.personal.metricas.core.composables.tabla.Columnas
 import com.personal.metricas.core.utils.Parametros
-import com.personal.metricas.dashboards.domain.entidades.Dashboard
 import com.personal.metricas.dashboards.ui.entidades.DashboardUI
 import com.personal.metricas.dashboards.ui.entidades.Etiquetas
-import com.personal.metricas.endpoints.ui.entidades.toDomain
 import com.personal.metricas.inicializador.domain.comunes.KpisComunes
 import com.personal.metricas.inicializador.domain.sqls.SQL
 import com.personal.metricas.kpi.ui.entidades.KpiUI
 import com.personal.metricas.kpi.ui.entidades.toKpi
-import com.personal.metricas.paneles.domain.entidades.Alarmas
-import com.personal.metricas.paneles.domain.entidades.Condiciones
 import com.personal.metricas.paneles.domain.entidades.Conector
 import com.personal.metricas.paneles.domain.entidades.EsquemaColores
 import com.personal.metricas.paneles.domain.entidades.Panel
@@ -25,7 +20,7 @@ class InitDahsboardGeneral(
 	private val operaciones: InicializadorOperaciones,
 	private val comunes: KpisComunes,
 ) {
-	suspend fun init(dashboardOrganizaciones: DashboardUI) {
+	suspend fun crearGeneral(dashboardOrganizaciones: DashboardUI) {
 
 
 		var panel: Panel = Panel()

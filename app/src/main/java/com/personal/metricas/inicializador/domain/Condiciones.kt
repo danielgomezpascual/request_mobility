@@ -18,6 +18,8 @@ object CONDICIONES_PANELES {
 	val listaCondicionesBanderas: List<Condiciones> = listOf<Condiciones>(BANDERAS)
 
 
+
+
 	val COND_ESTADO_ERROR: Condiciones = Condiciones(1, Columnas("ESTADO"),
 													 condicionCelda = FuncionesCondicionesCeldaManager.SIN_DEFINIR,
 													 color = EsquemaColores.PERS,

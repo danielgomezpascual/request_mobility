@@ -19,6 +19,7 @@ import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.firebase.modulesFirebase
 import com.personal.metricas.inicializador.modulosInicializador
 import com.personal.metricas.kpi.moduloKpis
+import com.personal.metricas.log.moduloLogSync
 import com.personal.metricas.menu.modulosMenu
 import com.personal.metricas.notas.moduloNotas
 import com.personal.metricas.organizaciones.moduloOrganizaciones
@@ -33,9 +34,11 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+
 
 class App : Application() {
 
@@ -73,27 +76,32 @@ class App : Application() {
 		App.log.c("Sincronizacion automática de datos ACTIVADA ${App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)}")
 		//	if (App.sharedPrerfences.get<Boolean>(Preferencias.SINCRONIZAR_AUTO, false)) {
 		planificadorSyncWorker(this)
+
+
 		//}
 		// Define el formato deseado (HH para formato 24h, mm para minutos)
-		/*
+
 		val formatter = DateTimeFormatter.ofPattern("HH:mm")
 		val horaActual = LocalTime.now()
 		val _horaActual = horaActual.format(formatter)
 
 
-
-		val hora30 = LocalTime.now().minusMinutes(30)
+		/*val hora30 = LocalTime.now().minusMinutes(30)
 		val _hora30 =  hora30.format(formatter)
 		App.log.d(_horaActual)
-		App.log.d(_hora30)
-		val horasEjemplo = "12:00;15:30;14:30;16:30;15:00;14:00;16:00;17:00;19:00;20:00;"
-		App.log.c("Hay horas: ${horasEnPeriodo(horasEjemplo)}")*/
+		App.log.d(_hora30)*/
+		val horasEjemplo = "12:30;13:00;13:30"
+		App.log.c("En periodo: ${horasEnPeriodo(horasEjemplo)}")
 	}
 
 
 	fun horasEnPeriodo(horas: String): Boolean {
 		// 1. Define el rango de tiempo
-		val now = LocalTime.now()
+		//val now = LocalTime.now()
+		val _now = "2025-10-21 13:52:11"
+		val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+		val now = LocalDateTime.parse(_now, formatter)
+
 		val thirtyMinutesAgo = now.minusMinutes(30)
 
 		// 2. Procesa el String de entrada y comprueba
@@ -105,10 +113,11 @@ class App : Application() {
 				try {
 					// Convierte el string "HH:mm" a un objeto LocalTime
 					val timeToCheck = LocalTime.parse(hourStr)
-
+					App.log.d("Tiem to check $timeToCheck")
 					// La lógica clave: ¿La hora está DESPUÉS de hace 30 min Y ANTES de ahora?
-					timeToCheck.isAfter(thirtyMinutesAgo) && timeToCheck.isBefore(now)
-				} catch (e: DateTimeParseException) {
+					timeToCheck.isAfter(thirtyMinutesAgo.toLocalTime()) && timeToCheck.isBefore(now.toLocalTime())
+				}
+				catch (e: DateTimeParseException) {
 					// Si una hora está mal formateada, la ignoramos y continuamos
 					false
 				}
@@ -142,6 +151,7 @@ class App : Application() {
 				modulosMenu,
 				moduloNotas,
 				moduleSettings,
+				moduloLogSync,
 
 				moduloWorker
 			)

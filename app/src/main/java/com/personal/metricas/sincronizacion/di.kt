@@ -1,13 +1,15 @@
 package com.personal.metricas.sincronizacion
 
 import com.personal.metricas.core.composables.dialogos.DialogManager
-import com.personal.metricas.organizaciones.domain.interactors.ObtenerOrganizacionesCU
+
 import com.personal.metricas.endpoints.data.ds.remote.EndPointsRemotoDS
 import com.personal.metricas.endpoints.data.ds.remote.servicio.EndPointRemotos
 import com.personal.metricas.endpoints.domain.ObtenerDatosEndPoint
+import com.personal.metricas.log.domain.interactors.GuardarLogCU
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.organizaciones.domain.interactors.AlmacenarOrganizacionCU
 import com.personal.metricas.organizaciones.domain.repositorio.IRepoOrganizaciones
+import com.personal.metricas.sincronizacion.domain.interactors.ObtenerOrganizacionesCU
 import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
 import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
 import com.personal.metricas.transacciones.data.repositorios.TransaccionesRepoImp
@@ -34,11 +36,13 @@ val moduloSincronizacion = module {
 		RealizarSincronizacionCU(
 			repoTrx = get<TransaccionesRepoImp>(),
 			guardar = get<GuardarTransacciones>(),
+			log =  get<GuardarLogCU>()
 		)
 	}
 
 
 	single<AlmacenarOrganizacionCU> { AlmacenarOrganizacionCU(repo = get<IRepoOrganizaciones>()) }
+	single<ObtenerOrganizacionesCU> { ObtenerOrganizacionesCU(repo = get<IRepoOrganizaciones>()) }
 
 	//ViewModel
 	viewModel {
