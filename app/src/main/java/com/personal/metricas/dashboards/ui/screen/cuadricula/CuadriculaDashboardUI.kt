@@ -2,6 +2,7 @@ package com.personal.metricas.dashboards.ui.screen.cuadricula
 
 import MA_IconBottom
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HdrAuto
 import androidx.compose.material.icons.filled.Stars
@@ -102,12 +104,16 @@ fun SuccessCuadriculaDashboard(
 
 
 				if (uiState.etiquetasDisponibles.isNotEmpty()) {
-					Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+					Row(modifier = Modifier.fillMaxWidth().horizontalScroll(state = rememberScrollState()),
+
+						horizontalArrangement = Arrangement.Center) {
 						uiState.etiquetasDisponibles.forEach { etiqueta ->
 							Box(modifier = Modifier.clickable(enabled = true, onClick = {
 								viewModel.onEvento(CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta))
 							})) {
-								MA_EtiquetaItem(etiqueta)
+								MA_EtiquetaItem(etiqueta){
+									viewModel.onEvento(CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta))
+								}
 
 
 							}

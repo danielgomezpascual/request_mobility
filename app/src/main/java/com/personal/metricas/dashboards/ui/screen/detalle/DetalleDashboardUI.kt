@@ -223,11 +223,11 @@ fun DetalleDashboardUIScreen(
 																 titulo = "",
 																 descripcion = "Seleccione la etiqueta para el elemento",
 																 valorInicial = {
-																	 MA_EtiquetaItem(uiState.etiquetaSeleccionada)
+																	 MA_EtiquetaItem(uiState.etiquetaSeleccionada){}
 																 },
 																 elementosSeleccionables = uiState.etiquetasDisponibles,
 																 item = { etiqueta ->
-																	 MA_EtiquetaItem(etiqueta)
+																	 MA_EtiquetaItem(etiqueta){}
 
 																 },
 																 onClickSeleccion = { etiqueta ->
