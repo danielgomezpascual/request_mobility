@@ -76,6 +76,7 @@ class DetallePanelVM(
 		data class OnChangeColor(val color: Int) : Eventos()
 		data class OnChangeKpiSeleccionado(val identificador: Int) : Eventos()
 		data class OnChangeDashboardSeleccionado(val dsh: DashboardUI) : Eventos()
+		data class onChangeCeldasPantallasGrandes(val celdas: String) : Eventos()
 		data class OnChangeTipoPanel(val identificador: TiposPanel) : Eventos()
 		data class onChangeOrientacion(val valor: String) : Eventos()
 
@@ -158,7 +159,6 @@ class DetallePanelVM(
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = evento.plantilla.configuracion))
 							}
 
-
 							is Eventos.onChangeFiltroOrganizacion   ->{
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
 									filtroOrganizacion = evento.valor)))
@@ -217,6 +217,14 @@ class DetallePanelVM(
 							is Eventos.OnChangeTipoPanel             -> {
 								estado.copy(panelUI = estado.panelUI.copy(tipoPanel = evento.identificador))
 							}
+
+
+							is Eventos.onChangeCeldasPantallasGrandes -> {
+								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(
+									celdasPantallasGrandes = evento.celdas.toInt())))
+							}
+
+
 
 							is Eventos.onChangeTipoGrafica           -> {
 								estado.copy(panelUI = estado.panelUI.copy(configuracion = estado.panelUI.configuracion.copy(

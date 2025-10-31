@@ -76,7 +76,7 @@ class FuncionesCondicionesCeldaManager {
 
 	fun banderas(valor: String): FuncionesCondicionCelda {
 		val paisIso = valor.substring(0, 2).lowercase()
-		App.log.d("Buscando bandera para $paisIso")
+		//App.log.d("Buscando bandera para $paisIso")
 		val r = FuncionesCondicionCelda(sobreTodoConjunto = true, composable = {
 			Row() {
 				MA_ImagenAssets("banderas/$paisIso.png", Modifier.width(20.dp))

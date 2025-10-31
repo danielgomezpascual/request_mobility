@@ -226,4 +226,8 @@ dependencies {
     // Otras dependencias que puedas necesitar
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
+
+    // build.gradle.kts (Módulo App)
+    implementation("androidx.compose.material3:material3-window-size-class:1.3.1") // O la versión más reciente
+
 }

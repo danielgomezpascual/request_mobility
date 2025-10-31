@@ -15,7 +15,7 @@ fun MA_LabelEtiqueta(
     valor: String,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
-    sizeLetras: TextUnit = 14.sp,
+    sizeLetras: TextUnit = 12.sp,
     alineacion : TextAlign = TextAlign.Unspecified,
     icono: Icons? = null,
 

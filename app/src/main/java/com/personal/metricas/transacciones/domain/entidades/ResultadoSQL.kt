@@ -1,5 +1,6 @@
 package com.personal.metricas.transacciones.domain.entidades
 
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.App
 import com.personal.metricas.core.composables.tabla.Celda
@@ -27,16 +28,42 @@ data class ResultadoSQL(
 		}
 
 		fun fromSqlToTabla(sql: String, parametrosKpi: Parametros = Parametros(), parametrosOrigenDatos: Parametros = Parametros()): ValoresTabla {
-			App.log.c("Ejecuta SQL")
-			val sqlConReemplazos = Parametros.reemplazar(str = sql, parametrosKpi = parametrosKpi, parametrosDashboard = parametrosOrigenDatos)
+			//App.log.c("Ejecuta SQL")
+			//App.log.v("1: $sql")
+
+sql.trimIndent()
+			//val _sql = sql.trimIndent().replace("\r\n", " ").replace("\t", " ").replace(" TRANSACCIONES ", " TRX_TIME ", true)
+
+
+			val _sql = reemplazarNombreTablaEnSql(sql, "TRANSACCIONES", "TRX_TIME")
+			App.log.d("2: $_sql")
+
+			val sqlConReemplazos = Parametros.reemplazar(str = _sql, parametrosKpi = parametrosKpi, parametrosDashboard = parametrosOrigenDatos)
 			val trxDao = getKoin().get<AppDatabase>().transaccionesDao()
 			val lista = trxDao.sqlToListString(sqlConReemplazos)
 			return from(lista).toValoresTabla()
 		}
-		
+		fun reemplazarNombreTablaEnSql(
+			sqlScript: String,
+			nombreAntiguo: String,
+			nombreNuevo: String
+		): String {
+
+			// 1. Escapamos el nombre antiguo por si contiene caracteres
+			//    especiales de Regex (como un punto).
+			val nombreAntiguoEscapado = Regex.escape(nombreAntiguo)
+
+			// 2. Creamos la Regex.
+			// \b significa "límite de palabra" (word boundary).
+			// Esto asegura que reemplazamos "usuarios" pero NO "usuarios_backup".
+			val regex = Regex("\\b${nombreAntiguoEscapado}\\b")
+
+			// 3. Reemplazamos todas las ocurrencias en el script original.
+			return regex.replace(sqlScript, nombreNuevo)
+		}
 		
 	}
-	
+
 	fun toValoresTabla(): ValoresTabla {
 		
 		var filasValoresTabla: List<Fila> = emptyList<Fila>()
@@ -77,7 +104,7 @@ data class ResultadoSQL(
 				celda.size =  columna.maximaLongitudDp
 			}
 		}
-		App.log.lista("Coluimnas", columnasTabla)
+//		App.log.lista("Coluimnas", columnasTabla)
 
 		return ValoresTabla(filas = filasValoresTabla, columnas = columnasTabla)
 		

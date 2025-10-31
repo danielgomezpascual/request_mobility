@@ -163,6 +163,8 @@ fun SucessScreenDetallePanel(
 		},
 
 		contenido = {
+			val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
+
 			Column(modifier = Modifier
 				.fillMaxWidth()
 				.verticalScroll(rememberScrollState())) {
@@ -212,26 +214,56 @@ fun SucessScreenDetallePanel(
 										   viewModel.onEvent(DetallePanelVM.Eventos.OnChangeDescripcion(valor))
 									   })
 
-						MA_ComboLista<TiposPanel>(modifier = Modifier.padding(8.dp),
-												  titulo = "Tipo de Panel",
 
-												  descripcion = "Tipo",
-												  valorInicial = {
-													  MA_LabelNormal(panelUI.tipoPanel.literal())
+						Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+							MA_ComboLista<TiposPanel>(modifier = Modifier.weight(1f),
+													  titulo = "Tipo de Panel",
+													  descripcion = "Tipo",
+													  valorInicial = {
+														  MA_LabelNormal(panelUI.tipoPanel.literal())
+													  },
+													  elementosSeleccionables = TiposPanel.getTipos(),
 
-												  },
-												  elementosSeleccionables = TiposPanel.getTipos(),
+													  item = { tipo ->
+														  //KpiComboItem(kpiUI = kpiUI)
+														  MA_LabelNormal(tipo.literal())
+													  },
+													  onClickSeleccion = { tipo ->
+														  viewModel.onEvent(DetallePanelVM.Eventos.OnChangeTipoPanel(
+															  tipo))
+													  })
 
-												  item = { tipo ->
-													  //KpiComboItem(kpiUI = kpiUI)
-													  MA_LabelNormal(tipo.literal())
-												  },
-												  onClickSeleccion = { tipo ->
-													  viewModel.onEvent(DetallePanelVM.Eventos.OnChangeTipoPanel(
-														  tipo))
-												  })
 
+							MA_Combo(
+								modifier = Modifier.weight(1f),
+								icono = Icons.Filled.Height,                    // modifier = Modifier.weight(1f),
+								titulo = "Celdas",
+								descripcion = "Celdas que ocuma",
+								valorInicial = panelUI.configuracion.celdasPantallasGrandes.toString(),
+								elementosSeleccionables = (1..3 step 1).map { it.toString() },
+								onClickSeleccion = { str, indice ->
+									viewModel.onEvent(DetallePanelVM.Eventos.onChangeCeldasPantallasGrandes(str))
+								})
+
+
+							MA_ComboColores(modifier = Modifier.weight(1f),
+											titulo = "Color Fondo",
+											descripcion = "Color Fondo Panle",
+											valorInicial = {
+												val color: Color = Color(panelUI.configuracion.colorPanel)
+												MA_SeleccionColor(color)
+											},
+											elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
+											item = { colorSeleccion ->
+												MA_SeleccionColor(colorSeleccion.color)
+											},
+											onClickSeleccion = { colorSeleccion ->
+
+												viewModel.onEvent(DetallePanelVM.Eventos.onChangeColorFondoPanel(colorSeleccion.color.toArgb()))
+											})
+						}
 					}
+
 				}
 
 
@@ -244,7 +276,7 @@ fun SucessScreenDetallePanel(
 							MA_ComboLista<DashboardUI>(modifier = Modifier, titulo = "",
 													   descripcion = "Seleccione el Dashboard a enlazar",
 													   valorInicial = {
-														   MA_ConectorItem( panelUI.conector)
+														   MA_ConectorItem(panelUI.conector)
 													   },
 													   elementosSeleccionables = uiState.dashboardDisponibles,
 													   item = { dshUI ->
@@ -267,7 +299,7 @@ fun SucessScreenDetallePanel(
 					MA_Titulo2("KPI")
 					MA_Card {
 						Box(modifier = Modifier.height(250.dp)) {
-							Column(){
+							Column() {
 								Row(verticalAlignment = Alignment.CenterVertically) {
 									MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "",
 														 descripcion = "Seleccione el KPI a enlazar",
@@ -316,7 +348,6 @@ fun SucessScreenDetallePanel(
 							}
 
 
-
 						}
 
 
@@ -325,7 +356,7 @@ fun SucessScreenDetallePanel(
 				if (panelUI.tipoPanel == TiposPanel.PANEL_KPI) {
 					//KPI
 
-					val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
+
 					MA_Titulo2(valor = "Plantilla")
 					MA_Card {
 						Column(modifier = Modifier.height(200.dp)) {
@@ -379,22 +410,6 @@ fun SucessScreenDetallePanel(
 							Row(verticalAlignment = Alignment.CenterVertically) {
 
 
-								MA_ComboColores(modifier = Modifier.weight(1f),
-												titulo = "Color Fondo",
-												descripcion = "Color Fondo Panle",
-												valorInicial = {
-
-													val color: Color = Color(panelUI.configuracion.colorPanel)
-													MA_SeleccionColor(color)
-												},
-												elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-												item = { colorSeleccion ->
-													MA_SeleccionColor(colorSeleccion.color)
-												},
-												onClickSeleccion = { colorSeleccion ->
-
-													viewModel.onEvent(DetallePanelVM.Eventos.onChangeColorFondoPanel(colorSeleccion.color.toArgb()))
-												})
 							}
 
 						}

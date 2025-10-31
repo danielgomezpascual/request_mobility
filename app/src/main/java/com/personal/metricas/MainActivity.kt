@@ -5,6 +5,7 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -24,6 +25,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,7 +67,7 @@ import okhttp3.internal.notify
 import org.koin.compose.getKoin
 
 class MainActivity : ComponentActivity() {
-	@OptIn(ExperimentalMaterial3Api::class)
+	@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
@@ -73,6 +76,21 @@ class MainActivity : ComponentActivity() {
 		setContent {
 			RequestMobilityTheme {
 
+				// 1. Calcula la clase de tamaño aquí
+				App.windowSizeClass = calculateWindowSizeClass(this)
+
+
+				// 1. Lee el valor booleano desde los recursos
+				val allowSensorRotation = resources.getBoolean(R.bool.allow_sensor_rotation)
+
+				// 2. Aplica la orientación a la Activity
+				requestedOrientation = if (allowSensorRotation) {
+					// En pantallas grandes: permite que el sensor decida (vertical u horizontal)
+					ActivityInfo.SCREEN_ORIENTATION_SENSOR
+				} else {
+					// En pantallas pequeñas: fuerza siempre el modo vertical
+					ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+				}
 
 				val auth = FirebaseManager().getAuth()
 				App.log.d(auth.currentUser?.displayName)

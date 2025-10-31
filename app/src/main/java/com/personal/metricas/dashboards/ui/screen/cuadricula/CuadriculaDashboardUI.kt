@@ -105,8 +105,8 @@ fun SuccessCuadriculaDashboard(
 
 				if (uiState.etiquetasDisponibles.isNotEmpty()) {
 					Row(modifier = Modifier.fillMaxWidth().horizontalScroll(state = rememberScrollState()),
-
-						horizontalArrangement = Arrangement.Center) {
+						horizontalArrangement = Arrangement.Center,
+						verticalAlignment = Alignment.CenterVertically) {
 						uiState.etiquetasDisponibles.forEach { etiqueta ->
 							Box(modifier = Modifier.clickable(enabled = true, onClick = {
 								viewModel.onEvento(CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta))
@@ -154,7 +154,7 @@ fun SuccessCuadriculaDashboard(
 
 
 							}
-							if (item.nombre.length == 6) {
+							if (item.nombre.split("(").first().trim().length == 6) {
 								FuncionesCondicionesCeldaManager().banderas(item.nombre).composable()
 							}else {
 								MA_LabelNegrita(

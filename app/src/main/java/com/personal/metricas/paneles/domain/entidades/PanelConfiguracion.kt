@@ -35,8 +35,7 @@ data class PanelConfiguracion(
 	val valorMaximo: String = "10",
 	val colorFondoIndicador: Int = Color.Black.toArgb(),
 	val colorPanel: Int = Color.White.toArgb(),
-
-
 	val filtroOrganizacion: Boolean = false,
 	val filtroLectora: Boolean = false,
+	val celdasPantallasGrandes: Int = 1,
 )

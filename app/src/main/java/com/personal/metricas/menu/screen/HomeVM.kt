@@ -40,7 +40,7 @@ class HomeVM(
 
 
 	sealed class UIState {
-		data class Success(val paneles: List<PanelUI> = emptyList<PanelUI>()) : UIState()
+		data class Success(val dsHome : Dashboard?, val paneles: List<PanelUI> = emptyList<PanelUI>()) : UIState()
 		data class Error(val message: String) : UIState()
 		object Loading : UIState()
 	}
@@ -63,7 +63,7 @@ class HomeVM(
 		viewModelScope.launch {
 			val ds = obtenerDashboardHomeCU.getAllHome().firstOrNull()
 			if (ds == null || ds.isEmpty()) {
-				_uiState.value = UIState.Success(paneles = emptyList())
+				_uiState.value = UIState.Success(dsHome = null, paneles = emptyList())
 				return@launch
 			}
 
@@ -74,42 +74,9 @@ class HomeVM(
 
 			var pTmp : List<PanelUI> = emptyList()
 
-			//los paneles tambien pueden ser dinamicos
-			/*paneles.forEach { panelUI ->
-				if( panelUI.tipoPanel == TiposPanel.PANEL_CONECTOR){
 
 
-					if (d.kpiOrigenDatos.id != 0){
-						ResultadoSQL.fromSqlToTabla(d.kpiOrigenDatos.sql).filas.forEach { f ->
-							val ds: Dashboard = d.copy(nombre = Parametros.reemplazar(d.nombre, parametrosKpi = f.toParametros(), parametrosDashboard = f.toParametros()))
-							//listaDashboard = listaDashboard.plus(ds.copy(parametros = f.toParametros()))
-
-						//	goto(EventosNavegacion.VisualizadorDashboard(ds.id, _toJson(ds.parametros)), App.navController)
-//pTmp.plus(panelUI.)	pTmp = pTmp.plus(panelUI)
-
-							pTmp = pTmp.plus(panelUI.copy(
-								titulo =Parametros.reemplazar( panelUI.titulo, parametrosKpi = f.toParametros(), parametrosDashboard = f.toParametros()),
-
-							))
-
-							MA_Panel(
-								panelData = PanelData.fromPanelUI(panelUI, notasManager,
-																  uiState.dashboardUI.parametros))
-						}
-					}else{
-						pTmp = pTmp.plus(panelUI)
-					}
-
-
-
-
-
-				}else{
-					pTmp = pTmp.plus(panelUI)
-				}
-			}*/
-
-			_uiState.value = UIState.Success(paneles = paneles)
+			_uiState.value = UIState.Success(dsHome = d, paneles = paneles)
 
 
 		}

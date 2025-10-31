@@ -34,19 +34,19 @@ data class Parametros(val ps: List<Parametro> = emptyList<Parametro>()) {
 				var valor = ""
 				if (parametroOrigenDatos != null) {
 					valor = parametroOrigenDatos.valor
-					App.log.d("A $valor")
+					//App.log.d("A $valor")
 				}
 
 				if (parametro.fijo) {
 					valor = parametro.defecto
-					App.log.d("B $valor")
+					//App.log.d("B $valor")
 				}
 				if (valor.isEmpty()) {
 					valor = parametro.valor
-					App.log.d("C $valor")
+					//App.log.d("C $valor")
 				}
 				strReemplazos = strReemplazos.replace("#$k", "$valor", ignoreCase = true)
-				App.log.d("Reemplazamos #$k, con $valor")
+//				App.log.d("Reemplazamos #$k, con $valor")
 			}
 			return strReemplazos
 		}

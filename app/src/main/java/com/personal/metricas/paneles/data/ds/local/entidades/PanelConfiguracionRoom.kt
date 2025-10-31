@@ -59,9 +59,9 @@ data class PanelConfiguracionRoom(
 
 
 	val filtroOrganizacion: Boolean = false,
-	val filtroLectora: Boolean = false
+	val filtroLectora: Boolean = false,
 
-
+	val celdasPantallasGrandes: Int = 1,
 ) {
 
 
@@ -113,8 +113,9 @@ data class PanelConfiguracionRoom(
 				colorPanel = panelConfiguracion.colorPanel,
 				filtroOrganizacion = panelConfiguracion.filtroOrganizacion,
 				filtroLectora = panelConfiguracion.filtroLectora,
+				celdasPantallasGrandes = panelConfiguracion.celdasPantallasGrandes,
 
-			)
+				)
 		}
 	}
 
@@ -163,15 +164,13 @@ data class PanelConfiguracionRoom(
 			filasColor = this.filasColor,
 			condiciones = this.condiciones,
 			condicionesCeldas = this.condicionesCeldas,
-
 			permiteNotas = this.permiteNotas,
 			valorMaximo = this.valorMaximo,
 			colorFondoIndicador = this.colorFondoIndicador,
 			colorPanel = this.colorPanel,
-
-
 			filtroOrganizacion = this.filtroOrganizacion,
-					filtroLectora = this.filtroLectora,
+			filtroLectora = this.filtroLectora,
+			celdasPantallasGrandes = this.celdasPantallasGrandes,
 		)
 	}
 }

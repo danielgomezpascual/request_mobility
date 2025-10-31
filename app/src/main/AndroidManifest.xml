@@ -39,7 +39,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Metricas"
-            android:screenOrientation="portrait"
+
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

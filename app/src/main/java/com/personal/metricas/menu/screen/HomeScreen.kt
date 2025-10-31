@@ -24,6 +24,8 @@ import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.core.utils.Parametros
+import com.personal.metricas.core.utils._toJson
+import com.personal.metricas.dashboards.ui.screen.visualizador.VisualizarDashboard
 import com.personal.metricas.firebase.autenticacion.ui.AuthScreen
 import com.personal.metricas.firebase.domain.FirebaseManager
 import com.personal.metricas.menu.screen.HomeVM.UIState
@@ -86,7 +88,16 @@ fun SuccessMenu(
 		navegacion = navegacion,
 		accionesSuperiores = {},
 		contenido = {
-			val scroll = rememberScrollState()
+
+
+			if (uiState.dsHome != null) {
+				navegacion(EventosNavegacion.VisualizadorDashboard(uiState.dsHome.id, _toJson(uiState.dsHome.parametros)))
+			}else{
+				MA_NoData()
+			}
+		//VisualizarDashboard(uiState)
+
+			/*val scroll = rememberScrollState()
 			Column(modifier = Modifier
 				.fillMaxSize()
 				.verticalScroll(state = scroll),
@@ -103,7 +114,7 @@ fun SuccessMenu(
 					MA_NoData()
 				}
 
-			}
+			}*/
 
 
 		}

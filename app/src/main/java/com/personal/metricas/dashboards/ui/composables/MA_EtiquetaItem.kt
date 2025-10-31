@@ -45,19 +45,6 @@ import com.personal.metricas.menu.Features
 @Composable
 fun MA_EtiquetaItem(etiqueta: Etiquetas, onClick : () -> Unit) {
 
-	/*Box(modifier = Modifier.padding(5.dp).border(width = 1.dp, color = Color(234, 234, 234, 100))
-	.background( color = Color(251, 233, 231, 255))){
-		Row (modifier = Modifier.padding(5.dp), verticalAlignment = Alignment.CenterVertically) {
-
-			if (etiqueta.seleccionada){
-				MA_Icono(Icons.Default.Check,  modifier = Modifier.size(12.dp))
-			}
-
-			MA_Spacer()
-			MA_LabelNormal(etiqueta.etiqueta)
-
-		}
-	}*/
 	MA_Card(
 		elevacion = 3.dp,
 		//color = Color(243, 237, 120, 81),

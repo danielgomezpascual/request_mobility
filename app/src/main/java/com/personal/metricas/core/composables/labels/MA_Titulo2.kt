@@ -47,7 +47,7 @@ fun MA_Titulo2(
 		}
 
 		Text(text = valor,
-			 fontSize = 16.sp,
+			 fontSize = 14.sp,
 			 modifier = modifier,
 			 color = color, style = MaterialTheme.typography.titleMedium, textAlign = alineacion)
 		// HorizontalDivider()
