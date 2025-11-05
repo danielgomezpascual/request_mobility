@@ -577,12 +577,12 @@ fun dameTipoTabla(
 
 	if (panelConfiguracion.mostrarTabla) {
 		return {
-			Column {
+			Column(modifier/*.background(color = Color.Magenta)*/) {
 
 
 				Box(modifier = Modifier.weight(1f)){
 					MA_Tabla(
-						modifier = Modifier.fillMaxSize(),
+						modifier = Modifier/*.background(color = Color(129, 199, 132, 255))*/.fillMaxSize(),
 						panelConfiguracion = panelConfiguracion,
 						//tabla = valoresTabla,
 						filasOriginal = filas,
@@ -599,10 +599,11 @@ fun dameTipoTabla(
 					)
 				}
 				MA_Spacer()
+
 				val paginasComoDouble = filas.size.toDouble() / panelData.elementos.toDouble()
 				val numeroDePaginas = ceil(paginasComoDouble).toInt()
 				if (numeroDePaginas  > 1 ) {
-					Row(modifier = Modifier.horizontalScroll(rememberScrollState()).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+					Row(modifier = Modifier.fillMaxWidth()/*.background(color = Color(220, 231, 117, 255))*/.horizontalScroll(rememberScrollState()).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
 
 						(0..numeroDePaginas - 1).forEach { it ->
 							if (it == panelData.indice) {

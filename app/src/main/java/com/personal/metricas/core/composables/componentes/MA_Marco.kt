@@ -24,7 +24,7 @@ fun MA_Marco(modifier: Modifier = Modifier, titulo: String = "", componente: @Co
             .padding(3.dp)
             //.border(0.dp, Color.LightGray),
         ,horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
         /* modifier = Modifier.fillMaxWidth()*/
     ) {
         MA_LabelTituloTabla(

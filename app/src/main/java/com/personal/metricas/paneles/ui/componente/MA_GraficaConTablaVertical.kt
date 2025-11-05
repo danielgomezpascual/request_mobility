@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.componentes.MA_Marco
+import com.personal.metricas.core.composables.edittext.MA_TextoNormal
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
@@ -38,7 +39,7 @@ fun MA_GraficaConTablaVertical(
 ) {
 	Column(
 		modifier.fillMaxWidth(),
-		verticalArrangement = Arrangement.Center,
+		verticalArrangement = Arrangement.Top,
 		horizontalAlignment = Alignment.Companion.CenterHorizontally
 	) {
 
@@ -47,15 +48,15 @@ fun MA_GraficaConTablaVertical(
 
 		val m = Modifier.Companion
 			//.width(Dp(panelConfiguracion.width.toFloat()))
-			.fillMaxWidth()
+			.fillMaxSize()
 			.height(Dp(panelConfiguracion.height.toFloat()))
 
-		MA_Marco(titulo = panelConfiguracion.titulo, modifier = m, componente = {
+		MA_Marco(titulo = panelConfiguracion.titulo, modifier = m/*background(Color.DarkGray)*/, componente = {
 
 			Column(
-				modifier = Modifier.fillMaxWidth(),
+				modifier = Modifier.fillMaxSize()/*.background(color = Color.Green)*/,
 				horizontalAlignment = Alignment.CenterHorizontally,
-				   verticalArrangement = Arrangement.Center) {
+				verticalArrangement = Arrangement.Top) {
 
 				MA_LabelMini(panelConfiguracion.descripcion)
 
@@ -91,7 +92,7 @@ fun MA_GraficaConTablaVertical(
 
 					Box(
 
-						modifier = modifier
+						modifier = modifier/*.background(color = Color.Yellow)*/
 							.fillMaxSize()
 
 					) {

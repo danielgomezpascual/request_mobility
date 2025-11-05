@@ -25,21 +25,23 @@ import com.personal.metricas.paneles.ui.entidades.ColoresSeleccion
 import com.personal.metricas.paneles.ui.entidades.PanelUI
 import com.personal.metricas.paneles.ui.entidades.fromPanel
 
-class InitDahsboardLog(
+class InitDahsboardErrores(
 	private val operaciones: InicializadorOperaciones,
 	private val comunes: KpisComunes,
 ) {
 	suspend fun crearDashboard() {
 
 
-		val dh = operaciones.guardarDashboard(nombre = "Log",
+		val dh = operaciones.guardarDashboard(nombre = "Error",
 											  listOf<PanelUI>(
-												  dameHorasTransacciones(),
-												  dameHistoricoLog(),
-												  dameTipoSincronziacion(),
-
-												  ),
-											  etiqueta = Etiquetas.EtiquetaValor("Log"),
+												  comunes.createGenerico(titulo = "Trx en Error", sql = SQL.INFO_TRANSACCIONES_ERROR_HOY, plantilla = PlantillasPanel.SoloTabla.id, colores = EsquemaColores.PERS_ROJA),
+											  comunes.createGenerico(titulo = "Trx en Error", sql = SQL.INFO_TRANSACCIONES_ERROR, plantilla = PlantillasPanel.SoloTabla.id, colores = EsquemaColores.PERS_AMARILLA),
+											  comunes.createGenerico(titulo = "Tipo Trx", sql = SQL.TIPOS_TRANSACCIONES_ERROR, plantilla = PlantillasPanel.Circular.id),
+											  comunes.createGenerico(titulo = "Por Version", sql = SQL.ERRORES_POR_VERSION, plantilla = PlantillasPanel.Circular.id),
+											  comunes.createGenerico(titulo = "Tasa Error Usuario", sql = SQL.TASA_ERROR_USUARIO, plantilla = PlantillasPanel.BarrasFinasVertivales.id),
+											  comunes.createGenerico(titulo = "Errores LECTORA", sql = SQL.ERRORES_DISPOSITIVO_FISICO, plantilla = PlantillasPanel.BarrasFinasVertivales.id),
+											  ),
+											  etiqueta = Etiquetas.EtiquetaValor("Errores"),
 											  home = false,
 											  color = -16744448
 		)
@@ -104,12 +106,12 @@ class InitDahsboardLog(
 
 
 		val SINC_MANUAL: Condiciones = Condiciones(id = 1,
-												columna = Columnas(nombre = "TIPO"),
-												color = 6,
-												condicionCelda = FuncionesCondicionesCeldaManager.SIN_DEFINIR,
-												predicado = "== 'MANUAL'",
-												descripion =  "",
-												alarma = Alarmas())
+												   columna = Columnas(nombre = "TIPO"),
+												   color = 6,
+												   condicionCelda = FuncionesCondicionesCeldaManager.SIN_DEFINIR,
+												   predicado = "== 'MANUAL'",
+												   descripion = "",
+												   alarma = Alarmas())
 		val listaCondicionesSincro: List<Condiciones> = listOf<Condiciones>(SINC_MANUAL)
 
 
@@ -121,7 +123,7 @@ class InitDahsboardLog(
 										  limiteElementos = 0,
 										  indicadorColor = false,
 										  condicionesCeldas = listaCondicionesSincro,
-										  condiciones =listaCondicionesSincro,
+										  condiciones = listaCondicionesSincro,
 										  ajustarContenidoAncho = true,
 									  ))
 

@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,13 +21,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.personal.metricas.App
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.dialogos.DialogosResultado
 import com.personal.metricas.core.composables.formas.MA_Circulo
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.utils.K
+import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.core.utils.if3
 import com.personal.metricas.notas.domain.NotasManager
@@ -41,9 +46,11 @@ fun MA_FilaTablaDatos(
 	onClick: (Fila) -> Unit,
 ) {
 
+
+	val nuemroCeldas = if3((fila.celdas.isEmpty()), 0, fila.celdas.size)
 	val modifier = Modifier.Companion
 	val filasColor = configuracion.filasColor
-	val ajustarContenidoAncho = configuracion.ajustarContenidoAncho
+	val ajustarContenidoAncho = logicaAjusteCeldaAncho(nuemroCeldas, configuracion.ajustarContenidoAncho)
 	val indicadorColor = configuracion.indicadorColor
 
 	val color: Color = (fila.color).copy(alpha = 0.6f)
@@ -148,7 +155,8 @@ fun MA_FilaTablaDatos(
 						else -> {
 							//celda.contenido(modifierCelda)
 							Box(modifier = modifierCelda) {
-								MA_LabelCelda(celda.valor)
+								MA_LabelCelda(celda.valor, alineacion = if3(celda.valor.esNumerico(),
+																			TextAlign.Companion.End, TextAlign.Companion.Start))
 							}
 
 

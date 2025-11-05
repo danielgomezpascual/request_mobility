@@ -27,6 +27,7 @@ class InicializadorManager(
 	private val initOrganizacioes: InitDashboardOrganizaciones,
 	private val initLectoras: InitDahsboardLectoras,
 	private val initLog: InitDahsboardLog,
+	private val initErrores: InitDahsboardErrores,
 	private val dialog: DialogManager,
 ) {
 	val appDatabase = getKoin().get<AppDatabase>()
@@ -58,14 +59,14 @@ class InicializadorManager(
 		db.execSQL("INSERT INTO ESTADOS_TRANSACCIONES (STATUS_CODE, ESTADO) VALUES (2, 'ERROR');")
 		db.execSQL("INSERT INTO ESTADOS_TRANSACCIONES (STATUS_CODE, ESTADO) VALUES (4, 'REPROCESADO');")
 
-		db.execSQL("DROP VIEW  IF EXISTS TRX_7 ")
+		/*db.execSQL("DROP VIEW  IF EXISTS TRX_7 ")
 		db.execSQL("CREATE VIEW  TRX_7 AS SELECT * FROM TRANSACCIONES T INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE WHERE DATE(CREATION_DATE) >= DATE('now', '-7 days')")
 
 		db.execSQL("DROP VIEW  IF EXISTS TRX_HOY ")
 		db.execSQL("CREATE VIEW IF NOT EXISTS TRX_HOY AS SELECT   * FROM  TRANSACCIONES T INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE WHERE  date(CREATION_DATE)  = date('now', 'localtime');")
-
+*/
 		db.execSQL("DROP VIEW  IF EXISTS TRX_TIME ")
-		db.execSQL("CREATE VIEW IF NOT EXISTS TRX_TIME AS SELECT   * FROM  TRANSACCIONES T INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE WHERE  date(CREATION_DATE)  > date('now', 'localtime', '-5 days');")
+		db.execSQL("CREATE VIEW IF NOT EXISTS TRX_TIME AS SELECT   * FROM  TRANSACCIONES T /*INNER JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE*/ WHERE  date(CREATION_DATE)  > date('now', 'localtime', '-5 days');")
 
 
 
@@ -80,10 +81,15 @@ class InicializadorManager(
 		eliminarDatosGeneradosPreviamente()
 		crearVistas()
 
+		initLog.crearDashboard()
+		initErrores.crearDashboard()
 		val dashboardLectora = initLectoras.dashboardLectoar()
 		val dashboardUI = initOrganizacioes.generaDashboardOrganizaciones(dashboardLectora)
-		initGeneral.crearGeneral(dashboardUI)
-		initLog.crearDashboard()
+
+		initGeneral.crearGeneralComun(dashboardUI)
+		initGeneral.crearHome()
+
+
 
 		//crearDashboardGeneral()
 		//crearDashboardErrores()

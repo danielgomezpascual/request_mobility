@@ -33,5 +33,6 @@ data class Celda(
 	},
 	val seleccionada: Boolean = false,
 	val filtroInvertido: Boolean = false,
-	val condicion: Condiciones  = Condiciones(0, columna = Columnas(""), color = 0 , condicionCelda = 0, predicado = "")
+	val condicion: Condiciones  = Condiciones(0, columna = Columnas(""),
+											  color = 0 , condicionCelda = 0, predicado = "")
 )

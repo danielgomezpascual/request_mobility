@@ -80,6 +80,7 @@ class InitDashboardOrganizaciones(
 
 
 
+
 		return operaciones.guardarDashboard(nombre = "ORG #ORGANIZATION_ID #ORGANIZATION_CODE \n#ORGANIZATION_NAME",
 									 listOf<PanelUI>(
 
@@ -95,9 +96,10 @@ class InitDashboardOrganizaciones(
 										 comunes.obtenerPanelTransaccionesHistorico(filtroOrganizacion = true),
 										 comunes.obtenerPanelConteoTransacciones(filtroOrganizacion = true),
 										 comunes.obtenerPanelTransaccionesPorHoras(filtroOrganizacion = true),
-										 obtenerTransaccionesPorLectora(filtroOrganizacion = true)
+										 obtenerTransaccionesPorLectora(filtroOrganizacion = true),
+										 comunes.obtenerPanelVersionesTransacciones(filtroOrganizacion = true)
 
-										 ),
+									 ),
 
 									 kpiOrigen = comunes.crearKpiOrganizaciones(),
 									 etiqueta = Etiquetas.EtiquetaValor("ORGS"),

@@ -20,7 +20,20 @@ class InitDahsboardGeneral(
 	private val operaciones: InicializadorOperaciones,
 	private val comunes: KpisComunes,
 ) {
-	suspend fun crearGeneral(dashboardOrganizaciones: DashboardUI) {
+
+	suspend fun crearHome(){
+		val dh = operaciones.guardarDashboard(nombre = "Home",
+											  listOf<PanelUI>(
+												  comunes.createGenerico(titulo= "TRX", SQL.INFO_TRANSACCIONES_HOY, plantilla =  PlantillasPanel.SoloTabla.id, celdas = 2, colores = EsquemaColores.PERS_VERDE),
+												  comunes.createGenerico(titulo = "Ratio", SQL.RATIO_RESULTADO_TRX, plantilla =  PlantillasPanel.SoloTabla.id, celdas = 2, colores = EsquemaColores.PERS)
+
+											  ),
+											  etiqueta = Etiquetas.EtiquetaValor("General"),
+											  home = true,
+											  color = -16744448
+		)
+	}
+	suspend fun crearGeneralComun(dashboardOrganizaciones: DashboardUI) {
 
 
 		var panel: Panel = Panel()
@@ -70,12 +83,12 @@ class InitDahsboardGeneral(
 												  comunes.obtenerPanelTransaccionesHistorico(),
 												  comunes.obtenerPanelConteoTransacciones(),
 												  comunes.obtenerPanelTransaccionesPorHoras(),
-												  obtenerTransaccionesPorOrganiacion()
-
+												  obtenerTransaccionesPorOrganiacion(),
+												  comunes.obtenerPanelVersionesTransacciones()
 
 											  ),
 											  etiqueta = Etiquetas.EtiquetaValor("General"),
-											  home = true,
+											  home = false,
 											  color = -16744448
 		)
 	}

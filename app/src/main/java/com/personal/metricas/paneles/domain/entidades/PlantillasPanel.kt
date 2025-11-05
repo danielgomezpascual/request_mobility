@@ -93,7 +93,8 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 															   filasColor = true,
 															   condiciones = emptyList(),
 															   condicionesCeldas = emptyList(),
-															   permiteNotas = true))
+															   permiteNotas = true,
+															   celdasPantallasGrandes = 3))
 
 
 	data object BarrasFinasVertivales : PlantillasPanel(4, "Barras Finas Verticales + Tabla", R.drawable.lineasfinas,
@@ -293,7 +294,8 @@ sealed class PlantillasPanel(val id: Int, val nombre: String, val icono: Int, va
 																	   filasColor = true,
 																	   condiciones = emptyList(),
 																	   condicionesCeldas = emptyList(),
-																	   permiteNotas = false))
+																	   permiteNotas = false,
+																	   celdasPantallasGrandes = 3))
 
 
 

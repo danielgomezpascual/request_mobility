@@ -5,6 +5,7 @@ import com.personal.metricas.dashboards.domain.interactors.GuardarDashboardCU
 import com.personal.metricas.endpoints.domain.interactors.GuardarEndPointCU
 import com.personal.metricas.inicializador.domain.InicializadorManager
 import com.personal.metricas.inicializador.domain.InicializadorOperaciones
+import com.personal.metricas.inicializador.domain.InitDahsboardErrores
 import com.personal.metricas.inicializador.domain.InitDahsboardGeneral
 import com.personal.metricas.inicializador.domain.InitDahsboardLectoras
 import com.personal.metricas.inicializador.domain.InitDahsboardLog
@@ -55,8 +56,14 @@ val modulosInicializador = module {
 			comunes = get<KpisComunes>()
 		)
 	}
-single<InitDahsboardLog> {
-	InitDahsboardLog(
+	single<InitDahsboardLog> {
+		InitDahsboardLog(
+			operaciones = get<InicializadorOperaciones>(),
+			comunes = get<KpisComunes>()
+		)
+	}
+	single<InitDahsboardErrores> {
+		InitDahsboardErrores(
 			operaciones = get<InicializadorOperaciones>(),
 			comunes = get<KpisComunes>()
 		)
@@ -70,7 +77,8 @@ single<InitDahsboardLog> {
 			initGeneral = get<InitDahsboardGeneral>(),
 			initOrganizacioes = get<InitDashboardOrganizaciones>(),
 			initLectoras = get<InitDahsboardLectoras>(),
-			initLog =  get<InitDahsboardLog>(),
+			initLog = get<InitDahsboardLog>(),
+			initErrores = get<InitDahsboardErrores>(),
 			dialog = get<DialogManager>()
 		)
 	}

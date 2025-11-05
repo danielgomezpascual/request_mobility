@@ -47,7 +47,7 @@ class InitDahsboardLectoras(
 										 comunes.obtenerPanelTransaccionesHistorico(filtroLectora = true),
 										 comunes.obtenerPanelConteoTransacciones(filtroLectora = true),
 										 comunes.obtenerPanelTransaccionesPorHoras(filtroLectora = true),
-
+										 comunes.obtenerPanelVersionesTransacciones(filtroLectora = true)
 
 									 ),
 

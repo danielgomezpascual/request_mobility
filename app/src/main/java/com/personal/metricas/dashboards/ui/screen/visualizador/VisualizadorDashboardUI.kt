@@ -116,11 +116,11 @@ fun VisualizarDashboard(uiState: UIState.Success) {
 
 			Column(modifier = Modifier
 				.fillMaxWidth()
-				.padding(3.dp)
+
 				.background(color = Color(255, 253, 231, 255))) {
 
 
-				Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+				Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(3.dp).fillMaxWidth()) {
 					MA_Titulo2(uiState.dashboardUI.nombre, modifier = Modifier.weight(1f))
 
 					/*
@@ -131,11 +131,11 @@ fun VisualizarDashboard(uiState: UIState.Success) {
 						size = 9.sp)
 				}
 
-				if (uiState.dashboardUI.descripcion.isNotEmpty()) {
+				/*if (uiState.dashboardUI.descripcion.isNotEmpty()) {
 					MA_LabelEtiqueta(modifier = Modifier.fillMaxWidth(),
 									 alineacion = TextAlign.Center,
 									 valor = uiState.dashboardUI.descripcion)
-				}
+				}*/
 
 			}
 

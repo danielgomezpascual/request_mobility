@@ -286,5 +286,65 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 
 
 
+	suspend fun obtenerPanelVersionesTransacciones(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+		val _k = KpiUI(
+			titulo = "Versiones",
+			descripcion = "Versiones utilziadas ",
+			origen = "",
+			sql = SQL.CONTEO_TRX_VERSION,
+			dinamico = true,
+			parametros = Parametros()
+		)
+
+		val k = operaciones.guardarKpi(_k)
+
+		val p = operaciones.crearPanel(k,
+									   false,
+									   PlantillasPanel.from(PlantillasPanel.TT.Circular.valor).configuracion.copy(
+										   colores = EsquemaColores().get(EsquemaColores.MUTICOLOR).id,
+										   limiteElementos = 0,
+										   indicadorColor = true,
+										   ajustarContenidoAncho = true,
+										   filtroOrganizacion = filtroOrganizacion,
+										   filtroLectora = filtroLectora
+
+
+									   ))
+		return p
+	}
+		suspend fun createGenerico(titulo:String,sql: String, plantilla: Int, colores:Int   = EsquemaColores.MUTICOLOR,
+								   celdas: Int = 1,
+								   filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+			val _k = KpiUI(
+				titulo = titulo,
+				descripcion = "",
+				origen = "",
+				sql = sql,
+				dinamico = true,
+				parametros = Parametros()
+			)
+
+			val k = operaciones.guardarKpi(_k)
+
+			val p = operaciones.crearPanel(k,
+										   false,
+										   PlantillasPanel.from(plantilla).configuracion.copy(
+											   colores = EsquemaColores().get(colores).id,
+											   limiteElementos = 0,
+											   celdasPantallasGrandes = celdas,
+											   indicadorColor = false,
+											   ajustarContenidoAncho = true,
+											   filtroOrganizacion = filtroOrganizacion,
+											   filtroLectora = filtroLectora
+
+										   ))
+			return p
+
+	}
+
+
+
+
+
 }
 

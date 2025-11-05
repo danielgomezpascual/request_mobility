@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.TableRows
 import androidx.compose.material.icons.filled.TableView
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -116,6 +117,18 @@ fun TablaDatos(
 }
 
 
+
+
+
+fun logicaAjusteCeldaAncho(columnas : Int, ajustarContenido: Boolean): Boolean{
+	val pantallasGrandes =  App.windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium ||
+			 App.windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
+
+	if (!pantallasGrandes && columnas > 4 ) return false
+
+	if (!pantallasGrandes) return ajustarContenido
+return true
+}
 @Composable
 fun MA_Tabla(
 	modifier: Modifier = Modifier,
@@ -135,10 +148,16 @@ fun MA_Tabla(
 	onClickBorrarFiltros: () -> Unit,
 ) {
 
+
+
+
 	val estadoScroll = rememberScrollState()
 	val indicadorColor = panelConfiguracion.indicadorColor
 	val filasColor = panelConfiguracion.filasColor
-	val ajustarContenidoAncho = panelConfiguracion.ajustarContenidoAncho
+
+	val nuemroCeldas = if3((filasOriginal.isEmpty()), 0, filasOriginal.first().celdas.size)
+
+	val ajustarContenidoAncho =logicaAjusteCeldaAncho( nuemroCeldas, panelConfiguracion.ajustarContenidoAncho )
 	var modifierColumn = modifier
 	if (!ajustarContenidoAncho) {
 		modifierColumn = modifierColumn.horizontalScroll(estadoScroll)
@@ -149,7 +168,7 @@ fun MA_Tabla(
 	val context = LocalContext.current
 	val d: DialogManager = getKoin().get()
 
-	Column(modifier = Modifier.fillMaxWidth()) {
+	Column(verticalArrangement = Arrangement.Top, modifier = Modifier.fillMaxWidth()) {
 		//Acciones
 		Row(modifier = Modifier
 			.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -244,25 +263,7 @@ fun MA_Tabla(
 								val chooser = Intent.createChooser(shareIntent, "Compartir archivo con...")
 								context.startActivity(chooser)
 							}
-							/*
-							//val file = createFileInCache(context, "mi_documento.txt", "Hola, Kotlin!")
 
-							// Obtenemos la Uri a través del FileProvider.
-							val uri = FileProvider.getUriForFile(
-								context,
-								"${context.packageName}.provider", // Debe coincidir con 'authorities' en el manifest.
-								myExcelFile
-							)
-
-							// Creamos el Intent para ver el fichero.
-							val intent = Intent(Intent.ACTION_VIEW).apply {
-								//setDataAndType(uri, "text/plain") // ¡Importante! Especifica el tipo MIME.
-								setDataAndType(uri, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // ¡Importante! Especifica el tipo MIME.
-								addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-							}
-
-							// Lanzamos el Intent.
-							context.startActivity(intent)*/
 						}
 					}
 				})
@@ -272,8 +273,9 @@ fun MA_Tabla(
 
 
 		}
+
 		//Complejo de la tabla
-		Column(modifierColumn, verticalArrangement = Arrangement.Center,
+		Column(modifierColumn, verticalArrangement = Arrangement.Top,
 			   horizontalAlignment = Alignment.Start) {
 			//Titulos de la tabla
 			Row(modifier = Modifier
