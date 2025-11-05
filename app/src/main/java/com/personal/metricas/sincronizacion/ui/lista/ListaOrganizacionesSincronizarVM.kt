@@ -10,6 +10,7 @@ import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils._t
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.organizaciones.domain.interactors.AlmacenarOrganizacionCU
+import com.personal.metricas.organizaciones.domain.interactors.GenerarPlanificacionAutomaticaOrganizaciones
 import com.personal.metricas.sincronizacion.domain.interactors.ObtenerOrganizacionesCU
 
 import com.personal.metricas.sincronizacion.domain.interactors.RealizarSincronizacionCU
@@ -38,7 +39,9 @@ class ListaOrganizacionesSincronizarVM(
 	//private val guardar: GuardarTransacciones,
 	private val notas: NotasManager,
 	private val dialog: DialogManager,
-	private val guardarOrganizacion: AlmacenarOrganizacionCU
+	private val guardarOrganizacion: AlmacenarOrganizacionCU,
+	private val autoPlanificacion: GenerarPlanificacionAutomaticaOrganizaciones,
+
 	) : ViewModel() {
 
 
@@ -169,22 +172,7 @@ class ListaOrganizacionesSincronizarVM(
 
 			}
 
-			/*if (estado is ListaOrganizacionesSincronizarVM.UIState.Success) {
-				estado.copy(textoBuscar = texto, organizaciones = l)
-			} else {
-				estado
-			}*/
 
-
-			/*val l = if (!texto.isEmpty()) {
-
-				listaOrganizacionesSincronizarUI.filter {
-					it.organizationName.contains(other = textoBuscar, ignoreCase = true) || it.organizationCode.contains(other = textoBuscar, ignoreCase = true)
-
-				}
-			} else {
-				listaOrganizacionesSincronizarUI.forEach { i }
-			}*/
 
 
 		}
@@ -248,9 +236,27 @@ class ListaOrganizacionesSincronizarVM(
 						_uiState.value = (_uiState.value as UIState.Success).copy(infoSincro = s)
 						withContext(Dispatchers.Main){
 							if (contador == totalOraganizacionesSincronizar) {
+
+
+								dialog.sino(texto = "Informacion actualizada, ¿Desea generar tambien una sincronziacion en funcion de las transacciones recibidas?"){ resultado ->
+									if (resultado == DialogosResultado.Si){
+										async(Dispatchers.IO) {
+											autoPlanificacion.realizarPlanificacionAutomativa()
+
+										}
+
+									}
+
+								}
+
+
+
 								_uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
-								dialog.informacion(_t(R.string.information_actualizada)) { }
+							
 							}
+
+
+
 						}
 
 					}

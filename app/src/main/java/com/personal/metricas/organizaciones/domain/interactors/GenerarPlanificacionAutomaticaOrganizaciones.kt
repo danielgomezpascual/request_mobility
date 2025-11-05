@@ -13,7 +13,9 @@ class GenerarPlanificacionAutomaticaOrganizaciones(
 	suspend fun realizarPlanificacionAutomativa(): Boolean {
 		try{
 			val organizaciones = obtenerOrganizaciones.getAll()
+			App.log.d("Realizando planificacion")
 			organizaciones.forEach { organizacion ->
+				App.log.d("Planificacion ${organizacion.organizationCode} - ${organizacion.organizationName}")
 				val horas = obtenerHoras.obtener(organizacion)
 				guardarOrganizacion.guardar(organizacion.copy(activo = true, visible = true, horas = horas))
 			}
