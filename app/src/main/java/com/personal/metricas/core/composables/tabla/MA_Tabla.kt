@@ -155,7 +155,13 @@ fun MA_Tabla(
 	val indicadorColor = panelConfiguracion.indicadorColor
 	val filasColor = panelConfiguracion.filasColor
 
-	val nuemroCeldas = if3((filasOriginal.isEmpty()), 0, filasOriginal.first().celdas.size)
+	var nuemroCeldas = 0
+	try{
+		nuemroCeldas = if3(( filasOriginal.isEmpty() || filasOriginal.first().celdas.isEmpty()), 0, filasOriginal.first().celdas.size)
+
+	}catch (e: Exception){
+		App.log.e(e.message)
+	}
 
 	val ajustarContenidoAncho =logicaAjusteCeldaAncho( nuemroCeldas, panelConfiguracion.ajustarContenidoAncho )
 	var modifierColumn = modifier

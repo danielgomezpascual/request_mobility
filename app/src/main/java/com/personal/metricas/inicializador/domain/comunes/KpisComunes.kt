@@ -98,6 +98,35 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 		return panelErroresRatio
 	}
 
+	suspend fun obtenerPanelGraficaTransaccionesErrores(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+		val _kpiRatioOkError = KpiUI(
+			titulo = "Ratios",
+			descripcion = "Ratios de errores sobre las transacciones corectas",
+			origen = "",
+			sql = SQL.ERRORES_TRX,
+			dinamico = true,
+			parametros = Parametros())
+		kpiTransaccionesDiarias = operaciones.guardarKpi(_kpiRatioOkError)
+
+
+		val panelErroresRatio = operaciones.crearPanel(
+			kpiTransaccionesDiarias,
+			false,
+			PlantillasPanel.from(PlantillasPanel.TT.Lineas.valor)
+				.configuracion.copy(
+					colores = 7,
+					indicadorColor = false,
+					condiciones = listOf<Condiciones>(CONDICIONES_PANELES.COND_RATIO_ERRORES),
+					ajustarContenidoAncho = true,
+					width = "500", height = "600",
+					filtroOrganizacion = filtroOrganizacion,
+					filtroLectora = filtroLectora
+				))
+		return panelErroresRatio
+	}
+
+
+
 	suspend fun obtenerPanelTransaccionesDiarias(filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
 		val _kpiTransaccionesDiarias = KpiUI(
 			titulo = "Transacciones",
@@ -314,7 +343,9 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 	}
 		suspend fun createGenerico(titulo:String,sql: String, plantilla: Int, colores:Int   = EsquemaColores.MUTICOLOR,
 								   celdas: Int = 1,
-								   filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false): PanelUI {
+								   filtroOrganizacion: Boolean = false, filtroLectora: Boolean = false, columnaCalculo: Int = 1
+
+		): PanelUI {
 			val _k = KpiUI(
 				titulo = titulo,
 				descripcion = "",
@@ -330,6 +361,7 @@ class KpisComunes(private val operaciones: InicializadorOperaciones) {
 										   false,
 										   PlantillasPanel.from(plantilla).configuracion.copy(
 											   colores = EsquemaColores().get(colores).id,
+											   columnaY = columnaCalculo,
 											   limiteElementos = 0,
 											   celdasPantallasGrandes = celdas,
 											   indicadorColor = false,

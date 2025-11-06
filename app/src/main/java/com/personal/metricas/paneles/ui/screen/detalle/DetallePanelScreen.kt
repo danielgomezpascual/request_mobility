@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -215,8 +216,8 @@ fun SucessScreenDetallePanel(
 									   })
 
 
-						Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-							MA_ComboLista<TiposPanel>(modifier = Modifier.weight(1f),
+						Row(modifier = Modifier.fillMaxWidth()   , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+							MA_ComboLista<TiposPanel>(modifier = Modifier.width(100.dp),
 													  titulo = "Tipo de Panel",
 													  descripcion = "Tipo",
 													  valorInicial = {
@@ -235,7 +236,7 @@ fun SucessScreenDetallePanel(
 
 
 							MA_Combo(
-								modifier = Modifier.weight(1f),
+								modifier = Modifier.width(100.dp),
 								icono = Icons.Filled.Height,                    // modifier = Modifier.weight(1f),
 								titulo = "Celdas",
 								descripcion = "Celdas que ocuma",
@@ -246,7 +247,7 @@ fun SucessScreenDetallePanel(
 								})
 
 
-							MA_ComboColores(modifier = Modifier.weight(1f),
+							MA_ComboColores(modifier = Modifier.width(100.dp),
 											titulo = "Color Fondo",
 											descripcion = "Color Fondo Panle",
 											valorInicial = {
@@ -327,22 +328,25 @@ fun SucessScreenDetallePanel(
 
 								}
 
-								MA_SwitchNormal(valor = panelUI.configuracion.filtroOrganizacion,
-												titulo = "Filtrar organiacion",
-												icono = Icons.Filled.TableView,
-												modifier = Modifier.weight(1f),
-												onValueChange = { valor ->
-													viewModel.onEvent(DetallePanelVM.Eventos.onChangeFiltroOrganizacion(valor))
-												})
+								Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+									MA_SwitchNormal(valor = panelUI.configuracion.filtroOrganizacion,
+													titulo = "Filtrar organiacion",
+													icono = Icons.Filled.TableView,
+													modifier = Modifier.weight(1f),
+													onValueChange = { valor ->
+														viewModel.onEvent(DetallePanelVM.Eventos.onChangeFiltroOrganizacion(valor))
+													})
 
-								MA_Spacer()
-								MA_SwitchNormal(valor = panelUI.configuracion.filtroLectora,
-												titulo = "Filtrar Lectora",
-												icono = Icons.Filled.TableView,
-												modifier = Modifier.weight(1f),
-												onValueChange = { valor ->
-													viewModel.onEvent(DetallePanelVM.Eventos.onChangeFiltroLectora(valor))
-												})
+									MA_Spacer()
+									MA_SwitchNormal(valor = panelUI.configuracion.filtroLectora,
+													titulo = "Filtrar Lectora",
+													icono = Icons.Filled.TableView,
+													modifier = Modifier.weight(1f),
+													onValueChange = { valor ->
+														viewModel.onEvent(DetallePanelVM.Eventos.onChangeFiltroLectora(valor))
+													})
+								}
+
 
 
 							}

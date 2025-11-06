@@ -158,10 +158,8 @@ fun VisualizarDashboard(uiState: UIState.Success) {
 				}
 			}
 
-			/*al esPantallaExpandida = widthSizeClass == WindowWidthSizeClass.Medium ||
-										  widthSizeClass == WindowWidthSizeClass.Expanded*/
-			if (esPantallaExpandida) {
 
+			if (esPantallaExpandida) {
 				VisulizadorVariasColumnas(uiState)
 			} else {
 

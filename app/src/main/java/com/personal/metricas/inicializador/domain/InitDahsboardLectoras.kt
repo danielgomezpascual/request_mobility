@@ -43,6 +43,7 @@ class InitDahsboardLectoras(
 										 comunes.obtenerPanelTransaccionesError(filtroLectora = true),
 
 										 comunes.obtenerPanelTransaccionesErrores(filtroLectora = true),
+										 comunes.obtenerPanelGraficaTransaccionesErrores(filtroLectora = true),
 										 comunes.obtenerPanelTransaccionesDiarias(filtroLectora = true),
 										 comunes.obtenerPanelTransaccionesHistorico(filtroLectora = true),
 										 comunes.obtenerPanelConteoTransacciones(filtroLectora = true),

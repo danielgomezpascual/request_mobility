@@ -92,6 +92,7 @@ class InitDashboardOrganizaciones(
 										 comunes.obtenerPanelTransaccionesError(filtroOrganizacion = true),
 
 										 comunes.obtenerPanelTransaccionesErrores(filtroOrganizacion = true),
+										 comunes.obtenerPanelGraficaTransaccionesErrores(filtroOrganizacion = true),
 										 comunes.obtenerPanelTransaccionesDiarias(filtroOrganizacion = true),
 										 comunes.obtenerPanelTransaccionesHistorico(filtroOrganizacion = true),
 										 comunes.obtenerPanelConteoTransacciones(filtroOrganizacion = true),

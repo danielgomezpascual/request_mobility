@@ -79,6 +79,8 @@ class InitDahsboardGeneral(
 												  comunes.obtenerPanelTransaccionesError(),
 
 												  comunes.obtenerPanelTransaccionesErrores(),
+												  comunes.obtenerPanelGraficaTransaccionesErrores(),
+
 												  comunes.obtenerPanelTransaccionesDiarias(),
 												  comunes.obtenerPanelTransaccionesHistorico(),
 												  comunes.obtenerPanelConteoTransacciones(),

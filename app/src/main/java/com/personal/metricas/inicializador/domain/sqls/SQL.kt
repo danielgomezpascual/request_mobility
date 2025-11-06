@@ -23,7 +23,7 @@ object SQL {
 					ROUND(CAST(SUM(CASE WHEN REQ_STATUS = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*), 2) AS '% OK'
 				FROM
 					TRANSACCIONES
-			
+				
 				GROUP BY
 					strftime('%m-%d', CREATION_DATE)
 				ORDER BY
@@ -325,5 +325,193 @@ ORDER BY
     total_errores DESC
 LIMIT 10
 """
+
+	val ERRORES_TRX = """	SELECT
+					strftime('%m-%d', CREATION_DATE)  AS Fecha, 
+					COUNT(*) AS TRX
+									
+			FROM
+					TRANSACCIONES
+					WHERE
+    REQ_STATUS = 2
+				GROUP BY strftime('%m-%d', CREATION_DATE) 
+				
+				ORDER BY				
+				strftime('%m-%d', CREATION_DATE)  DESC	
+"""
+
+
+	val TASA_EXITO_POR_VERSION = """	SELECT
+    CASE
+        WHEN INSTR(PROGRAM_VERSION, 'APK:') > 0
+        THEN SUBSTR(PROGRAM_VERSION, INSTR(PROGRAM_VERSION, 'APK: ') + 5)
+        ELSE PROGRAM_VERSION
+    END AS VERSION,
+    COUNT(CASE WHEN REQ_STATUS = 0 THEN 1 END) AS OK,
+    COUNT(*) AS TOTAL,
+    
+    ROUND((CAST(COUNT(CASE WHEN REQ_STATUS = 0 THEN 1 END) AS REAL) * 100.0) / COUNT(*), 2) AS POK
+FROM
+    TRANSACCIONES
+GROUP BY
+    1
+ORDER BY
+    POK DESC;
+"""
+	val ERRORES_POR_VERSION_TRX = """	SELECT
+     CASE
+        WHEN INSTR(PROGRAM_VERSION, 'APK:') > 0
+        THEN SUBSTR(PROGRAM_VERSION, INSTR(PROGRAM_VERSION, 'APK: ') + 5)
+        ELSE PROGRAM_VERSION
+    END AS VERSION,
+    COUNT(CASE WHEN REQ_STATUS = 2 THEN 1 END) AS ERROR,
+    COUNT(*) AS TOTAL,
+    
+    ROUND((CAST(COUNT(CASE WHEN REQ_STATUS = 2 THEN 1 END) AS REAL) * 100.0) / COUNT(*), 2) AS PERR
+FROM
+    TRANSACCIONES
+GROUP BY
+    1
+ORDER BY
+    PERR DESC;
+"""
+
+
+	val VOLUMEN_USO_DISTRIBUICION = """ 
+		
+	SELECT
+    -- Aplicamos la lógica de extracción de versión en el SELECT principal
+    CASE
+        WHEN INSTR(T1.PROGRAM_VERSION, 'APK:') > 0
+        THEN SUBSTR(T1.PROGRAM_VERSION, INSTR(T1.PROGRAM_VERSION, 'APK: ') + 5)
+        ELSE T1.PROGRAM_VERSION
+    END AS VERSION,
+    
+    T1.volumen_total_transacciones AS TOTAL,
+    
+    
+    ROUND((CAST(T1.volumen_total_transacciones AS REAL) * 100.0) / T2.gran_total, 2) AS PTOT
+FROM
+    (
+        
+        SELECT PROGRAM_VERSION, COUNT(*) AS volumen_total_transacciones
+        FROM TRANSACCIONES
+        GROUP BY PROGRAM_VERSION
+    ) AS T1,
+    (
+        
+        SELECT COUNT(*) AS gran_total
+        FROM TRANSACCIONES
+    ) AS T2
+ORDER BY
+    PTOT DESC;
+	
+	""".trimIndent()
+
+
+	val DISTRIBUCION_POR_ESTADOS = """
+		SELECT
+    -- 1. Limpia y renombra la versión, usando el alias VERSION
+    CASE
+        WHEN INSTR(T1.PROGRAM_VERSION, 'APK:') > 0
+        THEN SUBSTR(T1.PROGRAM_VERSION, INSTR(T1.PROGRAM_VERSION, 'APK: ') + 5)
+        ELSE T1.PROGRAM_VERSION
+    END AS VERSION,
+   
+    T1.REQ_STATUS,
+    T3.STATUS_DESCRIPTION AS ESTADO_DESCRIPCION,
+    T1.total_por_estado,
+    
+    -- Calcula el porcentaje (PVERS)
+    ROUND((CAST(T1.total_por_estado AS REAL) * 100.0) / T2.total_version, 2) AS PVERS
+FROM
+    (
+        -- T1: Conteo de cada estado por versión original
+        SELECT PROGRAM_VERSION, REQ_STATUS, COUNT(*) AS total_por_estado
+        FROM TRANSACCIONES
+        GROUP BY PROGRAM_VERSION, REQ_STATUS
+    ) AS T1
+JOIN
+    (
+        -- T2: Conteo total de transacciones por cada versión original (el denominador)
+        SELECT PROGRAM_VERSION, COUNT(*) AS total_version
+        FROM TRANSACCIONES
+        GROUP BY PROGRAM_VERSION
+    ) AS T2 ON T1.PROGRAM_VERSION = T2.PROGRAM_VERSION
+JOIN
+    ESTADOS_TRANSACCIONES AS T3 ON T1.REQ_STATUS = T3.STATUS_CODE
+ORDER BY
+    VERSION DESC, PVERS DESC;
+		
+	""".trimIndent()
+
+
+	val TRX_REPROCESADAS_POR_VERSION = """ 
+		SELECT
+      CASE
+        WHEN INSTR(PROGRAM_VERSION, 'APK:') > 0
+        THEN SUBSTR(PROGRAM_VERSION, INSTR(PROGRAM_VERSION, 'APK: ') + 5)
+        ELSE PROGRAM_VERSION
+    END AS VERSION,
+    COUNT(CASE WHEN REQ_STATUS = 4 THEN 1 END) AS TREPRO,
+    COUNT(*) AS TOTAL,
+    
+    ROUND((CAST(COUNT(CASE WHEN REQ_STATUS = 4 THEN 1 END) AS REAL) * 100.0) / COUNT(*), 2) AS PREPRO
+FROM
+    TRANSACCIONES
+GROUP BY
+   1
+ORDER BY
+    PREPRO DESC;
+		
+	""".trimIndent()
+
+
+	val DISTRIBUCION_VERSION_LECTRORAS_FISICA = """
+		SELECT
+      CASE
+        WHEN INSTR(PROGRAM_VERSION, 'APK:') > 0
+        THEN SUBSTR(PROGRAM_VERSION, INSTR(PROGRAM_VERSION, 'APK: ') + 5)
+        ELSE PROGRAM_VERSION
+    END AS VERSION,
+    LECTORA_FISICA_ID AS LECT,
+    COUNT(*) AS TLECT,
+    
+    ROUND((CAST(COUNT(*) AS REAL) * 100.0) / (SELECT COUNT(*) FROM TRANSACCIONES T2 WHERE T2.PROGRAM_VERSION = T1.PROGRAM_VERSION), 2) AS PVERS
+FROM
+    TRANSACCIONES T1
+WHERE
+    LECTORA_FISICA_ID IS NOT NULL
+GROUP BY
+    1, LECT
+ORDER BY
+     LECT DESC;
+		
+	""".trimIndent()
+
+
+	val DIAS_ANTIGUEDAD_ULTIMA_TRANSACCION = """
+SELECT
+    
+    CASE
+        WHEN INSTR(PROGRAM_VERSION, 'APK:') > 0
+        THEN SUBSTR(PROGRAM_VERSION, INSTR(PROGRAM_VERSION, 'APK: ') + 5)
+        ELSE PROGRAM_VERSION
+    END AS VERSION,
+    
+    MAX(CREATION_DATE) AS ULT,
+    
+    
+    CAST(JULIANDAY('now', 'localtime') - JULIANDAY(MAX(CREATION_DATE)) AS INTEGER) AS DIAS
+FROM
+    TRANSACCIONES
+GROUP BY
+    
+    VERSION
+ORDER BY
+    DIAS DESC;
+
+		
+	""".trimIndent()
 }
 
