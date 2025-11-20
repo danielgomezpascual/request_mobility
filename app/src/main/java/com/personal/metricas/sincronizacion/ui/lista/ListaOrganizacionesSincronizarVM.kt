@@ -237,7 +237,6 @@ class ListaOrganizacionesSincronizarVM(
 						withContext(Dispatchers.Main){
 							if (contador == totalOraganizacionesSincronizar) {
 
-
 								dialog.sino(texto = "Informacion actualizada, ¿Desea generar tambien una sincronziacion en funcion de las transacciones recibidas?"){ resultado ->
 									if (resultado == DialogosResultado.Si){
 										async(Dispatchers.IO) {

@@ -214,9 +214,6 @@ ORDER BY
 	""".trimIndent()
 
 
-
-
-
 	val CONTEO_TRANSACCIONES_POR_ORGANIZACION = """
 		 SELECT ORGANIZATION_CODE, ORGANIZATION_NAME,  COUNT(* ) 
 		 FROM TRANSACCIONES  T 
@@ -280,7 +277,7 @@ ORDER BY 2 DESC
 	
 	""".trimIndent()
 
-val ERRORES_POR_VERSION = """
+	val ERRORES_POR_VERSION = """
 	SELECT
     PROGRAM_VERSION,
     COUNT(*) AS total_transacciones,
@@ -411,7 +408,7 @@ ORDER BY
 
 	val DISTRIBUCION_POR_ESTADOS = """
 		SELECT
-    -- 1. Limpia y renombra la versión, usando el alias VERSION
+    
     CASE
         WHEN INSTR(T1.PROGRAM_VERSION, 'APK:') > 0
         THEN SUBSTR(T1.PROGRAM_VERSION, INSTR(T1.PROGRAM_VERSION, 'APK: ') + 5)
@@ -422,18 +419,18 @@ ORDER BY
     T3.STATUS_DESCRIPTION AS ESTADO_DESCRIPCION,
     T1.total_por_estado,
     
-    -- Calcula el porcentaje (PVERS)
+    
     ROUND((CAST(T1.total_por_estado AS REAL) * 100.0) / T2.total_version, 2) AS PVERS
 FROM
     (
-        -- T1: Conteo de cada estado por versión original
+        
         SELECT PROGRAM_VERSION, REQ_STATUS, COUNT(*) AS total_por_estado
         FROM TRANSACCIONES
         GROUP BY PROGRAM_VERSION, REQ_STATUS
     ) AS T1
 JOIN
     (
-        -- T2: Conteo total de transacciones por cada versión original (el denominador)
+        
         SELECT PROGRAM_VERSION, COUNT(*) AS total_version
         FROM TRANSACCIONES
         GROUP BY PROGRAM_VERSION
@@ -512,6 +509,20 @@ ORDER BY
     DIAS DESC;
 
 		
+	""".trimIndent()
+
+
+	val SQL_DEMO: String = """
+			SELECT
+				
+				ORGANIZATION_CODE, COUNT(*) 
+			FROM
+				TRANSACCIONES  T LEFT JOIN ESTADOS_TRANSACCIONES ET ON T.REQ_STATUS = ET.STATUS_CODE 
+													
+			GROUP BY ORGANIZATION_CODE
+			ORDER BY				2 DESC
+			LIMIT 10
+					
 	""".trimIndent()
 }
 

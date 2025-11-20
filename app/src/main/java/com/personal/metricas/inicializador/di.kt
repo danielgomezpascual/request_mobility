@@ -10,6 +10,7 @@ import com.personal.metricas.inicializador.domain.InitDahsboardGeneral
 import com.personal.metricas.inicializador.domain.InitDahsboardLectoras
 import com.personal.metricas.inicializador.domain.InitDahsboardLog
 import com.personal.metricas.inicializador.domain.InitDahsboardVersionesGeneral
+import com.personal.metricas.inicializador.domain.InitDashboardDemo
 import com.personal.metricas.inicializador.domain.InitDashboardOrganizaciones
 import com.personal.metricas.inicializador.domain.comunes.KpisComunes
 import com.personal.metricas.kpi.domain.interactors.GuardarKpiCU
@@ -78,6 +79,13 @@ val modulosInicializador = module {
 			comunes = get<KpisComunes>()
 		)
 	}
+
+	single<InitDashboardDemo> {
+		InitDashboardDemo(
+			operaciones = get<InicializadorOperaciones>(),
+			comunes = get<KpisComunes>()
+		)
+	}
 	single<InicializadorManager> {
 
 		InicializadorManager(
@@ -88,6 +96,7 @@ val modulosInicializador = module {
 			initLog = get<InitDahsboardLog>(),
 			initErrores = get<InitDahsboardErrores>(),
 			initVersiones = get<InitDahsboardVersionesGeneral>(),
+			initDemo = get<InitDashboardDemo>(),
 			dialog = get<DialogManager>()
 		)
 	}
