@@ -17,6 +17,7 @@ import com.personal.metricas.kpi.navegacion.ScreenDetalleKpi
 import com.personal.metricas.kpi.navegacion.ScreenListadoKpis
 import com.personal.metricas.menu.navegacion.ScreenHerramientas
 import com.personal.metricas.menu.navegacion.ScreenMenu
+import com.personal.metricas.menu.screen.ScreenHerramientasInicial
 import com.personal.metricas.organizaciones.ui.navegacion.ScreenDetalleOrganizacionSincronizacion
 import com.personal.metricas.organizaciones.ui.navegacion.ScreenOrganizacionesLista
 import com.personal.metricas.paneles.navegacion.ScreenDetallePanel
@@ -24,6 +25,8 @@ import com.personal.metricas.paneles.navegacion.ScreenListadoPaneles
 import com.personal.metricas.settings.navegacion.ScreenSettings
 import com.personal.metricas.sincronizacion.ui.navegacion.ScreenMenuSincronizacion
 import com.personal.metricas.sincronizacion.ui.navegacion.ScreenOrganizacionesSincronizacion
+import com.personal.metricas.start.navegacion.ScreenStartHerramientas
+import com.personal.metricas.start.navegacion.ScreenStartPlanificacion
 
 fun NavGraphBuilder.NavegacionDashboard(navController: NavController) {
 	composable<CuadriculaDashboards> {
@@ -113,6 +116,7 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 
 		//==== Organizaciones =======================
 		EventosNavegacion.ListaOrganizaciones                 -> navController.navigate(ScreenOrganizacionesLista)
+		EventosNavegacion.ListaOrganizacionesStart                 -> navController.navigate(ScreenStartPlanificacion)
 
 		is EventosNavegacion.CargarSincronizacionOrganizacion -> {
 			navController.navigate(
@@ -124,6 +128,7 @@ fun goto(navegacion: EventosNavegacion, navController: NavController) {
 
 		//==== Herramientas =======================
 		EventosNavegacion.MenuHerramientas                    -> navController.navigate(ScreenHerramientas)
+		EventosNavegacion.MenuHerramientasStart                    -> navController.navigate(ScreenStartHerramientas)
 
 
 		//==== End Points =======================

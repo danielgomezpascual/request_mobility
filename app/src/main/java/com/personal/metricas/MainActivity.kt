@@ -79,7 +79,6 @@ class MainActivity : ComponentActivity() {
 				// 1. Calcula la clase de tamaño aquí
 				App.windowSizeClass = calculateWindowSizeClass(this)
 
-
 				// 1. Lee el valor booleano desde los recursos
 				val allowSensorRotation = resources.getBoolean(R.bool.allow_sensor_rotation)
 

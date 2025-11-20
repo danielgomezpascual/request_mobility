@@ -13,26 +13,46 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.room.util.TableInfo
 import com.personal.metricas.R
+import com.personal.metricas.core.composables.MA_Spacer
+import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
+import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.TituloScreen
+import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.imagenes.MA_ImagenDrawable
+import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo2
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.menu.Features
+import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
+import com.personal.metricas.start.composables.MA_PrimerosPasos
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
+fun ScreenHerramientasInicial(
+	navegacion: (EventosNavegacion) -> Unit
+) {
+	HerramientasScreen(configuracionInicial = true,navegacion=  navegacion)
+
+}
+
+@Composable
 fun HerramientasScreen(
+	configuracionInicial: Boolean = false,
 	viewModel: HerramientasViewModel = koinViewModel(),
 	navegacion: (EventosNavegacion) -> Unit,
 ) {
 
 	MA_ScaffoldGenerico(
-
+		mostrarBotonesSuperioresYBarraInferior = !configuracionInicial,
 		tituloScreen = TituloScreen.Herramientas,
 		navegacion = navegacion,
 		accionesSuperiores = {
@@ -42,85 +62,83 @@ fun HerramientasScreen(
 			Column(verticalArrangement = Arrangement.SpaceEvenly,
 				   modifier = Modifier.fillMaxSize()) {
 
+				if (!configuracionInicial) {
+					MA_Titulo2("Planificador")
+					Row() {
+						MA_Card(
+							modifier = Modifier
+								.weight(1f)
+								.fillMaxWidth()
+								.clickable(
+									enabled = true,
+									onClick = {
 
-				MA_Titulo2("Planificador")
-				Row() {
-					MA_Card(
-						modifier = Modifier
-							.weight(1f)
-							.fillMaxWidth()
-							.clickable(
-								enabled = true,
-								onClick = {
-
-									navegacion(EventosNavegacion.ListaOrganizaciones)
-								})
-					) {
-						MA_IconBottom(icon = Features.Planificador().icono,
-									  labelText = Features.Planificador().texto,
-									  color = Features.Planificador().color) {
-							navegacion(EventosNavegacion.ListaOrganizaciones)
-						}
-
-
-					}
-				}
-
-				MA_Titulo2("Componentes")
-				Row() {
-					MA_Card(
-						modifier = Modifier
-							.weight(1f)
-							.fillMaxWidth()
-							.clickable(
-								enabled = true,
-								onClick = {
-
-									navegacion(EventosNavegacion.MenuEndPoints)
-								})
-					) {
-						MA_IconBottom(icon = Features.EndPoints().icono,
-									  labelText = Features.EndPoints().texto,
-									  color = Features.EndPoints().color) {
-							navegacion(EventosNavegacion.MenuEndPoints)
-						}
+										navegacion(EventosNavegacion.ListaOrganizaciones)
+									})
+						) {
+							MA_IconBottom(icon = Features.Planificador().icono,
+										  labelText = Features.Planificador().texto,
+										  color = Features.Planificador().color) {
+								navegacion(EventosNavegacion.ListaOrganizaciones)
+							}
 
 
-					}
-
-					MA_Card(
-						modifier = Modifier
-							.weight(1f)
-							.fillMaxWidth()
-							.clickable(
-								enabled = true,
-								onClick = { navegacion(EventosNavegacion.MenuKpis) })
-					) {
-						MA_IconBottom(icon = Features.Kpi().icono,
-									  labelText = Features.Kpi().texto,
-									  color = Features.Kpi().color) {
-							navegacion(EventosNavegacion.MenuKpis)
 						}
 					}
-				}
 
-				Row() {
+					MA_Titulo2("Componentes")
+					Row() {
+						MA_Card(
+							modifier = Modifier
+								.weight(1f)
+								.fillMaxWidth()
+								.clickable(
+									enabled = true,
+									onClick = {
+
+										navegacion(EventosNavegacion.MenuEndPoints)
+									})
+						) {
+							MA_IconBottom(icon = Features.EndPoints().icono,
+										  labelText = Features.EndPoints().texto,
+										  color = Features.EndPoints().color) {
+								navegacion(EventosNavegacion.MenuEndPoints)
+							}
 
 
-					MA_Card(
-						modifier = Modifier
-							.weight(1f)
-							.fillMaxWidth()
-							.clickable(
-								enabled = true,
-								onClick = { navegacion(EventosNavegacion.MenuDashboard) })
-					) {
-						MA_IconBottom(icon = Features.Dashboard().icono,
-									  labelText = Features.Dashboard().texto,
-									  color = Features.Dashboard().color) {
-							navegacion(EventosNavegacion.MenuDashboard)
 						}
-						/*Row(modifier = Modifier
+
+						MA_Card(
+							modifier = Modifier
+								.weight(1f)
+								.fillMaxWidth()
+								.clickable(
+									enabled = true,
+									onClick = { navegacion(EventosNavegacion.MenuKpis) })
+						) {
+							MA_IconBottom(icon = Features.Kpi().icono,
+										  labelText = Features.Kpi().texto,
+										  color = Features.Kpi().color) {
+								navegacion(EventosNavegacion.MenuKpis)
+							}
+						}
+					}
+
+					Row() {
+						MA_Card(
+							modifier = Modifier
+								.weight(1f)
+								.fillMaxWidth()
+								.clickable(
+									enabled = true,
+									onClick = { navegacion(EventosNavegacion.MenuDashboard) })
+						) {
+							MA_IconBottom(icon = Features.Dashboard().icono,
+										  labelText = Features.Dashboard().texto,
+										  color = Features.Dashboard().color) {
+								navegacion(EventosNavegacion.MenuDashboard)
+							}
+							/*Row(modifier = Modifier
 							.fillMaxWidth()
 							.padding(15.dp),
 							horizontalArrangement = Arrangement.Start,
@@ -132,26 +150,26 @@ fun HerramientasScreen(
 								valor = Features.Dashboard().texto
 							)
 						}*/
-					}
-
-
-					MA_Card(
-						modifier = Modifier
-							.weight(1f)
-							.fillMaxWidth()
-							.clickable(
-								enabled = true,
-								onClick = {
-
-									navegacion(EventosNavegacion.MenuPaneles)
-								})
-					) {
-						MA_IconBottom(icon = Features.Paneles().icono,
-									  labelText = Features.Paneles().texto,
-									  color = Features.Paneles().color) {
-							navegacion(EventosNavegacion.MenuPaneles)
 						}
-						/*Row(modifier = Modifier
+
+
+						MA_Card(
+							modifier = Modifier
+								.weight(1f)
+								.fillMaxWidth()
+								.clickable(
+									enabled = true,
+									onClick = {
+
+										navegacion(EventosNavegacion.MenuPaneles)
+									})
+						) {
+							MA_IconBottom(icon = Features.Paneles().icono,
+										  labelText = Features.Paneles().texto,
+										  color = Features.Paneles().color) {
+								navegacion(EventosNavegacion.MenuPaneles)
+							}
+							/*Row(modifier = Modifier
 							.fillMaxWidth()
 							.padding(15.dp),
 							horizontalArrangement = Arrangement.Start,
@@ -163,29 +181,75 @@ fun HerramientasScreen(
 								valor = Features.Paneles().texto
 							)
 						}*/
+						}
+
 					}
 
+					MA_Titulo2("Valores Predefinidos")
 				}
 
-				MA_Titulo2("Valores Predefinidos")
-				MA_Card(
-					modifier = Modifier
-						//.weight(1f)
-						.fillMaxWidth()
-						.clickable(
-							enabled = true,
-							onClick = {
+
+
+				if (configuracionInicial) {
+					Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(50.dp).fillMaxSize()) {
+/*						MA_LabelNegrita("Primeros pasos")
+						MA_Spacer()
+						MA_Avatar(texto = "2", size = 70.dp, color = Color.Gray, fontSize = 40.sp,)
+						MA_Spacer()
+						MA_LabelNormal("Si quieres cargar unos paneles y dashboard por defecto con las consultas más habituales  pulsta el sigueinte botón", alineacion = TextAlign.Center)
+						MA_Spacer()
+*/
+
+						MA_PrimerosPasos("Dashboard",
+										 "2",
+										 "Si quieres cargar unos paneles y dashboard por defecto con las consultas más habituales  pulsta el sigueinte botón")
+
+
+
+						MA_Card {
+							Column (){
+								MA_IconBottom(icon = Features.InicializadorMetricas().icono,
+											  labelText = Features.InicializadorMetricas().texto,
+											  color = Features.InicializadorMetricas().color) {
+									viewModel.onEvent(HerramientasViewModel.Eventos.InicializadorMetricas)
+								}
+
+							}
+						}
+						MA_Spacer()
+						MA_BotonPrincipal("Continuar...") {
+							navegacion(EventosNavegacion.ListaOrganizacionesStart)
+						}
+					}
+				}else{
+					MA_Card(
+						modifier = Modifier
+							//.weight(1f)
+							.fillMaxWidth()
+							.clickable(
+								enabled = true,
+								onClick = {
+									viewModel.onEvent(HerramientasViewModel.Eventos.InicializadorMetricas)
+								})
+					) {
+
+						Column {
+
+
+							MA_IconBottom(icon = Features.InicializadorMetricas().icono,
+										  labelText = Features.InicializadorMetricas().texto,
+										  color = Features.InicializadorMetricas().color) {
 								viewModel.onEvent(HerramientasViewModel.Eventos.InicializadorMetricas)
-							})
-				) {
+							}
 
-					MA_IconBottom(icon = Features.InicializadorMetricas().icono,
-								  labelText = Features.InicializadorMetricas().texto,
-								  color = Features.InicializadorMetricas().color) {
-						viewModel.onEvent(HerramientasViewModel.Eventos.InicializadorMetricas)
+
+						}
+
+
 					}
-
 				}
+
+
 			}
 
 

@@ -39,7 +39,7 @@ fun MA_ScaffoldGenerico(
 	navegacion: (EventosNavegacion) -> Unit,
 	accionesSuperiores: @Composable () -> Unit,
 	contenido: @Composable () -> Unit,
-
+	mostrarBotonesSuperioresYBarraInferior: Boolean = true
 	) {
 
 
@@ -51,7 +51,9 @@ fun MA_ScaffoldGenerico(
 				.padding(vertical = 6.dp)
 			) {
 				Column {
-					Cabecera(tituloScreen, navegacion, accionesSuperiores)
+					if (mostrarBotonesSuperioresYBarraInferior) {
+						Cabecera(tituloScreen, navegacion, accionesSuperiores)
+					}
 
 				}
 			}
@@ -59,6 +61,7 @@ fun MA_ScaffoldGenerico(
 
 		}, bottomBar = {
 
+			if (mostrarBotonesSuperioresYBarraInferior){
 			BottomAppBar() {
 				Row(
 
@@ -132,6 +135,9 @@ fun MA_ScaffoldGenerico(
 
 
 			}
+
+				}
+
 		}) { paddingValues ->
 
 		Box(Modifier.padding(paddingValues)) {

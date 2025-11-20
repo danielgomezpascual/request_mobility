@@ -149,6 +149,7 @@ class SettingsViewModel(
 						dialog.sino(_t(R.string.seguro_que_desea_elminar_los_datos_actuales_de_la_base_de_dtos)) { resp ->
 							if (resp == DialogosResultado.Si) {
 								viewModelScope.launch {
+									App.sharedPrerfences.put<Boolean>(Preferencias.CONFIGURACION_INICIAL, true)
 									listOf<String>("Transacciones", "paneles", "dashboard", "Kpis", "Notas", "EndPoints").forEach {
 										db.openHelper.writableDatabase.execSQL("DELETE FROM $it")
 									}

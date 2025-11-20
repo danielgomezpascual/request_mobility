@@ -29,6 +29,7 @@ sealed class EventosNavegacion {
 
 	//Organizaciones --------------
 	object ListaOrganizaciones: EventosNavegacion()
+	object ListaOrganizacionesStart: EventosNavegacion()
 	data class CargarSincronizacionOrganizacion(val identificador: String) : EventosNavegacion()
 
 	//======== EndPoints =============
@@ -43,6 +44,7 @@ sealed class EventosNavegacion {
 
 
 	object MenuHerramientas : EventosNavegacion()
+	object MenuHerramientasStart : EventosNavegacion()
 
 
 	object Settings : EventosNavegacion()

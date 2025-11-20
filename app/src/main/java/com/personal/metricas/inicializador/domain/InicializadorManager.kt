@@ -8,6 +8,7 @@ import com.personal.metricas.core.data.ds.remote.network.retrofit.request.Entorn
 import com.personal.metricas.core.room.AppDatabase
 import com.personal.metricas.core.utils.Parametro
 import com.personal.metricas.core.utils.Parametros
+import com.personal.metricas.core.utils.Preferencias
 import com.personal.metricas.dashboards.ui.entidades.Etiquetas
 import com.personal.metricas.endpoints.ui.entidades.EndPointUI
 import com.personal.metricas.kpi.ui.entidades.KpiUI
@@ -37,6 +38,9 @@ class InicializadorManager(
 	val db: SupportSQLiteDatabase = appDatabase.openHelper.writableDatabase // Usamos readableDatabase para operaciones de lectura
 
 	suspend fun eliminarDatosGeneradosPreviamente() {
+
+		App.sharedPrerfences.put<Boolean>(Preferencias.CONFIGURACION_INICIAL, true)
+
 
 		val trxDao = getKoin().get<AppDatabase>().transaccionesDao()
 

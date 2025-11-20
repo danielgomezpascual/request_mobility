@@ -25,10 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.personal.metricas.core.composables.MA_Spacer
+import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
+import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.edittext.MA_TextBuscador
+import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.listas.MA_Lista
@@ -39,12 +44,26 @@ import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.menu.Features
 import com.personal.metricas.sincronizacion.ui.composables.OrganizacionListItemSincronizar
 import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM.UIState
+import com.personal.metricas.start.composables.MA_PrimerosPasos
+import org.apache.commons.jexl3.JxltEngine
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
+fun StartOrganizaciones(navegacion: (EventosNavegacion) -> Unit) {
+
+
+		ListaOrganizacinesSincronizar(navegacion = navegacion, configuracionInicial = true)
+
+
+
+}
+
+@Composable
 fun ListaOrganizacinesSincronizar(
+	configuracionInicial: Boolean = false,
 	viewModel: ListaOrganizacionesSincronizarVM = koinViewModel(),
-	navegacion: (EventosNavegacion) -> Unit,
+	navegacion: (EventosNavegacion) -> Unit
+
 ) {
 
 	LaunchedEffect(Unit) {
@@ -58,7 +77,8 @@ fun ListaOrganizacinesSincronizar(
 		UIState.Trabajando -> LoadingScreen()
 		is UIState.Success -> Success(
 			viewModel, (uiState as UIState.Success),
-			navegacion
+			navegacion,
+			configuracionInicial
 		)
 	}
 }
@@ -70,25 +90,28 @@ fun Success(
 	viewModel: ListaOrganizacionesSincronizarVM,
 	uiState: UIState.Success,
 	navegacion: (EventosNavegacion) -> Unit,
+	configuracionInicial: Boolean = false,
 ) {
 
 	var mostrarContenidoDialogoEliminar by remember { mutableStateOf(false) }
 	var mostrarContenidoDialogoInformacion by remember { mutableStateOf(false) }
 
 	MA_ScaffoldGenerico(
-
+		mostrarBotonesSuperioresYBarraInferior = !configuracionInicial,
 		tituloScreen = TituloScreen.Sincronizar,
 		navegacion = navegacion,
 		accionesSuperiores = {
-			Row(
-				modifier = Modifier.fillMaxWidth(),
-				horizontalArrangement = Arrangement.End,
-				verticalAlignment = Alignment.Top
 
-			) {
-				MA_IconBottom(icon = Features.EliminarDatosActuales().icono, color = Features.EliminarDatosActuales().color) { viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.EliminarDatosActuales) }
-				MA_IconBottom(icon = Features.Sincronizar().icono, color = Features.Sincronizar().color) { viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.RealizarSincronizacion) }
-			}
+				Row(
+					modifier = Modifier.fillMaxWidth(),
+					horizontalArrangement = Arrangement.End,
+					verticalAlignment = Alignment.Top
+
+				) {
+					MA_IconBottom(icon = Features.EliminarDatosActuales().icono, color = Features.EliminarDatosActuales().color) { viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.EliminarDatosActuales) }
+					MA_IconBottom(icon = Features.Sincronizar().icono, color = Features.Sincronizar().color) { viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.RealizarSincronizacion) }
+				}
+
 		},
 		contenido = {
 			Column(
@@ -104,6 +127,34 @@ fun Success(
 						MA_LabelNormal(uiState.infoSincro, color = Color.White, alineacion = TextAlign.Center)
 					}
 				}
+
+
+				if (configuracionInicial){
+					Column(verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(20.dp).fillMaxWidth()) {
+
+						/*MA_LabelNegrita("Primeros pasos")
+						MA_Spacer()
+						MA_Avatar(texto = "1", size = 70.dp, color =  Color.Gray, fontSize = 40.sp)
+						MA_Spacer()
+						MA_LabelNormal("Seleccione las organizaciones de las que desea obtener la información y pulse en Sincronizar ", alineacion = TextAlign.Center)
+						MA_Spacer()
+*/
+
+
+						MA_PrimerosPasos("Organizaciones",
+										 "1",
+										 "Seleccione las organizaciones de las que desea obtener la información y pulse en Sincronizar ")
+
+
+						Row(){
+							MA_BotonSecundario("Sincroniar") { viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.RealizarSincronizacion)  }
+							MA_BotonPrincipal("Continuar...") {
+								navegacion(EventosNavegacion.MenuHerramientasStart)
+							}
+						}
+					}
+				}
+
 
 
 				// Barra de búsqueda
@@ -151,6 +202,7 @@ fun Success(
 
 
 				}
+
 			}
 			if (uiState.trabajando) {
 				// Este es el nuevo componente de carga
