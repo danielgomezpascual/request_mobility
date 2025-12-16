@@ -1,7 +1,8 @@
 package com.personal.metricas.core.composables.scaffold
 
-import MA_IconBottom
+
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
@@ -62,70 +65,49 @@ fun MA_ScaffoldGenerico(
 		}, bottomBar = {
 
 			if (mostrarBotonesSuperioresYBarraInferior){
-			BottomAppBar(modifier = Modifier.height(100.dp)) {
+			BottomAppBar(
+				modifier = Modifier.height(120.dp),
+				containerColor = Color(10, 10, 10, 5),
+				tonalElevation = 0.dp
+			) {
 				Row(
 
-					modifier = Modifier.fillMaxWidth().height(40.dp),
+					modifier = Modifier.fillMaxWidth().height(80.dp),
 					horizontalArrangement = Arrangement.SpaceEvenly,
-					verticalAlignment = Alignment.Bottom
+					verticalAlignment = Alignment.CenterVertically
 
 
 				) {
 					if (App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_SINCRONIZACION, true)) {
-						MA_IconBottom(
-							//   modifier = Modifier.weight(1f),
+						// Blue Theme for Sync
+						ColoredNavItem(
 							icon = Features.Sincronizar().icono,
-							labelText ="",
-							seleccionado = false,
-							destacado = false,
+							backgroundColor = Color(0xFFE3F2FD), // Light Blue
+							iconColor = Color(0xFF1565C0), // Dark Blue
 							onClick = { navegacion(EventosNavegacion.Sincronizacion) }
 						)
 					}
 
-					/*
-										MA_IconBottom(
-											//   modifier = Modifier.weight(1f),
-											icon = Features.EndPoints().icono,
-											labelText = Features.EndPoints().texto,
-											seleccionado = false,
-											destacado = false,
-											onClick = { navegacion(EventosNavegacion.MenuEndPoints) }
-										)
-					*/
-
-
 					val haptic = LocalHapticFeedback.current
 
-					MA_Icono(
-						   modifier = Modifier.size(36.dp).combinedClickable(
-
-							   interactionSource = remember { MutableInteractionSource() },
-							   indication = null, // Opcional: quita el efecto ripple para gestionarlo tú
-							   onClick = {
-								   navegacion(EventosNavegacion.CuadriculaDashboard)
-							   },
-							   onLongClick = {
-								   // Realizamos una vibración para notificar al usuario del long press
-								   haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-								   navegacion(EventosNavegacion.HomeApp)
-							   }
-						   ),
-
-						icono = Features.Cuadriculas().icono,
-
-						//labelText = Features.Cuadriculas().texto,
-						/*seleccionado = true,
-						destacado = false,*/
-						/*onClick = {  }*/
+					// Gold/Amber Theme for Dashboard
+					ColoredNavItem(
+						icon = Features.Cuadriculas().icono,
+						backgroundColor = Color(0xFFFFF8E1), // Light Amber
+						iconColor = Color(0xFFD84315), // Deep Orange/Brownish
+						onClick = { navegacion(EventosNavegacion.CuadriculaDashboard) },
+						onLongClick = {
+							haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+							navegacion(EventosNavegacion.HomeApp)
+						}
 					)
 
 					if (App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_HERRAMIENTAS, false)) {
-						MA_IconBottom(
-							//   modifier = Modifier.weight(1f),
+						// Red/Pink Theme for Tools
+						ColoredNavItem(
 							icon = Features.Herramientas().icono,
-							labelText ="",
-							seleccionado = false,
-							destacado = false,
+							backgroundColor = Color(0xFFFFEBEE), // Light Red
+							iconColor = Color(0xFFC62828), // Dark Red
 							onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
 						)
 					}
@@ -143,5 +125,36 @@ fun MA_ScaffoldGenerico(
 		Box(Modifier.padding(paddingValues)) {
 			contenido()
 		}
+	}
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ColoredNavItem(
+	icon: ImageVector,
+	backgroundColor: Color,
+	iconColor: Color,
+	onClick: () -> Unit,
+	onLongClick: (() -> Unit)? = null
+) {
+	Box(
+		modifier = Modifier
+			.padding(2.dp)
+			.size(100.dp) // Size of the container
+			.clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
+			.background(backgroundColor)
+			.combinedClickable(
+				interactionSource = remember { MutableInteractionSource() },
+				indication = null, 
+				onClick = onClick,
+				onLongClick = onLongClick
+			),
+		contentAlignment = Alignment.Center
+	) {
+		MA_Icono(
+			icono = icon,
+			color = iconColor,
+			modifier = Modifier.size(32.dp)
+		)
 	}
 }
