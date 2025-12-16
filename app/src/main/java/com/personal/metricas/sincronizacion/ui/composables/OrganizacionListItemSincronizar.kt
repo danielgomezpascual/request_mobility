@@ -48,19 +48,19 @@ fun OrganizacionListItemSincronizar(
             
             // Iconografía con letras
             val colors = listOf(
-                Color(0xFFFFCDD2), // Red 100
-                Color(0xFFF8BBD0), // Pink 100
-                Color(0xFFE1BEE7), // Purple 100
-                Color(0xFFD1C4E9), // Deep Purple 100
-                Color(0xFFC5CAE9), // Indigo 100
-                Color(0xFFBBDEFB), // Blue 100
-                Color(0xFFB2EBF2), // Cyan 100
-                Color(0xFFB2DFDB), // Teal 100
-                Color(0xFFC8E6C9), // Green 100
-                Color(0xFFF0F4C3), // Lime 100
-                Color(0xFFFFF9C4), // Yellow 100
-                Color(0xFFFFE0B2), // Orange 100
-                Color(0xFFD7CCC8)  // Brown 100
+                Color(0xFFFFCDD2).copy(alpha = 0.5f), // Red 100
+                Color(0xFFF8BBD0).copy(alpha = 0.5f), // Pink 100
+                Color(0xFFE1BEE7).copy(alpha = 0.5f), // Purple 100
+                Color(0xFFD1C4E9).copy(alpha = 0.5f), // Deep Purple 100
+                Color(0xFFC5CAE9).copy(alpha = 0.5f), // Indigo 100
+                Color(0xFFBBDEFB).copy(alpha = 0.5f), // Blue 100
+                Color(0xFFB2EBF2).copy(alpha = 0.5f), // Cyan 100
+                Color(0xFFB2DFDB).copy(alpha = 0.5f), // Teal 100
+                Color(0xFFC8E6C9).copy(alpha = 0.5f), // Green 100
+                Color(0xFFF0F4C3).copy(alpha = 0.5f), // Lime 100
+                Color(0xFFFFF9C4).copy(alpha = 0.5f), // Yellow 100
+                Color(0xFFFFE0B2).copy(alpha = 0.5f), // Orange 100
+                Color(0xFFD7CCC8).copy(alpha = 0.5f)  // Brown 100
             )
             val iconColor = colors[kotlin.math.abs(organizacionUI.organizationCode.hashCode()) % colors.size]
 
@@ -72,7 +72,7 @@ fun OrganizacionListItemSincronizar(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = organizacionUI.organizationCode.take(2).uppercase(),
+                    text = organizacionUI.organizationCode.take(3).uppercase(),
                     color = Color.DarkGray, // Texto oscuro para contrastar con los fondos claros
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp

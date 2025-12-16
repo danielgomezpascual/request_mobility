@@ -2,6 +2,7 @@ package com.personal.metricas.core.composables.formas
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -36,19 +38,20 @@ fun Test_MA_Avatar() {
 
 @Composable
 fun MA_Avatar(
-	texto: String, size: Dp = 35.dp, color: Color = getRandomColor(),
+	texto: String, size: Dp = 35.dp,
+	color: Color = getRandomColor(),
 	fontSize: TextUnit = 18.sp,
-			 ) {
+) {
 	// Avatar
-	var letras = if3( (texto.isNotEmpty() && texto.length == 3), 3 , 2)
-	val fs : TextUnit = if3( (letras == 3 && fontSize >= 18.sp ), 14.sp, fontSize)
-	
-	Column(
+	var letras = if3((texto.isNotEmpty() && texto.length == 3), 3, 2)
+	val fs: TextUnit = if3((letras == 3 && fontSize >= 18.sp), 14.sp, fontSize)
+
+	/*Column(
 			modifier = Modifier.Companion
 				.size(size)
 				//.clip(CircleShape)
 
-				.background(color, shape = MA_ShapeIrregular(corners = 50, irregularity = 0.1f, seed = 1L)),
+				.background(color.copy(alpha = 0.5f), shape = MA_ShapeIrregular(corners = 50, irregularity = 0.1f, seed = 1L)),
 			verticalArrangement = Arrangement.Center,
 			horizontalAlignment = Alignment.CenterHorizontally
 		  
@@ -60,6 +63,31 @@ fun MA_Avatar(
 			 fontSize = fs,
 			 color = Color.Companion.White)
 		
+	}*/
+
+	Box(
+		modifier = Modifier
+			.size(40.dp) // Más pequeño
+			.clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp)) // Cuadrado con bordes redondeados
+			.background(color.copy(alpha = 0.5f)),
+		contentAlignment = Alignment.Center
+	) {
+
+		Text(
+			modifier = Modifier.fillMaxWidth(),
+			text = texto.take(letras).uppercase(),
+			textAlign = TextAlign.Center,
+			fontSize = fs,
+			//color = Color.DarkGray, // Texto oscuro para contrastar con los fondos claros
+			color = Color.Companion.White,
+			fontWeight = FontWeight.Bold,
+		)
+		/*Text(
+			text = organizacionUI.organizationCode.take(3).uppercase(),
+			color = Color.DarkGray, // Texto oscuro para contrastar con los fondos claros
+			fontWeight = FontWeight.Bold,
+			fontSize = 16.sp
+		)*/
 	}
-	
+
 }
