@@ -62,7 +62,7 @@ fun MA_ScaffoldGenerico(
 		}, bottomBar = {
 
 			if (mostrarBotonesSuperioresYBarraInferior){
-			BottomAppBar() {
+			BottomAppBar(modifier = Modifier.height(100.dp)) {
 				Row(
 
 					modifier = Modifier.fillMaxWidth().height(40.dp),
