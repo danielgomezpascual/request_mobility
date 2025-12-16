@@ -37,8 +37,7 @@ import com.personal.metricas.App
 import com.personal.metricas.App.Companion.dialog
 import com.personal.metricas.R
 import com.personal.metricas.core.composables.MA_Spacer
-import com.personal.metricas.core.composables.card.MA_Card
-import com.personal.metricas.core.composables.componentes.MA_Marco
+
 import com.personal.metricas.core.composables.graficas.MA_GraficoAnillo
 import com.personal.metricas.core.composables.graficas.MA_GraficoBarras
 import com.personal.metricas.core.composables.graficas.MA_GraficoBarrasVerticales
@@ -109,7 +108,6 @@ fun MA_Panel(
 
 	try {
 
-
 		if (configuracion.limiteElementos > 0) {
 			filas = panelData.limiteElementos()
 			panelData.valoresTabla.filas = filas
@@ -148,18 +146,24 @@ fun MA_Panel(
 	}
 
 	if (tieneErrores) {
-		MA_Marco(titulo = panelData.panel.titulo, modifier = Modifier, componente = {
-			Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-				Icon(imageVector = Icons.Default.Error, tint = Color.Red, contentDescription = "")
-				MA_LabelNegrita("ERROR", color = Color.Red)
+		androidx.compose.material3.Card(
+			colors = androidx.compose.material3.CardDefaults.cardColors(
+				containerColor = androidx.compose.material3.MaterialTheme.colorScheme.errorContainer
+			),
+			modifier = Modifier.fillMaxWidth().padding(8.dp)
+		) {
+			Column(
+				modifier = Modifier.padding(16.dp),
+				verticalArrangement = Arrangement.Center,
+				horizontalAlignment = Alignment.CenterHorizontally
+			) {
+				Icon(imageVector = Icons.Default.Error, tint = androidx.compose.material3.MaterialTheme.colorScheme.onErrorContainer, contentDescription = "")
+				MA_LabelNegrita("ERROR", color = androidx.compose.material3.MaterialTheme.colorScheme.onErrorContainer)
 				MA_LabelMini(panelData.panel.descripcion)
 				MA_LabelNegrita(mensajeError)
 				MA_LabelNormal(trazaError)
-
 			}
-
-
-		})
+		}
 		return
 	}
 	val scope = rememberCoroutineScope() // Se mantiene dentro del componente
@@ -175,25 +179,39 @@ fun MA_Panel(
 
 	when (panelData.panel.tipoPanel) {
 		TiposPanel.PANEL_TEXTO     -> {
-			MA_Card(color = Color(panelData.panelConfiguracion.colorPanel)) {
-				Column(modifier = Modifier.padding(5.dp)) {
+			androidx.compose.material3.ElevatedCard(
+				modifier = Modifier.fillMaxWidth().padding(4.dp),
+				colors = androidx.compose.material3.CardDefaults.elevatedCardColors(
+					containerColor = if (panelData.panelConfiguracion.colorPanel != 0) Color(panelData.panelConfiguracion.colorPanel) else androidx.compose.material3.MaterialTheme.colorScheme.surface
+				),
+				elevation = androidx.compose.material3.CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+			) {
+				Column(modifier = Modifier.padding(16.dp)) {
 					MA_LabelNormal(panelData.panel.titulo)
+					MA_Spacer(Modifier.padding(4.dp))
 					MA_LabelMini(panelData.panel.descripcion)
-					MA_LabelMini(modifier = Modifier
-						.fillMaxWidth()
-						.padding(horizontal = 2.dp), valor = identificador,
-								 alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic)
+					
+					MA_Spacer(Modifier.padding(8.dp))
+					MA_LabelMini(modifier = Modifier.fillMaxWidth(),
+								 valor = identificador,
+								 alineacion = TextAlign.End,
+								 size = 9.sp,
+								 fontStyle = FontStyle.Italic)
 				}
 			}
 		}
 
 		TiposPanel.PANEL_END_POINT -> {
-
-
-			MA_Card(color = Color(panelData.panelConfiguracion.colorPanel), modifier = Modifier
-				.clickable(enabled = true, onClick = {
+			androidx.compose.material3.ElevatedCard(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(4.dp),
+				colors = androidx.compose.material3.CardDefaults.elevatedCardColors(
+					containerColor = if (panelData.panelConfiguracion.colorPanel != 0) Color(panelData.panelConfiguracion.colorPanel) else androidx.compose.material3.MaterialTheme.colorScheme.surface
+				),
+				onClick = {
 					scope.launch {
-						isLoading = true // ¡Mostramos el loading!
+						isLoading = true 
 						try {
 							App.log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
 							async() {
@@ -205,54 +223,47 @@ fun MA_Panel(
 						finally {
 							isLoading = false
 						}
-
-
 					}
-				})
+				}
 			) {
-				Column {
-					MA_IconBottom(icon = Features.EndPoints().icono,
-								  labelText = "${panelData.panel.titulo}",
-								  color = Features.EndPoints().color) {
+				Column(modifier = Modifier.padding(12.dp)) {
+					Row(verticalAlignment = Alignment.CenterVertically) {
+						MA_IconBottom(
+							icon = Features.EndPoints().icono,
+							labelText = "", // Label vacio aqui por diseño
+							color = Features.EndPoints().color,
+							onClick = {} // Sin accion extra
+						)
+						Column(modifier = Modifier.padding(start = 8.dp)) {
+							MA_LabelNormal(panelData.panel.titulo)
+							MA_LabelMini(identificador, size = 9.sp, fontStyle = FontStyle.Italic)
+						}
 					}
-					MA_LabelMini(modifier = Modifier
-						.fillMaxWidth()
-						.padding(horizontal = 2.dp),
-								 valor = identificador, alineacion = TextAlign.End, size = 9.sp,
-								 fontStyle = FontStyle.Italic)
-
 				}
 			}
-
 		}
 
 
 		TiposPanel.PANEL_CONECTOR  -> {
-
-
 			App.log.lista("Valres tabla", panelData.valoresTabla.filas)
 			App.log.lista("Valres tabla", filasPintar)
 
-			Row(modifier = Modifier.fillMaxWidth().horizontalScroll(state = rememberScrollState()), horizontalArrangement = Arrangement.Center) {
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+					.horizontalScroll(state = rememberScrollState())
+					.padding(vertical = 4.dp),
+				horizontalArrangement = Arrangement.spacedBy(8.dp)
+			) {
 				filasPintar.forEach { fila ->
 					pintarPanelConectores(panelData, panelData.panel.conector.identificador, fila)
 				}
-
 			}
-
-
-			/*ResultadoSQL.fromSqlToTabla(panelData..kpiOrigenDatos.sql).filas.forEach { fila ->
-				pintarPanelConectores(panelData, dashboardResult,fila )
-			}*/
-
 		}
 
 
 		TiposPanel.PANEL_KPI       -> {
-
-
 			var panelDataState by remember { mutableStateOf(panelData) }
-
 
 			graficaComposable = dameTipoGrafica(
 				panelConfiguracion = configuracion,
@@ -260,10 +271,7 @@ fun MA_Panel(
 				filas = fs,
 				posicionX = panelData.panelConfiguracion.columnaX,
 				posivionY = panelData.panelConfiguracion.columnaY
-
 			)
-
-
 
 			tablaComposable = dameTipoTabla(
 				panelDataState,
@@ -274,19 +282,16 @@ fun MA_Panel(
 				celdasFiltro = celdasFiltro,
 				onClickSeleccionarFila = { fila ->
 					filas = filas.map { f ->
-
 						App.log.d("Cambio en la seleccion del filtro")
 						if (fila.seleccionada) {
 							f.copy(seleccionada = false)
 						} else {
-
 							if (f.equals(fila)) {
 								f.copy(seleccionada = true)
 							} else {
 								f.copy(seleccionada = false)
 							}
 						}
-
 					}
 					celdasFiltro = fila.celdas
 					panelData.valoresTabla.filas = filas
@@ -317,9 +322,7 @@ fun MA_Panel(
 							c
 						}
 					}
-
 					filas = cumplenFiltro(filas, celdasFiltro)
-
 					panelData.valoresTabla.filas = filas
 				},
 				onClickBorrarFiltros = {
@@ -333,25 +336,24 @@ fun MA_Panel(
 					panelData.valoresTabla.filas = filas.map { fila ->
 						fila.copy(visible = fila.toString().contains(str))
 					}
-
-
 				},
 				onClickIndicePaginacion = { indice ->
 					panelDataState = panelDataState.copy(indice = indice)
 				}
-
 			)
 
-			val transparencia = if3(Color(panelData.panelConfiguracion.colorPanel) == Color.White, 1.0f, 0.2f)
-			MA_Card(
-				color = Color(panelData.panelConfiguracion.colorPanel).copy(alpha = transparencia),
-				modifier = Modifier.padding(6.dp)) {
+			val transparencia = if3(Color(panelData.panelConfiguracion.colorPanel) == Color.White, 1.0f, 0.9f)
+			
+			androidx.compose.material3.Surface(
+				color = if (panelData.panelConfiguracion.colorPanel != 0) Color(panelData.panelConfiguracion.colorPanel).copy(alpha = transparencia) else androidx.compose.material3.MaterialTheme.colorScheme.surface,
+				shadowElevation = 2.dp,
+				shape = androidx.compose.material3.MaterialTheme.shapes.medium,
+				modifier = Modifier.padding(6.dp)
+			) {
 
-				Column() {
+				Column(modifier = Modifier.padding(8.dp)) {
 					when (configuracion.orientacion) {
 						PanelOrientacion.VERTICAL   -> {
-
-
 							MA_GraficaConTablaVertical(
 								modifier = modifier,
 								panelConfiguracion = configuracion,
@@ -371,51 +373,48 @@ fun MA_Panel(
 							)
 						}
 					}
-					MA_LabelMini(modifier = Modifier
-						.fillMaxWidth()
-						.padding(horizontal = 2.dp), valor = identificador, alineacion = TextAlign.End, size = 9.sp, fontStyle = FontStyle.Italic)
-
+					
+					MA_Spacer(Modifier.padding(4.dp))
+					MA_LabelMini(modifier = Modifier.fillMaxWidth(), 
+								 valor = identificador, 
+								 alineacion = TextAlign.End, 
+								 size = 9.sp, 
+								 fontStyle = FontStyle.Italic)
 				}
-
 			}
-
 		}
 	}
-
-
 }
 
 @Composable
 fun pintarPanelConectores(panelData: PanelData, identificadorDashboard: Int, fila: Fila = Fila()) {
 
-	MA_Card(
-		elevacion = 3.dp,
-		color = Color(panelData.panelConfiguracion.colorPanel),
+	androidx.compose.material3.ElevatedCard(
+		elevation = androidx.compose.material3.CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+		colors = androidx.compose.material3.CardDefaults.elevatedCardColors(
+			containerColor = if (panelData.panelConfiguracion.colorPanel != 0) Color(panelData.panelConfiguracion.colorPanel) else androidx.compose.material3.MaterialTheme.colorScheme.surface
+		),
 		modifier = Modifier
-			.padding(1.dp)
-			//.background(color = Color(225, 245, 254, 255))
+			.padding(4.dp)
 			.clickable {
 				goto(EventosNavegacion.VisualizadorDashboard(identificadorDashboard, _toJson(fila.toParametros())),
 					 App.navController)
 			}
 	) {
-		Column {
+		Column(
+			modifier = Modifier.padding(12.dp),
+			horizontalAlignment = Alignment.CenterHorizontally
+		) {
 			val s: String = Parametros.reemplazar(panelData.panel.titulo, fila.toParametros(), fila.toParametros())
 
 			MA_IconBottom(
 				icon = Features.Dashboard().icono,
-				labelText = s,
+				labelText = "",
 				color = Features.Dashboard().color
 			) {}
-			MA_LabelMini(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(horizontal = 2.dp),
-				valor = s,
-				alineacion = TextAlign.End,
-				size = 9.sp,
-				fontStyle = FontStyle.Italic
-			)
+			
+			MA_Spacer(Modifier.padding(4.dp))
+			MA_LabelNormal(valor = s, alineacion = TextAlign.Center)
 		}
 	}
 }
