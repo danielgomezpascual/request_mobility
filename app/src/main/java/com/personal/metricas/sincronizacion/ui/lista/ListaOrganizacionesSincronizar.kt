@@ -2,6 +2,11 @@ package com.personal.metricas.sincronizacion.ui.lista
 
 import MA_IconBottom
 import MA_Morph
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +21,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -84,6 +91,7 @@ fun Success(
 
     var mostrarContenidoDialogoEliminar by remember { mutableStateOf(false) }
     var mostrarContenidoDialogoInformacion by remember { mutableStateOf(false) }
+    var mostrarBuscador by remember { mutableStateOf(false) }
 
     MA_ScaffoldGenerico(
             mostrarBotonesSuperioresYBarraInferior = !configuracionInicial,
@@ -95,6 +103,15 @@ fun Success(
 					horizontalArrangement = Arrangement.End,
 					verticalAlignment = Alignment.Top
                 ) {
+                    MA_IconBottom(
+                        icon = Icons.Default.Search,
+                        color = Color.DarkGray
+                    ) {
+                        mostrarBuscador = !mostrarBuscador
+                        if (!mostrarBuscador) {
+                            viewModel.onEvent(ListaOrganizacionesSincronizarVM.Eventos.Buscar(""))
+                        }
+                    }
                     MA_IconBottom(
                             icon = Features.EliminarDatosActuales().icono,
                             color = Features.EliminarDatosActuales().color
@@ -167,14 +184,20 @@ fun Success(
                     }
 
                     // Barra de búsqueda
-                    MA_TextBuscador(
+                    AnimatedVisibility(
+                        visible = mostrarBuscador,
+                        enter = expandVertically() + fadeIn(),
+                        exit = shrinkVertically() + fadeOut()
+                    ) {
+                        MA_TextBuscador(
                             searchText = uiState.textoBuscar,
                             onSearchTextChanged = { it ->
                                 viewModel.onEvent(
-                                        ListaOrganizacionesSincronizarVM.Eventos.Buscar(it)
+                                    ListaOrganizacionesSincronizarVM.Eventos.Buscar(it)
                                 )
                             },
-                    )
+                        )
+                    }
 
                     val selectedCount = uiState.organizaciones.count { it.seleccionado }
                     Row(
