@@ -24,6 +24,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -141,13 +144,16 @@ fun SuccessCuadriculaDashboard(
                         )
                     }
 
-                    MA_Card {
+
 
 
                         MA_Columnas(data = uiState.lista.sortedBy { it.nombre }) { item ->
 
 
-                            MA_Card(
+                            
+                            val borderColor = try { Color(item.color) } catch (e: Exception) { Color.LightGray }
+
+                            Surface(
                                 modifier =
                                     Modifier.padding(4.dp)
                                         .clickable(
@@ -164,8 +170,10 @@ fun SuccessCuadriculaDashboard(
                                                 )
                                             }
                                         ),
-                                color = Color(item.color).copy(alpha = 0.1f),
-                                elevacion = 0.dp
+                                shape = RoundedCornerShape(12.dp),
+                                color = Color.White,
+                                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.5f)),
+                                shadowElevation = 2.dp
                             ) {
                                 Column(
                                     modifier = Modifier.padding(16.dp).fillMaxWidth(),
@@ -196,7 +204,7 @@ fun SuccessCuadriculaDashboard(
                                 }
                             }
                         }
-                    }
+
                 }
             }
     )
