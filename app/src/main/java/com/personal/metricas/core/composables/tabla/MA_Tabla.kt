@@ -203,7 +203,31 @@ fun MA_Tabla(
                 verticalAlignment = Alignment.CenterVertically
         ) {
 
-
+            if (celdasFiltro.isNotEmpty()) {
+                ModalInferiorFiltros() {
+                    var str by remember {
+                        mutableStateOf(App.sharedPrerfences.get(K.TXT_FILTROS_LISTAS, ""))
+                    }
+                    Column {
+                        MA_Titulo("Filtro")
+                        MA_BotonSecundarioSinBorde("Borrar", color = Color.Red) {
+                            onClickBorrarFiltros()
+                        }
+                        MA_TextoEditable(valor = str, titulo = "Buscar") { texto ->
+                            str = texto
+                            App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
+                            onClickFiltrarTexto(str)
+                        }
+                        MA_Lista(celdasFiltro) { celdaFiltro ->
+                            MA_CeldaFiltro(
+                                celda = celdaFiltro,
+                                onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
+                                onClickInvertir = { cf -> onClickInvertir(cf) }
+                            )
+                        }
+                    }
+                }
+            }
 
 
 				// Pagination Controls
@@ -233,40 +257,11 @@ fun MA_Tabla(
 				}
 
 
-
-
-
-
-
             Row(modifier = Modifier, horizontalArrangement = Arrangement.End) {
-                if (celdasFiltro.isNotEmpty()) {
 
-                    ModalInferiorFiltros() {
-                        var str by remember {
-                            mutableStateOf(App.sharedPrerfences.get(K.TXT_FILTROS_LISTAS, ""))
-                        }
-                        Column {
-                            MA_Titulo("Filtro")
-                            MA_BotonSecundarioSinBorde("Borrar", color = Color.Red) {
-                                onClickBorrarFiltros()
-                            }
-                            MA_TextoEditable(valor = str, titulo = "Buscar") { texto ->
-                                str = texto
-                                App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
-                                onClickFiltrarTexto(str)
-                            }
-                            MA_Lista(celdasFiltro) { celdaFiltro ->
-                                MA_CeldaFiltro(
-                                        celda = celdaFiltro,
-                                        onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
-                                        onClickInvertir = { cf -> onClickInvertir(cf) }
-                                )
-                            }
-                        }
-                    }
-                }
                 MA_Spacer()
-                MA_Spacer()
+
+
                 TextButton(
                         onClick = {
                             val scope = CoroutineScope(Dispatchers.IO)
