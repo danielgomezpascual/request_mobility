@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,7 +48,7 @@ fun MA_ScaffoldGenerico(
 
 
 	Scaffold(
-		containerColor = Color(red = 227, green = 225, blue = 225, alpha = 100),
+		containerColor = Color(red = 245, green = 245, blue = 245, alpha = 100),
 		topBar = {
 
 			Box(modifier = Modifier
@@ -67,13 +68,12 @@ fun MA_ScaffoldGenerico(
 			if (mostrarBotonesSuperioresYBarraInferior){
 			BottomAppBar(
 				modifier = Modifier.height(120.dp),
-				containerColor = Color(10, 10, 10, 5),
-				tonalElevation = 0.dp
+				containerColor = Color(174, 213, 129, 10),
+				tonalElevation = 50.dp
 			) {
 				Row(
-
 					modifier = Modifier.fillMaxWidth().height(80.dp),
-					horizontalArrangement = Arrangement.SpaceEvenly,
+					horizontalArrangement = Arrangement.SpaceAround,
 					verticalAlignment = Alignment.CenterVertically
 
 
@@ -139,8 +139,11 @@ private fun ColoredNavItem(
 ) {
 	Box(
 		modifier = Modifier
-			.padding(2.dp)
-			.size(100.dp) // Size of the container
+			.padding(10.dp)
+
+			.fillMaxHeight()
+
+		.size(100.dp)
 			.clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
 			.background(backgroundColor)
 			.combinedClickable(

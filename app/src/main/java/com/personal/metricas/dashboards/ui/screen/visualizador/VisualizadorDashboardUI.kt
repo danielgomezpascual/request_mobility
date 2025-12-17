@@ -37,7 +37,11 @@ import com.personal.metricas.core.composables.labels.MA_LabelExtendido
 import com.personal.metricas.core.composables.labels.MA_LabelLeyenda
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_Titulo
+import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo2
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.notas.domain.NotasManager
 import com.personal.metricas.core.navegacion.EventosNavegacion
@@ -108,121 +112,79 @@ fun VisualizarDashboard(uiState: UIState.Success) {
 	// Extraemos la clase de ancho
 	val widthSizeClass = App.windowSizeClass.widthSizeClass
 
-
-
-
-	Box(Modifier) {
-		Column(modifier = Modifier) {
-
-			Column(modifier = Modifier
-				.fillMaxWidth()
-
-				.background(color = Color(255, 253, 231, 255))) {
-
-
-				Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(3.dp).fillMaxWidth()) {
-					MA_Titulo2(uiState.dashboardUI.nombre, modifier = Modifier.weight(1f))
-
-					/*
-			*/
-					MA_LabelMini(
-						alineacion = TextAlign.End,
-						valor = "Sync: ${App.sharedPrerfences.get(K.ULTIMA_SINCRONIZACION, "Sin datos")}",
-						size = 9.sp)
-				}
-
-				/*if (uiState.dashboardUI.descripcion.isNotEmpty()) {
-					MA_LabelEtiqueta(modifier = Modifier.fillMaxWidth(),
-									 alineacion = TextAlign.Center,
-									 valor = uiState.dashboardUI.descripcion)
-				}*/
-
-			}
-
-
-			var esPantallaExpandida: Boolean = false
-			when (widthSizeClass) {
-				WindowWidthSizeClass.Compact  -> {
-					App.numColumnas = 1
-					esPantallaExpandida = false
-				}
-
-				WindowWidthSizeClass.Medium   -> {
-					App.numColumnas = 2
-					esPantallaExpandida = true
-				}
-
-				WindowWidthSizeClass.Expanded -> {
-					App.numColumnas = 3
-					esPantallaExpandida = true
-				}
-			}
-
-
-			if (esPantallaExpandida) {
-				VisulizadorVariasColumnas(uiState)
-			} else {
-
-				Visualizador1Columna(uiState)
-			}
-
-		}
+	val columns = when (widthSizeClass) {
+		WindowWidthSizeClass.Compact -> 1
+		WindowWidthSizeClass.Medium -> 2
+		WindowWidthSizeClass.Expanded -> 3
+		else -> 1
 	}
-}
+	
+	App.numColumnas = columns
 
-
-@Composable
-fun Visualizador1Columna(uiState: UIState.Success) {
-	val scroll = rememberScrollState()
-	Column(modifier = Modifier.verticalScroll(state = scroll)) {
-
-
-		uiState.paneles.filter { it.seleccionado }.forEach { panelUI ->
-			lateinit var p: PanelUI
-			//val notasManager = getKoin().get<NotasManager>()
-			val notasManager = NotasManager.instancia()
-			val panelData = PanelData.fromPanelUI(panelUI, notasManager,
-												  uiState.dashboardUI.parametros)
-
-			MA_Panel(panelData = panelData)
-
-
-		}
-
-	}
-}
-
-@Composable
-fun VisulizadorVariasColumnas(uiState: UIState.Success) {
-	LazyVerticalGrid(
-		// 1. Definimos el número de columnas
-		columns = GridCells.Fixed(App.numColumnas),
-
-		// 2. (Opcional) Añadimos espaciado entre los elementos de la cuadrícula
-		/*verticalArrangement = Arrangement.spacedBy(8.dp),
-		horizontalArrangement = Arrangement.spacedBy(8.dp),*/
-
-		// 3. (Opcional) Añadimos padding alrededor de la cuadrícula
-		contentPadding = PaddingValues(4.dp)
+	Column(
+		modifier = Modifier
+			.fillMaxSize()
+			.background(MaterialTheme.colorScheme.background)
 	) {
 
 
-		val paneles = uiState.paneles.filter { it.seleccionado }
-		items(items = paneles,
-			  span = { panelUI -> // 2. El lambda para definir el span
-				  GridItemSpan(if3(panelUI.configuracion.celdasPantallasGrandes > App.numColumnas, App.numColumnas, panelUI.configuracion.celdasPantallasGrandes))
-			  }) { panelUI ->
-			// La variable 'p' no se usaba en tu código original,
-			// así que la he eliminado.
-			val notasManager = NotasManager.instancia()
-			val panelData = PanelData.fromPanelUI(
-				panelUI,
-				notasManager,
-				uiState.dashboardUI.parametros
-			)
+		Column(
+			modifier = Modifier
+				.fillMaxWidth()
+				.background(color = Color(255, 253, 231, 255)) // Original background
+				.padding(horizontal = 12.dp, vertical = 2.dp) // Improved padding
+		) {
+			Row(
+				verticalAlignment = Alignment.CenterVertically, 
+				modifier = Modifier.fillMaxWidth()
+			) {
+				MA_Titulo2(
+					valor = uiState.dashboardUI.nombre,
+					modifier = Modifier.weight(1f)
+				)
 
-			// Cada MA_Panel ocupará una celda de la cuadrícula
-			MA_Panel(panelData = panelData)
+				MA_LabelMini(
+					alineacion = TextAlign.End,
+					valor = "Sync: ${App.sharedPrerfences.get(K.ULTIMA_SINCRONIZACION, "Sin datos")}",
+					size = 10.sp
+				)
+			}
+			
+			/*if (uiState.dashboardUI.descripcion.isNotEmpty()) {
+				Spacer(modifier = Modifier.height(4.dp))
+				MA_LabelNormal(
+					valor = uiState.dashboardUI.descripcion,
+					modifier = Modifier.fillMaxWidth()
+				)
+			}*/
+		}
+
+
+		// Grid unificado
+		LazyVerticalGrid(
+			columns = GridCells.Fixed(columns),
+			contentPadding = PaddingValues(16.dp),
+			verticalArrangement = Arrangement.spacedBy(16.dp),
+			horizontalArrangement = Arrangement.spacedBy(16.dp),
+			modifier = Modifier.weight(1f)
+		) {
+			val paneles = uiState.paneles.filter { it.seleccionado }
+			
+			items(
+				items = paneles,
+				span = { panelUI ->
+					val spanCount = if3(panelUI.configuracion.celdasPantallasGrandes > columns, columns, panelUI.configuracion.celdasPantallasGrandes)
+					GridItemSpan(spanCount)
+				}
+			) { panelUI ->
+				val notasManager = NotasManager.instancia()
+				val panelData = PanelData.fromPanelUI(
+					panelUI,
+					notasManager,
+					uiState.dashboardUI.parametros
+				)
+				MA_Panel(panelData = panelData)
+			}
 		}
 	}
 }
