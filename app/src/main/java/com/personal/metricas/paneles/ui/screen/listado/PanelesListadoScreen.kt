@@ -12,8 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.TituloScreen
@@ -61,6 +72,7 @@ fun SuccessListadoPaneles(
 	uiState: UIState.Success,
 	navegacion: (EventosNavegacion) -> Unit,
 ) {
+	var mostrarBuscador by remember { mutableStateOf(false) }
 
 
 	MA_ScaffoldGenerico(
@@ -71,17 +83,17 @@ fun SuccessListadoPaneles(
 								modifier = Modifier.fillMaxWidth(),
 								horizontalArrangement = Arrangement.End,
 								verticalAlignment = Alignment.Top
-
 							) {
-								Row(
-									modifier = Modifier.fillMaxWidth(),
-									horizontalArrangement = Arrangement.End,
-									verticalAlignment = Alignment.Top
-
+								MA_IconBottom(
+									icon = Icons.Default.Search,
+									color = Color.DarkGray
 								) {
-									MA_IconBottom(icon = Features.Nuevo().icono, color = Features.Nuevo().color) { navegacion(EventosNavegacion.NuevoPanel) }
+									mostrarBuscador = !mostrarBuscador
+									if (!mostrarBuscador) {
+										viewModel.onEvent(PanelesListadoVM.Eventos.Buscar(""))
+									}
 								}
-
+								MA_IconBottom(icon = Features.Nuevo().icono, color = Features.Nuevo().color) { navegacion(EventosNavegacion.NuevoPanel) }
 							}
 						},
 		
@@ -108,14 +120,24 @@ fun SuccessListadoPaneles(
 			Column(modifier = Modifier.fillMaxWidth()) {
 
 
+				// Barra de búsqueda
+
+				AnimatedVisibility(
+					visible = mostrarBuscador,
+					enter = expandVertically() + fadeIn(),
+					exit = shrinkVertically() + fadeOut()
+				) {
+					MA_TextBuscador(
+						searchText = uiState.textoBuscar,
+						onSearchTextChanged = { it ->
+							viewModel.onEvent(PanelesListadoVM.Eventos.Buscar(it))
+						},
+					)
+				}
+
+
 				MA_Card() {
 					Column() {
-						MA_TextBuscador(
-							searchText = uiState.textoBuscar,
-							onSearchTextChanged = { it ->
-								viewModel.onEvent(PanelesListadoVM.Eventos.Buscar(it))
-							},
-						)
 
 						MA_Lista(data = uiState.lista) { item ->
 							PanelListItem(item, onClickItem = {

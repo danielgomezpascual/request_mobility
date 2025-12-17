@@ -15,6 +15,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -88,6 +95,7 @@ fun ListaOrganizacionesSuccess(
 
 	var mostrarContenidoDialogoEliminar by remember { mutableStateOf(false) }
 	var mostrarContenidoDialogoInformacion by remember { mutableStateOf(false) }
+	var mostrarBuscador by remember { mutableStateOf(false) }
 
 	MA_ScaffoldGenerico(
 		mostrarBotonesSuperioresYBarraInferior = !configuracionInicial,
@@ -100,6 +108,15 @@ fun ListaOrganizacionesSuccess(
 				verticalAlignment = Alignment.Top
 
 			) {
+				MA_IconBottom(
+					icon = Icons.Default.Search,
+					color = Color.DarkGray
+				) {
+					mostrarBuscador = !mostrarBuscador
+					if (!mostrarBuscador) {
+						viewModel.onEvent(ListaOrganizacionesVM.Eventos.Buscar(""))
+					}
+				}
 				MA_IconBottom(icon = Features.PlanificadorAuto().icono,
 							  color = Features.PlanificadorAuto().color) {
 					viewModel.onEvent(ListaOrganizacionesVM.Eventos.AutoPlanificacion)
@@ -148,12 +165,18 @@ fun ListaOrganizacionesSuccess(
 
 				} else {
 					// Barra de búsqueda
-					MA_TextBuscador(
-						searchText = uiState.textoBuscar,
-						onSearchTextChanged = { it ->
-							viewModel.onEvent(ListaOrganizacionesVM.Eventos.Buscar(it))
-						},
-					)
+					AnimatedVisibility(
+						visible = mostrarBuscador,
+						enter = expandVertically() + fadeIn(),
+						exit = shrinkVertically() + fadeOut()
+					) {
+						MA_TextBuscador(
+							searchText = uiState.textoBuscar,
+							onSearchTextChanged = { it ->
+								viewModel.onEvent(ListaOrganizacionesVM.Eventos.Buscar(it))
+							},
+						)
+					}
 
 					MA_LabelNegrita(modifier = Modifier.padding(3.dp), valor = "Organizaciones")
 

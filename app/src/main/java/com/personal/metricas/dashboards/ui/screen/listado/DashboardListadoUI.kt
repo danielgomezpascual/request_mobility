@@ -15,6 +15,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,6 +72,8 @@ fun SuccessListadoDashboards(
 	uiState: DashboardListadoVM.UIState.Success,
 	navegacion: (EventosNavegacion) -> Unit,
 ) {
+	var mostrarBuscador by remember { mutableStateOf(false) }
+
 	MA_ScaffoldGenerico(
 		tituloScreen = TituloScreen.DashboardLista,
 		navegacion = navegacion, // Para el icono de navegación del TopAppBar
@@ -71,6 +83,15 @@ fun SuccessListadoDashboards(
 				horizontalArrangement = Arrangement.End,
 				verticalAlignment = Alignment.Top
 			) {
+				MA_IconBottom(
+					icon = Icons.Default.Search,
+					color = Color.DarkGray
+				) {
+					mostrarBuscador = !mostrarBuscador
+					if (!mostrarBuscador) {
+						viewModel.onEvento(DashboardListadoVM.Eventos.Buscar(""))
+					}
+				}
 				MA_IconBottom(icon = Features.Nuevo().icono, color = Features.Nuevo().color) { navegacion(EventosNavegacion.NuevoDashboard) }
 			}
 		},
@@ -80,15 +101,24 @@ fun SuccessListadoDashboards(
 					.fillMaxWidth() // fillMaxWidth para la columna principal
 
 			) {
+				AnimatedVisibility(
+					visible = mostrarBuscador,
+					enter = expandVertically() + fadeIn(),
+					exit = shrinkVertically() + fadeOut()
+				) {
+					MA_TextBuscador(
+						searchText = uiState.textoBuscar,
+						onSearchTextChanged = { texto ->
+							viewModel.onEvento(DashboardListadoVM.Eventos.Buscar(texto))
+						}
+					)
+				}
+
 
 				MA_Card() {
 					Column() {
-						MA_TextBuscador(
-							searchText = uiState.textoBuscar,
-							onSearchTextChanged = { texto -> // Parámetro renombrado a 'texto'
-								viewModel.onEvento(DashboardListadoVM.Eventos.Buscar(texto))
-							}
-						)
+						// Barra de búsqueda
+
 						Row(
 							modifier = Modifier.fillMaxWidth(),
 							verticalAlignment = Alignment.CenterVertically
