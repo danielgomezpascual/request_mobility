@@ -20,6 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HdrAuto
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Stars
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,6 +45,7 @@ import com.personal.metricas.core.composables.edittext.MA_TextBuscador
 import com.personal.metricas.core.composables.formas.MA_Avatar
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelNegrita
+import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.layouts.MA_Columnas
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion
@@ -200,6 +204,22 @@ fun SuccessCuadriculaDashboard(
                                             modifier = Modifier.padding(2.dp),
                                             valor = item.nombre
                                         )
+                                    }
+
+                                    if (item.descripcion.isNotEmpty()) {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        MA_LabelMini(valor = item.descripcion)
+                                    }
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        MA_Icono(Icons.Default.Dashboard, Modifier.size(14.dp))
+                                        Spacer(modifier = Modifier.width(4.dp))
+
+                                        MA_LabelMini(valor = "${item.listaPaneles.filter { it.seleccionado }.size} Paneles")
                                     }
                                 }
                             }
