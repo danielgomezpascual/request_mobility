@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.HdrAuto
 import androidx.compose.material.icons.filled.Stars
 import androidx.compose.runtime.Composable
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Icon
@@ -95,7 +96,11 @@ fun MA_DashboardItem(dashboardUI: DashboardUI, navegacion: (EventosNavegacion) -
 					//.padding(4.dp)
 				) {
 					//MA_InfoPanelVertical(modifier = m, panel = it, mostrarNombre = true)
-					MA_InfoPanel(panel = it, mostrarNombre = true)
+					MA_InfoPanel(
+						panel = it,
+						mostrarNombre = true,
+						modifier = Modifier.fillMaxWidth().height(100.dp)
+					)
 				}
 
 			}

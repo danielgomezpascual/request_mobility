@@ -37,6 +37,9 @@ import com.personal.metricas.paneles.domain.entidades.PanelTipoGrafica
 import com.personal.metricas.paneles.domain.entidades.TiposPanel
 import com.personal.metricas.paneles.domain.entidades.literal
 import com.personal.metricas.paneles.ui.entidades.PanelUI
+import androidx.compose.material3.Surface
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
 
 @Composable
 fun PanelListItem(
@@ -88,54 +91,68 @@ fun PanelListItem(
 }
 
 @Composable
-fun MA_InfoPanel(panel: PanelUI, mostrarNombre: Boolean = false) {
-	Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun MA_InfoPanel(panel: PanelUI, mostrarNombre: Boolean = false, modifier: Modifier = Modifier) {
+    val borderColor = try { Color(panel.color) } catch (e: Exception) { Color.LightGray }
 
+    Surface(
+        modifier = modifier.padding(4.dp),
+        shape = RoundedCornerShape(12.dp),
+        color = Color.White,
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.5f)),
+        shadowElevation = 2.dp
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(8.dp)
+        ) {
 
-		Row(modifier = Modifier.padding(2.dp),
-			horizontalArrangement = Arrangement.Center,
-			verticalAlignment = Alignment.CenterVertically) {
+            if (mostrarNombre) {
+                MA_LabelMini(panel.titulo)
+                Spacer(modifier = Modifier.height(4.dp))
+            }
 
-			if (mostrarNombre) {
-				MA_LabelMini(panel.titulo)
-			}
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-			when (panel.tipoPanel) {
-				TiposPanel.PANEL_CONECTOR  -> MA_Icono(Icons.Default.LinearScale, modifier = Modifier.size(16.dp))
-				TiposPanel.PANEL_END_POINT -> MA_Icono(Icons.Default.Api, modifier = Modifier.size(16.dp))
-				TiposPanel.PANEL_KPI       -> MA_Icono(Icons.Default.Dataset, modifier = Modifier.size(16.dp))
-				TiposPanel.PANEL_TEXTO     -> MA_Icono(Icons.Default.TextIncrease, modifier = Modifier.size(16.dp))
-			}
+                when (panel.tipoPanel) {
+                    TiposPanel.PANEL_CONECTOR -> MA_Icono(Icons.Default.LinearScale, modifier = Modifier.size(16.dp))
+                    TiposPanel.PANEL_END_POINT -> MA_Icono(Icons.Default.Api, modifier = Modifier.size(16.dp))
+                    TiposPanel.PANEL_KPI -> MA_Icono(Icons.Default.Dataset, modifier = Modifier.size(16.dp))
+                    TiposPanel.PANEL_TEXTO -> MA_Icono(Icons.Default.TextIncrease, modifier = Modifier.size(16.dp))
+                }
 
+                Spacer(Modifier.width(6.dp))
 
+                if (panel.tipoPanel == TiposPanel.PANEL_KPI) {
 
-			Spacer(Modifier.width(2.dp))
-			if (panel.tipoPanel == TiposPanel.PANEL_KPI) {
+                    // MA_Avatar("", size = 12.dp, color = panel.kpi.dameColorDinamico(), fontSize = 12.sp)
+                    MA_LabelMini("■", color = panel.kpi.dameColorDinamico())
+                    Spacer(Modifier.width(2.dp))
+                    if (panel.configuracion.mostrarGrafica) {
+                        val idGrafico = when (panel.configuracion.tipo) {
+                            is PanelTipoGrafica.Anillo                 -> panel.configuracion.tipo.icono
+                            is PanelTipoGrafica.BarrasAnchasVerticales -> panel.configuracion.tipo.icono
+                            is PanelTipoGrafica.BarrasFinasVerticales  -> panel.configuracion.tipo.icono
+                            is PanelTipoGrafica.Circular               -> panel.configuracion.tipo.icono
+                            is PanelTipoGrafica.IndicadorHorizontal    -> panel.configuracion.tipo.icono
+                            is PanelTipoGrafica.IndicadorVertical      -> panel.configuracion.tipo.icono
+                            is PanelTipoGrafica.Lineas                 -> panel.configuracion.tipo.icono
+                            is PanelTipoGrafica.SignalVertical         -> panel.configuracion.tipo.icono
+                            is PanelTipoGrafica.SignalHorizontal       -> panel.configuracion.tipo.icono
+                        }
+                        MA_ImagenDrawable(idGrafico, s = 16.dp)
+                    }
+                    Spacer(Modifier.width(2.dp))
+                    if (panel.configuracion.mostrarTabla) {
+                        MA_ImagenDrawable(R.drawable.tabla, s = 16.dp)
+                    }
+                    Spacer(Modifier.width(2.dp))
 
-			//	MA_Avatar("", size = 12.dp, color = panel.kpi.dameColorDinamico(), fontSize = 12.sp)
-				MA_LabelMini("■", color = panel.kpi.dameColorDinamico())
-				Spacer(Modifier.width(2.dp))
-				if (panel.configuracion.mostrarGrafica) {
-					val idGrafico = when (panel.configuracion.tipo) {
-						is PanelTipoGrafica.Anillo                 -> panel.configuracion.tipo.icono
-						is PanelTipoGrafica.BarrasAnchasVerticales -> panel.configuracion.tipo.icono
-						is PanelTipoGrafica.BarrasFinasVerticales  -> panel.configuracion.tipo.icono
-						is PanelTipoGrafica.Circular               -> panel.configuracion.tipo.icono
-						is PanelTipoGrafica.IndicadorHorizontal    -> panel.configuracion.tipo.icono
-						is PanelTipoGrafica.IndicadorVertical      -> panel.configuracion.tipo.icono
-						is PanelTipoGrafica.Lineas                 -> panel.configuracion.tipo.icono
-						is PanelTipoGrafica.SignalVertical         -> panel.configuracion.tipo.icono
-						is PanelTipoGrafica.SignalHorizontal       -> panel.configuracion.tipo.icono
-					}
-					MA_ImagenDrawable(idGrafico, s = 16.dp)
-				}
-				Spacer(Modifier.width(2.dp))
-				if (panel.configuracion.mostrarTabla) {
-					MA_ImagenDrawable(R.drawable.tabla, s = 16.dp)
-				}
-				Spacer(Modifier.width(2.dp))
-
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 }
