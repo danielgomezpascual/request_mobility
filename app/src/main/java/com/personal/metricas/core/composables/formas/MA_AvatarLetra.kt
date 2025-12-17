@@ -67,7 +67,7 @@ fun MA_Avatar(
 
 	Box(
 		modifier = Modifier
-			.size(40.dp) // Más pequeño
+			.size(size) // Más pequeño
 			.clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp)) // Cuadrado con bordes redondeados
 			.background(color.copy(alpha = 0.5f)),
 		contentAlignment = Alignment.Center

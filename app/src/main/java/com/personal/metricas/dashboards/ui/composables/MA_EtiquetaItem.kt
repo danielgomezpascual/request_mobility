@@ -1,6 +1,9 @@
 package com.personal.metricas.dashboards.ui.composables
 
 import MA_IconBottom
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import com.personal.metricas.core.composables.formas.MA_Avatar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +37,7 @@ import com.personal.metricas.core.composables.labels.MA_LabelEtiqueta
 import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo2
+import com.personal.metricas.core.composables.labels.MA_LabelNegrita
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.utils.Parametros
 import com.personal.metricas.core.utils._toJson
@@ -45,46 +49,31 @@ import com.personal.metricas.menu.Features
 @Composable
 fun MA_EtiquetaItem(etiqueta: Etiquetas, onClick : () -> Unit) {
 
+	val mainColor = Features.Dashboard().color
+	val backgroundColor = if (etiqueta.seleccionada) mainColor.copy(alpha = 0.3f) else mainColor.copy(alpha = 0.1f)
+
 	MA_Card(
-		elevacion = 3.dp,
-		//color = Color(243, 237, 120, 81),
+		elevacion = 0.dp,
+		color = backgroundColor,
 		modifier = Modifier
-			.padding(1.dp)
-			//.background(color = Color(225, 245, 254, 255))
-			/*.clickable {
-				goto(EventosNavegacion.VisualizadorDashboard(identificadorDashboard, _toJson(fila.toParametros())),
-					 App.navController)
-			}*/
+			.padding(2.dp)
+			.clickable(onClick = onClick)
 	) {
-		Row {
-		//	val s: String = Parametros.reemplazar(panelData.panel.titulo, fila.toParametros(), fila.toParametros())
+		Column(
+			modifier = Modifier.padding(6.dp),
+			verticalArrangement = Arrangement.Center,
+			horizontalAlignment = Alignment.CenterHorizontally
+		) {
+			MA_Avatar(etiqueta.etiqueta, color = mainColor, size = 25.dp, fontSize = 14.sp)
 
-			val color = if3 (etiqueta.seleccionada, Color(0, 77, 64, 255), Features.Dashboard().color)
-
-
-
-
-			MA_IconBottom(
-				icon = Features.Dashboard().icono,
-				labelText = etiqueta.etiqueta,
-				color = color, onClick =  onClick
-
+			Spacer(modifier = Modifier.size(4.dp))
+			
+			MA_LabelMini(
+				alineacion = TextAlign.Center,
+				modifier = Modifier.padding(1.dp),
+				valor = etiqueta.etiqueta
 			)
-
-
-
-			/*MA_LabelMini(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(horizontal = 2.dp),
-				valor = s,
-				alineacion = TextAlign.End,
-				size = 9.sp,
-				fontStyle = FontStyle.Italic
-			)*/
 		}
 	}
-
-
 }
 
