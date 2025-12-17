@@ -42,6 +42,7 @@ import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
 import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
+import com.personal.metricas.core.composables.card.MA_Card_Elevada
 import com.personal.metricas.core.composables.checks.MA_CheckBoxNormal
 import com.personal.metricas.core.composables.combo.MA_ComboColores
 import com.personal.metricas.core.composables.componentes.TituloScreen
@@ -135,17 +136,11 @@ fun SuccessScreenDetalleKpi(
 
 				Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 					MA_Avatar(kpiUI.titulo, color = Color(kpiUI.color))
-					MA_Titulo(kpiUI.titulo)
-				}
-
-				val visible: Boolean = false
-
-				if (visible) {
-					MA_TextoNormal(valor = kpiUI.id.toString(), titulo = "ID", onValueChange = { valor -> null })
+					// MA_Titulo(kpiUI.titulo) // Redundante con el Avatar y Header
 				}
 
 				MA_Titulo2("Definicion")
-				MA_Card {
+				MA_Card_Elevada {
 
 					Column() {
 
@@ -170,11 +165,7 @@ fun SuccessScreenDetalleKpi(
 							MA_TextoNormal(valor = kpiUI.titulo, titulo = "Nombre", onValueChange = { valor ->
 								viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeTitulo(valor))
 							})
-
 						}
-
-
-
 
 						MA_TextoNormal(valor = kpiUI.descripcion, titulo = "Descripcion", onValueChange = { valor ->
 							viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeDescripcion(valor))
@@ -201,49 +192,52 @@ fun SuccessScreenDetalleKpi(
 								})
 
 
-								Row(modifier = Modifier
-									.fillMaxWidth()
-									.horizontalScroll(rememberScrollState())) {
+								if (uiState.ocurrenciasSQL.isNotEmpty()) {
+									Row(modifier = Modifier
+										.fillMaxWidth()
+										.padding(vertical = 8.dp)
+										.horizontalScroll(rememberScrollState())) {
 
-									uiState.ocurrenciasSQL.forEach { palabraSugerida ->
-										Box(modifier = Modifier
-											.padding(5.dp)
-											.background(color = Color(222, 222, 222, 100))
-											.clickable(enabled = true, onClick = {
-												// --- INICIO DE LA LÓGICA CLAVE ---
+										uiState.ocurrenciasSQL.forEach { palabraSugerida ->
+											Box(modifier = Modifier
+												.padding(4.dp)
+												.background(color = Color(0xFFF5F5F5), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+												.border(1.dp, Color.LightGray, androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+												.clickable(enabled = true, onClick = {
+													// --- INICIO DE LA LÓGICA CLAVE ---
 
-												// 1. Obtenemos el texto completo actual.
-												val textoCompleto = kpiUI.sql
+													// 1. Obtenemos el texto completo actual.
+													val textoCompleto = kpiUI.sql
 
-												// 2. Creamos el nuevo texto reemplazando la palabra que estabas
-												//    escribiendo (`currentWord`) por la que has seleccionado (`palabraSugerida`).
-												//    Usamos replaceLastWord para evitar reemplazar ocurrencias anteriores.
-												val nuevoTexto = replaceLastWord(textoCompleto, currentWord, palabraSugerida)
+													// 2. Creamos el nuevo texto reemplazando la palabra que estabas
+													//    escribiendo (`currentWord`) por la que has seleccionado (`palabraSugerida`).
+													//    Usamos replaceLastWord para evitar reemplazar ocurrencias anteriores.
+													val nuevoTexto = replaceLastWord(textoCompleto, currentWord, palabraSugerida)
 
-												// 3. Notificamos al ViewModel del cambio, como si el usuario
-												//    lo hubiera escrito todo.
+													// 3. Notificamos al ViewModel del cambio, como si el usuario
+													//    lo hubiera escrito todo.
+													viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(nuevoTexto))
 
+													// 4. (Importante) Limpiamos las sugerencias para que desaparezcan.
+													viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeAutocompletarSQL(""))
 
-												// 4. (Importante) Limpiamos las sugerencias para que desaparezcan.
-												viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeAutocompletarSQL(""))
+													// --- FIN DE LA LÓGICA CLAVE ---
+												})
+												.padding(horizontal = 12.dp, vertical = 6.dp)
+											) {
+												MA_LabelNormal(valor = palabraSugerida)
+											}
 
-
-
-												viewModel.onEvent(DetalleKpiVM.Eventos.OnChangeSQL(nuevoTexto))
-
-
-												// --- FIN DE LA LÓGICA CLAVE ---
-											})) {
-											MA_LabelNormal(valor = palabraSugerida)
 										}
 
 									}
-
 								}
 
 
-								MA_BotonSecundario(texto = "RUN  SQL") {
-									viewModel.onEvent(DetalleKpiVM.Eventos.RunSQL)
+								Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.Center) {
+									MA_BotonSecundario(texto = "RUN SQL") {
+										viewModel.onEvent(DetalleKpiVM.Eventos.RunSQL)
+									}
 								}
 
 
@@ -251,7 +245,7 @@ fun SuccessScreenDetalleKpi(
 
 									val color = if (uiState.estadoErrorSQL) Color.Red else Color.Black
 									MA_LabelLeyenda(
-										modifier = Modifier.fillMaxWidth(),
+										modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
 										alineacion = TextAlign.Center,
 										valor = uiState.infoSQL,
 										color = color)
@@ -265,19 +259,24 @@ fun SuccessScreenDetalleKpi(
 				}
 
 				MA_Titulo2("Parámetros")
-				MA_IconBottom(icon = Icons.Default.PlusOne) {
-					viewModel.onEvent(DetalleKpiVM.Eventos.NuevoParametro)
-					scope.launch { sheetParametros.show() }
-				}
 
-				MA_Card {
+				MA_Card_Elevada {
 					Column {
+						Row(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp), horizontalArrangement = Arrangement.End) {
+							MA_IconBottom(icon = Icons.Default.PlusOne) {
+								viewModel.onEvent(DetalleKpiVM.Eventos.NuevoParametro)
+								scope.launch { sheetParametros.show() }
+							}
+						}
+
 						kpiUI.parametros.ps.forEach { parametro ->
 							Row(modifier = Modifier.clickable(enabled = true, onClick = {
 								viewModel.onEvent(DetalleKpiVM.Eventos.SeleccionarParametro(parametro))
 								scope.launch { sheetParametros.show() }
 
-							})) {
+							})
+								.padding(vertical = 4.dp)
+							) {
 								Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
 
 
@@ -289,6 +288,8 @@ fun SuccessScreenDetalleKpi(
 										Spacer(modifier = Modifier.padding(5.dp))
 										MA_Icono(Icons.Default.PushPin, modifier = Modifier.size(15.dp))
 									}
+
+									Spacer(modifier = Modifier.weight(1f))
 
 									Box(
 										modifier = Modifier.clickable(onClick = {
@@ -312,7 +313,7 @@ fun SuccessScreenDetalleKpi(
 
 				val filas = ResultadoSQL.fromSqlToTabla(kpiUI.sql, kpiUI.parametros).filas.take(10)
 				MA_Titulo2("Resultado")
-				MA_Card(Modifier.height(400.dp)) {
+				MA_Card_Elevada(Modifier.height(400.dp)) {
 					Column() {
 						MA_Tabla(filasOriginal = filas) { }
 					}

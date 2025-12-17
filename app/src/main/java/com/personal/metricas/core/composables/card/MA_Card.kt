@@ -33,6 +33,22 @@ fun Test_MA_Card() {
 	}
 }
 
+
+@Composable
+fun MA_Card_Elevada(
+	modifier: Modifier = Modifier,
+	elevacion: Dp = 3.dp,
+	redondeo: Dp = 10.dp,
+	paddingCard : Dp = 6.dp,
+	color:Color = Color.White,
+	contenido: @Composable () -> Unit,
+) {
+
+
+	MA_Card (modifier, elevacion, redondeo, paddingCard, color, contenido)
+
+}
+
 @Composable
 fun MA_Card(
 	modifier: Modifier = Modifier,
