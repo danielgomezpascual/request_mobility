@@ -1,31 +1,42 @@
 package com.personal.metricas.core.composables.tabla
 
-import MA_IconBottom
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.TableRows
-import androidx.compose.material.icons.filled.TableView
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.FileDownload
+import androidx.compose.material.icons.filled.NavigateBefore
+import androidx.compose.material.icons.filled.NavigateNext
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -34,15 +45,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.personal.metricas.App
-import com.personal.metricas.App.Companion.dialog
 import com.personal.metricas.R
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.botones.MA_BotonSecundarioSinBorde
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.composables.edittext.MA_TextoEditable
-import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.composables.labels.MA_LabelMini
-import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.listas.MA_Lista
 import com.personal.metricas.core.utils.K
@@ -50,22 +58,21 @@ import com.personal.metricas.core.utils._t
 import com.personal.metricas.core.utils.if3
 import com.personal.metricas.excel.GenerateExcel
 import com.personal.metricas.notas.domain.entidades.Notas
+import com.personal.metricas.paneles.domain.entidades.PanelConfiguracion
 import com.personal.metricas.transacciones.ui.screens.composables.ModalInferiorFiltros
-import io.github.evanrupert.excelkt.workbook
+import java.io.File
+import kotlin.math.ceil
+import kotlin.math.max
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.getKoin
 import org.koin.compose.getKoin
-import java.io.File
-
 
 @Preview
 @Composable
 fun TestTablaDatos() {
 
-
-	// TablaDatos(Modifier, "Test", dameValoresTestTabla())
+    // TablaDatos(Modifier, "Test", dameValoresTestTabla())
 }
 
 /*fun dameValoresTestTabla(): ValoresTabla {
@@ -107,229 +114,293 @@ fun TestTablaDatos() {
 
 @Composable
 fun TablaDatos(
-	modifier: Modifier = Modifier,
-	titulo: String = "",
-	tabla: ValoresTabla,
-) {/*
-        Marco(modifier = modifier, titulo = titulo) {
-            Tabla(modifier, tabla)
-        }*/
+        modifier: Modifier = Modifier,
+        titulo: String = "",
+        tabla: ValoresTabla,
+) {
+    /*
+    Marco(modifier = modifier, titulo = titulo) {
+        Tabla(modifier, tabla)
+    }*/
 }
 
+fun logicaAjusteCeldaAncho(columnas: Int, ajustarContenido: Boolean): Boolean {
+    val pantallasGrandes =
+            App.windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium ||
+                    App.windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
 
+    if (!pantallasGrandes && columnas > 4) return false
 
-
-
-fun logicaAjusteCeldaAncho(columnas : Int, ajustarContenido: Boolean): Boolean{
-	val pantallasGrandes =  App.windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium ||
-			 App.windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
-
-	if (!pantallasGrandes && columnas > 4 ) return false
-
-	if (!pantallasGrandes) return ajustarContenido
-return true
+    if (!pantallasGrandes) return ajustarContenido
+    return true
 }
+
 @Composable
 fun MA_Tabla(
-	modifier: Modifier = Modifier,
-	panelConfiguracion: PanelConfiguracion = PanelConfiguracion(ajustarContenidoAncho = false, indicadorColor = false, filasColor = false
-
-	),
-	filasOriginal: List<Fila>,
-	notas: List<Notas> = emptyList<Notas>(),
-	celdasFiltro: List<Celda> = emptyList<Celda>(),
-	mostrarTitulos: Boolean = true,
-	indice: Int = 0,
-	elementos: Int = 1000,
-	onClickSeleccionarFiltro: (Celda) -> Unit = {},
-	onClickInvertir: (Celda) -> Unit = {},
-	onClickSeleccionarFila: (Fila) -> Unit = {},
-	onClickFiltrarTexto: (String) -> Unit = {},
-	onClickBorrarFiltros: () -> Unit,
+        modifier: Modifier = Modifier,
+        panelConfiguracion: PanelConfiguracion =
+                PanelConfiguracion(
+                        ajustarContenidoAncho = false,
+                        indicadorColor = false,
+                        filasColor = false
+                ),
+        filasOriginal: List<Fila>,
+        notas: List<Notas> = emptyList<Notas>(),
+        celdasFiltro: List<Celda> = emptyList<Celda>(),
+        mostrarTitulos: Boolean = true,
+        indice: Int = 0,
+        elementos: Int = 20,
+        onClickSeleccionarFiltro: (Celda) -> Unit = {},
+        onClickInvertir: (Celda) -> Unit = {},
+        onClickSeleccionarFila: (Fila) -> Unit = {},
+        onClickFiltrarTexto: (String) -> Unit = {},
+        onClickBorrarFiltros: () -> Unit,
 ) {
 
+    val estadoScroll = rememberScrollState()
+    val indicadorColor = panelConfiguracion.indicadorColor
+    val filasColor = panelConfiguracion.filasColor
+
+    var paginaActual by remember { mutableIntStateOf(indice) }
+
+    var nuemroCeldas = 0
+    try {
+        nuemroCeldas =
+                if3(
+                        (filasOriginal.isEmpty() || filasOriginal.first().celdas.isEmpty()),
+                        0,
+                        filasOriginal.first().celdas.size
+                )
+    } catch (e: Exception) {
+        App.log.e(e.message)
+    }
+
+    val ajustarContenidoAncho =
+            logicaAjusteCeldaAncho(nuemroCeldas, panelConfiguracion.ajustarContenidoAncho)
+    var modifierColumn = modifier
+    if (!ajustarContenidoAncho) {
+        modifierColumn = modifierColumn.horizontalScroll(estadoScroll)
+    }
+
+    val listaFiltrada = filasOriginal.filter { it.visible }
+    val totalPaginas =
+            if (elementos > 0) ceil(listaFiltrada.size.toFloat() / elementos).toInt() else 1
+
+    LaunchedEffect(totalPaginas) {
+        if (paginaActual >= totalPaginas) {
+            paginaActual = max(0, totalPaginas - 1)
+        }
+    }
+
+    val filas = listaFiltrada.drop(paginaActual * elementos).take(elementos)
+    val context = LocalContext.current
+    val d: DialogManager = getKoin().get()
+
+    Column(verticalArrangement = Arrangement.Top, modifier = Modifier.fillMaxWidth()) {
+        // Acciones
+        Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+        ) {
 
 
 
-	val estadoScroll = rememberScrollState()
-	val indicadorColor = panelConfiguracion.indicadorColor
-	val filasColor = panelConfiguracion.filasColor
 
-	var nuemroCeldas = 0
-	try{
-		nuemroCeldas = if3(( filasOriginal.isEmpty() || filasOriginal.first().celdas.isEmpty()), 0, filasOriginal.first().celdas.size)
-
-	}catch (e: Exception){
-		App.log.e(e.message)
-	}
-
-	val ajustarContenidoAncho =logicaAjusteCeldaAncho( nuemroCeldas, panelConfiguracion.ajustarContenidoAncho )
-	var modifierColumn = modifier
-	if (!ajustarContenidoAncho) {
-		modifierColumn = modifierColumn.horizontalScroll(estadoScroll)
-	}
-
-
-	val filas = filasOriginal.filter { it.visible }.drop(indice * elementos).take(elementos)
-	val context = LocalContext.current
-	val d: DialogManager = getKoin().get()
-
-	Column(verticalArrangement = Arrangement.Top, modifier = Modifier.fillMaxWidth()) {
-		//Acciones
-		Row(modifier = Modifier
-			.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-
-			//MA_Icono(icono =  Icons.Default.TableRows, color = Color.DarkGray	 )
-			MA_LabelMini(modifier = Modifier, alineacion = TextAlign.Start, valor = "${filasOriginal.filter { it.visible }.size} registros")
-
-
-			Row(modifier = Modifier
-
-				.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-
-				if (celdasFiltro.isNotEmpty()) {
-
-					ModalInferiorFiltros() {
-						var str by remember { mutableStateOf(App.sharedPrerfences.get(K.TXT_FILTROS_LISTAS, "")) }
-						Column {
-
-
-							MA_Titulo("Filtro")
-							MA_BotonSecundarioSinBorde("Borrar", color = Color.Red) { onClickBorrarFiltros() }
-							MA_TextoEditable(valor = str, titulo = "Buscar") { texto ->
-								str = texto
-								App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
-								onClickFiltrarTexto(str)
-							}
-							MA_Lista(celdasFiltro) { celdaFiltro ->
-								MA_CeldaFiltro(celda = celdaFiltro,
-											   onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
-											   onClickInvertir = { cf -> onClickInvertir(cf) })
-							}
-						}
-
-
-					}
-
+				// Pagination Controls
+				Row(
+					verticalAlignment = Alignment.CenterVertically,
+					horizontalArrangement = Arrangement.Center,
+					modifier = Modifier.weight(1f)
+				) {
+					IconButton(
+						onClick = { if (paginaActual > 0) paginaActual-- },
+						enabled = paginaActual > 0
+					) { Icon(Icons.Default.NavigateBefore, contentDescription = "Anterior") }
+					Text(
+						text = "${paginaActual + 1} / $totalPaginas",
+						style = MaterialTheme.typography.bodySmall,
+						modifier = Modifier.padding(horizontal = 8.dp)
+					)
+					MA_LabelMini(
+						modifier = Modifier,
+						alineacion = TextAlign.Start,
+						valor = "[${listaFiltrada.size} reg]"
+					)
+					IconButton(
+						onClick = { if (paginaActual < totalPaginas - 1) paginaActual++ },
+						enabled = paginaActual < totalPaginas - 1
+					) { Icon(Icons.Default.NavigateNext, contentDescription = "Siguiente") }
 				}
-				MA_Spacer()
-				MA_IconBottom(icon = Icons.Default.TableView, color = Color.DarkGray, onClick = {
-					val scope = CoroutineScope(Dispatchers.IO)
-
-					scope.launch {
-						val nombreFichero = if3(panelConfiguracion.titulo.isNullOrEmpty(), "Metricas", panelConfiguracion.titulo)
-
-						val appSpecificDir: File? = App.Companion.context.getExternalFilesDir(null)
-						val myExcelFile = File(appSpecificDir, "$nombreFichero.xls")
 
 
 
 
-						GenerateExcel().generate(titulo = nombreFichero,
-												 filas = filasOriginal.filter { it.visible },
-												 fichero = myExcelFile
-						)
-
-						d.informacion(_t(str = R.string.datos_exportados)) {
-
-							val uri = FileProvider.getUriForFile(
-								context,
-								"${context.packageName}.provider",
-								myExcelFile
-							)
-
-							// 2. Prepara el Intent para ABRIR (VIEW) el archivo
-							val viewIntent = Intent(Intent.ACTION_VIEW).apply {
-								// Este es el tipo MIME para .xlsx. Usa "application/vnd.ms-excel" para .xls
-								setDataAndType(uri, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-								addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-							}
-
-							// 3. Usa el bloque try-catch para manejar el error
-							try {
-								// Intenta iniciar la actividad para abrir el archivo
-								context.startActivity(viewIntent)
-							}
-							catch (e: ActivityNotFoundException) {
-								// Si falla, entra aquí
-								/*Toast.makeText(
-									context,
-									"No se encontró una app para abrir el archivo. Intenta compartirlo.",
-									Toast.LENGTH_LONG
-								).show()*/
-
-								// 4. Crea y lanza el Intent para COMPARTIR (SEND)
-								val shareIntent = Intent(Intent.ACTION_SEND).apply {
-									type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-									putExtra(Intent.EXTRA_STREAM, uri)
-									addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-								}
-
-								// Usamos createChooser para que siempre muestre el diálogo de selección de app
-								val chooser = Intent.createChooser(shareIntent, "Compartir archivo con...")
-								context.startActivity(chooser)
-							}
-
-						}
-					}
-				})
-
-
-			}
-
-
-		}
-
-		//Complejo de la tabla
-		Column(modifierColumn, verticalArrangement = Arrangement.Top,
-			   horizontalAlignment = Alignment.Start) {
-			//Titulos de la tabla
-			Row(modifier = Modifier
-				.padding(4.dp)
-				.fillMaxWidth()) {
-				if (mostrarTitulos && !filas.isEmpty()) {
-					filas.first().celdas.forEachIndexed { int, celda ->
-
-						//var modifierBox: Modifier = Modifier
-						var modifierBox: Modifier = Modifier.Companion
-
-						if (ajustarContenidoAncho) {
-							modifierBox = modifierBox
-								.fillMaxWidth()
-								.weight(1f)
-						} else {
-							//modifierBox = modifierBox.width(celda.size)
-							modifierBox = modifierBox.width(celda.size)
-						}
 
 
 
+            Row(modifier = Modifier, horizontalArrangement = Arrangement.End) {
+                if (celdasFiltro.isNotEmpty()) {
 
-						if (celda.titulo.equals(K.HASH_CODE)) {
-							//No pintamos titulo para el hashcode
-						} else {
+                    ModalInferiorFiltros() {
+                        var str by remember {
+                            mutableStateOf(App.sharedPrerfences.get(K.TXT_FILTROS_LISTAS, ""))
+                        }
+                        Column {
+                            MA_Titulo("Filtro")
+                            MA_BotonSecundarioSinBorde("Borrar", color = Color.Red) {
+                                onClickBorrarFiltros()
+                            }
+                            MA_TextoEditable(valor = str, titulo = "Buscar") { texto ->
+                                str = texto
+                                App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
+                                onClickFiltrarTexto(str)
+                            }
+                            MA_Lista(celdasFiltro) { celdaFiltro ->
+                                MA_CeldaFiltro(
+                                        celda = celdaFiltro,
+                                        onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
+                                        onClickInvertir = { cf -> onClickInvertir(cf) }
+                                )
+                            }
+                        }
+                    }
+                }
+                MA_Spacer()
+                MA_Spacer()
+                TextButton(
+                        onClick = {
+                            val scope = CoroutineScope(Dispatchers.IO)
 
-							Box(modifier = modifierBox.background(Color.Gray)) {
-								celda.celdaTitulo(modifierBox)
-							}
-						}
+                            scope.launch {
+                                val nombreFichero =
+                                        if3(
+                                                panelConfiguracion.titulo.isNullOrEmpty(),
+                                                "Metricas",
+                                                panelConfiguracion.titulo
+                                        )
 
+                                val appSpecificDir: File? =
+                                        App.Companion.context.getExternalFilesDir(null)
+                                val myExcelFile = File(appSpecificDir, "$nombreFichero.xls")
 
-					}
-				}
-			}
+                                GenerateExcel()
+                                        .generate(
+                                                titulo = nombreFichero,
+                                                filas = filasOriginal.filter { it.visible },
+                                                fichero = myExcelFile
+                                        )
 
-			MA_Lista(filas) { fila ->
-				MA_FilaTablaDatos(fila, notas, panelConfiguracion) { fila ->
-					onClickSeleccionarFila(fila)
-				}
-			}
-		}
+                                d.informacion(_t(str = R.string.datos_exportados)) {
+                                    val uri =
+                                            FileProvider.getUriForFile(
+                                                    context,
+                                                    "${context.packageName}.provider",
+                                                    myExcelFile
+                                            )
 
-	}
+                                    // 2. Prepara el Intent para ABRIR (VIEW) el archivo
+                                    val viewIntent =
+                                            Intent(Intent.ACTION_VIEW).apply {
+                                                // Este es el tipo MIME para .xlsx. Usa
+                                                // "application/vnd.ms-excel" para .xls
+                                                setDataAndType(
+                                                        uri,
+                                                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                                )
+                                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                            }
 
+                                    // 3. Usa el bloque try-catch para manejar el error
+                                    try {
+                                        // Intenta iniciar la actividad para abrir el archivo
+                                        context.startActivity(viewIntent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        // Si falla, entra aquí
+                                        /*Toast.makeText(
+                                        	context,
+                                        	"No se encontró una app para abrir el archivo. Intenta compartirlo.",
+                                        	Toast.LENGTH_LONG
+                                        ).show()*/
 
+                                        // 4. Crea y lanza el Intent para COMPARTIR (SEND)
+                                        val shareIntent =
+                                                Intent(Intent.ACTION_SEND).apply {
+                                                    type =
+                                                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                                    putExtra(Intent.EXTRA_STREAM, uri)
+                                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                                }
 
+                                        // Usamos createChooser para que siempre muestre el diálogo
+                                        // de selección de app
+                                        val chooser =
+                                                Intent.createChooser(
+                                                        shareIntent,
+                                                        "Compartir archivo con..."
+                                                )
+                                        context.startActivity(chooser)
+                                    }
+                                }
+                            }
+                        },
+                        shape = RoundedCornerShape(50),
+                        colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF2E7D32)),
+                        contentPadding =
+                                androidx.compose.foundation.layout.PaddingValues(
+                                        horizontal = 12.dp,
+                                        vertical = 0.dp
+                                ),
+                        modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Icon(
+                            Icons.Default.FileDownload,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Exportar", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+        }
 
+        // Complejo de la tabla
+        Column(
+                modifierColumn,
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+        ) {
+            // Titulos de la tabla
+            Row(modifier = Modifier.padding(4.dp).fillMaxWidth()) {
+                if (mostrarTitulos && !filas.isEmpty()) {
+                    filas.first().celdas.forEachIndexed { int, celda ->
+
+                        // var modifierBox: Modifier = Modifier
+                        var modifierBox: Modifier = Modifier.Companion
+
+                        if (ajustarContenidoAncho) {
+                            modifierBox = modifierBox.fillMaxWidth().weight(1f)
+                        } else {
+                            // modifierBox = modifierBox.width(celda.size)
+                            modifierBox = modifierBox.width(celda.size)
+                        }
+
+                        if (celda.titulo.equals(K.HASH_CODE)) {
+                            // No pintamos titulo para el hashcode
+                        } else {
+
+                            Box(modifier = modifierBox.background(Color(0xFFF5F5F5))) {
+                                celda.celdaTitulo(modifierBox)
+                            }
+                        }
+                    }
+                }
+            }
+
+            MA_Lista(filas) { fila ->
+                MA_FilaTablaDatos(fila, notas, panelConfiguracion) { fila ->
+                    onClickSeleccionarFila(fila)
+                }
+            }
+        }
+    }
 }
-

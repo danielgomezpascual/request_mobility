@@ -21,8 +21,8 @@ data class Celda(
 					  alineacion = if3(valor.esNumerico(),
 									   TextAlign.Companion.End, TextAlign.Companion.Start))
 	},
-	val titulo: String = "", val colorTitulo: Color = Color.Companion.White,
-	val fondoTitulo: Color = Color.Companion.DarkGray,
+	val titulo: String = "", val colorTitulo: Color = Color.Black,
+	val fondoTitulo: Color = Color(0xFFF5F5F5),
 	val celdaTitulo: @Composable (Modifier) -> Unit = { modifierTitulo ->
 		//MA_LabelCeldaTitulo(valor = titulo, color = colorTitulo, fondo = fondoTitulo)
 
