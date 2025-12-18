@@ -200,68 +200,69 @@ fun MA_Tabla(
         // Acciones
         Row(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            if (celdasFiltro.isNotEmpty()) {
-                ModalInferiorFiltros() {
-                    var str by remember {
-                        mutableStateOf(App.sharedPrerfences.get(K.TXT_FILTROS_LISTAS, ""))
-                    }
-                    Column {
-                        MA_Titulo("Filtro")
-                        MA_BotonSecundarioSinBorde("Borrar", color = Color.Red) {
-                            onClickBorrarFiltros()
+            // Contador de registros y navegación - Parte izquierda
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                if (celdasFiltro.isNotEmpty()) {
+                    ModalInferiorFiltros() {
+                        var str by remember {
+                            mutableStateOf(App.sharedPrerfences.get(K.TXT_FILTROS_LISTAS, ""))
                         }
-                        MA_TextoEditable(valor = str, titulo = "Buscar") { texto ->
-                            str = texto
-                            App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
-                            onClickFiltrarTexto(str)
-                        }
-                        MA_Lista(celdasFiltro) { celdaFiltro ->
-                            MA_CeldaFiltro(
-                                celda = celdaFiltro,
-                                onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
-                                onClickInvertir = { cf -> onClickInvertir(cf) }
-                            )
+                        Column {
+                            MA_Titulo("Filtro")
+                            MA_BotonSecundarioSinBorde("Borrar", color = Color.Red) {
+                                onClickBorrarFiltros()
+                            }
+                            MA_TextoEditable(valor = str, titulo = "Buscar") { texto ->
+                                str = texto
+                                App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
+                                onClickFiltrarTexto(str)
+                            }
+                            MA_Lista(celdasFiltro) { celdaFiltro ->
+                                MA_CeldaFiltro(
+                                    celda = celdaFiltro,
+                                    onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
+                                    onClickInvertir = { cf -> onClickInvertir(cf) }
+                                )
+                            }
                         }
                     }
                 }
+                
+                // Paginación
+                IconButton(
+                    onClick = { if (paginaActual > 0) paginaActual-- },
+                    enabled = paginaActual > 0
+                ) { 
+                    Icon(Icons.Default.NavigateBefore, contentDescription = "Anterior") 
+                }
+                
+                val registroInicio = if (listaFiltrada.isEmpty()) 0 else (paginaActual * elementos) + 1
+                val registroFin = minOf((paginaActual + 1) * elementos, listaFiltrada.size)
+                val totalRegistros = listaFiltrada.size
+                
+                Text(
+                    text = "$registroInicio a $registroFin de $totalRegistros",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                
+                IconButton(
+                    onClick = { if (paginaActual < totalPaginas - 1) paginaActual++ },
+                    enabled = paginaActual < totalPaginas - 1
+                ) { 
+                    Icon(Icons.Default.NavigateNext, contentDescription = "Siguiente") 
+                }
             }
 
-
-				// Pagination Controls
-				Row(
-					verticalAlignment = Alignment.CenterVertically,
-					horizontalArrangement = Arrangement.Center,
-					modifier = Modifier.weight(1f)
-				) {
-					IconButton(
-						onClick = { if (paginaActual > 0) paginaActual-- },
-						enabled = paginaActual > 0
-					) { Icon(Icons.Default.NavigateBefore, contentDescription = "Anterior") }
-					Text(
-						text = "${paginaActual + 1} / $totalPaginas",
-						style = MaterialTheme.typography.bodySmall,
-						modifier = Modifier.padding(horizontal = 8.dp)
-					)
-					MA_LabelMini(
-						modifier = Modifier,
-						alineacion = TextAlign.Start,
-						valor = "[${listaFiltrada.size} reg]"
-					)
-					IconButton(
-						onClick = { if (paginaActual < totalPaginas - 1) paginaActual++ },
-						enabled = paginaActual < totalPaginas - 1
-					) { Icon(Icons.Default.NavigateNext, contentDescription = "Siguiente") }
-				}
-
-
+            // Botón de exportar - Parte derecha
             Row(modifier = Modifier, horizontalArrangement = Arrangement.End) {
-
-                MA_Spacer()
-
-
                 TextButton(
                         onClick = {
                             val scope = CoroutineScope(Dispatchers.IO)
@@ -353,17 +354,17 @@ fun MA_Tabla(
                             modifier = Modifier.size(16.dp)
                     )
                     Spacer(Modifier.width(4.dp))
-                    Text("Exportar", style = MaterialTheme.typography.labelSmall)
+                    Text("", style = MaterialTheme.typography.labelSmall)
                 }
             }
         }
-
         // Complejo de la tabla
         Column(
                 modifierColumn,
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
         ) {
+
             // Titulos de la tabla
             Row(modifier = Modifier.padding(4.dp).fillMaxWidth()) {
                 if (mostrarTitulos && !filas.isEmpty()) {
@@ -390,12 +391,47 @@ fun MA_Tabla(
                     }
                 }
             }
-
             MA_Lista(filas) { fila ->
                 MA_FilaTablaDatos(fila, notas, panelConfiguracion) { fila ->
                     onClickSeleccionarFila(fila)
                 }
             }
+
+
+
+
         }
+        
+        // Pagination Controls - Contador de registros
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+
+            ) {
+            IconButton(
+                onClick = { if (paginaActual > 0) paginaActual-- },
+                enabled = paginaActual > 0
+            ) { Icon(Icons.Default.NavigateBefore, contentDescription = "Anterior") }
+            
+            val registroInicio = if (listaFiltrada.isEmpty()) 0 else (paginaActual * elementos) + 1
+            val registroFin = minOf((paginaActual + 1) * elementos, listaFiltrada.size)
+            val totalRegistros = listaFiltrada.size
+            
+            Text(
+                text = "$registroInicio a $registroFin de $totalRegistros",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            
+            IconButton(
+                onClick = { if (paginaActual < totalPaginas - 1) paginaActual++ },
+                enabled = paginaActual < totalPaginas - 1
+            ) { Icon(Icons.Default.NavigateNext, contentDescription = "Siguiente") }
+        }
+
+
+
+
     }
 }
