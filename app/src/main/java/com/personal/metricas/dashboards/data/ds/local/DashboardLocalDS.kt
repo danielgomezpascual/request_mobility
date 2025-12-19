@@ -19,6 +19,11 @@ class DashboardLocalDS(private val dao: DashboardDao) : IDataSourceDashboard {
         return dashboardsRoom.map { it.toDashboard() }
     }
 
+    override suspend fun getAllAccesoDirecto(): List<Dashboard> {
+        val dashboardsRoom: List<DashboardRoom> = dao.todosDashboardsAccesoDirecto()
+        return dashboardsRoom.map { it.toDashboard() }
+    }
+
     override suspend fun getAll(): List<Dashboard> {
         val dashboardsRoom: List<DashboardRoom> = dao.todosDashboards()
         return dashboardsRoom.map { it.toDashboard() }

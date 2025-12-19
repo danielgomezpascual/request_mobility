@@ -79,6 +79,7 @@ class DetalleDashboardVM(
 		data class OnChangeColor(val color: Int) : Eventos()     // Adaptado desde OnChangeItem
 		data class OnChangeDescripcion(val valor: String) : Eventos() // Adaptado desde OnChangeProveedor
 		data class OnChangeInicial(val valor: Boolean) : Eventos() //
+		data class OnChangeAccesoDirecto(val valor: Boolean) : Eventos()
 		data class OnSeleccionarPanel(val panelUI: PanelUI) : Eventos() // Adaptado desde OnChangeProveedor
 		data class OnActualizarPaneles(val panelesUI: List<PanelUI>) : Eventos() // Adaptado desde OnChangeProveedor
 		data class ActualizarLogo(val rutaLogo: String) : Eventos() // Adaptado desde OnChangeProveedor
@@ -114,6 +115,7 @@ class DetalleDashboardVM(
 
 							is Eventos.ActualizarLogo          -> estado.copy(dashboardUI = estado.dashboardUI.copy(logo = eventos.rutaLogo))
 							is Eventos.OnChangeInicial         -> estado.copy(dashboardUI = estado.dashboardUI.copy(home = eventos.valor))
+							is Eventos.OnChangeAccesoDirecto   -> estado.copy(dashboardUI = estado.dashboardUI.copy(accesoDirecto = eventos.valor))
 
 							is Eventos.onChangeTipoDashboard   -> {
 								estado.copy(dashboardUI = estado.dashboardUI.copy(tipo = if3(eventos.valor, TipoDashboard.Dinamico(), TipoDashboard.Estatico())))

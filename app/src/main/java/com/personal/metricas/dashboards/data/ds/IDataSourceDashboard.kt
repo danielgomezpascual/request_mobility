@@ -14,6 +14,7 @@ interface IDataSourceDashboard: IDS {
      * @return Lista de [Dashboard].
      */
     suspend fun getAllHome(): List<Dashboard>
+    suspend fun getAllAccesoDirecto(): List<Dashboard>
 
 
 

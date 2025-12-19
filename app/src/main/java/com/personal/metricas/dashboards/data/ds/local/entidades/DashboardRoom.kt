@@ -33,7 +33,8 @@ class DashboardRoom(
 	val paneles: String = "",
 	val autogenerado: String = "N",
 	val etiqueta: String = "",
-	val color: Int = 0
+	val color: Int = 0,
+	val accesoDirecto: String = "N"
 ) : IRoom
 
 suspend fun DashboardRoom.toDashboard(): Dashboard {
@@ -78,7 +79,8 @@ suspend fun DashboardRoom.toDashboard(): Dashboard {
 		paneles = listaPanelesActualizado,
 		autogenerado = esTrue(this.autogenerado, "Y", false),
 		etiqueta = _toObjectFromJson<Etiquetas>(this.etiqueta) ?: Etiquetas.EtiquetaVacia(),
-		color = this.color
+		color = this.color,
+		accesoDirecto = esTrue(this.accesoDirecto, "Y", false)
 	)
 
 }
@@ -104,6 +106,7 @@ fun DashboardRoom.fromDashboard(dashboard: Dashboard): DashboardRoom {
 		paneles = _toJson(dashboard.paneles.map { PanelDashboardRoom.fromPanel(it) }),
 		autogenerado = Utils.toSiNo(dashboard.autogenerado),
 		etiqueta = _toJson(dashboard.etiqueta),
-		color = dashboard.color
+		color = dashboard.color,
+		accesoDirecto = Utils.toSiNo(dashboard.accesoDirecto)
 	)
 }

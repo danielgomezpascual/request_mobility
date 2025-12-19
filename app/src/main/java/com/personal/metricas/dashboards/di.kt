@@ -12,6 +12,7 @@ import com.personal.metricas.dashboards.domain.interactors.EliminarTodosDashboar
 import com.personal.metricas.dashboards.domain.interactors.GuardarDashboardCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardsCU
+import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardsAccesoDirectoCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardsHomeCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerEtiquetasDashboardCU
 import com.personal.metricas.dashboards.domain.interactors.ObtenerKpisDashboard
@@ -59,6 +60,7 @@ val moduloDashboards = module {
     single<ObtenerKpisDashboard> { ObtenerKpisDashboard(get<DashboardRepositorio>(),
                                                         get<ObtenerKpiCU>()) }
     single<ObtenerDashboardsHomeCU> { ObtenerDashboardsHomeCU(get<DashboardRepositorio>()) }
+    single<ObtenerDashboardsAccesoDirectoCU> { ObtenerDashboardsAccesoDirectoCU(get<DashboardRepositorio>()) }
 
     single<ObtenerEtiquetasDashboardCU> { ObtenerEtiquetasDashboardCU(get<ObtenerDashboardsCU>()) }
 

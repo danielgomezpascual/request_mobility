@@ -1,6 +1,5 @@
 package com.personal.metricas.core.composables.scaffold
 
-
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -18,7 +17,11 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,8 +36,12 @@ import com.personal.metricas.core.composables.componentes.TituloScreen
 import com.personal.metricas.core.composables.imagenes.MA_Icono
 import com.personal.metricas.core.navegacion.EventosNavegacion
 import com.personal.metricas.core.utils.Preferencias
+import com.personal.metricas.core.utils._toJson
+import com.personal.metricas.dashboards.domain.interactors.ObtenerDashboardsAccesoDirectoCU
+import com.personal.metricas.dashboards.ui.entidades.DashboardUI
+import com.personal.metricas.dashboards.ui.entidades.fromDashboard
 import com.personal.metricas.menu.Features
-
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -45,6 +52,15 @@ fun MA_ScaffoldGenerico(
 	contenido: @Composable () -> Unit,
 	mostrarBotonesSuperioresYBarraInferior: Boolean = true
 	) {
+
+	val obtenerAccesoDirectoCU: ObtenerDashboardsAccesoDirectoCU = koinInject()
+	var accesosDirectos by remember { mutableStateOf(emptyList<DashboardUI>()) }
+	
+	LaunchedEffect(Unit) {
+		obtenerAccesoDirectoCU.execute().collect { lista ->
+			accesosDirectos = lista.map { DashboardUI().fromDashboard(it) }
+		}
+	}
 
 
 	Scaffold(
@@ -102,6 +118,23 @@ fun MA_ScaffoldGenerico(
 						}
 					)
 
+					// Dynamic Dashboard Shortcuts
+					accesosDirectos.forEach { ds ->
+						ColoredNavItem(
+							icon = Features.Dashboard().icono,
+							backgroundColor = Color(ds.color).copy(alpha = 0.1f),
+							iconColor = Color(ds.color),
+							onClick = {
+								navegacion(
+									EventosNavegacion.VisualizadorDashboard(
+										ds.id,
+										_toJson(ds.parametros)
+									)
+								)
+							}
+						)
+					}
+
 					if (App.sharedPrerfences.get<Boolean>(Preferencias.ACCESO_HERRAMIENTAS, false)) {
 						// Red/Pink Theme for Tools
 						ColoredNavItem(
@@ -139,11 +172,11 @@ private fun ColoredNavItem(
 ) {
 	Box(
 		modifier = Modifier
-			.padding(10.dp)
+			.padding(4.dp)
 
 			.fillMaxHeight()
 
-		.size(100.dp)
+		.size(80.dp)
 			.clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
 			.background(backgroundColor)
 			.combinedClickable(
@@ -157,7 +190,7 @@ private fun ColoredNavItem(
 		MA_Icono(
 			icono = icon,
 			color = iconColor,
-			modifier = Modifier.size(32.dp)
+			modifier = Modifier.size(28.dp)
 		)
 	}
 }

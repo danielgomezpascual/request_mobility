@@ -23,7 +23,8 @@ data class DashboardUI(
 	val parametros: Parametros = Parametros(),
 	val autogenerado: Boolean = false,
 	val etiqueta: Etiquetas = Etiquetas.EtiquetaVacia()  ,
-	val color: Int = -29696
+	val color: Int = -29696,
+	val accesoDirecto: Boolean = false
 ){
 
 }
@@ -46,7 +47,8 @@ fun DashboardUI.fromDashboard(dashboard: Dashboard): DashboardUI {
 		parametros = dashboard.parametros,
 		autogenerado = dashboard.autogenerado,
 		etiqueta = dashboard.etiqueta,
-		color = dashboard.color
+		color = dashboard.color,
+		accesoDirecto = dashboard.accesoDirecto
 	)
 
 }
@@ -67,7 +69,8 @@ fun DashboardUI.fromDashboardLight(dashboard: Dashboard): DashboardUI {
 		parametros = dashboard.parametros,
 		autogenerado = dashboard.autogenerado,
 		etiqueta = dashboard.etiqueta,
-		color = dashboard.color
+		color = dashboard.color,
+		accesoDirecto = dashboard.accesoDirecto
 	)
 
 }
@@ -95,7 +98,8 @@ fun DashboardUI.toDashboard(): Dashboard {
 		parametros = this.parametros,
 		autogenerado = this.autogenerado,
 		etiqueta =  this.etiqueta,
-		color = this.color
+		color = this.color,
+		accesoDirecto = this.accesoDirecto
 
 	)
 }

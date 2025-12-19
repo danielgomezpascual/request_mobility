@@ -20,6 +20,9 @@ abstract class DashboardDao : BaseDaoExtended<DashboardRoom>(), KoinComponent { 
     @Query("SELECT * FROM Dashboard")
     abstract suspend fun todosDashboards(): List<DashboardRoom>
 
+    @Query("SELECT * FROM Dashboard WHERE accesoDirecto = 'Y' ")
+    abstract suspend fun todosDashboardsAccesoDirecto(): List<DashboardRoom>
+
     @Query("SELECT * FROM Dashboard WHERE id = :id")
     abstract suspend fun getPorID(id: Int): DashboardRoom?
 }

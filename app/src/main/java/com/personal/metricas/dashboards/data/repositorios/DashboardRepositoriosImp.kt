@@ -17,6 +17,11 @@ class DashboardRepositoriosImp(
         emit(listado)
     }
 
+    override suspend fun getAllAccesoDirecto(): Flow<List<Dashboard>> = flow{
+        val listado: List<Dashboard> = dameDS(TIPO_DS.ROOM).getAllAccesoDirecto()
+        emit(listado)
+    }
+
     override suspend fun getAll(): Flow<List<Dashboard>> = flow {
         // App.modo determinaría si se obtienen datos locales o remotos primero,
         // o si se hace una sincronización. El ejemplo usa App.modo para elegir una fuente.

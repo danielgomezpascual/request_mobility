@@ -149,6 +149,7 @@ fun DetalleDashboardUIScreen(
 								Column {
 									MA_Titulo2("Informacion")
 									MA_SwitchNormal(valor = dashboardUI.home, titulo = "Home", icono = Icons.Default.Star) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
+									MA_SwitchNormal(valor = dashboardUI.accesoDirecto, titulo = "Acceso Directo", icono = Icons.Default.DoubleArrow) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeAccesoDirecto(valor)) }
 
 								}
 

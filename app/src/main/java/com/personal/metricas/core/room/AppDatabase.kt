@@ -25,7 +25,7 @@ import com.personal.metricas.transacciones.data.ds.local.entities.TransaccionesR
         PanelesRoom::class, EndPointRoom::class, NotasRoom::class,
         OrganizacionesRoom::class, LogRoom::class
                ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface DashboardRepositorio {
     suspend fun getAllHome(): Flow<List<Dashboard>>
+    suspend fun getAllAccesoDirecto(): Flow<List<Dashboard>>
     suspend fun getAll(): Flow<List<Dashboard>>
     suspend fun eliminar(dashboard: Dashboard)
     suspend fun eliminar() // Para eliminar todos
