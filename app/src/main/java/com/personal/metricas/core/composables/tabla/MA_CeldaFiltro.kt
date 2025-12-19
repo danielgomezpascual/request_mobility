@@ -1,24 +1,34 @@
 package com.personal.metricas.core.composables.tabla
 
 import MA_IconBottom
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.InvertColors
-import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.MA_Spacer
@@ -33,51 +43,79 @@ import com.personal.metricas.core.utils.if3
 
 @Composable
 fun MA_CeldaFiltro(
-
 	modifier: Modifier = Modifier,
 	celda: Celda,
 	alineacion: TextAlign = TextAlign.Unspecified,
-	icono: Icons? = null,
 	onClickSeleccion: (Celda) -> Unit = {},
 	onClickInvertir: (Celda) -> Unit = {},
-
+) {
+	val colorActivo = Color(0xFFFFB74D) // Un violeta premium
+	val colorInvertido = Color(0xFFE91E63) // Rosa para inversión
+	
+	Surface(
+		modifier = modifier
+			.padding(vertical = 4.dp, horizontal = 2.dp)
+			.fillMaxWidth(),
+		shape = RoundedCornerShape(12.dp),
+		color = if (celda.seleccionada) colorActivo.copy(alpha = 0.08f) else MaterialTheme.colorScheme.surface,
+		border = BorderStroke(
+			width = 1.dp,
+			color = when {
+				celda.filtroInvertido -> colorInvertido
+				celda.seleccionada -> colorActivo
+				else -> MaterialTheme.colorScheme.outlineVariant
+			}
+		),
+		tonalElevation = if (celda.seleccionada) 2.dp else 0.dp
 	) {
-
-	Row(verticalAlignment = Alignment.CenterVertically,
-		modifier = Modifier.fillMaxWidth().clickable { onClickSeleccion(celda) }) {
-
-		//MA_Circulo(color = if3(celda.seleccionada, Color.Yellow, Color.LightGray))
-		// Column {
-		MA_IconBottom(icon = Icons.Default.LightMode,
-					  color = if3(celda.seleccionada, Color.Magenta, Color.LightGray), onClick = {
-			onClickSeleccion(celda)
-		})
-
-		//MA_Icono(Icons.Default.LightMode, color = if3(celda.seleccionada, Color.Magenta, Color.LightGray))
-		MA_Spacer()
-		MA_IconBottom(icon = Icons.Default.InvertColors,
-					  color = if3(celda.filtroInvertido, Color.Magenta, Color.LightGray), onClick = {
-			onClickInvertir(celda)
-		})
-		//MA_BotonSecundarioSinBorde(onClick = {onClickInvertir(celda)},  texto = "INV" )
-
-
-		//   }
-		MA_Spacer()
-		MA_LabelMini(valor = "${celda.titulo} = ${celda.valor}")
-		/*Text(
-			text = "${celda.titulo} = ${celda.valor}",
-			modifier = modifier
-				.background(celda.fondoCelda)
-				.padding(4.dp),
-
-			color = celda.colorCelda,
-			style = MaterialTheme.typography.bodySmall,
-			textAlign = alineacion
-		)*/
-
-
-		//MA_BotonSecundarioSinBorde(onClick = {onClickInvertir(celda)},  texto = "Invertir" )
+		Row(
+			modifier = Modifier
+				.clickable { onClickSeleccion(celda) }
+				.padding(12.dp),
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			// Indicador de estado principal (Selección)
+			Icon(
+				imageVector = Icons.Default.FilterAlt, 
+				contentDescription = null,
+				tint = if (celda.seleccionada) colorActivo else MaterialTheme.colorScheme.outline,
+				modifier = Modifier.size(20.dp)
+			)
+			
+			MA_Spacer(Modifier.width(12.dp))
+			
+			// Texto del filtro
+			Column(modifier = Modifier.weight(1f)) {
+				MA_LabelNormal(
+					valor = celda.titulo,
+					color = if (celda.seleccionada) colorActivo else MaterialTheme.colorScheme.onSurface,
+					size = 12.sp
+				)
+				Text(
+					text = celda.valor.toString(),
+					style = MaterialTheme.typography.bodyMedium,
+					color = if (celda.seleccionada) colorActivo.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant,
+					maxLines = 1,
+					overflow = TextOverflow.Ellipsis
+				)
+			}
+			
+			// Botón de inversión
+			Surface(
+				onClick = { onClickInvertir(celda) },
+				shape = RoundedCornerShape(8.dp),
+				color = if (celda.filtroInvertido) colorInvertido else Color.Transparent,
+				modifier = Modifier.size(36.dp)
+			) {
+				Box(contentAlignment = Alignment.Center) {
+					Icon(
+						imageVector = Icons.Default.Block,
+						contentDescription = "Invertir",
+						tint = if (celda.filtroInvertido) Color.White else MaterialTheme.colorScheme.outline,
+						modifier = Modifier.size(18.dp)
+					)
+				}
+			}
+		}
 	}
-
 }
