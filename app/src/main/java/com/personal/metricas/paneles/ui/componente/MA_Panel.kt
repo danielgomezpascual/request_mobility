@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.personal.metricas.App
 import com.personal.metricas.App.Companion.dialog
+import com.personal.metricas.App.Companion.log
 import com.personal.metricas.R
 import com.personal.metricas.core.composables.MA_Spacer
 
@@ -213,7 +214,7 @@ fun MA_Panel(
 					scope.launch {
 						isLoading = true 
 						try {
-							App.log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
+							log.lista("Paramtros Dashboard", panelData.parametrosOrigenDatos.ps)
 							async() {
 								val procesarEndPoint: AlmacenarDatosRemotosEndPointCU = KoinJavaComponent.getKoin().get()
 								val resultado: ResultadoEndPoint = procesarEndPoint.obtenerRemoto(panelData.panel.endPoint)
@@ -245,8 +246,8 @@ fun MA_Panel(
 
 
 		TiposPanel.PANEL_CONECTOR  -> {
-			App.log.lista("Valres tabla", panelData.valoresTabla.filas)
-			App.log.lista("Valres tabla", filasPintar)
+			log.lista("Valres tabla", panelData.valoresTabla.filas)
+			log.lista("Valres tabla", filasPintar)
 
 			Row(
 				modifier = Modifier
@@ -282,7 +283,7 @@ fun MA_Panel(
 				celdasFiltro = celdasFiltro,
 				onClickSeleccionarFila = { fila ->
 					filas = filas.map { f ->
-						App.log.d("Cambio en la seleccion del filtro")
+						log.d("Cambio en la seleccion del filtro")
 						if (fila.seleccionada) {
 							f.copy(seleccionada = false)
 						} else {
@@ -298,7 +299,7 @@ fun MA_Panel(
 				},
 				onClickInvertir = { cfi ->
 					panelDataState = panelDataState.copy(indice = 0)
-					App.log.d("Cambio en la INVERSION DEL FILTRO")
+					log.d("Cambio en la INVERSION DEL FILTRO")
 					celdasFiltro = celdasFiltro.map { c ->
 						if (c.titulo.equals(cfi.titulo)) {
 							if (!cfi.filtroInvertido) {
@@ -327,15 +328,33 @@ fun MA_Panel(
 				},
 				onClickBorrarFiltros = {
 					panelDataState = panelDataState.copy(indice = 0)
-					panelData.valoresTabla.filas = filas.map { fila ->
-						fila.copy(visible = true)
+					celdasFiltro = emptyList() // Limpiar filtros de celdas
+					filas = filas.map { fila ->
+						fila.copy(visible = true, seleccionada = false) // Restaurar visibilidad y quitar seleccion
 					}
+					panelData.valoresTabla.filas = filas
 				},
 				onClickFiltrarTexto = { str ->
 					panelDataState = panelDataState.copy(indice = 0)
-					panelData.valoresTabla.filas = filas.map { fila ->
-						fila.copy(visible = fila.toString().contains(str))
+					
+					// Filtrar las filas buscando el texto en el contenido de las celdas
+					filas = filas.map { fila ->
+						// Buscar en todas las celdas de la fila (case-insensitive)
+						val cumpleFiltro = if (str.isBlank()) {
+							true // Si el texto de búsqueda está vacío, mostrar todas las filas
+						} else {
+							fila.celdas.any { celda ->
+								celda.valor.toString().contains(str, ignoreCase = true)
+							}
+						}
+						
+						App.log.d("Filtro texto: '$str' - Fila cumple: $cumpleFiltro")
+						fila.copy(visible = cumpleFiltro)
 					}
+					
+					// Actualizar el estado del panel
+					panelData.valoresTabla.filas = filas
+
 				},
 				onClickIndicePaginacion = { indice ->
 					panelDataState = panelDataState.copy(indice = indice)
