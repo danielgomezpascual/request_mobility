@@ -18,7 +18,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.NavigateBefore
 import androidx.compose.material.icons.filled.NavigateNext
@@ -57,6 +59,7 @@ import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.listas.MA_Lista
 import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils._t
+import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.core.utils.if3
 import com.personal.metricas.excel.GenerateExcel
 import com.personal.metricas.notas.domain.entidades.Notas
@@ -164,6 +167,8 @@ fun MA_Tabla(
     val filasColor = panelConfiguracion.filasColor
 
     var paginaActual by remember { mutableIntStateOf(indice) }
+    var columnaOrdenada by remember { mutableStateOf<Int?>(null) }
+    var ordenAscendente by remember { mutableStateOf(true) }
 
     var nuemroCeldas = 0
     try {
@@ -185,8 +190,30 @@ fun MA_Tabla(
     }
 
     val listaFiltrada = filasOriginal.filter { it.visible }
+
+    val listaOrdenada = remember(listaFiltrada, columnaOrdenada, ordenAscendente) {
+        if (columnaOrdenada == null) {
+            listaFiltrada
+        } else {
+            listaFiltrada.sortedWith { f1, f2 ->
+                val v1 = f1.celdas.getOrNull(columnaOrdenada!!)?.valor ?: ""
+                val v2 = f2.celdas.getOrNull(columnaOrdenada!!)?.valor ?: ""
+
+                val cmp = if (v1.esNumerico() && v2.esNumerico()) {
+                    val n1 = v1.replace(",", ".").toDoubleOrNull() ?: 0.0
+                    val n2 = v2.replace(",", ".").toDoubleOrNull() ?: 0.0
+                    n1.compareTo(n2)
+                } else {
+                    v1.compareTo(v2, ignoreCase = true)
+                }
+
+                if (ordenAscendente) cmp else -cmp
+            }
+        }
+    }
+
     val totalPaginas =
-            if (elementos > 0) ceil(listaFiltrada.size.toFloat() / elementos).toInt() else 1
+            if (elementos > 0) ceil(listaOrdenada.size.toFloat() / elementos).toInt() else 1
 
     LaunchedEffect(totalPaginas) {
         if (paginaActual >= totalPaginas) {
@@ -194,7 +221,7 @@ fun MA_Tabla(
         }
     }
 
-    val filas = listaFiltrada.drop(paginaActual * elementos).take(elementos)
+    val filas = listaOrdenada.drop(paginaActual * elementos).take(elementos)
     val context = LocalContext.current
     val d: DialogManager = getKoin().get()
 
@@ -413,9 +440,34 @@ fun MA_Tabla(
                         if (celda.titulo.equals(K.HASH_CODE)) {
                             // No pintamos titulo para el hashcode
                         } else {
-
-                            Box(modifier = modifierBox.background(Color(0xFFF5F5F5))) {
-                                celda.celdaTitulo(modifierBox)
+                            Box(
+                                modifier = modifierBox
+                                    .background(Color(0xFFF5F5F5))
+                                    .clickable {
+                                        if (columnaOrdenada == int) {
+                                            ordenAscendente = !ordenAscendente
+                                        } else {
+                                            columnaOrdenada = int
+                                            ordenAscendente = true
+                                        }
+                                    }
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Box(modifier = Modifier.weight(1f)) {
+                                        celda.celdaTitulo(Modifier)
+                                    }
+                                    if (columnaOrdenada == int) {
+                                        Icon(
+                                            imageVector = if (ordenAscendente) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp).padding(end = 4.dp),
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
