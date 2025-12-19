@@ -3,6 +3,7 @@ package com.personal.metricas.core.composables.tabla
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,9 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.FileDownload
@@ -42,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,10 +47,8 @@ import androidx.core.content.FileProvider
 import com.personal.metricas.App
 import com.personal.metricas.R
 import com.personal.metricas.core.composables.MA_Spacer
-import com.personal.metricas.core.composables.botones.MA_BotonSecundarioSinBorde
 import com.personal.metricas.core.composables.dialogos.DialogManager
 import com.personal.metricas.core.composables.edittext.MA_TextoEditable
-import com.personal.metricas.core.composables.labels.MA_LabelMini
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.listas.MA_Lista
@@ -191,26 +186,28 @@ fun MA_Tabla(
 
     val listaFiltrada = filasOriginal.filter { it.visible }
 
-    val listaOrdenada = remember(listaFiltrada, columnaOrdenada, ordenAscendente) {
-        if (columnaOrdenada == null) {
-            listaFiltrada
-        } else {
-            listaFiltrada.sortedWith { f1, f2 ->
-                val v1 = f1.celdas.getOrNull(columnaOrdenada!!)?.valor ?: ""
-                val v2 = f2.celdas.getOrNull(columnaOrdenada!!)?.valor ?: ""
-
-                val cmp = if (v1.esNumerico() && v2.esNumerico()) {
-                    val n1 = v1.replace(",", ".").toDoubleOrNull() ?: 0.0
-                    val n2 = v2.replace(",", ".").toDoubleOrNull() ?: 0.0
-                    n1.compareTo(n2)
+    val listaOrdenada =
+            remember(listaFiltrada, columnaOrdenada, ordenAscendente) {
+                if (columnaOrdenada == null) {
+                    listaFiltrada
                 } else {
-                    v1.compareTo(v2, ignoreCase = true)
-                }
+                    listaFiltrada.sortedWith { f1, f2 ->
+                        val v1 = f1.celdas.getOrNull(columnaOrdenada!!)?.valor ?: ""
+                        val v2 = f2.celdas.getOrNull(columnaOrdenada!!)?.valor ?: ""
 
-                if (ordenAscendente) cmp else -cmp
+                        val cmp =
+                                if (v1.esNumerico() && v2.esNumerico()) {
+                                    val n1 = v1.replace(",", ".").toDoubleOrNull() ?: 0.0
+                                    val n2 = v2.replace(",", ".").toDoubleOrNull() ?: 0.0
+                                    n1.compareTo(n2)
+                                } else {
+                                    v1.compareTo(v2, ignoreCase = true)
+                                }
+
+                        if (ordenAscendente) cmp else -cmp
+                    }
+                }
             }
-        }
-    }
 
     val totalPaginas =
             if (elementos > 0) ceil(listaOrdenada.size.toFloat() / elementos).toInt() else 1
@@ -235,8 +232,8 @@ fun MA_Tabla(
 
             // Contador de registros y navegación - Parte izquierda
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
             ) {
                 if (celdasFiltro.isNotEmpty()) {
                     ModalInferiorFiltros {
@@ -244,78 +241,81 @@ fun MA_Tabla(
                             mutableStateOf(App.sharedPrerfences.get(K.TXT_FILTROS_LISTAS, ""))
                         }
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             // Cabecera del Filtro
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                             ) {
                                 MA_Titulo("Filtros Avanzados")
                                 TextButton(
-                                    onClick = { onClickBorrarFiltros() },
-                                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                                ) {
-                                    Text("Borrar todo")
-                                }
+                                        onClick = { onClickBorrarFiltros() },
+                                        colors =
+                                                ButtonDefaults.textButtonColors(
+                                                        contentColor =
+                                                                MaterialTheme.colorScheme.error
+                                                )
+                                ) { Text("Borrar todo") }
                             }
 
                             // Campo de búsqueda principal
                             MA_TextoEditable(
-                                valor = str,
-                                titulo = "Búsqueda rápida...",
-                                onValueChange = { texto ->
-                                    str = texto
-                                    App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
-                                    onClickFiltrarTexto(str)
-                                }
+                                    valor = str,
+                                    titulo = "Búsqueda rápida...",
+                                    onValueChange = { texto ->
+                                        str = texto
+                                        App.sharedPrerfences.put(K.TXT_FILTROS_LISTAS, str)
+                                        onClickFiltrarTexto(str)
+                                    }
                             )
 
                             // Lista de filtros por columna
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                MA_LabelNormal("Filtrar por columna", size = 14.sp, color = MaterialTheme.colorScheme.primary)
+                                MA_LabelNormal(
+                                        "Filtrar por columna",
+                                        size = 14.sp,
+                                        color = MaterialTheme.colorScheme.primary
+                                )
                                 MA_Lista(celdasFiltro) { celdaFiltro ->
                                     MA_CeldaFiltro(
-                                        celda = celdaFiltro,
-                                        onClickSeleccion = { cf -> onClickSeleccionarFiltro(cf) },
-                                        onClickInvertir = { cf -> onClickInvertir(cf) }
+                                            celda = celdaFiltro,
+                                            onClickSeleccion = { cf ->
+                                                onClickSeleccionarFiltro(cf)
+                                            },
+                                            onClickInvertir = { cf -> onClickInvertir(cf) }
                                     )
                                 }
                             }
-                            
+
                             MA_Spacer(Modifier.padding(8.dp))
                         }
                     }
                 }
-                
+
                 // Paginación
                 IconButton(
-                    onClick = { if (paginaActual > 0) paginaActual-- },
-                    enabled = paginaActual > 0
-                ) { 
-                    Icon(Icons.Default.NavigateBefore, contentDescription = "Anterior") 
-                }
-                
-                val registroInicio = if (listaFiltrada.isEmpty()) 0 else (paginaActual * elementos) + 1
+                        onClick = { if (paginaActual > 0) paginaActual-- },
+                        enabled = paginaActual > 0
+                ) { Icon(Icons.Default.NavigateBefore, contentDescription = "Anterior") }
+
+                val registroInicio =
+                        if (listaFiltrada.isEmpty()) 0 else (paginaActual * elementos) + 1
                 val registroFin = minOf((paginaActual + 1) * elementos, listaFiltrada.size)
                 val totalRegistros = listaFiltrada.size
-                
+
                 Text(
-                    text = "$registroInicio a $registroFin de $totalRegistros",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                        text = "$registroInicio a $registroFin de $totalRegistros",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(horizontal = 8.dp)
                 )
-                
+
                 IconButton(
-                    onClick = { if (paginaActual < totalPaginas - 1) paginaActual++ },
-                    enabled = paginaActual < totalPaginas - 1
-                ) { 
-                    Icon(Icons.Default.NavigateNext, contentDescription = "Siguiente") 
-                }
+                        onClick = { if (paginaActual < totalPaginas - 1) paginaActual++ },
+                        enabled = paginaActual < totalPaginas - 1
+                ) { Icon(Icons.Default.NavigateNext, contentDescription = "Siguiente") }
             }
 
             // Botón de exportar - Parte derecha
@@ -339,7 +339,7 @@ fun MA_Tabla(
                                 GenerateExcel()
                                         .generate(
                                                 titulo = nombreFichero,
-                                                filas = filasOriginal.filter { it.visible },
+                                                filas = listaOrdenada,
                                                 fichero = myExcelFile
                                         )
 
@@ -441,30 +441,32 @@ fun MA_Tabla(
                             // No pintamos titulo para el hashcode
                         } else {
                             Box(
-                                modifier = modifierBox
-                                    .background(Color(0xFFF5F5F5))
-                                    .clickable {
-                                        if (columnaOrdenada == int) {
-                                            ordenAscendente = !ordenAscendente
-                                        } else {
-                                            columnaOrdenada = int
-                                            ordenAscendente = true
-                                        }
-                                    }
+                                    modifier =
+                                            modifierBox.background(Color(0xFFF5F5F5)).clickable {
+                                                if (columnaOrdenada == int) {
+                                                    ordenAscendente = !ordenAscendente
+                                                } else {
+                                                    columnaOrdenada = int
+                                                    ordenAscendente = true
+                                                }
+                                            }
                             ) {
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.fillMaxWidth()
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Box(modifier = Modifier.weight(1f)) {
                                         celda.celdaTitulo(Modifier)
                                     }
                                     if (columnaOrdenada == int) {
                                         Icon(
-                                            imageVector = if (ordenAscendente) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(16.dp).padding(end = 4.dp),
-                                            tint = MaterialTheme.colorScheme.primary
+                                                imageVector =
+                                                        if (ordenAscendente)
+                                                                Icons.Default.ArrowUpward
+                                                        else Icons.Default.ArrowDownward,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp).padding(end = 4.dp),
+                                                tint = MaterialTheme.colorScheme.primary
                                         )
                                     }
                                 }
@@ -478,42 +480,33 @@ fun MA_Tabla(
                     onClickSeleccionarFila(fila)
                 }
             }
-
-
-
-
         }
-        
+
         // Pagination Controls - Contador de registros
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-
-            ) {
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+        ) {
             IconButton(
-                onClick = { if (paginaActual > 0) paginaActual-- },
-                enabled = paginaActual > 0
+                    onClick = { if (paginaActual > 0) paginaActual-- },
+                    enabled = paginaActual > 0
             ) { Icon(Icons.Default.NavigateBefore, contentDescription = "Anterior") }
-            
+
             val registroInicio = if (listaFiltrada.isEmpty()) 0 else (paginaActual * elementos) + 1
             val registroFin = minOf((paginaActual + 1) * elementos, listaFiltrada.size)
             val totalRegistros = listaFiltrada.size
-            
+
             Text(
-                text = "$registroInicio a $registroFin de $totalRegistros",
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                    text = "$registroInicio a $registroFin de $totalRegistros",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = 8.dp)
             )
-            
+
             IconButton(
-                onClick = { if (paginaActual < totalPaginas - 1) paginaActual++ },
-                enabled = paginaActual < totalPaginas - 1
+                    onClick = { if (paginaActual < totalPaginas - 1) paginaActual++ },
+                    enabled = paginaActual < totalPaginas - 1
             ) { Icon(Icons.Default.NavigateNext, contentDescription = "Siguiente") }
         }
-
-
-
-
     }
 }
