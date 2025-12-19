@@ -137,6 +137,8 @@ fun DetalleDashboardUIScreen(
 
 
 						contenido = {
+
+
 							Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
 								.fillMaxSize()
 								.verticalScroll(rememberScrollState()) // Para que el contenido sea scrollable
@@ -144,14 +146,17 @@ fun DetalleDashboardUIScreen(
 
 
 								MA_Avatar(dashboardUI.nombre,  color = Color(dashboardUI.color))
+								MA_Titulo2("Informacion")
+								MA_Card {
 
+									Row {
 
-								Column {
-									MA_Titulo2("Informacion")
-									MA_SwitchNormal(valor = dashboardUI.home, titulo = "Home", icono = Icons.Default.Star) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
-									MA_SwitchNormal(valor = dashboardUI.accesoDirecto, titulo = "Acceso Directo", icono = Icons.Default.DoubleArrow) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeAccesoDirecto(valor)) }
+										MA_SwitchNormal(valor = dashboardUI.home, titulo = "Home", icono = Icons.Default.Star) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeInicial(valor)) }
+										MA_SwitchNormal(valor = dashboardUI.accesoDirecto, titulo = "Acceso Directo", icono = Icons.Default.DoubleArrow) { valor -> viewModel.onEvento(DetalleDashboardVM.Eventos.OnChangeAccesoDirecto(valor)) }
 
+									}
 								}
+
 
 								MA_Card {
 									Column() {

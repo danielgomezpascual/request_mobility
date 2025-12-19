@@ -3,6 +3,7 @@ package com.personal.metricas.paneles.ui.componente
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -10,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.formas.MA_ShapeIrregular
 import com.personal.metricas.core.composables.labels.MA_LabelNormal
+import org.apache.commons.math3.geometry.spherical.twod.Circle
 
 @Composable
 fun MA_SeleccionColor(color: Color) {
@@ -33,7 +35,8 @@ fun MA_SeleccionColor(color: Color) {
 				color = color,
 				// ¡Llamamos a nuestra función!
 				// Cambia el 'seed' para obtener una forma diferente.
-				shape = MA_ShapeIrregular(corners = 30, irregularity = 0.2f, seed = 2L)
+				//shape = MA_ShapeIrregular(corners = 30, irregularity = 0.2f, seed = 2L)
+				shape = RoundedCornerShape(12)
 			)
 	){
 		MA_LabelNormal("")
