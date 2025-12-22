@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
@@ -53,6 +54,7 @@ import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo
 import com.personal.metricas.core.composables.listas.MA_Lista
 import com.personal.metricas.core.utils.K
+import com.personal.metricas.core.utils.MA_DimensionUtils
 import com.personal.metricas.core.utils._t
 import com.personal.metricas.core.utils.esNumerico
 import com.personal.metricas.core.utils.if3
@@ -164,7 +166,6 @@ fun MA_Tabla(
     var paginaActual by remember { mutableIntStateOf(indice) }
     var columnaOrdenada by remember { mutableStateOf<Int?>(null) }
     var ordenAscendente by remember { mutableStateOf(true) }
-
     var nuemroCeldas = 0
     try {
         nuemroCeldas =
@@ -177,11 +178,43 @@ fun MA_Tabla(
         App.log.e(e.message)
     }
 
+    // Pre-calculamos el ancho de las columnas si el crecimiento horizontal está activado
+    val anchosColumnas =
+            remember(filasOriginal, panelConfiguracion.textoCeldaHorizontal) {
+                if (!panelConfiguracion.textoCeldaHorizontal) return@remember emptyMap<Int, Dp>()
+                val map = mutableMapOf<Int, Dp>()
+                filasOriginal.forEach { fila ->
+                    fila.celdas.forEachIndexed { index, celda ->
+                        val anchoCelda = MA_DimensionUtils.calcularAnchoEstimadoTexto(celda.valor)
+                        val anchoTitulo = MA_DimensionUtils.calcularAnchoEstimadoTexto(celda.titulo)
+                        val maxAncho = if (anchoCelda > anchoTitulo) anchoCelda else anchoTitulo
+                        val actual = map.getOrDefault(index, 0.dp)
+                        if (maxAncho > actual) map[index] = maxAncho
+                    }
+                }
+                map
+            }
+
+    // Aplicamos los anchos calculados a las celdas
+    if (panelConfiguracion.textoCeldaHorizontal) {
+        filasOriginal.forEach { fila ->
+            fila.celdas.forEachIndexed { index, celda ->
+                celda.size = anchosColumnas.getOrDefault(index, 50.dp)
+            }
+        }
+    }
+
+    val totalWidthCalculated = anchosColumnas.values.fold(0.dp) { acc: Dp, d: Dp -> acc + d }
+
     val ajustarContenidoAncho =
-            logicaAjusteCeldaAncho(nuemroCeldas, panelConfiguracion.ajustarContenidoAncho)
+            if (panelConfiguracion.textoCeldaHorizontal) false
+            else logicaAjusteCeldaAncho(nuemroCeldas, panelConfiguracion.ajustarContenidoAncho)
     var modifierColumn = modifier
-    if (!ajustarContenidoAncho) {
+    if (!ajustarContenidoAncho || panelConfiguracion.textoCeldaHorizontal) {
         modifierColumn = modifierColumn.horizontalScroll(estadoScroll)
+        if (panelConfiguracion.textoCeldaHorizontal && totalWidthCalculated > 0.dp) {
+            modifierColumn = modifierColumn.width(totalWidthCalculated)
+        }
     }
 
     val listaFiltrada = filasOriginal.filter { it.visible }
@@ -423,7 +456,15 @@ fun MA_Tabla(
         ) {
 
             // Titulos de la tabla
-            Row(modifier = Modifier.padding(4.dp).fillMaxWidth()) {
+            Row(
+                    modifier =
+                            Modifier.padding(4.dp)
+                                    .then(
+                                            if (panelConfiguracion.textoCeldaHorizontal)
+                                                    Modifier.width(totalWidthCalculated)
+                                            else Modifier.fillMaxWidth()
+                                    )
+            ) {
                 if (mostrarTitulos && !filas.isEmpty()) {
                     filas.first().celdas.forEachIndexed { int, celda ->
 
@@ -434,7 +475,12 @@ fun MA_Tabla(
                             modifierBox = modifierBox.fillMaxWidth().weight(1f)
                         } else {
                             // modifierBox = modifierBox.width(celda.size)
-                            modifierBox = modifierBox.width(celda.size)
+                            modifierBox =
+                                    if3(
+                                            panelConfiguracion.textoCeldaHorizontal,
+                                            modifierBox.width(celda.size),
+                                            modifierBox.width(celda.size)
+                                    )
                         }
 
                         if (celda.titulo.equals(K.HASH_CODE)) {
@@ -475,7 +521,13 @@ fun MA_Tabla(
                     }
                 }
             }
-            MA_Lista(filas) { fila ->
+            MA_Lista(
+                    data = filas,
+                    modifier =
+                            if (panelConfiguracion.textoCeldaHorizontal)
+                                    Modifier.width(totalWidthCalculated)
+                            else Modifier.fillMaxWidth()
+            ) { fila ->
                 MA_FilaTablaDatos(fila, notas, panelConfiguracion) { fila ->
                     onClickSeleccionarFila(fila)
                 }

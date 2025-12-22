@@ -1,6 +1,5 @@
 package com.personal.metricas.paneles.ui.screen.detalle
 
-
 import MA_IconBottom
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -100,748 +98,1612 @@ import com.personal.metricas.paneles.ui.screen.detalle.DetallePanelVM.UIState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 fun DetallePanelScreen(
-	identificador: Int,
-	viewModel: DetallePanelVM = koinViewModel(),
-	navegacion: (EventosNavegacion) -> Unit,
+        identificador: Int,
+        viewModel: DetallePanelVM = koinViewModel(),
+        navegacion: (EventosNavegacion) -> Unit,
 ) {
 
-	val uiState by viewModel.uiState.collectAsState()
+        val uiState by viewModel.uiState.collectAsState()
 
-	LaunchedEffect(Unit) {
-		viewModel.onEvent(DetallePanelVM.Eventos.Cargar(identificador))
-	}
+        LaunchedEffect(Unit) { viewModel.onEvent(DetallePanelVM.Eventos.Cargar(identificador)) }
 
-
-	when (uiState) {
-		is UIState.Error   -> ErrorScreen((uiState as UIState.Error).mensaje)
-		UIState.Loading    -> LoadingScreen()
-		is UIState.Success -> SucessScreenDetallePanel(viewModel,
-													   uiState as UIState.Success,
-													   navegacion)
-
-	}
-
-
+        when (uiState) {
+                is UIState.Error -> ErrorScreen((uiState as UIState.Error).mensaje)
+                UIState.Loading -> LoadingScreen()
+                is UIState.Success ->
+                        SucessScreenDetallePanel(viewModel, uiState as UIState.Success, navegacion)
+        }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SucessScreenDetallePanel(
-	viewModel: DetallePanelVM,
-	uiState: UIState.Success,
-	navegacion: (EventosNavegacion) -> Unit,
+        viewModel: DetallePanelVM,
+        uiState: UIState.Success,
+        navegacion: (EventosNavegacion) -> Unit,
 ) {
-	val panelUI = uiState.panelUI
-	val valoresTabla = uiState.valoresTabla
-	val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-	val sheetStateCondicionFila = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-	val sheetStateCondicionCelda = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-	val scope = rememberCoroutineScope() // Se mantiene dentro del componente
-
-
-
-
-	MA_ScaffoldGenerico(
-
-		tituloScreen = TituloScreen.Paneles,
-		navegacion = navegacion,
-		accionesSuperiores = {
-			Row(
-				modifier = Modifier.fillMaxWidth(),
-				horizontalArrangement = Arrangement.End,
-				verticalAlignment = Alignment.Top
-
-			) {
-				MA_IconBottom(icon = Features.Previo().icono, color = Features.Previo().color) { scope.launch { sheetState.show() } }
-				//MA_IconBottom(icon = Features.Duplicar().icono, color = Features.Duplicar().color) { viewModel.onEvent(DetallePanelVM.Eventos.Duplicar(navegacion)) }
-				MA_Spacer()
-				MA_IconBottom(icon = Features.Eliminar().icono, color = Features.Eliminar().color) { viewModel.onEvent(DetallePanelVM.Eventos.Eliminar(navegacion)) }
-				MA_IconBottom(icon = Features.Guardar().icono, color = Features.Guardar().color) { viewModel.onEvent(DetallePanelVM.Eventos.Guardar(navegacion)) }
-			}
-		},
-
-		contenido = {
-			val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
-
-			Column(modifier = Modifier
-				.fillMaxWidth()
-				.verticalScroll(rememberScrollState())) {
-
-				Column(modifier = Modifier.fillMaxWidth(),
-					   horizontalAlignment = Alignment.CenterHorizontally) {
-					MA_Avatar(panelUI.titulo, color = Color(panelUI.color))
-					MA_Titulo(panelUI.titulo)
-				}
-
-
-				//Identificacion
-				MA_Titulo2("Información")
-				MA_Card(modifier = Modifier.fillMaxWidth()) {
-					Column {
-						Row() {
-							val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
-							MA_ComboColores(modifier = Modifier.weight(1f),
-											titulo = "",
-											descripcion = "Color",
-											valorInicial = {
-
-												val color: Color = Color(panelUI.color)
-												MA_SeleccionColor(color)
-											},
-											elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-											item = { colorSeleccion ->
-												MA_SeleccionColor(colorSeleccion.color)
-											},
-											onClickSeleccion = { colorSeleccion ->
-
-												viewModel.onEvent(DetallePanelVM.Eventos.OnChangeColor(colorSeleccion.color.toArgb()))
-											})
-
-
-							MA_TextoNormal(valor = panelUI.titulo,
-										   titulo = "Nombre",
-										   onValueChange = { valor ->
-											   viewModel.onEvent(DetallePanelVM.Eventos.OnChangeTitulo(valor))
-										   })
-						}
-
-
-						MA_TextoNormal(valor = panelUI.descripcion,
-									   titulo = "Descripcion",
-									   onValueChange = { valor ->
-										   viewModel.onEvent(DetallePanelVM.Eventos.OnChangeDescripcion(valor))
-									   })
-
-
-						Row(modifier = Modifier.fillMaxWidth()   , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-							MA_ComboLista<TiposPanel>(modifier = Modifier.width(100.dp),
-													  titulo = "Tipo de Panel",
-													  descripcion = "Tipo",
-													  valorInicial = {
-														  MA_LabelNormal(panelUI.tipoPanel.literal())
-													  },
-													  elementosSeleccionables = TiposPanel.getTipos(),
-
-													  item = { tipo ->
-														  //KpiComboItem(kpiUI = kpiUI)
-														  MA_LabelNormal(tipo.literal())
-													  },
-													  onClickSeleccion = { tipo ->
-														  viewModel.onEvent(DetallePanelVM.Eventos.OnChangeTipoPanel(
-															  tipo))
-													  })
-
-
-							MA_Combo(
-								modifier = Modifier.width(100.dp),
-								icono = Icons.Filled.Height,                    // modifier = Modifier.weight(1f),
-								titulo = "Celdas",
-								descripcion = "Celdas que ocuma",
-								valorInicial = panelUI.configuracion.celdasPantallasGrandes.toString(),
-								elementosSeleccionables = (1..3 step 1).map { it.toString() },
-								onClickSeleccion = { str, indice ->
-									viewModel.onEvent(DetallePanelVM.Eventos.onChangeCeldasPantallasGrandes(str))
-								})
-
-
-							MA_ComboColores(modifier = Modifier.width(100.dp),
-											titulo = "Color Fondo",
-											descripcion = "Color Fondo Panle",
-											valorInicial = {
-												val color: Color = Color(panelUI.configuracion.colorPanel)
-												MA_SeleccionColor(color)
-											},
-											elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-											item = { colorSeleccion ->
-												MA_SeleccionColor(colorSeleccion.color)
-											},
-											onClickSeleccion = { colorSeleccion ->
-
-												viewModel.onEvent(DetallePanelVM.Eventos.onChangeColorFondoPanel(colorSeleccion.color.toArgb()))
-											})
-						}
-					}
-
-				}
-
-
-				if (panelUI.tipoPanel == TiposPanel.PANEL_CONECTOR) {
-
-
-					MA_Titulo2("Conector")
-					MA_Card {
-						Box(modifier = Modifier.height(100.dp)) {
-							MA_ComboLista<DashboardUI>(modifier = Modifier, titulo = "",
-													   descripcion = "Seleccione el Dashboard a enlazar",
-													   valorInicial = {
-														   MA_ConectorItem(panelUI.conector)
-													   },
-													   elementosSeleccionables = uiState.dashboardDisponibles,
-													   item = { dshUI ->
-														   MA_DashboardComboItem(dashboardUI = dshUI)
-													   },
-													   onClickSeleccion = { dshUI ->
-														   viewModel.onEvent(DetallePanelVM.Eventos.OnChangeDashboardSeleccionado(
-															   dshUI))
-													   })
-
-						}
-					}
-
-				}
-
-
-				if (panelUI.tipoPanel == TiposPanel.PANEL_CONECTOR || panelUI.tipoPanel == TiposPanel.PANEL_KPI) {
-
-
-					MA_Titulo2("KPI")
-					MA_Card {
-						Box(modifier = Modifier.height(250.dp)) {
-							Column() {
-								Row(verticalAlignment = Alignment.CenterVertically) {
-									MA_ComboLista<KpiUI>(modifier = Modifier.weight(1f), titulo = "",
-														 descripcion = "Seleccione el KPI a enlazar",
-														 valorInicial = {
-															 App.log.d(panelUI.kpi.toString())
-															 KpiComboItem(kpiUI = panelUI.kpi)
-
-														 },
-														 elementosSeleccionables = uiState.kpiDisponibles,
-														 item = { kpiUI ->
-															 KpiComboItem(kpiUI = kpiUI)
-														 },
-														 onClickSeleccion = { kpiUI ->
-															 viewModel.onEvent(DetallePanelVM.Eventos.OnChangeKpiSeleccionado(
-																 kpiUI.id))
-														 })
-
-									Box(modifier = Modifier
-										.clickable(enabled = true, onClick = {
-											App.log.d("Clined")
-											navegacion(EventosNavegacion.CargarKPI(panelUI.kpi.id))
-										})) {
-										MA_Icono(Icons.Default.DoubleArrow, modifier = Modifier.size(16.dp))
-									}
-
-								}
-
-								Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-									MA_SwitchNormal(valor = panelUI.configuracion.filtroOrganizacion,
-													titulo = "Filtrar organiacion",
-													icono = Icons.Filled.TableView,
-													modifier = Modifier.weight(1f),
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeFiltroOrganizacion(valor))
-													})
-
-									MA_Spacer()
-									MA_SwitchNormal(valor = panelUI.configuracion.filtroLectora,
-													titulo = "Filtrar Lectora",
-													icono = Icons.Filled.TableView,
-													modifier = Modifier.weight(1f),
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeFiltroLectora(valor))
-													})
-								}
-
-
-
-							}
-
-
-						}
-
-
-					}
-				}
-				if (panelUI.tipoPanel == TiposPanel.PANEL_KPI) {
-					//KPI
-
-
-					MA_Titulo2(valor = "Plantilla")
-					MA_Card {
-						Column(modifier = Modifier.height(200.dp)) {
-
-
-							Row(verticalAlignment = Alignment.CenterVertically) {
-								MA_ComboLista<PlantillasPanel>(modifier = Modifier.weight(1f),
-															   titulo = "Tipo de Gráfica",
-															   descripcion = "Seleccione  el tipo de gráfica a utilizar",
-															   valorInicial = { MA_SeleccionPlantillaPanel(PlantillasPanel.from(uiState.panelUI.configuracion.plantilla)) },
-															   elementosSeleccionables = PlantillasPanel.dameTipos(),
-															   item = { plantilla -> MA_SeleccionPlantillaPanel(plantilla) },
-															   onClickSeleccion = { plantilla -> viewModel.onEvent(DetallePanelVM.Eventos.OnSeleccionarPlantillaAplicar(plantilla)) })
-							}
-
-							Row(verticalAlignment = Alignment.CenterVertically) {
-
-								MA_ComboLista<Columnas>(modifier = Modifier.weight(1f),
-														titulo = "Eje X ",
-														descripcion = "Campo  por el que se van a agrupar los valores cuando la tabla se encuentre limitada",
-														valorInicial = {
-															MA_ColumnaItemSeleccionable(valoresTabla.dameColumnaPosicion(
-																panelUI.configuracion.columnaX))
-														},
-														elementosSeleccionables = valoresTabla.dameColumnas(),
-														item = { columna -> MA_ColumnaItemSeleccionable(columna) },
-														onClickSeleccion = { columna ->
-															viewModel.onEvent(DetallePanelVM.Eventos.onChangeCampoAgrupacionTabla(
-																columna.posicion.toString()))
-														})
-
-								MA_ComboLista<Columnas>(
-									modifier = Modifier.weight(1f),
-									titulo = "Eje Y ",
-									descripcion = "Campo  por el que se van a agrupar los valores cuando la tabla se encuentre limitada",
-									valorInicial = {
-										MA_ColumnaItemSeleccionable(valoresTabla.dameColumnaPosicion(
-											panelUI.configuracion.columnaY))
-									},
-									elementosSeleccionables = valoresTabla.dameColumnas(),
-									item = { columna -> MA_ColumnaItemSeleccionable(columna) },
-									onClickSeleccion = { columna ->
-										viewModel.onEvent(DetallePanelVM.Eventos.onChangeCampoSumaTabla(
-											columna.posicion.toString()))
-									},
-								)
-
-							}
-
-
-							Row(verticalAlignment = Alignment.CenterVertically) {
-
-
-							}
-
-						}
-					}
-					var mostrarDetalles by remember { mutableStateOf<Boolean>(false) }
-					MA_SwitchNormal(valor = mostrarDetalles, titulo = "Detalles", icono = Icons.Default.Details,
-									onValueChange = { it -> mostrarDetalles = it })
-					if (mostrarDetalles) {
-
-						//Valores Generales
-						MA_Titulo2(valor = "Generales")
-						MA_Card {
-							MA_2ColumnasHorizontales(titulo = "", elementos = listOf(
-
-
-								{
-									MA_Combo(icono = Icons.Filled.HorizontalRule,                    //modifier = Modifier.weight(1f),
-											 titulo = "Ancho",
-											 descripcion = "Ancho a ocupar en (DP)",
-											 valorInicial = panelUI.configuracion.width,
-											 elementosSeleccionables = (200..1000 step 50).map { it.toString() },
-											 onClickSeleccion = { str, indice ->
-												 viewModel.onEvent(DetallePanelVM.Eventos.onChangeAncho(str))
-											 })
-								},
-
-								{
-									MA_Combo(icono = Icons.Filled.Height,                    // modifier = Modifier.weight(1f),
-											 titulo = "Alto",
-											 descripcion = "Alto a ocupar en (DP)",
-											 valorInicial = panelUI.configuracion.height,
-											 elementosSeleccionables = (200..1000 step 50).map { it.toString() },
-											 onClickSeleccion = { str, indice ->
-												 viewModel.onEvent(DetallePanelVM.Eventos.onChangeAlto(str))
-											 })
-								},
-
-								{
-									MA_ComboLista<EsquemaColores>(titulo = "Esquema de colores ",
-																  descripcion = "Esquema de colores que se van a mostrar en la gráfica",
-																  valorInicial = {
-																	  MA_SelectorEsquemaColores(EsquemaColores().get(panelUI.configuracion.colores))
-																  },
-																  elementosSeleccionables = EsquemaColores().dameListasDisponibles(),
-																  item = { esquema ->
-																	  MA_SelectorEsquemaColores(esquema)
-																  },
-																  onClickSeleccion = { columna ->
-																	  viewModel.onEvent(DetallePanelVM.Eventos.onChangeEsquemaColores(
-																		  columna.id))
-																  })
-								},
-
-								{
-									MA_Combo(icono = Icons.Filled.Directions,
-											 modifier = Modifier.weight(1f),
-											 titulo = "Orientacion",
-											 descripcion = "Seleccione  como quiere que se presenten la grafica y la tabla",
-											 valorInicial = panelUI.configuracion.orientacion.name,
-											 elementosSeleccionables = listOf("HORIZONTAL", "VERTICAL"),
-											 onClickSeleccion = { str, indice ->
-												 viewModel.onEvent(DetallePanelVM.Eventos.onChangeOrientacion(
-													 str))
-											 })
-								}))
-						}
-
-						//Tabla
-						MA_Titulo2("Tabla")
-						MA_Card {
-							MA_2ColumnasHorizontales(titulo = "", elementos = listOf(
-
-								{
-									MA_SwitchNormal(valor = panelUI.configuracion.mostrarTabla,
-													titulo = "Tabla",
-													icono = Icons.Filled.TableView,
-													modifier = Modifier.weight(1f),
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeMosrtarTabla(valor))
-													})
-								},
-								{
-
-									MA_Combo(                                        //    modifier = Modifier.weight(1f),
-										icono = Icons.Filled.TableView,
-										titulo = "Espacio Tabla",
-										descripcion = "Porcentaje del espaci que va  utilizar la gráfica en el panel",
-										valorInicial = panelUI.configuracion.espacioTabla,
-										elementosSeleccionables = (0..100 step 10).map { it.toString() },
-										onClickSeleccion = { str, indice ->
-											viewModel.onEvent(DetallePanelVM.Eventos.onChangeEspacioTabla(str))
-										})
-								},
-
-								{
-									MA_Combo(
-
-										titulo = "Máximo",
-										descripcion = "Límite de elementos que se pueden presentar en la lista",
-										icono = Icons.Filled.FrontHand,
-										valorInicial = panelUI.configuracion.limiteElementos.toString(),
-										elementosSeleccionables = (0..10).map { it.toString() },
-										onClickSeleccion = { str, indice ->
-											viewModel.onEvent(DetallePanelVM.Eventos.onChangeLimiteElementos(
-												str))
-										})
-								},
-
-								{
-									MA_SwitchNormal(titulo = "Agrupar  en 'Resto' ",
-													valor = panelUI.configuracion.agruparResto,
-													icono = Icons.Filled.ContentCut,
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.OnChangeAgruparResto(
-															valor))
-													})
-								},
-
-
-								{
-									MA_SwitchNormal(titulo = "Ordenados",
-													valor = panelUI.configuracion.ordenado,
-													icono = Icons.Filled.ArrowDownward,
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarOrdenado(
-															valor))
-													})
-								},
-
-								{
-									MA_SwitchNormal(titulo = "Todo el espacio",
-													valor = panelUI.configuracion.ocuparTodoEspacio,
-													icono = Icons.Default.SwapHoriz,
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeOcuparTodoEspacio(
-															valor))
-													})
-								},
-
-								{
-									MA_SwitchNormal(titulo = "Título Tabla",
-													icono = Icons.Default.FormatColorText,
-													valor = panelUI.configuracion.mostrarTituloTabla,
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarTitulosTabla(
-															valor))
-													})
-								},
-
-								{
-									MA_SwitchNormal(icono = Icons.Default.SpaceBar,
-													titulo = "Ajustar Ancho",
-													valor = panelUI.configuracion.ajustarContenidoAncho,
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeAjustarContenido(
-															valor))
-													})
-								},
-
-								{
-									MA_SwitchNormal(titulo = "Indicador Color",
-													icono = Icons.Default.ColorLens,
-													valor = panelUI.configuracion.indicadorColor,
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeIndicadorColor(
-															valor))
-													})
-								},
-
-								{
-									MA_SwitchNormal(icono = Icons.Default.FormatColorFill,
-													titulo = "Filas de color",
-													valor = panelUI.configuracion.filasColor,
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeFilasColor(
-															valor))
-													})
-								}))
-
-						}
-
-
-						//Grafica
-						MA_Titulo2("Grafica")
-						MA_Card {
-							MA_2ColumnasHorizontales(titulo = "", elementos = listOf(
-								{
-									MA_SwitchNormal(valor = panelUI.configuracion.mostrarGrafica,
-													titulo = "Grafica",
-													icono = Icons.Filled.AutoGraph,
-													modifier = Modifier.weight(1f),
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarGrafica(valor))
-													})
-								},
-
-								{
-
-
-									MA_ComboLista<PanelTipoGrafica>(modifier = Modifier.weight(1f),
-																	titulo = "Tipo de Gráfica",
-																	descripcion = "Seleccione  el tipo de gráfica a utilizar",
-																	valorInicial = {
-
-																		App.log.d(panelUI.configuracion.tipo)
-
-																		MA_SeleccionTipoGrafica(panelUI.configuracion.tipo)
-																	},
-																	elementosSeleccionables = PanelTipoGrafica.dameTipos(),
-																	item = { tipo ->
-																		App.log.d(panelUI.configuracion.tipo)
-																		MA_SeleccionTipoGrafica(tipo)
-																	},
-																	onClickSeleccion = { tipo ->
-																		viewModel.onEvent(DetallePanelVM.Eventos.onChangeTipoGrafica(tipo))
-																	})
-
-
-								},
-
-
-								{
-									MA_Combo(                    //  modifier = Modifier.weight(1f),
-										icono = Icons.Filled.AutoGraph,
-										titulo = "Espacio Gráfica",
-										descripcion = "Porcentaje del espaci que va  utilizar la gráfica en el panel",
-										valorInicial = panelUI.configuracion.espacioGrafica,
-										elementosSeleccionables = (0..100 step 10).map { it.toString() },
-										onClickSeleccion = { str, indice ->
-											viewModel.onEvent(DetallePanelVM.Eventos.onChangeEspacioGrafica(
-												str))
-										})
-								},
-
-								{
-									MA_SwitchNormal(titulo = "Etiquetas",
-													valor = panelUI.configuracion.mostrarEtiquetas,
-													icono = Icons.Filled.Textsms,
-													onValueChange = { valor ->
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeMostrarEtiquetas(valor))
-													})
-								},
-
-								{
-									MA_Combo(icono = Icons.Filled.HorizontalRule,                    //modifier = Modifier.weight(1f),
-											 titulo = "Limite máximo elementos",
-											 descripcion = "Tope Elementos)",
-											 valorInicial = panelUI.configuracion.valorMaximo,
-											 elementosSeleccionables = (0..55 step 5).map { it.toString() } + (100..500 step 10).map { it.toString() } + (5000..1500 step 100).map { it.toString() },
-											 onClickSeleccion = { str, indice ->
-												 viewModel.onEvent(DetallePanelVM.Eventos.OnChangeValorMaximo(str))
-											 })
-
-
-								},
-								{
-									MA_ComboColores(modifier = Modifier.weight(1f),
-													titulo = "Color",
-													descripcion = "Color",
-													valorInicial = {
-
-														val color: Color = Color(panelUI.configuracion.colorFondoIndicador)
-														MA_SeleccionColor(color)
-													},
-													elementosSeleccionables = ColoresSeleccion().get(esquemaColores.id),
-													item = { colorSeleccion ->
-														MA_SeleccionColor(colorSeleccion.color)
-													},
-													onClickSeleccion = { colorSeleccion ->
-
-														viewModel.onEvent(DetallePanelVM.Eventos.onChangeColorFondoIndicador(colorSeleccion.color.toArgb()))
-													})
-								}
-							))
-						}
-
-						//----------------------------------------------------------------------------------
-						MA_Titulo2("Condiciones sobre la celda (${panelUI.configuracion.condicionesCeldas.size})")
-						MA_Card {
-							Column() {
-								MA_IconBottom(icon = Icons.Default.Add) {
-									viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicionCelda(Condiciones(id = 0,
-																											   columna = Columnas(nombre = "", posicion = -1),
-																											   color = 1,
-																											   condicionCelda = 0,
-																											   predicado = "")))
-									scope.launch { sheetStateCondicionCelda.show() }
-								}
-
-								LazyRow(modifier = Modifier/*.height(300.dp)*/,
-										horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-									items(items = panelUI.configuracion.condicionesCeldas,
-										  key = { item -> item.id }) { condicion ->
-										MA_CondicionCeldaPanelLista(
-											condicion = condicion, onClickAceptar = { condicionUI ->
-												App.log.d("Abriendo...")
-												viewModel.onEvent(DetallePanelVM.Eventos.SeleccionarCondicionCelda(condicionUI))
-												scope.launch { sheetStateCondicionCelda.show() }
-											}, onClickCancelar = { condicionUI ->
-												viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicionCelda(condicionUI))
-											})
-									}
-								}
-
-
-							}
-						}
-
-
-						//----------------------------------------------------------------------------------
-
-						MA_Titulo2("Codiciones sobre las filas (${panelUI.configuracion.condiciones.size})")
-
-
-						MA_Card {
-							Column() {
-								MA_IconBottom(icon = Icons.Default.Add) {
-									viewModel.onEvent(DetallePanelVM.Eventos.AgregarCondicion(Condiciones(0,
-																										  columna = Columnas(nombre = "", posicion = 1, valores = emptyList()),
-																										  color = 1,
-																										  condicionCelda = 0,
-																										  predicado = "")))
-									scope.launch { sheetStateCondicionFila.show() }
-								}
-								//LazyColumn(
-								LazyRow(modifier = Modifier/*.height(200.dp)*/,                    // verticalArrangement = Arrangement.spacedBy(4.dp)
-										horizontalArrangement = Arrangement.Center) {
-									items(items = panelUI.configuracion.condiciones,
-										  key = { item -> item.id }) { condicion ->
-
-										MA_CondicionPanelLista(esquemaColores = EsquemaColores().dameEsquemaCondiciones(),
-															   condicion = condicion,
-															   onClickAceptar = { condicionUI ->
-																   viewModel.onEvent(DetallePanelVM.Eventos.SeleccionarCondicion(condicionUI))
-																   scope.launch { sheetStateCondicionFila.show() }
-															   },
-															   onClickCancelar = { condicionUI ->
-																   viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(
-																	   condicionUI))
-															   })
-									}
-								}
-							}
-						}
-
-					}
-				}
-			}
-
-
-			if (uiState.condicionFila != null) {
-				MA_BottomSheet(sheetStateCondicionFila, onClose = {
-					{ scope.launch { sheetStateCondicionFila.hide() } }
-				}, contenido = {
-					Column {
-
-						MA_CondicionPanel(columnas = valoresTabla.dameColumnas(),
-										  esquemaColores = EsquemaColores().dameEsquemaCondiciones(),
-										  condicion = uiState.condicionFila,
-										  onClickAceptar = { condicionUI ->
-											  viewModel.onEvent(DetallePanelVM.Eventos.GuardarCondicion(condicionUI))
-											  scope.launch { sheetStateCondicionFila.hide() }
-										  },
-										  onClickCancelar = { condicionUI ->
-											  App.log.d("${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}")                                    //condiciones = condiciones.filterNot { it.id != condicionUI.id }
-											  // panelUI.configuracion.condiciones = condiciones
-											  // viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(condicionUI))
-											  scope.launch { sheetStateCondicionFila.hide() }
-										  })
-
-
-					}
-
-				})
-			}
-
-
-			if (uiState.condicionCelda != null) {
-				MA_BottomSheet(sheetStateCondicionCelda, onClose = {
-					{ scope.launch { sheetStateCondicionCelda.hide() } }
-				}, contenido = {
-					Column {
-
-						MA_CondicionCeldaPanel(columnas = valoresTabla.dameColumnas(),
-											   condicion = uiState.condicionCelda,
-											   onClickAceptar = { condicionUI ->
-												   viewModel.onEvent(DetallePanelVM.Eventos.GuardarCondicionCelda(
-													   condicionUI))
-												   scope.launch { sheetStateCondicionCelda.hide() }
-											   },
-											   onClickCancelar = { condicionUI ->                                /*viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicionCelda(
-										condicionUI))*/
-												   scope.launch { sheetStateCondicionCelda.hide() }
-
-											   })
-
-
-					}
-
-				})
-			}
-
-
-			MA_BottomSheet(sheetState, onClose = {
-				{ scope.launch { sheetState.hide() } }
-			}, contenido = {
-				Column {
-					MA_BotonPrincipal("Cerrar") { scope.launch { sheetState.hide() } }
-
-
-
-					panelUI.kpi.parametros.ps.forEach { p ->
-						App.log.d(p.toString())
-					}
-
-
-					MA_Panel(
-						panelData = PanelData(
-							panel = panelUI.toPanel(),
-							panelConfiguracion = panelUI.configuracion,
-							valoresTabla = uiState.valoresTabla,
-						))
-
-				}
-			})
-
-		})
-
+        val panelUI = uiState.panelUI
+        val valoresTabla = uiState.valoresTabla
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val sheetStateCondicionFila = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val sheetStateCondicionCelda = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val scope = rememberCoroutineScope() // Se mantiene dentro del componente
+
+        MA_ScaffoldGenerico(
+                tituloScreen = TituloScreen.Paneles,
+                navegacion = navegacion,
+                accionesSuperiores = {
+                        Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.Top
+                        ) {
+                                MA_IconBottom(
+                                        icon = Features.Previo().icono,
+                                        color = Features.Previo().color
+                                ) { scope.launch { sheetState.show() } }
+                                // MA_IconBottom(icon = Features.Duplicar().icono, color =
+                                // Features.Duplicar().color) {
+                                // viewModel.onEvent(DetallePanelVM.Eventos.Duplicar(navegacion)) }
+                                MA_Spacer()
+                                MA_IconBottom(
+                                        icon = Features.Eliminar().icono,
+                                        color = Features.Eliminar().color
+                                ) { viewModel.onEvent(DetallePanelVM.Eventos.Eliminar(navegacion)) }
+                                MA_IconBottom(
+                                        icon = Features.Guardar().icono,
+                                        color = Features.Guardar().color
+                                ) { viewModel.onEvent(DetallePanelVM.Eventos.Guardar(navegacion)) }
+                        }
+                },
+                contenido = {
+                        val esquemaColores = EsquemaColores().dameEsquemaCondiciones()
+
+                        Column(
+                                modifier =
+                                        Modifier.fillMaxWidth()
+                                                .verticalScroll(rememberScrollState())
+                        ) {
+                                Column(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                        MA_Avatar(panelUI.titulo, color = Color(panelUI.color))
+                                        MA_Titulo(panelUI.titulo)
+                                }
+
+                                // Identificacion
+                                MA_Titulo2("Información")
+                                MA_Card(modifier = Modifier.fillMaxWidth()) {
+                                        Column {
+                                                Row() {
+                                                        val esquemaColores =
+                                                                EsquemaColores()
+                                                                        .dameEsquemaCondiciones()
+                                                        MA_ComboColores(
+                                                                modifier = Modifier.weight(1f),
+                                                                titulo = "",
+                                                                descripcion = "Color",
+                                                                valorInicial = {
+                                                                        val color: Color =
+                                                                                Color(panelUI.color)
+                                                                        MA_SeleccionColor(color)
+                                                                },
+                                                                elementosSeleccionables =
+                                                                        ColoresSeleccion()
+                                                                                .get(
+                                                                                        esquemaColores
+                                                                                                .id
+                                                                                ),
+                                                                item = { colorSeleccion ->
+                                                                        MA_SeleccionColor(
+                                                                                colorSeleccion.color
+                                                                        )
+                                                                },
+                                                                onClickSeleccion = { colorSeleccion,
+                                                                        ->
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .OnChangeColor(
+                                                                                                colorSeleccion
+                                                                                                        .color
+                                                                                                        .toArgb()
+                                                                                        )
+                                                                        )
+                                                                }
+                                                        )
+
+                                                        MA_TextoNormal(
+                                                                valor = panelUI.titulo,
+                                                                titulo = "Nombre",
+                                                                onValueChange = { valor ->
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .OnChangeTitulo(
+                                                                                                valor
+                                                                                        )
+                                                                        )
+                                                                }
+                                                        )
+                                                }
+
+                                                MA_TextoNormal(
+                                                        valor = panelUI.descripcion,
+                                                        titulo = "Descripcion",
+                                                        onValueChange = { valor ->
+                                                                viewModel.onEvent(
+                                                                        DetallePanelVM.Eventos
+                                                                                .OnChangeDescripcion(
+                                                                                        valor
+                                                                                )
+                                                                )
+                                                        }
+                                                )
+
+                                                Row(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        verticalAlignment =
+                                                                Alignment.CenterVertically,
+                                                        horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                        MA_ComboLista<TiposPanel>(
+                                                                modifier = Modifier.width(100.dp),
+                                                                titulo = "Tipo de Panel",
+                                                                descripcion = "Tipo",
+                                                                valorInicial = {
+                                                                        MA_LabelNormal(
+                                                                                panelUI.tipoPanel
+                                                                                        .literal()
+                                                                        )
+                                                                },
+                                                                elementosSeleccionables =
+                                                                        TiposPanel.getTipos(),
+                                                                item = { tipo ->
+                                                                        // KpiComboItem(kpiUI =
+                                                                        // kpiUI)
+                                                                        MA_LabelNormal(
+                                                                                tipo.literal()
+                                                                        )
+                                                                },
+                                                                onClickSeleccion = { tipo ->
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .OnChangeTipoPanel(
+                                                                                                tipo
+                                                                                        )
+                                                                        )
+                                                                }
+                                                        )
+
+                                                        MA_Combo(
+                                                                modifier = Modifier.width(100.dp),
+                                                                icono =
+                                                                        Icons.Filled
+                                                                                .Height, // modifier
+                                                                // =
+                                                                // Modifier.weight(1f),
+                                                                titulo = "Celdas",
+                                                                descripcion = "Celdas que ocuma",
+                                                                valorInicial =
+                                                                        panelUI.configuracion
+                                                                                .celdasPantallasGrandes
+                                                                                .toString(),
+                                                                elementosSeleccionables =
+                                                                        (1..3 step 1).map {
+                                                                                it.toString()
+                                                                        },
+                                                                onClickSeleccion = { str, indice ->
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .onChangeCeldasPantallasGrandes(
+                                                                                                str
+                                                                                        )
+                                                                        )
+                                                                }
+                                                        )
+
+                                                        MA_ComboColores(
+                                                                modifier = Modifier.width(100.dp),
+                                                                titulo = "Color Fondo",
+                                                                descripcion = "Color Fondo Panle",
+                                                                valorInicial = {
+                                                                        val color: Color =
+                                                                                Color(
+                                                                                        panelUI.configuracion
+                                                                                                .colorPanel
+                                                                                )
+                                                                        MA_SeleccionColor(color)
+                                                                },
+                                                                elementosSeleccionables =
+                                                                        ColoresSeleccion()
+                                                                                .get(
+                                                                                        esquemaColores
+                                                                                                .id
+                                                                                ),
+                                                                item = { colorSeleccion ->
+                                                                        MA_SeleccionColor(
+                                                                                colorSeleccion.color
+                                                                        )
+                                                                },
+                                                                onClickSeleccion = { colorSeleccion,
+                                                                        ->
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .onChangeColorFondoPanel(
+                                                                                                colorSeleccion
+                                                                                                        .color
+                                                                                                        .toArgb()
+                                                                                        )
+                                                                        )
+                                                                }
+                                                        )
+                                                }
+                                        }
+                                }
+
+                                if (panelUI.tipoPanel == TiposPanel.PANEL_CONECTOR) {
+
+                                        MA_Titulo2("Conector")
+                                        MA_Card {
+                                                Box(modifier = Modifier.height(100.dp)) {
+                                                        MA_ComboLista<DashboardUI>(
+                                                                modifier = Modifier,
+                                                                titulo = "",
+                                                                descripcion =
+                                                                        "Seleccione el Dashboard a enlazar",
+                                                                valorInicial = {
+                                                                        MA_ConectorItem(
+                                                                                panelUI.conector
+                                                                        )
+                                                                },
+                                                                elementosSeleccionables =
+                                                                        uiState.dashboardDisponibles,
+                                                                item = { dshUI ->
+                                                                        MA_DashboardComboItem(
+                                                                                dashboardUI = dshUI
+                                                                        )
+                                                                },
+                                                                onClickSeleccion = { dshUI ->
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .OnChangeDashboardSeleccionado(
+                                                                                                dshUI
+                                                                                        )
+                                                                        )
+                                                                }
+                                                        )
+                                                }
+                                        }
+                                }
+
+                                if (panelUI.tipoPanel == TiposPanel.PANEL_CONECTOR ||
+                                                panelUI.tipoPanel == TiposPanel.PANEL_KPI
+                                ) {
+
+                                        MA_Titulo2("KPI")
+                                        MA_Card {
+                                                Box(modifier = Modifier.height(250.dp)) {
+                                                        Column() {
+                                                                Row(
+                                                                        verticalAlignment =
+                                                                                Alignment
+                                                                                        .CenterVertically
+                                                                ) {
+                                                                        MA_ComboLista<KpiUI>(
+                                                                                modifier =
+                                                                                        Modifier.weight(
+                                                                                                1f
+                                                                                        ),
+                                                                                titulo = "",
+                                                                                descripcion =
+                                                                                        "Seleccione el KPI a enlazar",
+                                                                                valorInicial = {
+                                                                                        App.log.d(
+                                                                                                panelUI.kpi
+                                                                                                        .toString()
+                                                                                        )
+                                                                                        KpiComboItem(
+                                                                                                kpiUI =
+                                                                                                        panelUI.kpi
+                                                                                        )
+                                                                                },
+                                                                                elementosSeleccionables =
+                                                                                        uiState.kpiDisponibles,
+                                                                                item = { kpiUI ->
+                                                                                        KpiComboItem(
+                                                                                                kpiUI =
+                                                                                                        kpiUI
+                                                                                        )
+                                                                                },
+                                                                                onClickSeleccion = {
+                                                                                        kpiUI ->
+                                                                                        viewModel
+                                                                                                .onEvent(
+                                                                                                        DetallePanelVM
+                                                                                                                .Eventos
+                                                                                                                .OnChangeKpiSeleccionado(
+                                                                                                                        kpiUI.id
+                                                                                                                )
+                                                                                                )
+                                                                                }
+                                                                        )
+
+                                                                        Box(
+                                                                                modifier =
+                                                                                        Modifier.clickable(
+                                                                                                enabled =
+                                                                                                        true,
+                                                                                                onClick = {
+                                                                                                        App.log
+                                                                                                                .d(
+                                                                                                                        "Clined"
+                                                                                                                )
+                                                                                                        navegacion(
+                                                                                                                EventosNavegacion
+                                                                                                                        .CargarKPI(
+                                                                                                                                panelUI.kpi
+                                                                                                                                        .id
+                                                                                                                        )
+                                                                                                        )
+                                                                                                }
+                                                                                        )
+                                                                        ) {
+                                                                                MA_Icono(
+                                                                                        Icons.Default
+                                                                                                .DoubleArrow,
+                                                                                        modifier =
+                                                                                                Modifier.size(
+                                                                                                        16.dp
+                                                                                                )
+                                                                                )
+                                                                        }
+                                                                }
+
+                                                                Row(
+                                                                        modifier =
+                                                                                Modifier.fillMaxWidth(),
+                                                                        horizontalArrangement =
+                                                                                Arrangement.Center
+                                                                ) {
+                                                                        MA_SwitchNormal(
+                                                                                valor =
+                                                                                        panelUI.configuracion
+                                                                                                .filtroOrganizacion,
+                                                                                titulo =
+                                                                                        "Filtrar organiacion",
+                                                                                icono =
+                                                                                        Icons.Filled
+                                                                                                .TableView,
+                                                                                modifier =
+                                                                                        Modifier.weight(
+                                                                                                1f
+                                                                                        ),
+                                                                                onValueChange = {
+                                                                                        valor ->
+                                                                                        viewModel
+                                                                                                .onEvent(
+                                                                                                        DetallePanelVM
+                                                                                                                .Eventos
+                                                                                                                .onChangeFiltroOrganizacion(
+                                                                                                                        valor
+                                                                                                                )
+                                                                                                )
+                                                                                }
+                                                                        )
+
+                                                                        MA_Spacer()
+                                                                        MA_SwitchNormal(
+                                                                                valor =
+                                                                                        panelUI.configuracion
+                                                                                                .filtroLectora,
+                                                                                titulo =
+                                                                                        "Filtrar Lectora",
+                                                                                icono =
+                                                                                        Icons.Filled
+                                                                                                .TableView,
+                                                                                modifier =
+                                                                                        Modifier.weight(
+                                                                                                1f
+                                                                                        ),
+                                                                                onValueChange = {
+                                                                                        valor ->
+                                                                                        viewModel
+                                                                                                .onEvent(
+                                                                                                        DetallePanelVM
+                                                                                                                .Eventos
+                                                                                                                .onChangeFiltroLectora(
+                                                                                                                        valor
+                                                                                                                )
+                                                                                                )
+                                                                                }
+                                                                        )
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+                                if (panelUI.tipoPanel == TiposPanel.PANEL_KPI) {
+                                        // KPI
+
+                                        MA_Titulo2(valor = "Plantilla")
+                                        MA_Card {
+                                                Column(modifier = Modifier.height(200.dp)) {
+                                                        Row(
+                                                                verticalAlignment =
+                                                                        Alignment.CenterVertically
+                                                        ) {
+                                                                MA_ComboLista<PlantillasPanel>(
+                                                                        modifier =
+                                                                                Modifier.weight(1f),
+                                                                        titulo = "Tipo de Gráfica",
+                                                                        descripcion =
+                                                                                "Seleccione  el tipo de gráfica a utilizar",
+                                                                        valorInicial = {
+                                                                                MA_SeleccionPlantillaPanel(
+                                                                                        PlantillasPanel
+                                                                                                .from(
+                                                                                                        uiState.panelUI
+                                                                                                                .configuracion
+                                                                                                                .plantilla
+                                                                                                )
+                                                                                )
+                                                                        },
+                                                                        elementosSeleccionables =
+                                                                                PlantillasPanel
+                                                                                        .dameTipos(),
+                                                                        item = { plantilla ->
+                                                                                MA_SeleccionPlantillaPanel(
+                                                                                        plantilla
+                                                                                )
+                                                                        },
+                                                                        onClickSeleccion = {
+                                                                                plantilla ->
+                                                                                viewModel.onEvent(
+                                                                                        DetallePanelVM
+                                                                                                .Eventos
+                                                                                                .OnSeleccionarPlantillaAplicar(
+                                                                                                        plantilla
+                                                                                                )
+                                                                                )
+                                                                        }
+                                                                )
+                                                        }
+
+                                                        Row(
+                                                                verticalAlignment =
+                                                                        Alignment.CenterVertically
+                                                        ) {
+                                                                MA_ComboLista<Columnas>(
+                                                                        modifier =
+                                                                                Modifier.weight(1f),
+                                                                        titulo = "Eje X ",
+                                                                        descripcion =
+                                                                                "Campo  por el que se van a agrupar los valores cuando la tabla se encuentre limitada",
+                                                                        valorInicial = {
+                                                                                MA_ColumnaItemSeleccionable(
+                                                                                        valoresTabla
+                                                                                                .dameColumnaPosicion(
+                                                                                                        panelUI.configuracion
+                                                                                                                .columnaX
+                                                                                                )
+                                                                                )
+                                                                        },
+                                                                        elementosSeleccionables =
+                                                                                valoresTabla
+                                                                                        .dameColumnas(),
+                                                                        item = { columna ->
+                                                                                MA_ColumnaItemSeleccionable(
+                                                                                        columna
+                                                                                )
+                                                                        },
+                                                                        onClickSeleccion = {
+                                                                                columna,
+                                                                                ->
+                                                                                viewModel.onEvent(
+                                                                                        DetallePanelVM
+                                                                                                .Eventos
+                                                                                                .onChangeCampoAgrupacionTabla(
+                                                                                                        columna.posicion
+                                                                                                                .toString()
+                                                                                                )
+                                                                                )
+                                                                        }
+                                                                )
+
+                                                                MA_ComboLista<Columnas>(
+                                                                        modifier =
+                                                                                Modifier.weight(1f),
+                                                                        titulo = "Eje Y ",
+                                                                        descripcion =
+                                                                                "Campo  por el que se van a agrupar los valores cuando la tabla se encuentre limitada",
+                                                                        valorInicial = {
+                                                                                MA_ColumnaItemSeleccionable(
+                                                                                        valoresTabla
+                                                                                                .dameColumnaPosicion(
+                                                                                                        panelUI.configuracion
+                                                                                                                .columnaY
+                                                                                                )
+                                                                                )
+                                                                        },
+                                                                        elementosSeleccionables =
+                                                                                valoresTabla
+                                                                                        .dameColumnas(),
+                                                                        item = { columna ->
+                                                                                MA_ColumnaItemSeleccionable(
+                                                                                        columna
+                                                                                )
+                                                                        },
+                                                                        onClickSeleccion = {
+                                                                                columna,
+                                                                                ->
+                                                                                viewModel.onEvent(
+                                                                                        DetallePanelVM
+                                                                                                .Eventos
+                                                                                                .onChangeCampoSumaTabla(
+                                                                                                        columna.posicion
+                                                                                                                .toString()
+                                                                                                )
+                                                                                )
+                                                                        },
+                                                                )
+                                                        }
+
+                                                        Row(
+                                                                verticalAlignment =
+                                                                        Alignment.CenterVertically
+                                                        ) {}
+                                                }
+                                        }
+                                        var mostrarDetalles by remember {
+                                                mutableStateOf<Boolean>(false)
+                                        }
+                                        MA_SwitchNormal(
+                                                valor = mostrarDetalles,
+                                                titulo = "Detalles",
+                                                icono = Icons.Default.Details,
+                                                onValueChange = { it -> mostrarDetalles = it }
+                                        )
+                                        if (mostrarDetalles) {
+
+                                                // Valores Generales
+                                                MA_Titulo2(valor = "Generales")
+                                                MA_Card {
+                                                        MA_2ColumnasHorizontales(
+                                                                titulo = "",
+                                                                elementos =
+                                                                        listOf(
+                                                                                {
+                                                                                        MA_Combo(
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .HorizontalRule, // modifier = Modifier.weight(1f),
+                                                                                                titulo =
+                                                                                                        "Ancho",
+                                                                                                descripcion =
+                                                                                                        "Ancho a ocupar en (DP)",
+                                                                                                valorInicial =
+                                                                                                        panelUI.configuracion
+                                                                                                                .width,
+                                                                                                elementosSeleccionables =
+                                                                                                        (200..1000 step
+                                                                                                                        50)
+                                                                                                                .map {
+                                                                                                                        it.toString()
+                                                                                                                },
+                                                                                                onClickSeleccion = {
+                                                                                                        str,
+                                                                                                        indice,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeAncho(
+                                                                                                                                        str
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_Combo(
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .Height, // modifier = Modifier.weight(1f),
+                                                                                                titulo =
+                                                                                                        "Alto",
+                                                                                                descripcion =
+                                                                                                        "Alto a ocupar en (DP)",
+                                                                                                valorInicial =
+                                                                                                        panelUI.configuracion
+                                                                                                                .height,
+                                                                                                elementosSeleccionables =
+                                                                                                        (200..1000 step
+                                                                                                                        50)
+                                                                                                                .map {
+                                                                                                                        it.toString()
+                                                                                                                },
+                                                                                                onClickSeleccion = {
+                                                                                                        str,
+                                                                                                        indice,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeAlto(
+                                                                                                                                        str
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_ComboLista<
+                                                                                                EsquemaColores>(
+                                                                                                titulo =
+                                                                                                        "Esquema de colores ",
+                                                                                                descripcion =
+                                                                                                        "Esquema de colores que se van a mostrar en la gráfica",
+                                                                                                valorInicial = {
+                                                                                                        MA_SelectorEsquemaColores(
+                                                                                                                EsquemaColores()
+                                                                                                                        .get(
+                                                                                                                                panelUI.configuracion
+                                                                                                                                        .colores
+                                                                                                                        )
+                                                                                                        )
+                                                                                                },
+                                                                                                elementosSeleccionables =
+                                                                                                        EsquemaColores()
+                                                                                                                .dameListasDisponibles(),
+                                                                                                item = {
+                                                                                                        esquema,
+                                                                                                        ->
+                                                                                                        MA_SelectorEsquemaColores(
+                                                                                                                esquema
+                                                                                                        )
+                                                                                                },
+                                                                                                onClickSeleccion = {
+                                                                                                        columna,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeEsquemaColores(
+                                                                                                                                        columna.id
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_Combo(
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .Directions,
+                                                                                                modifier =
+                                                                                                        Modifier.weight(
+                                                                                                                1f
+                                                                                                        ),
+                                                                                                titulo =
+                                                                                                        "Orientacion",
+                                                                                                descripcion =
+                                                                                                        "Seleccione  como quiere que se presenten la grafica y la tabla",
+                                                                                                valorInicial =
+                                                                                                        panelUI.configuracion
+                                                                                                                .orientacion
+                                                                                                                .name,
+                                                                                                elementosSeleccionables =
+                                                                                                        listOf(
+                                                                                                                "HORIZONTAL",
+                                                                                                                "VERTICAL"
+                                                                                                        ),
+                                                                                                onClickSeleccion = {
+                                                                                                        str,
+                                                                                                        indice,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeOrientacion(
+                                                                                                                                        str
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                }
+                                                                        )
+                                                        )
+                                                }
+
+                                                // Tabla
+                                                MA_Titulo2("Tabla")
+                                                MA_Card {
+                                                        MA_2ColumnasHorizontales(
+                                                                titulo = "",
+                                                                elementos =
+                                                                        listOf(
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .mostrarTabla,
+                                                                                                titulo =
+                                                                                                        "Tabla",
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .TableView,
+                                                                                                modifier =
+                                                                                                        Modifier.weight(
+                                                                                                                1f
+                                                                                                        ),
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeMosrtarTabla(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_Combo( //    modifier =
+                                                                                                // Modifier.weight(1f),
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .TableView,
+                                                                                                titulo =
+                                                                                                        "Espacio Tabla",
+                                                                                                descripcion =
+                                                                                                        "Porcentaje del espaci que va  utilizar la gráfica en el panel",
+                                                                                                valorInicial =
+                                                                                                        panelUI.configuracion
+                                                                                                                .espacioTabla,
+                                                                                                elementosSeleccionables =
+                                                                                                        (0..100 step
+                                                                                                                        10)
+                                                                                                                .map {
+                                                                                                                        it.toString()
+                                                                                                                },
+                                                                                                onClickSeleccion = {
+                                                                                                        str,
+                                                                                                        indice,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeEspacioTabla(
+                                                                                                                                        str
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_Combo(
+                                                                                                titulo =
+                                                                                                        "Máximo",
+                                                                                                descripcion =
+                                                                                                        "Límite de elementos que se pueden presentar en la lista",
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .FrontHand,
+                                                                                                valorInicial =
+                                                                                                        panelUI.configuracion
+                                                                                                                .limiteElementos
+                                                                                                                .toString(),
+                                                                                                elementosSeleccionables =
+                                                                                                        (0..10)
+                                                                                                                .map {
+                                                                                                                        it.toString()
+                                                                                                                },
+                                                                                                onClickSeleccion = {
+                                                                                                        str,
+                                                                                                        indice,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeLimiteElementos(
+                                                                                                                                        str
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                titulo =
+                                                                                                        "Agrupar  en 'Resto' ",
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .agruparResto,
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .ContentCut,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .OnChangeAgruparResto(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                titulo =
+                                                                                                        "Ordenados",
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .ordenado,
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .ArrowDownward,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeMostrarOrdenado(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                titulo =
+                                                                                                        "Todo el espacio",
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .ocuparTodoEspacio,
+                                                                                                icono =
+                                                                                                        Icons.Default
+                                                                                                                .SwapHoriz,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeOcuparTodoEspacio(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                titulo =
+                                                                                                        "Título Tabla",
+                                                                                                icono =
+                                                                                                        Icons.Default
+                                                                                                                .FormatColorText,
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .mostrarTituloTabla,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeMostrarTitulosTabla(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                icono =
+                                                                                                        Icons.Default
+                                                                                                                .SpaceBar,
+                                                                                                titulo =
+                                                                                                        "Ajustar Ancho",
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .ajustarContenidoAncho,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeAjustarContenido(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                titulo =
+                                                                                                        "Indicador Color",
+                                                                                                icono =
+                                                                                                        Icons.Default
+                                                                                                                .ColorLens,
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .indicadorColor,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeIndicadorColor(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                icono =
+                                                                                                        Icons.Default
+                                                                                                                .FormatColorFill,
+                                                                                                titulo =
+                                                                                                        "Filas de color",
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .filasColor,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeFilasColor(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                icono =
+                                                                                                        Icons.Default
+                                                                                                                .Height,
+                                                                                                titulo =
+                                                                                                        "Texto Completo Celda",
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .textoCeldaCompleto,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeTextoCeldaCompleto(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                icono =
+                                                                                                        Icons.Default
+                                                                                                                .SwapHoriz,
+                                                                                                titulo =
+                                                                                                        "Texto Horizontal Celda",
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .textoCeldaHorizontal,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeTextoCeldaHorizontal(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                }
+                                                                        )
+                                                        )
+                                                }
+
+                                                // Grafica
+                                                MA_Titulo2("Grafica")
+                                                MA_Card {
+                                                        MA_2ColumnasHorizontales(
+                                                                titulo = "",
+                                                                elementos =
+                                                                        listOf(
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .mostrarGrafica,
+                                                                                                titulo =
+                                                                                                        "Grafica",
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .AutoGraph,
+                                                                                                modifier =
+                                                                                                        Modifier.weight(
+                                                                                                                1f
+                                                                                                        ),
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeMostrarGrafica(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_ComboLista<
+                                                                                                PanelTipoGrafica>(
+                                                                                                modifier =
+                                                                                                        Modifier.weight(
+                                                                                                                1f
+                                                                                                        ),
+                                                                                                titulo =
+                                                                                                        "Tipo de Gráfica",
+                                                                                                descripcion =
+                                                                                                        "Seleccione  el tipo de gráfica a utilizar",
+                                                                                                valorInicial = {
+                                                                                                        App.log
+                                                                                                                .d(
+                                                                                                                        panelUI.configuracion
+                                                                                                                                .tipo
+                                                                                                                )
+
+                                                                                                        MA_SeleccionTipoGrafica(
+                                                                                                                panelUI.configuracion
+                                                                                                                        .tipo
+                                                                                                        )
+                                                                                                },
+                                                                                                elementosSeleccionables =
+                                                                                                        PanelTipoGrafica
+                                                                                                                .dameTipos(),
+                                                                                                item = {
+                                                                                                        tipo,
+                                                                                                        ->
+                                                                                                        App.log
+                                                                                                                .d(
+                                                                                                                        panelUI.configuracion
+                                                                                                                                .tipo
+                                                                                                                )
+                                                                                                        MA_SeleccionTipoGrafica(
+                                                                                                                tipo
+                                                                                                        )
+                                                                                                },
+                                                                                                onClickSeleccion = {
+                                                                                                        tipo,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeTipoGrafica(
+                                                                                                                                        tipo
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_Combo( //  modifier =
+                                                                                                // Modifier.weight(1f),
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .AutoGraph,
+                                                                                                titulo =
+                                                                                                        "Espacio Gráfica",
+                                                                                                descripcion =
+                                                                                                        "Porcentaje del espaci que va  utilizar la gráfica en el panel",
+                                                                                                valorInicial =
+                                                                                                        panelUI.configuracion
+                                                                                                                .espacioGrafica,
+                                                                                                elementosSeleccionables =
+                                                                                                        (0..100 step
+                                                                                                                        10)
+                                                                                                                .map {
+                                                                                                                        it.toString()
+                                                                                                                },
+                                                                                                onClickSeleccion = {
+                                                                                                        str,
+                                                                                                        indice,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeEspacioGrafica(
+                                                                                                                                        str
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_SwitchNormal(
+                                                                                                titulo =
+                                                                                                        "Etiquetas",
+                                                                                                valor =
+                                                                                                        panelUI.configuracion
+                                                                                                                .mostrarEtiquetas,
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .Textsms,
+                                                                                                onValueChange = {
+                                                                                                        valor
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeMostrarEtiquetas(
+                                                                                                                                        valor
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_Combo(
+                                                                                                icono =
+                                                                                                        Icons.Filled
+                                                                                                                .HorizontalRule, // modifier = Modifier.weight(1f),
+                                                                                                titulo =
+                                                                                                        "Limite máximo elementos",
+                                                                                                descripcion =
+                                                                                                        "Tope Elementos)",
+                                                                                                valorInicial =
+                                                                                                        panelUI.configuracion
+                                                                                                                .valorMaximo,
+                                                                                                elementosSeleccionables =
+                                                                                                        (0..55 step
+                                                                                                                        5)
+                                                                                                                .map {
+                                                                                                                        it.toString()
+                                                                                                                } +
+                                                                                                                (100..500 step
+                                                                                                                                10)
+                                                                                                                        .map {
+                                                                                                                                it.toString()
+                                                                                                                        } +
+                                                                                                                (5000..1500 step
+                                                                                                                                100)
+                                                                                                                        .map {
+                                                                                                                                it.toString()
+                                                                                                                        },
+                                                                                                onClickSeleccion = {
+                                                                                                        str,
+                                                                                                        indice,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .OnChangeValorMaximo(
+                                                                                                                                        str
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                },
+                                                                                {
+                                                                                        MA_ComboColores(
+                                                                                                modifier =
+                                                                                                        Modifier.weight(
+                                                                                                                1f
+                                                                                                        ),
+                                                                                                titulo =
+                                                                                                        "Color",
+                                                                                                descripcion =
+                                                                                                        "Color",
+                                                                                                valorInicial = {
+                                                                                                        val color:
+                                                                                                                Color =
+                                                                                                                Color(
+                                                                                                                        panelUI.configuracion
+                                                                                                                                .colorFondoIndicador
+                                                                                                                )
+                                                                                                        MA_SeleccionColor(
+                                                                                                                color
+                                                                                                        )
+                                                                                                },
+                                                                                                elementosSeleccionables =
+                                                                                                        ColoresSeleccion()
+                                                                                                                .get(
+                                                                                                                        esquemaColores
+                                                                                                                                .id
+                                                                                                                ),
+                                                                                                item = {
+                                                                                                        colorSeleccion,
+                                                                                                        ->
+                                                                                                        MA_SeleccionColor(
+                                                                                                                colorSeleccion
+                                                                                                                        .color
+                                                                                                        )
+                                                                                                },
+                                                                                                onClickSeleccion = {
+                                                                                                        colorSeleccion,
+                                                                                                        ->
+                                                                                                        viewModel
+                                                                                                                .onEvent(
+                                                                                                                        DetallePanelVM
+                                                                                                                                .Eventos
+                                                                                                                                .onChangeColorFondoIndicador(
+                                                                                                                                        colorSeleccion
+                                                                                                                                                .color
+                                                                                                                                                .toArgb()
+                                                                                                                                )
+                                                                                                                )
+                                                                                                }
+                                                                                        )
+                                                                                }
+                                                                        )
+                                                        )
+                                                }
+
+                                                // ----------------------------------------------------------------------------------
+                                                MA_Titulo2(
+                                                        "Condiciones sobre la celda (${panelUI.configuracion.condicionesCeldas.size})"
+                                                )
+                                                MA_Card {
+                                                        Column() {
+                                                                MA_IconBottom(
+                                                                        icon = Icons.Default.Add
+                                                                ) {
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .AgregarCondicionCelda(
+                                                                                                Condiciones(
+                                                                                                        id =
+                                                                                                                0,
+                                                                                                        columna =
+                                                                                                                Columnas(
+                                                                                                                        nombre =
+                                                                                                                                "",
+                                                                                                                        posicion =
+                                                                                                                                -1
+                                                                                                                ),
+                                                                                                        color =
+                                                                                                                1,
+                                                                                                        condicionCelda =
+                                                                                                                0,
+                                                                                                        predicado =
+                                                                                                                ""
+                                                                                                )
+                                                                                        )
+                                                                        )
+                                                                        scope.launch {
+                                                                                sheetStateCondicionCelda
+                                                                                        .show()
+                                                                        }
+                                                                }
+
+                                                                LazyRow(
+                                                                        modifier =
+                                                                                Modifier /*.height(300.dp)*/,
+                                                                        horizontalArrangement =
+                                                                                Arrangement
+                                                                                        .spacedBy(
+                                                                                                4.dp
+                                                                                        )
+                                                                ) {
+                                                                        items(
+                                                                                items =
+                                                                                        panelUI.configuracion
+                                                                                                .condicionesCeldas,
+                                                                                key = { item ->
+                                                                                        "COND_CELDAS_" +
+                                                                                                item.id
+                                                                                                        .toString()
+                                                                                }
+                                                                        ) { condicion ->
+                                                                                MA_CondicionCeldaPanelLista(
+                                                                                        condicion =
+                                                                                                condicion,
+                                                                                        onClickAceptar = {
+                                                                                                condicionUI,
+                                                                                                ->
+                                                                                                App.log
+                                                                                                        .d(
+                                                                                                                "Abriendo..."
+                                                                                                        )
+                                                                                                viewModel
+                                                                                                        .onEvent(
+                                                                                                                DetallePanelVM
+                                                                                                                        .Eventos
+                                                                                                                        .SeleccionarCondicionCelda(
+                                                                                                                                condicionUI
+                                                                                                                        )
+                                                                                                        )
+                                                                                                scope
+                                                                                                        .launch {
+                                                                                                                sheetStateCondicionCelda
+                                                                                                                        .show()
+                                                                                                        }
+                                                                                        },
+                                                                                        onClickCancelar = {
+                                                                                                condicionUI,
+                                                                                                ->
+                                                                                                viewModel
+                                                                                                        .onEvent(
+                                                                                                                DetallePanelVM
+                                                                                                                        .Eventos
+                                                                                                                        .EliminarCondicionCelda(
+                                                                                                                                condicionUI
+                                                                                                                        )
+                                                                                                        )
+                                                                                        }
+                                                                                )
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+
+                                                // ----------------------------------------------------------------------------------
+
+                                                MA_Titulo2(
+                                                        "Codiciones sobre las filas (${panelUI.configuracion.condiciones.size})"
+                                                )
+
+                                                MA_Card {
+                                                        Column() {
+                                                                MA_IconBottom(
+                                                                        icon = Icons.Default.Add
+                                                                ) {
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .AgregarCondicion(
+                                                                                                Condiciones(
+                                                                                                        0,
+                                                                                                        columna =
+                                                                                                                Columnas(
+                                                                                                                        nombre =
+                                                                                                                                "",
+                                                                                                                        posicion =
+                                                                                                                                1,
+                                                                                                                        valores =
+                                                                                                                                emptyList()
+                                                                                                                ),
+                                                                                                        color =
+                                                                                                                1,
+                                                                                                        condicionCelda =
+                                                                                                                0,
+                                                                                                        predicado =
+                                                                                                                ""
+                                                                                                )
+                                                                                        )
+                                                                        )
+                                                                        scope.launch {
+                                                                                sheetStateCondicionFila
+                                                                                        .show()
+                                                                        }
+                                                                }
+                                                                // LazyColumn(
+                                                                LazyRow(
+                                                                        modifier =
+                                                                                Modifier /*.height(200.dp)*/, // verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                                        horizontalArrangement =
+                                                                                Arrangement.Center
+                                                                ) {
+                                                                        items(
+                                                                                items =
+                                                                                        panelUI.configuracion
+                                                                                                .condiciones,
+                                                                                key = { item ->
+                                                                                        "COND_" +
+                                                                                                Math.random()
+                                                                                }
+                                                                        ) { condicion ->
+                                                                                MA_CondicionPanelLista(
+                                                                                        esquemaColores =
+                                                                                                EsquemaColores()
+                                                                                                        .dameEsquemaCondiciones(),
+                                                                                        condicion =
+                                                                                                condicion,
+                                                                                        onClickAceptar = {
+                                                                                                condicionUI,
+                                                                                                ->
+                                                                                                viewModel
+                                                                                                        .onEvent(
+                                                                                                                DetallePanelVM
+                                                                                                                        .Eventos
+                                                                                                                        .SeleccionarCondicion(
+                                                                                                                                condicionUI
+                                                                                                                        )
+                                                                                                        )
+                                                                                                scope
+                                                                                                        .launch {
+                                                                                                                sheetStateCondicionFila
+                                                                                                                        .show()
+                                                                                                        }
+                                                                                        },
+                                                                                        onClickCancelar = {
+                                                                                                condicionUI,
+                                                                                                ->
+                                                                                                viewModel
+                                                                                                        .onEvent(
+                                                                                                                DetallePanelVM
+                                                                                                                        .Eventos
+                                                                                                                        .EliminarCondicion(
+                                                                                                                                condicionUI
+                                                                                                                        )
+                                                                                                        )
+                                                                                        }
+                                                                                )
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+
+                        if (uiState.condicionFila != null) {
+                                MA_BottomSheet(
+                                        sheetStateCondicionFila,
+                                        onClose = {
+                                                { scope.launch { sheetStateCondicionFila.hide() } }
+                                        },
+                                        contenido = {
+                                                Column {
+                                                        MA_CondicionPanel(
+                                                                columnas =
+                                                                        valoresTabla.dameColumnas(),
+                                                                esquemaColores =
+                                                                        EsquemaColores()
+                                                                                .dameEsquemaCondiciones(),
+                                                                condicion = uiState.condicionFila,
+                                                                onClickAceptar = { condicionUI ->
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .GuardarCondicion(
+                                                                                                condicionUI
+                                                                                        )
+                                                                        )
+                                                                        scope.launch {
+                                                                                sheetStateCondicionFila
+                                                                                        .hide()
+                                                                        }
+                                                                },
+                                                                onClickCancelar = { condicionUI ->
+                                                                        App.log.d(
+                                                                                "${condicionUI.id}  - ${condicionUI.color} - ${condicionUI.predicado}"
+                                                                        ) // condiciones =
+                                                                        // condiciones.filterNot {
+                                                                        // it.id !=
+                                                                        // condicionUI.id }
+                                                                        // panelUI.configuracion.condiciones = condiciones
+                                                                        // viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicion(condicionUI))
+                                                                        scope.launch {
+                                                                                sheetStateCondicionFila
+                                                                                        .hide()
+                                                                        }
+                                                                }
+                                                        )
+                                                }
+                                        }
+                                )
+                        }
+
+                        if (uiState.condicionCelda != null) {
+                                MA_BottomSheet(
+                                        sheetStateCondicionCelda,
+                                        onClose = {
+                                                { scope.launch { sheetStateCondicionCelda.hide() } }
+                                        },
+                                        contenido = {
+                                                Column {
+                                                        MA_CondicionCeldaPanel(
+                                                                columnas =
+                                                                        valoresTabla.dameColumnas(),
+                                                                condicion = uiState.condicionCelda,
+                                                                onClickAceptar = { condicionUI ->
+                                                                        viewModel.onEvent(
+                                                                                DetallePanelVM
+                                                                                        .Eventos
+                                                                                        .GuardarCondicionCelda(
+                                                                                                condicionUI
+                                                                                        )
+                                                                        )
+                                                                        scope.launch {
+                                                                                sheetStateCondicionCelda
+                                                                                        .hide()
+                                                                        }
+                                                                },
+                                                                onClickCancelar = { condicionUI,
+                                                                        -> /*viewModel.onEvent(DetallePanelVM.Eventos.EliminarCondicionCelda(
+                                                                           condicionUI))*/
+                                                                        scope.launch {
+                                                                                sheetStateCondicionCelda
+                                                                                        .hide()
+                                                                        }
+                                                                }
+                                                        )
+                                                }
+                                        }
+                                )
+                        }
+
+                        MA_BottomSheet(
+                                sheetState,
+                                onClose = { { scope.launch { sheetState.hide() } } },
+                                contenido = {
+                                        Column {
+                                                MA_BotonPrincipal("Cerrar") {
+                                                        scope.launch { sheetState.hide() }
+                                                }
+
+                                                panelUI.kpi.parametros.ps.forEach { p ->
+                                                        App.log.d(p.toString())
+                                                }
+
+                                                MA_Panel(
+                                                        panelData =
+                                                                PanelData(
+                                                                        panel = panelUI.toPanel(),
+                                                                        panelConfiguracion =
+                                                                                panelUI.configuracion,
+                                                                        valoresTabla =
+                                                                                uiState.valoresTabla,
+                                                                )
+                                                )
+                                        }
+                                }
+                        )
+                }
+        )
 }
-
-
