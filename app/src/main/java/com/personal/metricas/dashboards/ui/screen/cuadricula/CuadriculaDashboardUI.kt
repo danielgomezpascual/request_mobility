@@ -53,6 +53,7 @@ import com.personal.metricas.core.screen.ErrorScreen
 import com.personal.metricas.core.screen.LoadingScreen
 import com.personal.metricas.core.utils._toJson
 import com.personal.metricas.dashboards.ui.composables.MA_EtiquetaItem
+import com.personal.metricas.dashboards.ui.entidades.DashboardUI
 import com.personal.metricas.menu.Features
 import com.personal.metricas.paneles.domain.entidades.FuncionesCondicionesCeldaManager
 import org.koin.androidx.compose.koinViewModel
@@ -83,149 +84,163 @@ fun CuadriculDashboardUI(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuccessCuadriculaDashboard(
-        viewModel: CuadriculaDashboardVM,
-        uiState: CuadriculaDashboardVM.UIState.Success,
-        navegacion: (EventosNavegacion) -> Unit,
+    viewModel: CuadriculaDashboardVM,
+    uiState: CuadriculaDashboardVM.UIState.Success,
+    navegacion: (EventosNavegacion) -> Unit,
 ) {
     var mostrarBuscador by remember { mutableStateOf(false) }
+    val manager = remember { FuncionesCondicionesCeldaManager() }
 
     MA_ScaffoldGenerico(
-            tituloScreen = TituloScreen.DashboardLista,
-            navegacion = navegacion,
-            accionesSuperiores = {
-                Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.Top
+        tituloScreen = TituloScreen.DashboardLista,
+        navegacion = navegacion,
+        accionesSuperiores = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Top
+            ) {
+                MA_IconBottom(
+                    icon = Icons.Default.Search,
+                    color = Color.DarkGray
                 ) {
-                    MA_IconBottom(
-                        icon = Icons.Default.Search,
-                        color = Color.DarkGray
-                    ) {
-                        mostrarBuscador = !mostrarBuscador
-                        if (!mostrarBuscador) {
-                            viewModel.onEvento(CuadriculaDashboardVM.Eventos.Buscar(""))
-                        }
+                    mostrarBuscador = !mostrarBuscador
+                    if (!mostrarBuscador) {
+                        viewModel.onEvento(CuadriculaDashboardVM.Eventos.Buscar(""))
                     }
-                    MA_IconBottom(
-                            icon = Features.Dashboard().icono,
-                            color = Features.Dashboard().color
-                    ) { navegacion(EventosNavegacion.NuevoPanel) }
                 }
-            },
-            contenido = {
-                Column(
-                        modifier = Modifier.fillMaxWidth() // fillMaxWidth para la columna principal
-                ) {
-                    if (uiState.etiquetasDisponibles.isNotEmpty()) {
-                        Row(
-                                modifier =
-                                        Modifier.fillMaxWidth()
-                                                .horizontalScroll(state = rememberScrollState()),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            uiState.etiquetasDisponibles.forEach { etiqueta ->
-                                MA_EtiquetaItem(etiqueta) {
-                                    viewModel.onEvento(
-                                            CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    AnimatedVisibility(
-                        visible = mostrarBuscador,
-                        enter = expandVertically() + fadeIn(),
-                        exit = shrinkVertically() + fadeOut()
+                MA_IconBottom(
+                    icon = Features.Dashboard().icono,
+                    color = Features.Dashboard().color
+                ) { navegacion(EventosNavegacion.NuevoPanel) }
+            }
+        },
+        contenido = {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (uiState.etiquetasDisponibles.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(state = rememberScrollState()),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        MA_TextBuscador(
-                            searchText = uiState.textoBuscar,
-                            onSearchTextChanged = { texto ->
-                                viewModel.onEvento(CuadriculaDashboardVM.Eventos.Buscar(texto))
-                            }
-                        )
-                    }
-
-
-
-
-                        MA_Columnas(data = uiState.lista.sortedBy { it.nombre }) { item ->
-
-
-                            
-                            val borderColor = try { Color(item.color) } catch (e: Exception) { Color.LightGray }
-
-                            Surface(
-                                modifier =
-                                    Modifier.padding(4.dp)
-                                        .clickable(
-                                            enabled = true,
-                                            onClick = {
-                                                navegacion(
-                                                    EventosNavegacion
-                                                        .VisualizadorDashboard(
-                                                            item.id,
-                                                            _toJson(
-                                                                item.parametros
-                                                            )
-                                                        )
-                                                )
-                                            }
-                                        ),
-                                shape = RoundedCornerShape(12.dp),
-                                color = Color.White,
-                                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.5f)),
-                                shadowElevation = 2.dp
-                            ) {
-                                Column(
-                                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    MA_Avatar(item.nombre, color = Color(item.color))
-
-                                    Spacer(modifier = Modifier.size(8.dp))
-
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        if (item.home)
-                                            MA_Icono(Icons.Default.Stars, Modifier.size(16.dp))
-                                        if (item.autogenerado)
-                                            MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
-                                    }
-                                    if (item.nombre.split("(").first().trim().length == 6) {
-                                        FuncionesCondicionesCeldaManager()
-                                            .banderas(item.nombre)
-                                            .composable()
-                                    } else {
-                                        MA_LabelNegrita(
-                                            alineacion = TextAlign.Center,
-                                            modifier = Modifier.padding(2.dp),
-                                            valor = item.nombre
-                                        )
-                                    }
-
-                                    if (item.descripcion.isNotEmpty()) {
-                                        Spacer(modifier = Modifier.height(4.dp))
-                                        MA_LabelMini(valor = item.descripcion)
-                                    }
-
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-                                        MA_Icono(Icons.Default.Dashboard, Modifier.size(14.dp))
-                                        Spacer(modifier = Modifier.width(4.dp))
-
-                                        MA_LabelMini(valor = "${item.listaPaneles.filter { it.seleccionado }.size} Paneles")
-                                    }
-                                }
+                        uiState.etiquetasDisponibles.forEach { etiqueta ->
+                            MA_EtiquetaItem(etiqueta) {
+                                viewModel.onEvento(
+                                    CuadriculaDashboardVM.Eventos.FiltrarEtiquetas(etiqueta)
+                                )
                             }
                         }
+                    }
+                }
 
+                AnimatedVisibility(
+                    visible = mostrarBuscador,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut()
+                ) {
+                    MA_TextBuscador(
+                        searchText = uiState.textoBuscar,
+                        onSearchTextChanged = { texto ->
+                            viewModel.onEvento(CuadriculaDashboardVM.Eventos.Buscar(texto))
+                        }
+                    )
+                }
+
+                MA_Columnas(
+                    data = uiState.lista,
+                    key = { "${it.id}_${it.nombre}" }
+                ) { item ->
+                    DashboardItemCard(item, manager, navegacion)
                 }
             }
+        }
     )
+}
+
+@Composable
+fun DashboardItemCard(
+    item: DashboardUI,
+    manager: FuncionesCondicionesCeldaManager,
+    navegacion: (EventosNavegacion) -> Unit
+) {
+    val borderColor = remember(item.color) {
+        try { Color(item.color) } catch (e: Exception) { Color.LightGray }
+    }
+
+    val numPaneles = remember(item.listaPaneles) {
+        item.listaPaneles.count { it.seleccionado }
+    }
+
+    val esBandera = remember(item.nombre) {
+        item.nombre.split("(").first().trim().length == 6
+    }
+
+    Surface(
+        modifier = Modifier
+            .padding(4.dp)
+            .clickable(
+                enabled = true,
+                onClick = {
+                    navegacion(
+                        EventosNavegacion.VisualizadorDashboard(
+                            item.id,
+                            _toJson(item.parametros)
+                        )
+                    )
+                }
+            ),
+        shape = RoundedCornerShape(12.dp),
+        color = Color.White,
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.5f)),
+        shadowElevation = 2.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            MA_Avatar(item.nombre, color = Color(item.color))
+
+            Spacer(modifier = Modifier.size(8.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (item.home)
+                    MA_Icono(Icons.Default.Stars, Modifier.size(16.dp))
+                if (item.autogenerado)
+                    MA_Icono(Icons.Default.HdrAuto, Modifier.size(16.dp))
+            }
+
+            if (esBandera) {
+                manager.banderas(item.nombre).composable()
+            } else {
+                MA_LabelNegrita(
+                    alineacion = TextAlign.Center,
+                    modifier = Modifier.padding(2.dp),
+                    valor = item.nombre
+                )
+            }
+
+            if (item.descripcion.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                MA_LabelMini(valor = item.descripcion)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                MA_Icono(Icons.Default.Dashboard, Modifier.size(14.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+
+                MA_LabelMini(valor = "$numPaneles Paneles")
+            }
+        }
+    }
 }

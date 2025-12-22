@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CuadriculaDashboardVM(
@@ -61,13 +62,14 @@ class CuadriculaDashboardVM(
 	private fun buscar(buscar: String = "") {
 		_uiState.update { estado ->
 			if (estado is UIState.Success) {
-				estado.copy(textoBuscar = buscar, lista = listaOriginalDashboard.filter { it.nombre.contains(buscar, ignoreCase = true) })
-			}else{
+				val listaFiltrada = listaOriginalDashboard
+					.filter { it.nombre.contains(buscar, ignoreCase = true) }
+					.sortedBy { it.nombre }
+				estado.copy(textoBuscar = buscar, lista = listaFiltrada)
+			} else {
 				estado
 			}
-
 		}
-
 	}
 
 	private fun filtrarEtiqueta(etiqueta: Etiquetas) {
@@ -95,10 +97,9 @@ class CuadriculaDashboardVM(
 				App.log.lista("listaEtiquetasDisponibles", listaEtiquetasDisponibles)
 
 				val l = listaOriginalDashboard.filter { ds ->
-					App.log.d("${ds.etiqueta.etiqueta} -> ${ds.etiqueta.etiqueta.equals(etiqueta.etiqueta)}")
-					(listaEtiquetasFiltrar.count { etiqueta -> ds.etiqueta.etiqueta.equals(etiqueta.etiqueta) } > 0)
-					&&     ds.nombre.contains(busquedaActual, ignoreCase = true)
-				}
+					(listaEtiquetasFiltrar.any { etiqueta -> ds.etiqueta.etiqueta == etiqueta.etiqueta })
+					&& ds.nombre.contains(busquedaActual, ignoreCase = true)
+				}.sortedBy { it.nombre }
 
 
 
@@ -112,39 +113,41 @@ class CuadriculaDashboardVM(
 
 
 	private fun cargarDatos() {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.IO) {
 			_uiState.value = UIState.Loading("Cargando dashboards...")
 			obtenerDashboardsCU.getAll()
 				.catch { e -> _uiState.value = UIState.Error("Error al cargar: ${e.message}") }
 				.collect { listaDashboardsDomain ->
 
-
-					var listaDashboard: List<Dashboard> = emptyList()
-					listaDashboardsDomain.filter { it.tipo == TipoDashboard.Dinamico() }.forEach { dsh ->
-
-						ResultadoSQL.fromSqlToTabla(dsh.kpiOrigenDatos.sql).filas.forEach { f ->
-							val ds: Dashboard = dsh.copy(nombre = Parametros.reemplazar(dsh.nombre, parametrosKpi = f.toParametros(), parametrosDashboard = f.toParametros()))
-							listaDashboard = listaDashboard.plus(ds.copy(parametros = f.toParametros()))
+					val listaDashboardDinamicos = listaDashboardsDomain
+						.filter { it.tipo == TipoDashboard.Dinamico() }
+						.flatMap { dsh ->
+							try {
+								ResultadoSQL.fromSqlToTabla(dsh.kpiOrigenDatos.sql).filas.map { f ->
+									val params = f.toParametros()
+									dsh.copy(
+										nombre = Parametros.reemplazar(dsh.nombre, parametrosKpi = params, parametrosDashboard = params),
+										parametros = params
+									)
+								}
+							} catch (e: Exception) {
+								listOf(dsh)
+							}
 						}
-					}
 
+					val listaDshEstaticos = listaDashboardsDomain.filter { it.tipo == TipoDashboard.Estatico() }
 
-					val listaDshEstaticos =
-						listaDashboardsDomain.filter { it.tipo == TipoDashboard.Estatico() }
-
-					listaDashboard = listaDashboard.plus(listaDshEstaticos)
-					listaOriginalDashboard = listaDashboard.map {
-						DashboardUI().fromDashboard(it)
-					}
-
+					listaOriginalDashboard = (listaDashboardDinamicos + listaDshEstaticos)
+						.map { DashboardUI().fromDashboard(it) }
+						.sortedBy { it.nombre }
 
 					listaEtiquetasDisponibles = obtenerEtiquetasDashboardCU.dameEtiquetas()
 
-					_uiState.value = UIState.Success(etiquetasDisponibles =  listaEtiquetasDisponibles, lista = listaOriginalDashboard)
-
+					_uiState.value = UIState.Success(
+						etiquetasDisponibles = listaEtiquetasDisponibles,
+						lista = listaOriginalDashboard
+					)
 				}
 		}
 	}
 }
-
-

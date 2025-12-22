@@ -15,7 +15,13 @@ import androidx.compose.ui.unit.dp
 import com.personal.metricas.core.composables.labels.MA_Titulo2
 
 @Composable
-fun <T> MA_Columnas(modifier: Modifier = Modifier, data: List<T>, columnas: Int = 2, contenido: @Composable (T) -> Unit) {
+fun <T> MA_Columnas(
+    modifier: Modifier = Modifier,
+    data: List<T>,
+    columnas: Int = 2,
+    key: ((T) -> Any)? = null,
+    contenido: @Composable (T) -> Unit
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(columnas), // Define exactamente 2 columnas
         modifier = modifier.fillMaxWidth(),
@@ -24,7 +30,10 @@ fun <T> MA_Columnas(modifier: Modifier = Modifier, data: List<T>, columnas: Int 
         horizontalArrangement = Arrangement.spacedBy(4.dp) // Espaciado horizontal entre items
     ) {
 
-        items(items = data) { ds ->
+        items(
+            items = data,
+            key = key
+        ) { ds ->
             contenido(ds)
         }
 
