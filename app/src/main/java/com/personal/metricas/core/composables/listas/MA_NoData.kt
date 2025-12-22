@@ -50,11 +50,11 @@ fun MA_NoData(mensaje: String = _t(R.string.sin_informacion)) {
 
         MA_Spacer(modifier = Modifier.padding(4.dp))
 
-        MA_LabelNormal(
+      /*  MA_LabelNormal(
                 valor = "No se han encontrado registros en este momento.",
                 size = 14.sp,
                 alineacion = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-        )
+        )*/
     }
 }
