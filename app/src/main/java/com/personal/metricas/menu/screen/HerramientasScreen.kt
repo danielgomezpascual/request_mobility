@@ -1,7 +1,6 @@
 package com.personal.metricas.menu.screen
 
 import MA_IconBottom
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,38 +8,28 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.room.util.TableInfo
-import com.personal.metricas.R
+import com.personal.metricas.App
 import com.personal.metricas.core.composables.MA_Spacer
 import com.personal.metricas.core.composables.botones.MA_BotonPrincipal
-import com.personal.metricas.core.composables.botones.MA_BotonSecundario
 import com.personal.metricas.core.composables.card.MA_Card
 import com.personal.metricas.core.composables.componentes.TituloScreen
-import com.personal.metricas.core.composables.formas.MA_Avatar
-import com.personal.metricas.core.composables.imagenes.MA_ImagenDrawable
-import com.personal.metricas.core.composables.labels.MA_LabelNegrita
-import com.personal.metricas.core.composables.labels.MA_LabelNormal
 import com.personal.metricas.core.composables.labels.MA_Titulo2
 import com.personal.metricas.core.composables.scaffold.MA_ScaffoldGenerico
 import com.personal.metricas.core.navegacion.EventosNavegacion
+import com.personal.metricas.core.utils.Preferencias
 import com.personal.metricas.menu.Features
-import com.personal.metricas.sincronizacion.ui.lista.ListaOrganizacionesSincronizarVM
 import com.personal.metricas.start.composables.MA_PrimerosPasos
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ScreenHerramientasInicial(
-	navegacion: (EventosNavegacion) -> Unit
+	navegacion: (EventosNavegacion) -> Unit,
 ) {
-	HerramientasScreen(configuracionInicial = true,navegacion=  navegacion)
+	HerramientasScreen(configuracionInicial = true, navegacion = navegacion)
 
 }
 
@@ -83,6 +72,40 @@ fun HerramientasScreen(
 							}
 
 
+						}
+
+						if (App.sharedPrerfences.get<Boolean>(
+								Preferencias.ACCESO_SINCRONIZACION,
+								true
+							)
+						) {
+							MA_Card(
+								modifier = Modifier
+									.weight(1f)
+									.fillMaxWidth()
+									.clickable(
+										enabled = true,
+										onClick = {
+
+											navegacion(EventosNavegacion.Sincronizacion)
+										})
+							) {
+								MA_IconBottom(icon = Features.Sincronizar().icono,
+											  labelText = Features.Sincronizar().texto,
+											  color = Features.Sincronizar().color) {
+									navegacion(EventosNavegacion.Sincronizacion)
+								}
+
+
+							}
+							// Blue Theme for Sync
+							/*ColoredNavItem(
+								icon = Features.Sincronizar().icono,
+								texto = Features.Sincronizar().texto,
+								backgroundColor = Color(0xFFE3F2FD), // Light Blue
+								iconColor = Color(0xFF1565C0), // Dark Blue
+								onClick = { navegacion(EventosNavegacion.Sincronizacion) }
+							)*/
 						}
 					}
 
@@ -191,7 +214,9 @@ fun HerramientasScreen(
 
 
 				if (configuracionInicial) {
-					Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(50.dp).fillMaxSize()) {
+					Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+						.padding(50.dp)
+						.fillMaxSize()) {
 /*						MA_LabelNegrita("Primeros pasos")
 						MA_Spacer()
 						MA_Avatar(texto = "2", size = 70.dp, color = Color.Gray, fontSize = 40.sp,)
@@ -207,7 +232,7 @@ fun HerramientasScreen(
 
 
 						MA_Card {
-							Column (){
+							Column() {
 								MA_IconBottom(icon = Features.InicializadorMetricas().icono,
 											  labelText = Features.InicializadorMetricas().texto,
 											  color = Features.InicializadorMetricas().color) {
@@ -221,7 +246,7 @@ fun HerramientasScreen(
 							navegacion(EventosNavegacion.ListaOrganizacionesStart)
 						}
 					}
-				}else{
+				} else {
 					MA_Card(
 						modifier = Modifier
 							//.weight(1f)

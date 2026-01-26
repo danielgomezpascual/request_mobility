@@ -1,6 +1,8 @@
 package com.personal.metricas.sincronizacion.domain.interactors
 
 import androidx.core.util.TimeUtils
+import com.personal.metricas.App
+import com.personal.metricas.core.utils.K
 import com.personal.metricas.core.utils.TiempoHora
 import com.personal.metricas.log.domain.entidades.Log
 import com.personal.metricas.log.domain.interactors.GuardarLogCU
@@ -31,14 +33,10 @@ class RealizarSincronizacionCU(
 
 		guardar.guardar(l)
 		log.guardar(Log(id = 0, organization_code = organizacion.organizationCode, hora = TiempoHora.ahora(), tipo = tipo, trx = trx.size))
-		/*val s = "${organizacion.organizationCode} $contador/$totalOraganizacionesSincronizar"
-		_uiState.value =(_uiState.value as UIState.Success).copy(infoSincro = s)
-		App.log.v(s)
+		App.sharedPrerfences.put(
+			K.ULTIMA_SINCRONIZACION,
+			System.currentTimeMillis().toString()
+		)
 
-
-		if (contador == totalOraganizacionesSincronizar) {
-			_uiState.value = UIState.Success(organizaciones = oraganizciones, trabajando = false)
-			dialog.informacion(_t(R.string.information_actualizada)) { }
-		}*/
 	}
 }

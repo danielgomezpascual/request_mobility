@@ -50,6 +50,7 @@ class SharedPreferencesManager(private val context: Context) {
 	 * @param T El tipo del valor esperado.
 	 * @return El valor recuperado, o defaultValue si la clave no existe.
 	 */
+
 	inline fun <reified T> get(key: String, defaultValue: T): T {
 		return when (T::class) {
 			String::class -> sharedPreferences.getString(key, defaultValue as String) as T

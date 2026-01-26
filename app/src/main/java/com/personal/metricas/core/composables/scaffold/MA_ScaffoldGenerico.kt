@@ -22,13 +22,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -65,6 +65,10 @@ fun MA_ScaffoldGenerico(
 ) {
 
     val obtenerAccesoDirectoCU: ObtenerDashboardsAccesoDirectoCU = koinInject()
+    val globalSyncViewModel: com.personal.metricas.sincronizacion.ui.GlobalSyncViewModel =
+            koinInject()
+    val isSyncing by globalSyncViewModel.isSyncing.collectAsState()
+    val syncStatus by globalSyncViewModel.syncStatus.collectAsState()
     var accesosDirectos by remember { mutableStateOf(emptyList<DashboardUI>()) }
 
     LaunchedEffect(Unit) {
@@ -99,6 +103,13 @@ fun MA_ScaffoldGenerico(
 
             accesosDirectos = listaDashboardExpandida.map { DashboardUI().fromDashboard(it) }
         }
+        }
+
+
+    LaunchedEffect(Unit) {
+        globalSyncViewModel.navigateToHome.collect {
+            navegacion(EventosNavegacion.HomeApp)
+        }
     }
 
     Scaffold(
@@ -127,7 +138,53 @@ fun MA_ScaffoldGenerico(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if (App.sharedPrerfences.get<Boolean>(
+
+                            // Quick Sync Item (User Request)
+                            val (bgColor, iconColor) =
+                                    when (syncStatus.colorLevel) {
+                                        0 -> Color(0xFFE8F5E9) to Color(0xFF2E7D32) // Green: 0-1h
+                                        1 ->
+                                                Color(0xFFFFFDE7) to
+                                                        Color(
+                                                                0xFFFFCC00
+                                                        ) // Yellow: 1-5h (Used #FBC02D usually,
+                                        // trying lighter yellow bg)
+                                        // Actually user said Yellow. Let's make it distinct.
+                                        // Level 1 is Yellow.
+                                        2 -> Color(0xFFFFEBEE) to Color(0xFFC62828) // Red: 5-12h
+                                        else -> Color(0xFFE0E0E0) to Color.Black // Black: >12h
+                                    }
+                            // Specific Override for Yellow if needed, but let's stick to the pair
+                            // logic above
+
+                            // Re-defining specifically for clarity based on requirements
+                            val finalBg =
+                                    when (syncStatus.colorLevel) {
+                                        0 -> Color(0xFFE8F5E9) // Light Green
+                                        1 -> Color(0xFFFFF9C4) // Light Yellow
+                                        2 -> Color(0xFFFFEBEE) // Light Red
+                                        else -> Color(0xFFE0E0E0) // Light Grey/Blackish
+                                    }
+                            val finalIcon =
+                                    when (syncStatus.colorLevel) {
+                                        0 -> Color(0xFF2E7D32) // Green
+                                        1 -> Color(0xFFFBC02D) // Dark Yellow
+                                        2 -> Color(0xFFD32F2F) // Red
+                                        else -> Color.Black // Black
+                                    }
+
+                            ColoredNavItem(
+                                    icon = Features.Sincronizar().icono,
+                                    texto = if (isSyncing) "Cargando..." else syncStatus.timeText,
+                                    backgroundColor = finalBg,
+                                    iconColor = finalIcon,
+                                    onClick = {
+                                        globalSyncViewModel.sync()
+                                      
+                                    }
+                            )
+
+                            if (1 == 2 && App.sharedPrerfences.get<Boolean>(
                                             Preferencias.ACCESO_SINCRONIZACION,
                                             true
                                     )
@@ -157,20 +214,19 @@ fun MA_ScaffoldGenerico(
                                     }
                             )
                             if (App.sharedPrerfences.get<Boolean>(
-                                    Preferencias.ACCESO_HERRAMIENTAS,
-                                    false
-                                )
+                                            Preferencias.ACCESO_HERRAMIENTAS,
+                                            false
+                                    )
                             ) {
                                 // Red/Pink Theme for Tools
                                 ColoredNavItem(
-                                    icon = Features.Herramientas().icono,
-                                    texto = Features.Herramientas().texto,
-                                    backgroundColor = Color(0xFFFFEBEE), // Light Red
-                                    iconColor = Color(0xFFC62828), // Dark Red
-                                    onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
+                                        icon = Features.Herramientas().icono,
+                                        texto = Features.Herramientas().texto,
+                                        backgroundColor = Color(0xFFFFEBEE), // Light Red
+                                        iconColor = Color(0xFFC62828), // Dark Red
+                                        onClick = { navegacion(EventosNavegacion.MenuHerramientas) }
                                 )
                             }
-
 
                             // Dynamic Dashboard Shortcuts
                             accesosDirectos.forEach { ds ->
@@ -189,8 +245,6 @@ fun MA_ScaffoldGenerico(
                                         }
                                 )
                             }
-
-
                         }
                     }
                 }
@@ -213,7 +267,7 @@ private fun ColoredNavItem(
                     Modifier.padding(1.dp)
                             .fillMaxHeight()
                             .size(80.dp)
-                            //.clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
+                            // .clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
                             .background(backgroundColor)
                             .combinedClickable(
                                     interactionSource = remember { MutableInteractionSource() },

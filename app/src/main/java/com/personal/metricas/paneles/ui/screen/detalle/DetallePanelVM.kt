@@ -1053,6 +1053,7 @@ class DetallePanelVM(
         }
 
         private fun cargar(identificador: Int) {
+                _uiState.value = UIState.Loading
                 viewModelScope.launch {
                         withContext(Dispatchers.IO) {
                                 // obtenerKpis()

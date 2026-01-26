@@ -59,6 +59,12 @@ val moduloSincronizacion = module {
 
 		)
 	}
+	viewModel {
+		com.personal.metricas.sincronizacion.ui.GlobalSyncViewModel(
+			obtenerOrganizacionesCU = get<ObtenerOrganizacionesCU>(),
+			realizarSincronizacionCU = get<RealizarSincronizacionCU>()
+		)
+	}
 
 }
 
