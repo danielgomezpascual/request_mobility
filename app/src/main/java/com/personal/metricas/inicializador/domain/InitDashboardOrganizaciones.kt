@@ -85,7 +85,7 @@ class InitDashboardOrganizaciones(
 									 listOf<PanelUI>(
 
 										 conectorLectora(dashboardLectrora),
-										 panelEndPointSolicitudes,
+										// panelEndPointSolicitudes,
 
 										 comunes.obtenerPanelTransaccionesEstado(filtroOrganizacion = true),
 										 comunes.obtenerPanelTransaccionesOK(filtroOrganizacion = true),

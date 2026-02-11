@@ -156,7 +156,8 @@ fun MA_Tabla(
         onClickInvertir: (Celda) -> Unit = {},
         onClickSeleccionarFila: (Fila) -> Unit = {},
         onClickFiltrarTexto: (String) -> Unit = {},
-        onClickBorrarFiltros: () -> Unit,
+        onClickBorrarFiltros: () -> Unit ={},
+        onClickAbrirMobility: (Celda) -> Unit = {},
 ) {
 
     val estadoScroll = rememberScrollState()
@@ -318,7 +319,10 @@ fun MA_Tabla(
                                             onClickSeleccion = { cf ->
                                                 onClickSeleccionarFiltro(cf)
                                             },
-                                            onClickInvertir = { cf -> onClickInvertir(cf) }
+                                            onClickInvertir = { cf -> onClickInvertir(cf) },
+                                            onClickAbrirMobility = { cf ->
+                                                onClickAbrirMobility(cf)
+                                            }
                                     )
                                 }
                             }

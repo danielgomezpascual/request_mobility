@@ -1,5 +1,6 @@
 package com.personal.metricas.transacciones.data.ds.local.entities
 
+import android.R
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.personal.metricas.core.room.IRoom
@@ -39,8 +40,8 @@ data class TransaccionesRoom(
     var ORGANIZATION_ID: String? = "",
     var MASTERORGANIZATION_ID: String? = "",
     var SCE_REFERENCIA: String? = "",
-    var ORACLE_DOC: String? = ""
-
+    var ORACLE_DOC: String? = "",
+	var FIREBASE: String? = ""
 
     ) : IRoom
 
@@ -78,7 +79,8 @@ fun TransaccionesRoom.toTransacciones(): Transacciones {
 		organizationId = this.ORGANIZATION_ID ?: "",
 		masterOrganizationId = this.MASTERORGANIZATION_ID ?: "",
 		sceReferencia = this.SCE_REFERENCIA ?: "",
-		oracleDoc = this.ORACLE_DOC ?: ""
+		oracleDoc = this.ORACLE_DOC ?: "",
+		firebase = this.FIREBASE ?: ""
 
 
 	)
@@ -117,6 +119,7 @@ fun TransaccionesRoom.fromTransaccion(trx: Transacciones): TransaccionesRoom = T
 	MASTERORGANIZATION_ID = trx.masterOrganizationId,
 	SCE_REFERENCIA = trx.sceReferencia,
 	ORACLE_DOC = trx.oracleDoc,
+	FIREBASE = trx.firebase
 )
 
 

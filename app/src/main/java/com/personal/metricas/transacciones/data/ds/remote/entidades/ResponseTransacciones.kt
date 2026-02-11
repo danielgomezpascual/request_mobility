@@ -34,7 +34,8 @@ data class TrxResponseRetrofit(
     @SerializedName("TCB_ERROR_PILE") val TCB_ERROR_PILE: String = "",
     @SerializedName("REQ_RESULT") val REQ_RESULT: String = "",
     @SerializedName("REQ_RESULT_DETAIL") val REQ_RESULT_DETAIL: String = "",
-    @SerializedName("REQ_RESULT_DATE") val REQ_RESULT_DATE: String = ""
+    @SerializedName("REQ_RESULT_DATE") val REQ_RESULT_DATE: String = "",
+    @SerializedName("FIREBASE") val FIREBASE: String = ""
     )
 
 
@@ -59,4 +60,5 @@ fun TrxResponseRetrofit.toTransacciones() = Transacciones(
     reqResult = this.REQ_RESULT,
     reqResultDetail = this.REQ_RESULT_DETAIL.siVacio(""),
     reqResultDate = this.REQ_RESULT_DATE.siVacio(""),
+    firebase = this.FIREBASE.siVacio("")
 )

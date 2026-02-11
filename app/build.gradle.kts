@@ -205,6 +205,12 @@ dependencies {
     //-- Firestore
     implementation("com.google.firebase:firebase-firestore")
 
+    //-- Realtime Database
+    implementation("com.google.firebase:firebase-database")
+
+    //-- Messaging
+    implementation("com.google.firebase:firebase-messaging")
+
 
 
 
@@ -229,5 +235,9 @@ dependencies {
 
     // build.gradle.kts (Módulo App)
     implementation("androidx.compose.material3:material3-window-size-class:1.3.1") // O la versión más reciente
+
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0") {
+        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+    }
 
 }

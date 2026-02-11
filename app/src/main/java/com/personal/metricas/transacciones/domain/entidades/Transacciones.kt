@@ -32,6 +32,6 @@ class Transacciones(
   var organizationId: String = "",
   var masterOrganizationId: String = "",
   var sceReferencia: String = "",
-  var oracleDoc: String = ""
-
+  var oracleDoc: String = "",
+  var firebase : String
 )
